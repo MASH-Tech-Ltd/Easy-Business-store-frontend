@@ -99,7 +99,7 @@ export default async function Home() {
           <div className="max-w-[1400px] mx-auto px-6">
             <div className="flex items-center justify-between py-3 border-b border-gray-100">
               <h2 className="text-lg font-black text-gray-900 tracking-tight">{t('topCategories')}</h2>
-              <Link href="/categories" className="text-sm font-semibold text-green-600 hover:text-green-700 transition-colors">{t('seeAllCategories')}</Link>
+              <Link href="/categories" className="text-sm font-semibold text-primary hover:opacity-80 transition-opacity">{t('seeAllCategories')}</Link>
             </div>
             
             <CategorySlider>
@@ -122,7 +122,7 @@ export default async function Home() {
         </div>
       )}
 
-      <main className="max-w-[1400px] mx-auto px-6 py-12">
+      <main id="home-main" className="max-w-[1400px] mx-auto px-6 py-12">
         <section>
           <div className="flex items-center justify-between mb-8 bg-black text-white px-6 py-4 rounded-lg shadow-md">
             <h2 className="text-xl font-bold tracking-wider uppercase">{t('collections')}</h2>

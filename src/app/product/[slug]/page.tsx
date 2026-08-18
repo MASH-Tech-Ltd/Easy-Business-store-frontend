@@ -204,7 +204,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
                     <div className="divide-y divide-gray-100">
                       {spec.entries?.map((entry: any, index: number) => (
                         <div key={index} className={`grid grid-cols-1 md:grid-cols-4 p-5 text-[14px] ${index % 2 === 0 ? 'bg-white' : 'bg-gray-50/50 hover:bg-gray-50 transition-colors rounded-lg'}`}>
-                          <div className="font-semibold text-gray-700 md:col-span-1">{entry.name}</div>
+                          <div className="font-normal text-gray-700 md:col-span-1">{entry.name}</div>
                           <div className="text-gray-600 md:col-span-3">{entry.value}</div>
                         </div>
                       ))}

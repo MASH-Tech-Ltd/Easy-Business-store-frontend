@@ -26,6 +26,7 @@ export default function CategorySlider({ children }: { children: React.ReactNode
       </button>
 
       <div 
+        id="category-slider-track"
         ref={sliderRef} 
         className="flex gap-8 overflow-x-auto py-8 px-4 w-full [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] scroll-smooth snap-x snap-mandatory"
       >

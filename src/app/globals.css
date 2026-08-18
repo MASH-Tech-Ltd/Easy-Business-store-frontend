@@ -28,29 +28,36 @@ body {
   .dark-glass {
     @apply bg-slate-900/40 backdrop-blur-xl border border-slate-700/50 shadow-xl;
   }
-  
-  /* Scale down Tailwind text classes for Bengali to visually match English */
-  html[lang="bn"] .text-\[11px\] { font-size: calc(11px * 0.85) !important; }
-  html[lang="bn"] .text-\[13px\] { font-size: calc(13px * 0.85) !important; }
-  html[lang="bn"] .text-xs { font-size: calc(0.75rem * 0.85) !important; line-height: calc(1rem * 0.85) !important; }
-  html[lang="bn"] .text-sm { font-size: calc(0.875rem * 0.85) !important; line-height: calc(1.25rem * 0.85) !important; }
-  html[lang="bn"] .text-base { font-size: calc(1rem * 0.85) !important; line-height: calc(1.5rem * 0.85) !important; }
-  html[lang="bn"] .text-lg { font-size: calc(1.125rem * 0.85) !important; line-height: calc(1.75rem * 0.85) !important; }
-  html[lang="bn"] .text-xl { font-size: calc(1.25rem * 0.85) !important; line-height: calc(1.75rem * 0.85) !important; }
-  html[lang="bn"] .text-2xl { font-size: calc(1.5rem * 0.85) !important; line-height: calc(2rem * 0.85) !important; }
-  html[lang="bn"] .text-3xl { font-size: calc(1.875rem * 0.85) !important; line-height: calc(2.25rem * 0.85) !important; }
-  html[lang="bn"] .text-4xl { font-size: calc(2.25rem * 0.85) !important; line-height: calc(2.5rem * 0.85) !important; }
+
+  /* Decrease specific vertical gaps in Bangla layout as requested by the user */
+  html[lang="bn"] #main-header {
+    padding-top: 0.5rem !important;
+    padding-bottom: 0.5rem !important;
+  }
+  html[lang="bn"] #category-slider-track {
+    padding-top: 0.5rem !important;
+    padding-bottom: 0.5rem !important;
+  }
+  html[lang="bn"] #home-main {
+    padding-top: 1rem !important;
+  }
 }
 
 @layer base {
-  input, textarea, select {
+  input,
+  textarea,
+  select {
     color: #000000 !important;
   }
 }
 
 @keyframes marquee {
-  0% { transform: translateX(100%); }
-  100% { transform: translateX(-100%); }
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
 }
 
 .animate-marquee {

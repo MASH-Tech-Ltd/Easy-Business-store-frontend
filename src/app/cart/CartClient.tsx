@@ -44,7 +44,7 @@ export default function CartClient() {
                     
                     <div className="flex-1 flex flex-col w-full text-center sm:text-left">
                       <h3 className="text-sm font-semibold text-gray-900 line-clamp-2 mb-2">{item.title}</h3>
-                      <div className="text-lg font-bold text-[#D3100B]">{item.price.toLocaleString()}{t('bdt')}</div>
+                      <div className="text-lg font-bold text-[#D3100B]">{item.price.toLocaleString()} {t('bdt')}</div>
                     </div>
                     
                     <div className="flex items-center gap-6 w-full sm:w-auto justify-between sm:justify-end">
@@ -86,7 +86,7 @@ export default function CartClient() {
                 <div className="space-y-4 mb-6">
                   <div className="flex justify-between text-gray-600">
                     <span>{t('subtotal')} ({totalItems} {t('items')})</span>
-                    <span className="font-semibold text-gray-900">{totalPrice.toLocaleString()}{t('bdt')}</span>
+                    <span className="font-semibold text-gray-900">{totalPrice.toLocaleString()} {t('bdt')}</span>
                   </div>
                   <div className="flex justify-between text-gray-600">
                     <span>{t('shipping')}</span>
@@ -95,7 +95,7 @@ export default function CartClient() {
                   <div className="h-px bg-gray-100 w-full my-2"></div>
                   <div className="flex justify-between text-lg font-bold text-gray-900">
                     <span>{t('total')}</span>
-                    <span className="text-[#D3100B]">{totalPrice.toLocaleString()}{t('bdt')}</span>
+                    <span className="text-[#D3100B]">{totalPrice.toLocaleString()} {t('bdt')}</span>
                   </div>
                 </div>
 

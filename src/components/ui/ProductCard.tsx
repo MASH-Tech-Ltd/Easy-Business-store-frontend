@@ -95,7 +95,7 @@ export default function ProductCard({ product, isList = false }: ProductProps) {
               product.saveAmount ||
               product.originalPrice - product.discountedPrice
             ).toLocaleString()}
-            {t('bdt')} (-{savePercent}%)
+            {" "}{t('bdt')} (-{savePercent}%)
           </div>
         )}
         {imageUrl ? (
@@ -131,11 +131,11 @@ export default function ProductCard({ product, isList = false }: ProductProps) {
           <span
             className={`font-bold text-[#D3100B] ${isList ? "text-xl" : "text-[15px]"}`}
           >
-            {product.discountedPrice.toLocaleString()}{t('bdt')}
+            {product.discountedPrice.toLocaleString()} {t('bdt')}
           </span>
           {product.originalPrice > product.discountedPrice && (
             <span className="text-[12px] text-gray-500 line-through">
-              {product.originalPrice.toLocaleString()}{t('bdt')}
+              {product.originalPrice.toLocaleString()} {t('bdt')}
             </span>
           )}
         </div>

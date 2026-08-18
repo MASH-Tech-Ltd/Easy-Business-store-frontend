@@ -21,7 +21,7 @@ export default async function Header() {
   const storeInfo = await getStoreInfo(tenantSlug);
 
   return (
-    <header className="bg-white border-b border-gray-100 py-4 sm:py-6 sticky top-0 z-50 shadow-sm">
+    <header id="main-header" className="bg-white border-b border-gray-100 py-4 sm:py-6 sticky top-0 z-50 shadow-sm">
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 flex flex-col md:flex-row gap-4 justify-between items-center">
         
         {/* Top Row on Mobile: Logo + Mobile Nav */}

@@ -37,7 +37,7 @@ export async function generateMetadata(): Promise<Metadata> {
   
   return {
     title: storeInfo?.name ? `${storeInfo.name}` : `${tenantSlug.toUpperCase()} Store`,
-    description: "Powered by Electronics SaaS Platform",
+    description: "Powered by MashEasy SaaS Platform",
     icons: {
       icon: storeInfo?.logo || '/favicon.ico'
     }

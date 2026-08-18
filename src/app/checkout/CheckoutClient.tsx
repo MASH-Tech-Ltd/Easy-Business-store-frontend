@@ -78,7 +78,10 @@ export default function CheckoutClient({ storeInfo }: { storeInfo?: any }) {
           image: item.image
         })),
         tenantId: storeInfo?._id,
-        totalPrice: grandTotal
+        subTotal: totalPrice,
+        shippingCharge: deliveryCharge,
+        totalPrice: grandTotal,
+        paymentStatus: 'unpaid'
       };
 
       const res = await fetch('http://localhost:8000/api/v1/orders/create-order', {
@@ -260,7 +263,7 @@ export default function CheckoutClient({ storeInfo }: { storeInfo?: any }) {
                     cartItems.map((item) => (
                       <div key={item.id} className="py-4 flex gap-4 items-center first:pt-0">
                         <div className="w-14 h-14 bg-white rounded overflow-hidden shrink-0 border border-gray-100 p-1">
-                          <img src={item.image} alt={item.title} className="w-full h-full object-contain" />
+                          <img src={item.image} alt={item.title} className="w-full h-full object-cover" />
                         </div>
                         
                         <div className="flex-1 min-w-0">

@@ -140,8 +140,9 @@ export default async function Footer() {
           )}
         </div>
         
-        <div className="border-t border-gray-100 pt-6 text-center">
+        <div className="border-t border-gray-100 pt-6 text-center flex flex-col items-center gap-1">
           <p className="text-xs text-gray-400">{copyrightText}</p>
+          <p className="text-[10px] font-semibold text-gray-400 tracking-widest uppercase">A Product Of MASH TECH</p>
         </div>
       </div>
     </footer>
