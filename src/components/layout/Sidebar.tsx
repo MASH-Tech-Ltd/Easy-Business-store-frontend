@@ -2,7 +2,7 @@ import React from 'react';
 
 async function getCategories() {
   try {
-    const res = await fetch('http://localhost:8000/api/v1/categories/get-all-category', { cache: 'no-store' });
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/categories/get-all-category`, { next: { revalidate: 60 } });
     if (!res.ok) return [];
     const json = await res.json();
     return json.data || [];

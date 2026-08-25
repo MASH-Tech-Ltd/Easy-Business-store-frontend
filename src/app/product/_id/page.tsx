@@ -8,7 +8,7 @@ import FloatingButtons from '@/components/ui/FloatingButtons';
 
 async function getProduct(id: string) {
   try {
-    const res = await fetch(`http://localhost:8000/api/v1/products/get-product/${id}`, { cache: 'no-store' });
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/products/get-product/${id}`, { next: { revalidate: 60 } });
     if (!res.ok) return null;
     const json = await res.json();
     return json.data;

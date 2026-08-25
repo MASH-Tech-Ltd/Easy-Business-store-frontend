@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { CheckCircle2, Minus, Plus, Trash2, Check, AlertTriangle } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
 import { useTranslation } from '@/context/LanguageContext';
@@ -20,10 +21,26 @@ export default function CheckoutClient({ storeInfo }: { storeInfo?: any }) {
   const [status, setStatus] = useState<'idle' | 'processing' | 'success'>('idle');
   const [fieldErrors, setFieldErrors] = useState<Record<string, string[]>>({});
   const [mounted, setMounted] = useState(false);
+  const router = useRouter();
 
   React.useEffect(() => {
     setMounted(true);
   }, []);
+
+  const [countdown, setCountdown] = useState(5);
+
+  React.useEffect(() => {
+    if (status === 'success') {
+      if (countdown <= 0) {
+        router.push('/');
+        return;
+      }
+      const timer = setTimeout(() => {
+        setCountdown((prev) => prev - 1);
+      }, 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [status, countdown, router]);
   
   // Mock form state
   const [phone, setPhone] = useState('');
@@ -84,7 +101,7 @@ export default function CheckoutClient({ storeInfo }: { storeInfo?: any }) {
         paymentStatus: 'unpaid'
       };
 
-      const res = await fetch('http://localhost:8000/api/v1/orders/create-order', {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/orders/create-order`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
@@ -121,7 +138,8 @@ export default function CheckoutClient({ storeInfo }: { storeInfo?: any }) {
             <CheckCircle2 className="w-10 h-10" />
           </div>
           <h1 className="text-3xl font-bold text-gray-900 mb-4">{t('orderConfirmed')}</h1>
-          <p className="text-gray-500 mb-8">{t('thankYouPurchase')}</p>
+          <p className="text-gray-500 mb-4">{t('thankYouPurchase')}</p>
+          <p className="text-sm font-semibold text-gray-400 mb-8">Redirecting to homepage in {countdown} seconds...</p>
           <Link href="/" className="block w-full bg-primary hover:opacity-90 transition-opacity text-white font-bold py-4 px-8 rounded-xl">
             {t('continueShopping')}
           </Link>

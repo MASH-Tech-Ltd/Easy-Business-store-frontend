@@ -45,7 +45,7 @@ export default function GlobalSearch({ tenantSlug }: { tenantSlug: string }) {
       setIsOpen(true);
       
       try {
-        const res = await fetch(`http://localhost:8000/api/v1/storefront/${tenantSlug}/products?search=${encodeURIComponent(query)}&limit=10`);
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/products?search=${encodeURIComponent(query)}&limit=10`);
         const json = await res.json();
         if (json.data && json.data.data) {
           setResults(json.data.data);
@@ -99,11 +99,11 @@ export default function GlobalSearch({ tenantSlug }: { tenantSlug: string }) {
                     }}
                     className="flex items-center gap-4 p-3 hover:bg-gray-50 border-b border-gray-50 last:border-0 transition-colors"
                   >
-                    <div className="w-12 h-12 bg-white border border-gray-100 rounded flex-shrink-0 p-1">
+                    <div className="w-12 h-12 bg-white border border-gray-100 rounded flex-shrink-0 overflow-hidden">
                       <img 
                         src={product.images?.[0]?.secure_url || 'https://placehold.co/100'} 
                         alt={product.title}
-                        className="w-full h-full object-contain"
+                        className="w-full h-full object-cover"
                       />
                     </div>
                     <div className="flex-1 min-w-0">

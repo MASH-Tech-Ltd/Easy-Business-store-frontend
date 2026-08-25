@@ -8,7 +8,7 @@ import { getTranslation, TranslationKeys } from '@/utils/translations';
 
 async function getStoreInfo(tenantSlug: string) {
   try {
-    const res = await fetch(`http://localhost:8000/api/v1/storefront/${tenantSlug}/info`, { cache: 'no-store' });
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/info`, { next: { revalidate: 60 } });
     if (!res.ok) return null;
     const json = await res.json();
     return json.data;
@@ -19,7 +19,7 @@ async function getStoreInfo(tenantSlug: string) {
 
 async function getTheme(tenantSlug: string) {
   try {
-    const res = await fetch(`http://localhost:8000/api/v1/storefront/${tenantSlug}/theme`, { cache: 'no-store' });
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/theme`, { next: { revalidate: 60 } });
     if (!res.ok) return null;
     const json = await res.json();
     return json.data;
@@ -30,7 +30,7 @@ async function getTheme(tenantSlug: string) {
 
 async function getProduct(tenantSlug: string, productSlug: string) {
   try {
-    const res = await fetch(`http://localhost:8000/api/v1/storefront/${tenantSlug}/products/${productSlug}`, { cache: 'no-store' });
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/products/${productSlug}`, { next: { revalidate: 60 } });
     if (!res.ok) return null;
     const json = await res.json();
     return json.data || null;
@@ -45,20 +45,49 @@ export async function generateMetadata(
 ): Promise<Metadata> {
   const resolvedParams = await params;
   const headersList = await headers();
+  const host = headersList.get('host') || 'localhost:3000';
   const tenantSlug = headersList.get('x-tenant-slug') || 'main';
   
-  const product = await getProduct(tenantSlug, resolvedParams.slug);
+  const protocol = host.includes('localhost') ? 'http' : 'https';
+  const baseUrl = `${protocol}://${host}`;
+
+  const [storeInfo, product] = await Promise.all([
+    getStoreInfo(tenantSlug),
+    getProduct(tenantSlug, resolvedParams.slug)
+  ]);
   
   if (!product) {
     return { title: 'Product Not Found' };
   }
   
+  const title = `${product.title} | ${storeInfo?.name || tenantSlug.toUpperCase()}`;
+  const description = product.shortDescription || product.description?.substring(0, 160)?.replace(/<[^>]*>?/gm, '') || `Buy ${product.title}`;
+
   return {
-    title: product.title,
-    description: product.shortDescription || product.description?.substring(0, 160),
+    title,
+    description,
     openGraph: {
-      images: product.images?.[0]?.secure_url ? [product.images[0].secure_url] : [],
+      title,
+      description,
+      url: `${baseUrl}/product/${resolvedParams.slug}`,
+      siteName: storeInfo?.name || tenantSlug.toUpperCase(),
+      images: product.images?.[0]?.secure_url ? [
+        {
+          url: product.images[0].secure_url,
+          width: 800,
+          height: 800,
+          alt: product.title,
+        }
+      ] : [],
+      locale: 'en_US',
+      type: 'website',
     },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+      images: product.images?.[0]?.secure_url ? [product.images[0].secure_url] : [],
+    }
   };
 }
 

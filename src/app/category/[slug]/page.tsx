@@ -1,4 +1,5 @@
 import { headers } from 'next/headers';
+import type { Metadata, ResolvingMetadata } from 'next';
 import Link from 'next/link';
 import FilterSidebar from '../../../components/ui/FilterSidebar';
 import SortSelect from '../../../components/ui/SortSelect';
@@ -10,7 +11,7 @@ import Footer from '../../../components/layout/Footer';
 
 async function getStoreInfo(tenantSlug: string) {
   try {
-    const res = await fetch(`http://localhost:8000/api/v1/storefront/${tenantSlug}/info`, { cache: 'no-store' });
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/info`, { next: { revalidate: 60 } });
     if (!res.ok) return null;
     const json = await res.json();
     return json.data;
@@ -21,7 +22,7 @@ async function getStoreInfo(tenantSlug: string) {
 
 async function getCategory(tenantSlug: string, categoryId: string) {
   try {
-    const res = await fetch(`http://localhost:8000/api/v1/storefront/${tenantSlug}/categories`, { cache: 'no-store' });
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/categories`, { next: { revalidate: 60 } });
     if (!res.ok) return null;
     const json = await res.json();
     return json.data.find((c: any) => c._id === categoryId);
@@ -42,13 +43,43 @@ async function getFilteredProducts(tenantSlug: string, categoryId: string, searc
     if (searchParams.brand) query.set('brand', searchParams.brand);
     if (searchParams.inStock) query.set('inStock', searchParams.inStock);
 
-    const res = await fetch(`http://localhost:8000/api/v1/storefront/${tenantSlug}/products?${query.toString()}`, { cache: 'no-store' });
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/products?${query.toString()}`, { next: { revalidate: 60 } });
     if (!res.ok) return { data: [], pagination: { total: 0, page: 1, totalPages: 1 } };
     const json = await res.json();
     return json.data || { data: [], pagination: { total: 0, page: 1, totalPages: 1 } };
   } catch (error) {
     return { data: [], pagination: { total: 0, page: 1, totalPages: 1 } };
   }
+}
+
+export async function generateMetadata(
+  { params }: { params: Promise<{ slug: string }> },
+  parent: ResolvingMetadata
+): Promise<Metadata> {
+  const resolvedParams = await params;
+  const headersList = await headers();
+  const tenantSlug = headersList.get('x-tenant-slug') || 'main';
+  
+  const [storeInfo, categoriesRes] = await Promise.all([
+    getStoreInfo(tenantSlug),
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/categories`, { next: { revalidate: 60 } }).then(res => res.json().catch(() => null)).catch(() => null)
+  ]);
+
+  const categories = categoriesRes?.data || [];
+  const category = categories.find((c: any) => c.slug === resolvedParams.slug || c._id === resolvedParams.slug);
+
+  if (!category) {
+    return { title: 'Category Not Found' };
+  }
+  
+  return {
+    title: `${category.name} | ${storeInfo?.name || tenantSlug.toUpperCase()}`,
+    description: category.description || `Browse our collection of ${category.name} at ${storeInfo?.name || tenantSlug.toUpperCase()}`,
+    openGraph: {
+      title: `${category.name} | ${storeInfo?.name || tenantSlug.toUpperCase()}`,
+      description: category.description || `Browse our collection of ${category.name} at ${storeInfo?.name || tenantSlug.toUpperCase()}`,
+    }
+  };
 }
 
 export default async function CategoryPage({ params, searchParams }: any) {
@@ -62,7 +93,7 @@ export default async function CategoryPage({ params, searchParams }: any) {
   // First fetch categories and store info to find the actual category ID
   const [storeInfo, categoriesRes] = await Promise.all([
     getStoreInfo(tenantSlug),
-    fetch(`http://localhost:8000/api/v1/storefront/${tenantSlug}/categories`, { cache: 'no-store' }).then(res => res.json())
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/categories`, { next: { revalidate: 60 } }).then(res => res.json())
   ]);
 
   const categories = categoriesRes?.data || [];
@@ -74,7 +105,7 @@ export default async function CategoryPage({ params, searchParams }: any) {
   const [productResponse, brandsRes] = categoryId 
     ? await Promise.all([
         getFilteredProducts(tenantSlug, categoryId, resolvedSearchParams),
-        fetch(`http://localhost:8000/api/v1/storefront/${tenantSlug}/brands?categoryId=${categoryId}`, { cache: 'no-store' }).then(res => res.json())
+        fetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/brands?categoryId=${categoryId}`, { next: { revalidate: 60 } }).then(res => res.json())
       ])
     : [
         { data: [], pagination: { total: 0, page: 1, totalPages: 1 } },
@@ -101,6 +132,28 @@ export default async function CategoryPage({ params, searchParams }: any) {
           </Link>
           <span>&rarr;</span>
           <span className="text-gray-900">{category?.name || 'Category'}</span>
+        </div>
+      </div>
+
+      {/* Category Pills */}
+      <div className="hidden lg:block border-b border-gray-100 bg-white">
+        <div className="max-w-[1400px] mx-auto px-6 py-4 flex flex-wrap gap-2 justify-center items-center">
+          {categories.map((c: any) => {
+            const isActive = c._id === categoryId;
+            return (
+              <Link 
+                key={c._id} 
+                href={`/category/${c.slug}`}
+                className={`px-3 py-1.5 text-sm rounded border transition-colors ${
+                  isActive 
+                    ? 'border-primary text-primary bg-primary/5 font-semibold' 
+                    : 'border-gray-200 text-gray-600 hover:border-gray-300 hover:bg-gray-50'
+                }`}
+              >
+                {c.name}
+              </Link>
+            );
+          })}
         </div>
       </div>
 

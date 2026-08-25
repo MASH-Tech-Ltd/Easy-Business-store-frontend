@@ -8,7 +8,7 @@ import HeaderCartIcon from '../components/ui/HeaderCartIcon';
 import { getTranslation, TranslationKeys } from '@/utils/translations';
 async function getStoreInfo(tenantSlug: string) {
   try {
-    const res = await fetch(`http://localhost:8000/api/v1/storefront/${tenantSlug}/info`, { cache: 'no-store' });
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/info`, { next: { revalidate: 60 } });
     if (!res.ok) return null;
     const json = await res.json();
     return json.data;
@@ -19,7 +19,7 @@ async function getStoreInfo(tenantSlug: string) {
 
 async function getTheme(tenantSlug: string) {
   try {
-    const res = await fetch(`http://localhost:8000/api/v1/storefront/${tenantSlug}/theme`, { cache: 'no-store' });
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/theme`, { next: { revalidate: 60 } });
     if (!res.ok) return null;
     const json = await res.json();
     return json.data;
@@ -30,7 +30,7 @@ async function getTheme(tenantSlug: string) {
 
 async function getProducts(tenantSlug: string) {
   try {
-    const res = await fetch(`http://localhost:8000/api/v1/storefront/${tenantSlug}/products?limit=50`, { cache: 'no-store' });
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/products?limit=50&sort=random`, { next: { revalidate: 60 } });
     if (!res.ok) return [];
     const json = await res.json();
     const data = json?.data?.data || json?.data || [];
@@ -42,7 +42,7 @@ async function getProducts(tenantSlug: string) {
 
 async function getCategories(tenantSlug: string) {
   try {
-    const res = await fetch(`http://localhost:8000/api/v1/storefront/${tenantSlug}/categories`, { cache: 'no-store' });
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/categories`, { next: { revalidate: 60 } });
     if (!res.ok) return [];
     const json = await res.json();
     const data = json?.data?.data || json?.data || [];

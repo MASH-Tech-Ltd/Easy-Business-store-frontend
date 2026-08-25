@@ -111,55 +111,88 @@ export default function ProductCard({ product, isList = false }: ProductProps) {
         )}
       </div>
 
-      {/* Details */}
-      <div
-        className={`p-4 flex flex-col flex-1 ${isList ? "justify-center" : ""}`}
-      >
-        <h4
-          className={`text-[13px] text-gray-800 leading-snug mb-3 group-hover:text-primary transition-colors ${isList ? "text-lg font-semibold" : "line-clamp-2 min-h-[36px]"}`}
-        >
-          {product.title}
-        </h4>
+      {/* Details Section */}
+      {isList ? (
+        <div className="flex flex-1 flex-row">
+          {/* Main Info */}
+          <div className="p-6 flex flex-col flex-1 border-r border-gray-100 justify-start">
+            <h4 className="text-lg font-semibold text-gray-800 leading-snug mb-3 group-hover:text-primary transition-colors line-clamp-2">
+              {product.title}
+            </h4>
+            {product.shortDescription && (
+              <p className="text-sm text-gray-500 line-clamp-3 leading-relaxed">
+                {product.shortDescription}
+              </p>
+            )}
+          </div>
 
-        {isList && product.shortDescription && (
-          <p className="text-sm text-gray-500 mb-4 line-clamp-2">
-            {product.shortDescription}
-          </p>
-        )}
+          {/* Pricing & Actions */}
+          <div className="w-64 p-6 flex flex-col justify-center shrink-0 bg-gray-50/50">
+            <div className="flex flex-col gap-1 mb-6 text-center">
+              <span className="font-bold text-[#D3100B] text-2xl">
+                {product.discountedPrice.toLocaleString()} {t('bdt')}
+              </span>
+              {product.originalPrice > product.discountedPrice && (
+                <span className="text-sm text-gray-500 line-through">
+                  {product.originalPrice.toLocaleString()} {t('bdt')}
+                </span>
+              )}
+            </div>
+            
+            <div className="flex flex-col gap-2">
+              <button
+                onClick={handleAddToCart}
+                className="w-full flex items-center justify-center space-x-2 py-2 border border-primary text-primary rounded-md hover:bg-primary hover:text-white transition-colors"
+              >
+                <ShoppingCart size={16} />
+                <span className="text-sm font-semibold">{t('addToCart')}</span>
+              </button>
+              <button
+                onClick={handleBuyNow}
+                className="w-full flex items-center justify-center space-x-2 py-2 bg-primary text-white rounded-md hover:bg-primary/90 transition-colors shadow-sm"
+              >
+                <Zap size={16} />
+                <span className="text-sm font-semibold">{t('buyNow')}</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : (
+        <div className="p-4 flex flex-col flex-1">
+          <h4 className="text-[13px] text-gray-800 leading-snug mb-3 group-hover:text-primary transition-colors line-clamp-2 min-h-[36px]">
+            {product.title}
+          </h4>
 
-        <div className="flex items-baseline gap-2 mb-4">
-          <span
-            className={`font-bold text-[#D3100B] ${isList ? "text-xl" : "text-[15px]"}`}
-          >
-            {product.discountedPrice.toLocaleString()} {t('bdt')}
-          </span>
-          {product.originalPrice > product.discountedPrice && (
-            <span className="text-[12px] text-gray-500 line-through">
-              {product.originalPrice.toLocaleString()} {t('bdt')}
+          <div className="flex items-baseline gap-2 mb-4">
+            <span className="font-bold text-[#D3100B] text-[15px]">
+              {product.discountedPrice.toLocaleString()} {t('bdt')}
             </span>
-          )}
-        </div>
+            {product.originalPrice > product.discountedPrice && (
+              <span className="text-[12px] text-gray-500 line-through">
+                {product.originalPrice.toLocaleString()} {t('bdt')}
+              </span>
+            )}
+          </div>
 
-        {/* Action Buttons */}
-        <div
-          className={`mt-auto flex ${isList ? "flex-row gap-3 w-64" : "flex-col gap-2"}`}
-        >
-          <button
-            onClick={handleAddToCart}
-            className="w-full flex items-center justify-center space-x-2 py-1.5 border border-primary text-primary rounded hover:bg-primary hover:text-white transition-colors"
-          >
-            <ShoppingCart size={14} />
-            <span className="text-xs font-semibold">{t('addToCart')}</span>
-          </button>
-          <button
-            onClick={handleBuyNow}
-            className="w-full flex items-center justify-center space-x-2 py-1.5 bg-primary text-white rounded hover:bg-primary transition-colors shadow-sm"
-          >
-            <Zap size={14} />
-            <span className="text-xs font-semibold">{t('buyNow')}</span>
-          </button>
+          {/* Action Buttons */}
+          <div className="mt-auto flex flex-col gap-2">
+            <button
+              onClick={handleAddToCart}
+              className="w-full flex items-center justify-center space-x-2 py-1.5 border border-primary text-primary rounded hover:bg-primary hover:text-white transition-colors"
+            >
+              <ShoppingCart size={14} />
+              <span className="text-xs font-semibold">{t('addToCart')}</span>
+            </button>
+            <button
+              onClick={handleBuyNow}
+              className="w-full flex items-center justify-center space-x-2 py-1.5 bg-primary text-white rounded hover:bg-primary transition-colors shadow-sm"
+            >
+              <Zap size={14} />
+              <span className="text-xs font-semibold">{t('buyNow')}</span>
+            </button>
+          </div>
         </div>
-      </div>
+      )}
     </Link>
   );
 }

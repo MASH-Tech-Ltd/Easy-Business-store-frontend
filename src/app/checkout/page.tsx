@@ -5,7 +5,7 @@ import Footer from '../../components/layout/Footer';
 
 async function getStoreInfo(tenantSlug: string) {
   try {
-    const res = await fetch(`http://localhost:8000/api/v1/storefront/${tenantSlug}/info`, { cache: 'no-store' });
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/info`, { next: { revalidate: 60 } });
     if (!res.ok) return null;
     const json = await res.json();
     return json.data;

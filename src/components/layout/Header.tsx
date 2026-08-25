@@ -6,7 +6,7 @@ import GlobalSearch from '../ui/GlobalSearch';
 
 async function getStoreInfo(tenantSlug: string) {
   try {
-    const res = await fetch(`http://localhost:8000/api/v1/storefront/${tenantSlug}/info`, { cache: 'no-store' });
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/info`, { next: { revalidate: 60 } });
     if (!res.ok) return null;
     const json = await res.json();
     return json.data;
@@ -28,7 +28,7 @@ export default async function Header() {
         <div className="flex justify-between items-center w-full md:w-auto">
           <Link href="/" className="flex items-center gap-3">
             {storeInfo?.logo && (
-              <img src={storeInfo.logo} alt={storeInfo?.name || tenantSlug} className="h-8 sm:h-10 object-contain" />
+              <img src={storeInfo.logo} alt={storeInfo?.name || tenantSlug} className="w-10 h-10 sm:w-12 sm:h-12 rounded-full object-cover shadow-sm border border-gray-100" />
             )}
             <h1 className="text-xl sm:text-2xl font-black tracking-tight text-gray-900 uppercase">
               {storeInfo?.name || tenantSlug}

@@ -5,7 +5,7 @@ import { getTranslation, TranslationKeys } from '@/utils/translations';
 
 async function getTheme(tenantSlug: string) {
   try {
-    const res = await fetch(`http://localhost:8000/api/v1/storefront/${tenantSlug}/theme`, { next: { revalidate: 60 } });
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/theme`, { next: { revalidate: 60 } });
     if (!res.ok) return null;
     const json = await res.json();
     return json.data;
@@ -16,7 +16,7 @@ async function getTheme(tenantSlug: string) {
 
 async function getStoreInfo(tenantSlug: string) {
   try {
-    const res = await fetch(`http://localhost:8000/api/v1/storefront/${tenantSlug}/info`, { next: { revalidate: 60 } });
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/info`, { next: { revalidate: 60 } });
     if (!res.ok) return null;
     const json = await res.json();
     return json.data;
@@ -69,7 +69,7 @@ export default async function Footer() {
           <div className="col-span-2 md:col-span-1 flex flex-row items-center justify-between w-full md:flex-col md:items-start md:justify-start md:space-y-4 md:space-x-0 space-x-4">
             <div className="h-12 flex items-center justify-start shrink-0">
                {storeInfo?.logo ? (
-                 <img src={storeInfo.logo} alt={storeInfo.name} className="max-h-12 object-contain rounded-sm" />
+                 <img src={storeInfo.logo} alt={storeInfo.name} className="w-12 h-12 rounded-full object-cover shadow-sm border border-gray-100" />
                ) : (
                  <span className="font-black text-xl text-gray-900">{storeInfo?.name || tenantSlug.toUpperCase()}</span>
                )}
