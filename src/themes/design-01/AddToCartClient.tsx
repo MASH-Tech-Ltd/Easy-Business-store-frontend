@@ -5,7 +5,7 @@ import { useCart } from '@/context/CartContext';
 import { useRouter } from 'next/navigation';
 import { useTranslation } from '@/context/LanguageContext';
 
-export default function AddToCartClient({ product }: { product: any }) {
+export default function AddToCartClient({ product, theme }: { product: any, theme?: any }) {
   const [quantity, setQuantity] = useState(1);
   const { addToCart } = useCart();
   const router = useRouter();
@@ -36,16 +36,26 @@ export default function AddToCartClient({ product }: { product: any }) {
     router.push('/checkout');
   };
 
+  const primaryColor = theme?.primaryColor || '#7c3aed';
+  const addToCartColor = theme?.buttonColors?.addToCart || primaryColor;
+  const buyNowColor = theme?.buttonColors?.buyNow || '#ef4444';
+
   return (
     <div className="flex flex-wrap items-center gap-4 mb-4">
-      <div className="flex items-center border border-[#7c3aed] rounded overflow-hidden h-10 w-28 text-[#7c3aed]">
+      <div 
+        className="flex items-center border rounded overflow-hidden h-10 w-28"
+        style={{ borderColor: addToCartColor, color: addToCartColor }}
+      >
         <button 
           onClick={handleDecrease}
           className="w-8 h-full flex items-center justify-center hover:bg-[#f9f5ff] transition-colors font-bold text-lg"
         >
           -
         </button>
-        <div className="flex-1 text-center text-sm font-semibold text-gray-900 border-x border-[#7c3aed] py-2">
+        <div 
+          className="flex-1 text-center text-sm font-semibold text-gray-900 border-x py-2"
+          style={{ borderColor: addToCartColor }}
+        >
           {quantity}
         </div>
         <button 
@@ -57,13 +67,15 @@ export default function AddToCartClient({ product }: { product: any }) {
       </div>
       <button 
         onClick={handleAddToCart}
-        className="bg-[#7c3aed] hover:bg-[#6d28d9] text-white font-bold py-2.5 px-8 rounded text-sm shadow-md hover:shadow-lg transition-all cursor-pointer"
+        className="text-white font-bold py-2.5 px-8 rounded text-sm shadow-md hover:shadow-lg hover:opacity-90 transition-all cursor-pointer"
+        style={{ backgroundColor: addToCartColor }}
       >
         {t('addToCart')}
       </button>
       <button 
         onClick={handleBuyNow}
-        className="bg-red-500 hover:bg-red-600 text-white font-bold py-2.5 px-8 rounded text-sm shadow-md hover:shadow-lg transition-all cursor-pointer"
+        className="text-white font-bold py-2.5 px-8 rounded text-sm shadow-md hover:shadow-lg hover:opacity-90 transition-all cursor-pointer"
+        style={{ backgroundColor: buyNowColor }}
       >
         {t('buyNow')}
       </button>

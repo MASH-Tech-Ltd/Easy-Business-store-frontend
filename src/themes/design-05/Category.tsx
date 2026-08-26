@@ -1,0 +1,122 @@
+import { headers } from 'next/headers';
+import Link from 'next/link';
+import FilterSidebar05 from './components/ui/FilterSidebar';
+import SortSelect05 from './components/ui/SortSelect';
+import ViewToggle05 from './components/ui/ViewToggle';
+import Pagination05 from './components/ui/Pagination';
+import ProductCard05 from './components/ui/ProductCard';
+import Header05 from './components/layout/Header';
+import Footer05 from './components/layout/Footer';
+
+export default async function CategoryPage05({ params, searchParams }: any) {
+  const resolvedParams = await (params || {});
+  const resolvedSearchParams = await (searchParams || {});
+  const categoryId = resolvedParams.slug || resolvedParams.categoryId;
+  
+  const headersList = await headers();
+  const tenantSlug = headersList.get('x-tenant-slug') || 'main';
+
+  // 1. Fetch categories, store info, and theme first
+  const [storeInfoRes, themeRes, categoriesRes] = await Promise.all([
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/info`, { next: { revalidate: 60 } }),
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/theme`, { next: { revalidate: 60 } }),
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/categories`, { next: { revalidate: 60 } })
+  ]);
+
+  const storeInfo = storeInfoRes.ok ? (await storeInfoRes.json()) : { data: null };
+  const themeData = themeRes.ok ? (await themeRes.json()) : { data: null };
+  const categoriesData = categoriesRes.ok ? (await categoriesRes.json()) : { data: [] };
+
+  const info = storeInfo.data;
+  const theme = themeData?.data;
+  const categoryData = categoriesData.data?.find((c: any) => c.slug === categoryId || c._id === categoryId);
+  const realCategoryId = categoryData?._id;
+
+  // 2. Now fetch products and brands with the correct categoryId
+  const fetchCategoryProducts = async (cId: string) => {
+    try {
+      const query = new URLSearchParams();
+      if (resolvedSearchParams.minPrice) query.set('minPrice', resolvedSearchParams.minPrice);
+      if (resolvedSearchParams.maxPrice) query.set('maxPrice', resolvedSearchParams.maxPrice);
+      if (resolvedSearchParams.search) query.set('search', resolvedSearchParams.search);
+      if (resolvedSearchParams.page) query.set('page', resolvedSearchParams.page);
+      query.set('limit', '50');
+      if (resolvedSearchParams.sort) query.set('sort', resolvedSearchParams.sort);
+      if (resolvedSearchParams.brand) query.set('brand', resolvedSearchParams.brand);
+      if (resolvedSearchParams.inStock) query.set('inStock', resolvedSearchParams.inStock);
+
+      query.set('categoryId', cId);
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/products?${query.toString()}`, { next: { revalidate: 60 } });
+      if (!res.ok) return { data: [], pagination: { total: 0, page: 1, totalPages: 1 } };
+      return (await res.json()).data || { data: [], pagination: { total: 0, page: 1, totalPages: 1 } };
+    } catch { return { data: [], pagination: { total: 0, page: 1, totalPages: 1 } }; }
+  };
+
+  const [productResponse, brandsRes] = realCategoryId
+    ? await Promise.all([
+        fetchCategoryProducts(realCategoryId),
+        fetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/brands?categoryId=${realCategoryId}`, { next: { revalidate: 60 } }).then(r => r.json()).catch(() => ({ data: [] }))
+      ])
+    : [
+        { data: [], pagination: { total: 0, page: 1, totalPages: 1 } },
+        { data: [] }
+      ];
+
+  const products = productResponse.data || [];
+  const availableBrands = brandsRes?.data || [];
+  const pagination = productResponse.pagination || { total: 0, page: 1, totalPages: 1 };
+  const isListView = resolvedSearchParams.view === 'list';
+
+  return (
+    <div className="min-h-screen bg-white font-sans flex flex-col">
+      <Header05 storeInfo={info} />
+
+      <div className="pt-16 pb-8 px-6 lg:px-12 text-center">
+        <h1 className="text-4xl lg:text-5xl font-bold text-gray-900 tracking-tight mb-4">{categoryData?.name || 'Category'}</h1>
+        <div className="flex items-center justify-center text-[13px] font-semibold text-gray-400 uppercase tracking-widest gap-3">
+          <Link href="/" className="hover:text-black transition-colors">Home</Link>
+          <span className="text-gray-300">/</span>
+          <Link href="/categories" className="hover:text-black transition-colors">Categories</Link>
+          <span className="text-gray-300">/</span>
+          <span className="text-black">{categoryData?.name || 'Unknown'}</span>
+        </div>
+      </div>
+
+      <main className="max-w-[1400px] mx-auto px-6 lg:px-12 py-12 flex-1 w-full flex flex-col lg:flex-row gap-12">
+        <aside className="w-full lg:w-[260px] shrink-0">
+          <FilterSidebar05 categoryId={categoryId} availableBrands={availableBrands} />
+        </aside>
+
+        <section className="flex-1">
+          <div className="flex flex-col sm:flex-row justify-between items-center border-b border-gray-100 pb-6 mb-8 gap-4">
+            <span className="text-sm font-medium text-gray-500">Showing <span className="text-black font-semibold">{products.length}</span> of {pagination.total}</span>
+            <div className="flex items-center gap-6">
+              <SortSelect05 />
+              <div className="w-px h-6 bg-gray-200"></div>
+              <ViewToggle05 />
+            </div>
+          </div>
+
+          {products.length === 0 ? (
+            <div className="py-32 text-center flex flex-col items-center justify-center">
+              <svg className="w-16 h-16 text-gray-200 mb-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+              <h3 className="text-xl font-semibold text-gray-900 mb-2">No results found</h3>
+              <p className="text-gray-500">Try adjusting your filters or search query.</p>
+            </div>
+          ) : (
+            <>
+              <div className={isListView ? "flex flex-col gap-6" : "grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6 lg:gap-8"}>
+                {products.map((p: any) => (
+                  <ProductCard05 key={p._id} product={p} isList={isListView} theme={theme} />
+                ))}
+              </div>
+              <Pagination05 currentPage={Number(resolvedSearchParams.page) || 1} totalPages={pagination.totalPages} />
+            </>
+          )}
+        </section>
+      </main>
+
+      <Footer05 storeInfo={info} theme={theme} />
+    </div>
+  );
+}

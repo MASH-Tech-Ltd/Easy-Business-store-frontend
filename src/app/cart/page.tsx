@@ -1,12 +1,21 @@
-import React from 'react';
-import CartClient from './CartClient';
-import Footer from '../../components/layout/Footer';
+import { headers } from 'next/headers';
+import { getTheme } from '@/core/api/store';
+import { themeRegistry } from '@/themes/themeRegistry';
 
-export default function CartPage() {
-  return (
-    <div className="min-h-screen bg-gray-50 flex flex-col font-sans">
-      <CartClient />
-      <Footer />
-    </div>
-  );
+export default async function CartPage() {
+  const headersList = await headers();
+  const tenantSlug = headersList.get('x-tenant-slug') || 'main';
+
+  let themeId = 'design-01';
+
+  if (tenantSlug !== 'main') {
+    const theme = await getTheme(tenantSlug);
+    if (theme && theme.themeId && themeRegistry[theme.themeId]) {
+      themeId = theme.themeId;
+    }
+  }
+
+  const ThemeCart = themeRegistry[themeId]?.Cart || themeRegistry['design-01'].Cart;
+
+  return <ThemeCart tenantSlug={tenantSlug} />;
 }

@@ -104,7 +104,6 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 import Providers from "../components/Providers";
-import Header from "../components/layout/Header";
 import { LanguageProvider } from "../context/LanguageContext";
 
 export default async function RootLayout({
@@ -301,7 +300,6 @@ export default async function RootLayout({
         />
         <LanguageProvider initialLanguage={language}>
           <Providers>
-            <Header />
             {children}
           </Providers>
         </LanguageProvider>

@@ -1,10 +1,10 @@
 import React from 'react';
-import Header from '@/components/layout/Header';
-import Footer from '@/components/layout/Footer';
-import Sidebar from '@/components/layout/Sidebar';
-import ProductActions from '@/components/ui/ProductActions';
+import Header from '@/themes/design-01/components/layout/Header';
+import Footer from '@/themes/design-01/components/layout/Footer';
+import Sidebar from '@/components/Sidebar';
+import ProductActions from '@/themes/design-01/components/ui/ProductActions';
 import Link from 'next/link';
-import FloatingButtons from '@/components/ui/FloatingButtons';
+import FloatingButtons from '@/themes/design-01/components/ui/FloatingButtons';
 
 async function getProduct(id: string) {
   try {
