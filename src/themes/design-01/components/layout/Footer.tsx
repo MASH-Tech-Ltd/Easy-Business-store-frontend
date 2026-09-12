@@ -73,21 +73,20 @@ export default async function Footer() {
   return (
     <footer className="bg-white border-t border-gray-200 mt-12 pt-12 pb-6">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-8 mb-12">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
           {/* Logo and Social */}
           <div className="col-span-2 md:col-span-1 flex flex-row items-center justify-between w-full md:flex-col md:items-start md:justify-start md:space-y-4 md:space-x-0 space-x-4">
-            <div className="h-12 flex items-center justify-start shrink-0">
-              {storeInfo?.logo ? (
+            <div className="h-12 flex items-center justify-start shrink-0 gap-3">
+              {storeInfo?.logo && (
                 <img
                   src={storeInfo.logo}
                   alt={storeInfo.name}
                   className="w-12 h-12 rounded-full object-cover shadow-sm border border-gray-100"
                 />
-              ) : (
-                <span className="font-black text-xl text-gray-900">
-                  {storeInfo?.name || tenantSlug.toUpperCase()}
-                </span>
               )}
+              <span className="font-black text-xl text-gray-900">
+                {storeInfo?.name || tenantSlug.toUpperCase()}
+              </span>
             </div>
 
             {(socialLinks.facebook ||
@@ -215,6 +214,23 @@ export default async function Footer() {
               </ul>
             </div>
           )}
+
+          {/* Quick Links */}
+          <div className="col-span-1">
+            <h3 className="font-bold text-gray-900 mb-4 text-sm uppercase">
+              Quick Links
+            </h3>
+            <ul className="space-y-3">
+              <li>
+                <Link
+                  href="/track-order"
+                  className="text-sm text-gray-500 hover:text-primary transition-colors"
+                >
+                  Track Order
+                </Link>
+              </li>
+            </ul>
+          </div>
 
           {/* Contact Us */}
           {(contactInfo.email || contactInfo.phone || contactInfo.address) && (

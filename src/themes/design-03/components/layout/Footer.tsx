@@ -19,7 +19,10 @@ export default function Footer03({
           <div className="text-[10px] text-cyan-400 mb-4 uppercase tracking-widest">
             System Identifier
           </div>
-          <h3 className="text-3xl font-black uppercase tracking-tighter mb-4">
+          <h3 className="text-3xl font-black uppercase tracking-tighter mb-4 flex items-center gap-3">
+            {storeInfo?.logo && (
+              <img src={storeInfo.logo} alt={storeInfo.name} className="w-10 h-10 rounded-full object-cover" />
+            )}
             {storeInfo?.name || "Premium Store"}
           </h3>
           <p className="text-gray-500 text-xs leading-relaxed max-w-sm mb-8 uppercase">
@@ -88,6 +91,11 @@ export default function Footer03({
             <li>
               <Link href="/cart" className="hover:text-white transition-colors">
                 / Cart
+              </Link>
+            </li>
+            <li>
+              <Link href="/track-order" className="hover:text-white transition-colors">
+                / Track Order
               </Link>
             </li>
             {footer?.policies?.aboutUs && (

@@ -28,21 +28,21 @@ export default function CartClient04() {
           <div className="flex-1">
             <div className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden divide-y divide-gray-100">
               {cartItems.map((item) => (
-                <div key={item.id} className="p-6 flex flex-col sm:flex-row items-center gap-6">
-                  <div className="w-24 h-24 bg-gray-50 rounded-xl border border-gray-100 shrink-0 flex items-center justify-center p-2">
+                <div key={item.id} className="p-4 sm:p-6 flex flex-row items-center gap-4 sm:gap-6">
+                  <div className="w-16 h-16 sm:w-24 sm:h-24 bg-gray-50 rounded-xl border border-gray-100 shrink-0 flex items-center justify-center p-1 sm:p-2">
                     <img src={item.image} alt={item.title} className="w-full h-full object-cover mix-blend-multiply" />
                   </div>
-                  <div className="flex-1 text-center sm:text-left">
-                    <h3 className="text-base font-semibold text-gray-900 mb-1">{item.title}</h3>
-                    <div className="text-lg font-black text-gray-900">৳{item.price.toLocaleString()}</div>
+                  <div className="flex-1 text-left">
+                    <h3 className="text-sm sm:text-base font-semibold text-gray-900 mb-1 line-clamp-2">{item.title}</h3>
+                    <div className="text-base sm:text-lg font-black text-gray-900">৳{item.price.toLocaleString()}</div>
                   </div>
-                  <div className="flex items-center gap-6">
+                  <div className="flex flex-col sm:flex-row items-end sm:items-center gap-2 sm:gap-6 shrink-0">
                     <div className="flex items-center border border-gray-200 rounded-full bg-white p-1">
-                      <button onClick={() => updateQuantity(item.id, item.quantity - 1)} className="w-8 h-8 flex items-center justify-center rounded-full text-gray-500 hover:bg-gray-100 transition-colors"><Minus size={14} /></button>
-                      <div className="w-10 text-center font-bold text-gray-900 text-sm">{item.quantity}</div>
-                      <button onClick={() => updateQuantity(item.id, item.quantity + 1)} className="w-8 h-8 flex items-center justify-center rounded-full text-gray-500 hover:bg-gray-100 transition-colors"><Plus size={14} /></button>
+                      <button onClick={() => updateQuantity(item.id, item.quantity - 1)} className="w-6 h-6 sm:w-8 sm:h-8 flex items-center justify-center rounded-full text-gray-500 hover:bg-gray-100 transition-colors"><Minus size={12} className="sm:w-3.5 sm:h-3.5" /></button>
+                      <div className="w-6 sm:w-10 text-center font-bold text-gray-900 text-xs sm:text-sm">{item.quantity}</div>
+                      <button onClick={() => updateQuantity(item.id, item.quantity + 1)} className="w-6 h-6 sm:w-8 sm:h-8 flex items-center justify-center rounded-full text-gray-500 hover:bg-gray-100 transition-colors"><Plus size={12} className="sm:w-3.5 sm:h-3.5" /></button>
                     </div>
-                    <button onClick={() => removeFromCart(item.id)} className="w-10 h-10 flex items-center justify-center text-gray-400 hover:bg-red-50 hover:text-red-500 rounded-full transition-colors"><Trash2 size={18} /></button>
+                    <button onClick={() => removeFromCart(item.id)} className="w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center text-gray-400 hover:bg-red-50 hover:text-red-500 rounded-full transition-colors"><Trash2 size={16} className="sm:w-4.5 sm:h-4.5" /></button>
                   </div>
                 </div>
               ))}

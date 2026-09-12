@@ -6,7 +6,7 @@ import { ShoppingCart } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
 import { useRouter } from 'next/navigation';
 
-export default function ProductCard04({ product, isList = false, theme }: { product: any; isList?: boolean; theme?: any }) {
+export default function ProductCard04({ product, isList = false, isBestSelling = false, theme }: { product: any; isList?: boolean; isBestSelling?: boolean; theme?: any }) {
   const { addToCart } = useCart();
   const router = useRouter();
 
@@ -47,6 +47,11 @@ export default function ProductCard04({ product, isList = false, theme }: { prod
           ) : (
             <div className="text-gray-300 text-xs">No image</div>
           )}
+          {(isBestSelling && product.salesCount && product.salesCount > 30) && (
+            <div className="absolute top-2 right-2 bg-amber-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full z-10 shadow-sm flex items-center gap-1">
+              🔥 {product.salesCount}+ Sold
+            </div>
+          )}
         </div>
         <div className="flex flex-col flex-1 p-5 justify-center">
           <h4 className="text-base font-semibold text-gray-900 mb-1 line-clamp-2">{product.title || product.name}</h4>
@@ -78,6 +83,11 @@ export default function ProductCard04({ product, isList = false, theme }: { prod
             />
           ) : (
             <div className="text-gray-200 text-sm">No image</div>
+          )}
+          {(isBestSelling && product.salesCount && product.salesCount > 30) && (
+            <div className="absolute top-3 right-3 bg-amber-500 text-white text-[10px] font-bold px-2 py-1 rounded-full z-10 shadow-sm flex items-center gap-1">
+              🔥 {product.salesCount}+ Sold
+            </div>
           )}
         </div>
       </Link>

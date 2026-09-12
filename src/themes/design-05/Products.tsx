@@ -7,6 +7,7 @@ import Pagination05 from './components/ui/Pagination';
 import ProductCard05 from './components/ui/ProductCard';
 import Header05 from './components/layout/Header';
 import Footer05 from './components/layout/Footer';
+import FilterDrawer from './components/ui/FilterDrawer';
 
 async function getStoreInfo(tenantSlug: string) {
   try {
@@ -68,9 +69,14 @@ export default async function ProductsPage05({ searchParams }: any) {
 
       <main className="max-w-[1400px] mx-auto px-6 lg:px-12 py-12 flex-1 w-full flex flex-col lg:flex-row gap-12">
         {/* Sidebar */}
-        <aside className="w-full lg:w-[260px] shrink-0">
+        <aside className="hidden lg:block w-[260px] shrink-0">
           <FilterSidebar05 availableBrands={availableBrands} />
         </aside>
+
+        {/* Mobile Filter Drawer Toggle */}
+        <div className="lg:hidden">
+          <FilterDrawer categoryId="" availableBrands={availableBrands} />
+        </div>
 
         {/* Content */}
         <section className="flex-1">

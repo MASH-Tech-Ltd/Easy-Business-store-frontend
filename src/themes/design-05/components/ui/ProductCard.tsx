@@ -6,7 +6,7 @@ import { ShoppingCart } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
 import { useRouter } from 'next/navigation';
 
-export default function ProductCard05({ product, isList = false, theme }: { product: any; isList?: boolean; theme?: any }) {
+export default function ProductCard05({ product, isList = false, isBestSelling = false, theme }: { product: any; isList?: boolean; isBestSelling?: boolean; theme?: any }) {
   const { addToCart } = useCart();
   const router = useRouter();
 
@@ -36,6 +36,11 @@ export default function ProductCard05({ product, isList = false, theme }: { prod
           ) : (
             <div className="text-gray-300 text-xs font-medium uppercase tracking-widest">No image</div>
           )}
+          {(isBestSelling && product.salesCount && product.salesCount > 30) && (
+            <div className="absolute top-4 right-4 bg-amber-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full z-10 shadow-sm flex items-center gap-1">
+              🔥 {product.salesCount}+ Sold
+            </div>
+          )}
         </div>
         <div className="flex flex-col flex-1 p-6 justify-center">
           <div className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">{product.brand || 'Minimal'}</div>
@@ -63,6 +68,11 @@ export default function ProductCard05({ product, isList = false, theme }: { prod
             Save {savePercent}%
           </span>
         )}
+        {(isBestSelling && product.salesCount && product.salesCount > 30) && (
+          <span className="absolute top-4 right-4 bg-amber-500 text-white text-[10px] font-bold uppercase tracking-wider px-3 py-1.5 rounded-full z-10 shadow-sm">
+            🔥 {product.salesCount}+ Sold
+          </span>
+        )}
         {imageUrl ? (
           <img src={imageUrl} alt={product.title || product.name} className="w-full h-full object-cover mix-blend-multiply group-hover:scale-105 transition-transform duration-700 ease-out" />
         ) : (
@@ -70,7 +80,7 @@ export default function ProductCard05({ product, isList = false, theme }: { prod
         )}
         
         {/* Hover Add to Cart */}
-        <div className="absolute inset-x-4 bottom-4 translate-y-12 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 z-20">
+        <div className="absolute inset-x-4 bottom-4 translate-y-0 opacity-100 md:translate-y-12 md:opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 z-20">
           <button onClick={handleAddToCart} 
             style={theme?.buttonColors?.addToCart ? { backgroundColor: theme.buttonColors.addToCart, borderColor: theme.buttonColors.addToCart, color: '#fff' } : {}}
             className="w-full py-3.5 bg-white/90 backdrop-blur-md text-gray-900 text-sm font-semibold rounded-xl hover:bg-black hover:text-white transition-colors shadow-sm flex items-center justify-center gap-2">

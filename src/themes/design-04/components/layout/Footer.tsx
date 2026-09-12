@@ -132,6 +132,14 @@ export default function Footer04({
                   My Cart
                 </Link>
               </li>
+              <li>
+                <Link
+                  href="/track-order"
+                  className="hover:text-gray-900 transition-colors"
+                >
+                  Track Order
+                </Link>
+              </li>
               {policies.aboutUs && (
                 <li>
                   <Link

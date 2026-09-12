@@ -178,7 +178,7 @@ export default async function Design05Home({
             </div>
             <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-8">
               {displayBestsellers.map((p: any) => (
-                <ProductCard05 key={p._id} product={p} theme={theme} />
+                <ProductCard05 key={p._id} product={p} isBestSelling={true} theme={theme} />
               ))}
             </div>
           </section>

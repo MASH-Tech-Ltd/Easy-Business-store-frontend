@@ -20,11 +20,13 @@ interface ProductProps {
     saveAmount?: number;
     shortDescription?: string;
     tenantId: string;
+    salesCount?: number;
   };
   isList?: boolean;
+  isBestSelling?: boolean;
 }
 
-export default function ProductCard({ product, isList = false }: ProductProps) {
+export default function ProductCard({ product, isList = false, isBestSelling = false }: ProductProps) {
   const router = useRouter();
   const { addToCart } = useCart();
   const { t } = useTranslation();
@@ -96,6 +98,11 @@ export default function ProductCard({ product, isList = false }: ProductProps) {
               product.originalPrice - product.discountedPrice
             ).toLocaleString()}
             {" "}{t('bdt')} Off
+          </div>
+        )}
+        {(isBestSelling && product.salesCount && product.salesCount > 30) && (
+          <div className="absolute top-2 right-2 bg-amber-500 text-white text-[11px] font-extrabold px-2 py-1 rounded-md z-10 shadow-md flex items-center gap-1">
+            🔥 {product.salesCount}+ Sold
           </div>
         )}
         {imageUrl ? (
@@ -175,7 +182,7 @@ export default function ProductCard({ product, isList = false }: ProductProps) {
           </div>
 
           {/* Action Buttons */}
-          <div className="mt-auto grid grid-cols-2 gap-2 opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform translate-y-2 group-hover:translate-y-0">
+          <div className="mt-auto grid grid-cols-2 gap-2">
             <button
               onClick={handleAddToCart}
               className="flex items-center justify-center gap-2 py-2.5 border-2 border-indigo-100 text-indigo-600 rounded-lg hover:border-indigo-600 hover:bg-indigo-50 transition-colors font-semibold text-sm"

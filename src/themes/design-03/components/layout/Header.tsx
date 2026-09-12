@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { headers } from 'next/headers';
 import { ShoppingCart, Home, Grid, ChevronRight } from 'lucide-react';
+import GlobalSearch03 from '../ui/GlobalSearch';
 
 async function getStoreInfo(tenantSlug: string) {
   try {
@@ -17,19 +18,22 @@ export default async function Header03({ storeInfo }: { storeInfo?: any }) {
   return (
     <>
       {/* Mobile Top Bar */}
-      <header className="lg:hidden flex items-center justify-between p-4 border-b border-white/10 bg-[#050505] sticky top-0 z-50">
-        <Link href="/" className="flex items-center gap-2">
-          {storeInfo?.logo && <img src={storeInfo.logo} alt="Logo" className="w-8 h-8 rounded-none border border-white/20" />}
-          <span className="font-bold tracking-widest uppercase text-sm">{storeInfo?.name || 'Store'}</span>
-        </Link>
-        <Link href="/cart" className="text-white hover:text-cyan-400 transition-colors">
-          <ShoppingCart className="w-5 h-5" />
-        </Link>
+      <header className="lg:hidden flex flex-col p-4 border-b border-white/10 bg-[#050505] sticky top-0 z-50 gap-4">
+        <div className="flex items-center justify-between">
+          <Link href="/" className="flex items-center gap-2">
+            {storeInfo?.logo && <img src={storeInfo.logo} alt="Logo" className="w-8 h-8 rounded-none border border-white/20" />}
+            <span className="font-bold tracking-widest uppercase text-sm">{storeInfo?.name || 'Store'}</span>
+          </Link>
+          <Link href="/cart" className="text-white hover:text-cyan-400 transition-colors">
+            <ShoppingCart className="w-5 h-5" />
+          </Link>
+        </div>
+        <GlobalSearch03 tenantSlug={tenantSlug} />
       </header>
 
       {/* Desktop Left Sidebar */}
       <aside className="hidden lg:flex flex-col w-64 h-screen fixed left-0 top-0 border-r border-white/10 bg-[#050505] z-50 py-8 px-6 overflow-y-auto font-sans">
-        <div className="mb-12">
+        <div className="mb-8">
           <Link href="/" className="flex flex-col gap-4 group">
             {storeInfo?.logo ? (
               <img src={storeInfo.logo} alt="Logo" className="w-16 h-16 rounded-none border border-white/20 p-1 bg-white/5 group-hover:border-cyan-400 transition-colors" />
@@ -38,6 +42,10 @@ export default async function Header03({ storeInfo }: { storeInfo?: any }) {
             )}
             <span className="font-black text-xl tracking-tighter uppercase leading-none text-white group-hover:text-cyan-400 transition-colors">{storeInfo?.name || 'Premium Store'}</span>
           </Link>
+        </div>
+
+        <div className="mb-8">
+          <GlobalSearch03 tenantSlug={tenantSlug} />
         </div>
 
         <nav className="flex flex-col gap-1 flex-1">

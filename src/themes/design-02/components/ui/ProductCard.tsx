@@ -5,10 +5,11 @@ import ProductCardActions from './ProductCardActions';
 interface ProductProps {
   product: any;
   isList?: boolean;
+  isBestSelling?: boolean;
   theme?: any;
 }
 
-export default function Design02ProductCard({ product, isList = false, theme }: ProductProps) {
+export default function Design02ProductCard({ product, isList = false, isBestSelling = false, theme }: ProductProps) {
   const imageUrl = product.images?.[0]?.secure_url || product.image?.secure_url || product.image;
 
   if (isList) {
@@ -23,6 +24,11 @@ export default function Design02ProductCard({ product, isList = false, theme }: 
             />
           ) : (
             <div className="w-full h-full flex items-center justify-center text-gray-400 text-sm">No Image</div>
+          )}
+          {(isBestSelling && product.salesCount && product.salesCount > 30) && (
+            <div className="absolute top-2 right-2 bg-amber-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full z-10 shadow-sm flex items-center gap-1">
+              🔥 {product.salesCount}+ Sold
+            </div>
           )}
         </div>
         <div className="p-6 flex flex-col justify-center flex-1">
@@ -60,7 +66,12 @@ export default function Design02ProductCard({ product, isList = false, theme }: 
             Sale
           </div>
         )}
-        <div className="absolute inset-x-0 bottom-0 p-2 translate-y-full opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 ease-in-out bg-white/40 backdrop-blur-md border-t border-white/20 flex flex-col justify-end">
+        {(isBestSelling && product.salesCount && product.salesCount > 30) && (
+          <div className="absolute top-4 right-4 px-3 py-1 bg-amber-500 text-white text-xs font-bold uppercase tracking-wider rounded-sm shadow-sm">
+            🔥 {product.salesCount}+ Sold
+          </div>
+        )}
+        <div className="absolute inset-x-0 bottom-0 p-2 translate-y-0 opacity-100 md:translate-y-full md:opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 ease-in-out bg-white/40 backdrop-blur-md border-t border-white/20 flex flex-col justify-end">
           <ProductCardActions product={product} theme={theme} />
         </div>
       </div>

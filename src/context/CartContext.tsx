@@ -20,6 +20,7 @@ interface CartContextType {
   clearCart: () => void;
   totalItems: number;
   totalPrice: number;
+  isInitialized: boolean;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -87,7 +88,8 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       updateQuantity,
       clearCart,
       totalItems,
-      totalPrice
+      totalPrice,
+      isInitialized
     }}>
       {children}
     </CartContext.Provider>

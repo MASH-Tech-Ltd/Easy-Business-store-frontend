@@ -62,8 +62,8 @@ export default async function Design01Home({ tenantSlug }: { tenantSlug: string 
             <div className="absolute inset-0 bg-black/60"></div>
           </div>
         )}
-        <div className="max-w-[1400px] mx-auto px-6 py-16 md:py-24 grid md:grid-cols-2 gap-12 items-center relative z-10">
-          <div>
+        <div className="max-w-[1400px] mx-auto px-6 py-16 md:py-24 relative z-10">
+          <div className="max-w-2xl">
             {theme?.banner?.subtitle && (
               <span className="inline-block py-1 px-3 rounded-full bg-blue-800/50 text-blue-200 text-sm font-semibold mb-6 border border-blue-700/50 backdrop-blur-sm">
                 {theme.banner.subtitle}
@@ -84,7 +84,7 @@ export default async function Design01Home({ tenantSlug }: { tenantSlug: string 
                 </>
               )}
             </h1>
-            <p className="text-lg md:text-xl text-blue-100 mb-8 max-w-lg leading-relaxed">
+            <p className="text-lg md:text-xl text-blue-100 mb-8 leading-relaxed">
               {theme?.banner?.subtitle || 'Discover the latest gadgets and accessories at unbeatable prices. Shop our curated collection now.'}
             </p>
             <Link 
@@ -93,26 +93,6 @@ export default async function Design01Home({ tenantSlug }: { tenantSlug: string 
             >
               {theme?.banner?.buttonText || 'Shop Now'} <ArrowRight className="w-5 h-5" />
             </Link>
-          </div>
-          <div className="hidden md:flex justify-center relative">
-            <div className="absolute inset-0 bg-gradient-to-tr from-cyan-400/20 to-purple-500/20 blur-3xl rounded-full"></div>
-            {theme?.banner?.image?.secure_url ? (
-               <img 
-                 src={theme.banner.image.secure_url} 
-                 alt="Featured Product" 
-                 className="relative z-10 w-full max-w-md object-contain h-[400px] drop-shadow-2xl hover:scale-105 transition-transform duration-500" 
-               />
-            ) : products?.[0]?.images?.[0]?.secure_url ? (
-               <img 
-                 src={products[0].images[0].secure_url} 
-                 alt="Featured Product" 
-                 className="relative z-10 w-full max-w-md object-contain h-[400px] drop-shadow-2xl hover:scale-105 transition-transform duration-500" 
-               />
-            ) : (
-              <div className="relative z-10 w-full max-w-md h-[400px] bg-white/5 rounded-2xl border border-white/10 backdrop-blur-sm flex items-center justify-center">
-                 <Component className="w-24 h-24 text-white/20" />
-              </div>
-            )}
           </div>
         </div>
       </section>
@@ -166,7 +146,7 @@ export default async function Design01Home({ tenantSlug }: { tenantSlug: string 
               {products.map((product: any) => (
                 <ProductCard 
                   key={product._id || product.id} 
-                  product={product} 
+                  product={product}
                 />
               ))}
             </div>

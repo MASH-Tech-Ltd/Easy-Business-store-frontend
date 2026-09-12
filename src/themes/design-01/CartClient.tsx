@@ -37,41 +37,41 @@ export default function CartClient() {
               </div>
               <div className="divide-y divide-gray-100">
                 {cartItems.map((item) => (
-                  <div key={item.id} className="p-6 flex flex-col sm:flex-row items-center gap-6 group hover:bg-gray-50 transition-colors">
-                    <div className="w-24 h-24 bg-[#F8F9FA] rounded-md border border-gray-200 shrink-0 flex items-center justify-center overflow-hidden">
+                  <div key={item.id} className="p-4 sm:p-6 flex flex-row items-center gap-4 sm:gap-6 group hover:bg-gray-50 transition-colors">
+                    <div className="w-16 h-16 sm:w-24 sm:h-24 bg-[#F8F9FA] rounded-md border border-gray-200 shrink-0 flex items-center justify-center overflow-hidden">
                       <img src={item.image} alt={item.title} className="w-full h-full object-cover mix-blend-multiply" />
                     </div>
                     
-                    <div className="flex-1 flex flex-col w-full text-center sm:text-left">
-                      <h3 className="text-sm font-semibold text-gray-900 line-clamp-2 mb-2">{item.title}</h3>
-                      <div className="text-lg font-bold text-[#D3100B]">{item.price.toLocaleString()} {t('bdt')}</div>
+                    <div className="flex-1 flex flex-col w-full text-left">
+                      <h3 className="text-xs sm:text-sm font-semibold text-gray-900 line-clamp-2 mb-1 sm:mb-2">{item.title}</h3>
+                      <div className="text-sm sm:text-lg font-bold text-[#D3100B]">{item.price.toLocaleString()} {t('bdt')}</div>
                     </div>
                     
-                    <div className="flex items-center gap-6 w-full sm:w-auto justify-between sm:justify-end">
+                    <div className="flex flex-col sm:flex-row items-end sm:items-center gap-2 sm:gap-6 shrink-0">
                       <div className="flex items-center border border-gray-200 rounded-md bg-white">
                         <button 
                           onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                          className="w-10 h-10 flex items-center justify-center text-gray-500 hover:text-gray-900 hover:bg-gray-100 transition-colors"
+                          className="w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center text-gray-500 hover:text-gray-900 hover:bg-gray-100 transition-colors"
                         >
-                          <Minus size={16} />
+                          <Minus size={14} />
                         </button>
-                        <div className="w-12 text-center font-semibold text-gray-900 text-sm">
+                        <div className="w-8 sm:w-12 text-center font-semibold text-gray-900 text-xs sm:text-sm">
                           {item.quantity}
                         </div>
                         <button 
                           onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                          className="w-10 h-10 flex items-center justify-center text-gray-500 hover:text-gray-900 hover:bg-gray-100 transition-colors"
+                          className="w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center text-gray-500 hover:text-gray-900 hover:bg-gray-100 transition-colors"
                         >
-                          <Plus size={16} />
+                          <Plus size={14} />
                         </button>
                       </div>
                       
                       <button 
                         onClick={() => removeFromCart(item.id)}
-                        className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-full transition-colors"
+                        className="p-1 sm:p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-full transition-colors"
                         title="Remove item"
                       >
-                        <Trash2 size={20} />
+                        <Trash2 size={16} className="sm:w-5 sm:h-5" />
                       </button>
                     </div>
                   </div>

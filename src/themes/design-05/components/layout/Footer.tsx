@@ -79,7 +79,10 @@ export default function Footer05({
         <div className="grid grid-cols-1 md:grid-cols-12 gap-12 lg:gap-8 mb-16">
           {/* Brand & Intro */}
           <div className="md:col-span-4 lg:col-span-5 pr-4">
-            <Link href="/" className="inline-block mb-6">
+            <Link href="/" className="inline-flex items-center gap-2 mb-6">
+              {storeInfo?.logo && (
+                <img src={storeInfo.logo} alt={storeInfo.name} className="w-8 h-8 rounded-full object-cover" />
+              )}
               <span className="font-bold text-2xl tracking-tight text-gray-900">
                 {storeInfo?.name || "Minimal"}
               </span>
@@ -152,6 +155,14 @@ export default function Footer05({
                     className="hover:text-black transition-colors"
                   >
                     Your Cart
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/track-order"
+                    className="hover:text-black transition-colors"
+                  >
+                    Track Order
                   </Link>
                 </li>
                 {policies.aboutUs && (

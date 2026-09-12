@@ -5,6 +5,7 @@ import FilterSidebar03 from './components/ui/FilterSidebar';
 import SortSelect03 from './components/ui/SortSelect';
 import ViewToggle03 from './components/ui/ViewToggle';
 import Pagination03 from './components/ui/Pagination';
+import FilterDrawer from './components/ui/FilterDrawer';
 import Design03ProductCard from './components/ui/ProductCard';
 import Header03 from './components/layout/Header';
 import Footer03 from './components/layout/Footer';
@@ -101,9 +102,14 @@ export default async function Design03CategoryPage({ params, searchParams }: any
 
         <div className="grid grid-cols-1 lg:grid-cols-[260px_1fr] flex-1">
           {/* Sidebar */}
-          <aside className="border-b lg:border-b-0 lg:border-r border-white/10 bg-black">
+          <aside className="hidden lg:block border-r border-white/10 bg-black">
             <FilterSidebar03 categoryId={categoryId} availableBrands={availableBrands} />
           </aside>
+
+          {/* Mobile Filter Drawer Toggle */}
+          <div className="lg:hidden">
+            <FilterDrawer categoryId={categoryId} availableBrands={availableBrands} />
+          </div>
 
           {/* Product Grid */}
           <section className="flex flex-col h-full bg-[#050505]">
@@ -129,7 +135,7 @@ export default async function Design03CategoryPage({ params, searchParams }: any
               </div>
             ) : (
               <div className="flex flex-col flex-1">
-                <div className={resolvedSearchParams.view === 'list' ? 'flex flex-col border-b border-white/10' : 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 border-b border-white/10'}>
+                <div className={resolvedSearchParams.view === 'list' ? 'flex flex-col border-b border-white/10' : 'grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 border-b border-white/10'}>
                   {products.map((product: any, idx: number) => (
                     <div key={product._id || product.id} className={resolvedSearchParams.view === 'list' ? 'border-b border-white/10 last:border-b-0' : `border-b sm:border-r border-white/10 ${idx % 3 === 2 ? 'lg:border-r-0' : ''}`}>
                       <Design03ProductCard product={product} isList={resolvedSearchParams.view === 'list'} theme={theme} />

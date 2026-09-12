@@ -126,7 +126,7 @@ export default async function Design04Home({ tenantSlug }: { tenantSlug: string 
             </div>
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-5">
               {displayBestsellers.map((product: any) => (
-                <ProductCard04 key={product._id || product.id} product={product} theme={theme} />
+                <ProductCard04 key={product._id || product.id} product={product} isBestSelling={true} theme={theme} />
               ))}
             </div>
           </div>

@@ -1,14 +1,14 @@
 'use client';
 
 import React, { useState } from 'react';
-import Design02FilterSidebar from './FilterSidebar';
+import FilterSidebar from './FilterSidebar';
 
 interface FilterDrawerProps {
   categoryId: string;
   availableBrands?: string[];
 }
 
-export default function Design02FilterDrawer({ categoryId, availableBrands = [] }: FilterDrawerProps) {
+export default function FilterDrawer({ categoryId, availableBrands = [] }: FilterDrawerProps) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -60,7 +60,7 @@ export default function Design02FilterDrawer({ categoryId, availableBrands = [] 
         
         {/* We reuse the sidebar but hide its own 'Filters' title using CSS via a wrapper class */}
         <div className="p-[3px] [&>div>h3]:hidden">
-          <Design02FilterSidebar categoryId={categoryId} availableBrands={availableBrands} />
+          <FilterSidebar categoryId={categoryId} availableBrands={availableBrands} />
         </div>
       </div>
     </>

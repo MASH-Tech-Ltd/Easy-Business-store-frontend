@@ -5,10 +5,11 @@ import ProductCardActions03 from './ProductCardActions';
 interface ProductProps {
   product: any;
   isList?: boolean;
+  isBestSelling?: boolean;
   theme?: any;
 }
 
-export default function Design03ProductCard({ product, isList = false, theme }: ProductProps) {
+export default function Design03ProductCard({ product, isList = false, isBestSelling = false, theme }: ProductProps) {
   const imageUrl = product.images?.[0]?.secure_url || product.image?.secure_url || product.image;
   const price = product.discountedPrice || product.originalPrice || product.price;
   const hasDiscount = product.originalPrice > (product.discountedPrice || 0);
@@ -21,6 +22,11 @@ export default function Design03ProductCard({ product, isList = false, theme }: 
             <img src={imageUrl} alt={product.title || product.name} className="w-full h-full object-contain mix-blend-luminosity group-hover:mix-blend-normal transition-all duration-300" />
           ) : (
             <div className="w-full h-full flex items-center justify-center text-gray-600 text-xs font-mono uppercase tracking-widest">No Signal</div>
+          )}
+          {(isBestSelling && product.salesCount && product.salesCount > 30) && (
+            <div className="absolute top-0 right-0 bg-amber-500 text-black px-2 py-1 text-[10px] font-black uppercase tracking-widest z-10">
+              🔥 {product.salesCount}+ SOLD
+            </div>
           )}
           {hasDiscount && (
             <div className="absolute top-0 left-0 bg-cyan-400 text-black px-2 py-1 text-[10px] font-black uppercase tracking-widest">
@@ -61,6 +67,12 @@ export default function Design03ProductCard({ product, isList = false, theme }: 
             </div>
           )}
           
+          {(isBestSelling && product.salesCount && product.salesCount > 30) && (
+            <div className="absolute top-4 right-0 bg-amber-500 text-black px-3 py-1 text-[10px] font-black uppercase tracking-widest z-10">
+              🔥 {product.salesCount}+ SOLD
+            </div>
+          )}
+          
           {/* Tech crosshairs */}
           <div className="absolute top-2 left-2 w-2 h-2 border-t border-l border-white/30" />
           <div className="absolute top-2 right-2 w-2 h-2 border-t border-r border-white/30" />
@@ -82,7 +94,7 @@ export default function Design03ProductCard({ product, isList = false, theme }: 
       </Link>
       
       {/* Brutalist hover actions block */}
-      <div className="absolute top-0 left-0 w-full h-full pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity z-10">
+      <div className="absolute top-0 left-0 w-full h-full pointer-events-none opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity z-10">
          <div className="absolute bottom-0 left-0 w-full p-4 pointer-events-auto">
             <ProductCardActions03 product={product} theme={theme} />
          </div>

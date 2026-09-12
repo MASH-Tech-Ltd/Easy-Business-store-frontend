@@ -6,12 +6,13 @@ import SortSelect from './components/ui/SortSelect';
 import ViewToggle from './components/ui/ViewToggle';
 import Pagination from './components/ui/Pagination';
 import ProductCard from './components/ui/ProductCard';
+import FilterDrawer from './components/ui/FilterDrawer';
 import Header from './components/layout/Header';
 import Footer from './components/layout/Footer';
 
 async function getStoreInfo(tenantSlug: string) {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/info`, { next: { revalidate: 60 } });
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/info`, { next: { revalidate: 10 } });
     if (!res.ok) return null;
     const json = await res.json();
     return json.data;
@@ -161,9 +162,14 @@ export default async function CategoryPage({ params, searchParams }: any) {
       <main className="max-w-[1400px] mx-auto px-6 py-12 flex-1 w-full grid grid-cols-1 md:grid-cols-[280px_1fr] gap-8">
         
         {/* Sidebar */}
-        <aside>
+        <aside className="hidden md:block">
           <FilterSidebar categoryId={categoryId} availableBrands={availableBrands} />
         </aside>
+
+        {/* Mobile Filter Drawer Toggle */}
+        <div className="md:hidden">
+          <FilterDrawer categoryId={categoryId} availableBrands={availableBrands} />
+        </div>
 
         {/* Product Grid */}
         <section className="flex flex-col h-full">

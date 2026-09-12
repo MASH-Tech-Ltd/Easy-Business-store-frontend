@@ -45,31 +45,31 @@ export default function CartClient03() {
         {/* Cart Items */}
         <div className="flex-1 lg:border-r border-white/10 bg-[#050505]">
           {cartItems.map((item) => (
-            <div key={item.id} className="flex flex-col sm:flex-row items-center border-b border-white/10 last:border-b-0 p-6 md:p-8 hover:bg-[#0a0a0a] transition-colors group">
-              <div className="w-full sm:w-32 aspect-square bg-[#111] overflow-hidden shrink-0 border border-white/10 mb-6 sm:mb-0 sm:mr-8 p-4 relative flex items-center justify-center">
+            <div key={item.id} className="flex flex-row items-center border-b border-white/10 last:border-b-0 p-4 md:p-8 hover:bg-[#0a0a0a] transition-colors group gap-4 sm:gap-8">
+              <div className="w-20 h-20 sm:w-32 sm:h-32 bg-[#111] overflow-hidden shrink-0 border border-white/10 p-2 sm:p-4 relative flex items-center justify-center">
                 {item.image ? (
                   <img src={item.image} alt={item.title} className="w-full h-full object-contain mix-blend-luminosity group-hover:mix-blend-normal transition-all" />
                 ) : (
-                  <div className="text-[10px] text-gray-600 font-mono">NO IMG</div>
+                  <div className="text-[8px] sm:text-[10px] text-gray-600 font-mono">NO IMG</div>
                 )}
               </div>
-              <div className="flex-1 min-w-0 w-full mb-6 sm:mb-0">
-                <div className="text-[10px] text-gray-500 font-mono mb-1 uppercase tracking-widest">ID: {item.id.substring(0,8)}</div>
-                <h4 className="text-xl font-black uppercase tracking-tighter text-white mb-2">{item.title}</h4>
-                <p className="text-2xl font-black text-cyan-400 tracking-tighter">৳{(item.price * item.quantity).toLocaleString()}</p>
+              <div className="flex-1 min-w-0 w-full">
+                <div className="text-[8px] sm:text-[10px] text-gray-500 font-mono mb-1 uppercase tracking-widest">ID: {item.id.substring(0,8)}</div>
+                <h4 className="text-sm sm:text-xl font-black uppercase tracking-tighter text-white mb-1 sm:mb-2 line-clamp-2">{item.title}</h4>
+                <p className="text-lg sm:text-2xl font-black text-cyan-400 tracking-tighter">৳{(item.price * item.quantity).toLocaleString()}</p>
               </div>
-              <div className="flex items-center gap-6 w-full sm:w-auto justify-between sm:justify-end">
+              <div className="flex flex-col sm:flex-row items-end sm:items-center gap-2 sm:gap-6 shrink-0">
                 <div className="flex items-center border border-white/20 bg-black">
-                  <button onClick={() => updateQuantity(item.id, item.quantity - 1)} className="w-10 h-10 flex items-center justify-center text-gray-400 hover:text-white hover:bg-white/10 transition-colors">
-                    <Minus className="w-4 h-4" />
+                  <button onClick={() => updateQuantity(item.id, item.quantity - 1)} className="w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center text-gray-400 hover:text-white hover:bg-white/10 transition-colors">
+                    <Minus className="w-3 h-3 sm:w-4 sm:h-4" />
                   </button>
-                  <span className="w-10 text-center text-sm font-mono font-bold text-white">{item.quantity}</span>
-                  <button onClick={() => updateQuantity(item.id, item.quantity + 1)} className="w-10 h-10 flex items-center justify-center text-gray-400 hover:text-white hover:bg-white/10 transition-colors">
-                    <Plus className="w-4 h-4" />
+                  <span className="w-8 sm:w-10 text-center text-xs sm:text-sm font-mono font-bold text-white">{item.quantity}</span>
+                  <button onClick={() => updateQuantity(item.id, item.quantity + 1)} className="w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center text-gray-400 hover:text-white hover:bg-white/10 transition-colors">
+                    <Plus className="w-3 h-3 sm:w-4 sm:h-4" />
                   </button>
                 </div>
-                <button onClick={() => removeFromCart(item.id)} className="w-10 h-10 flex items-center justify-center text-gray-600 hover:text-red-500 transition-colors border border-transparent hover:border-red-500/30 hover:bg-red-500/10">
-                  <Trash2 className="w-5 h-5" />
+                <button onClick={() => removeFromCart(item.id)} className="w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center text-gray-600 hover:text-red-500 transition-colors border border-transparent hover:border-red-500/30 hover:bg-red-500/10">
+                  <Trash2 className="w-4 h-4 sm:w-5 sm:h-5" />
                 </button>
               </div>
             </div>

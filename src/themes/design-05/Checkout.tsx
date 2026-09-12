@@ -19,7 +19,7 @@ export default async function Checkout05() {
   return (
     <div className="min-h-screen bg-white font-sans flex flex-col">
       <Header05 storeInfo={storeInfo} />
-      <CheckoutClient05 theme={theme} />
+      <CheckoutClient05 theme={theme} storeInfo={storeInfo} />
       <Footer05 storeInfo={storeInfo} theme={theme} />
     </div>
   );

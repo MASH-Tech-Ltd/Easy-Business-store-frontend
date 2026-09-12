@@ -5,30 +5,57 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { CheckCircle2 } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
+import { bdLocations } from '@/data/locations';
+import { z } from 'zod';
+
+const checkoutSchema = z.object({
+  phone: z.string().regex(/^(?:\+88|88)?01[3-9]\d{8}$/, { message: "Please enter a valid BD phone number (e.g. 01712345678)" }),
+  fullName: z.string().min(3, { message: "Full name must be at least 3 characters long" }),
+  address: z.string().min(5, { message: "Please provide a detailed address" }),
+  division: z.string().min(1, { message: "Please select a division" }),
+  district: z.string().min(1, { message: "Please select a district" }),
+  upazila: z.string().min(1, { message: "Please select a subdistrict/thana" }),
+});
 
 export default function CheckoutClient04({ storeInfo }: { storeInfo?: any }) {
   const { cartItems, totalItems, totalPrice, clearCart } = useCart();
   const [status, setStatus] = useState<'idle' | 'processing' | 'success'>('idle');
+  const [orderId, setOrderId] = useState<string | null>(null);
   const router = useRouter();
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string[]>>({});
   
   const [phone, setPhone] = useState('');
   const [fullName, setFullName] = useState('');
   const [address, setAddress] = useState('');
-  const [division, setDivision] = useState('');
+  const [division, setDivision] = useState('Dhaka');
+  const [district, setDistrict] = useState('');
+  const [upazila, setUpazila] = useState('');
+
+  const divisionsList = bdLocations.map((d) => d.division);
+  const districtsList = bdLocations.find((d) => d.division === division)?.districts || [];
+  const upazilasList = districtsList.find((d) => d.district === district)?.upazilas || [];
 
   const deliveryCharge = 120;
   const grandTotal = totalPrice > 0 ? totalPrice + deliveryCharge : 0;
 
   const handleCheckout = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    const result = checkoutSchema.safeParse({ phone, fullName, address, division, district, upazila });
+    if (!result.success) {
+      setFieldErrors(result.error.flatten().fieldErrors as Record<string, string[]>);
+      return;
+    }
+    setFieldErrors({});
+
     setStatus('processing');
     try {
       const payload = {
         customerName: fullName,
         customerPhone: phone,
-        shippingAddress: `${address}, ${division}`,
+        shippingAddress: `${address}, ${upazila}, ${district}, ${division}`,
         items: cartItems.map(item => ({
-          productId: item.id,
+          productId: item.id || (item as any)._id,
           title: item.title,
           price: item.price,
           quantity: item.quantity,
@@ -47,10 +74,15 @@ export default function CheckoutClient04({ storeInfo }: { storeInfo?: any }) {
         body: JSON.stringify(payload)
       });
 
-      if (!res.ok) throw new Error("Checkout failed");
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || "Checkout failed");
+      
+      if (data?.data) {
+        setOrderId(data.data.orderId);
+      }
+      
       setStatus('success');
       clearCart();
-      setTimeout(() => router.push('/'), 3000);
     } catch {
       setStatus('idle');
       alert("Something went wrong during checkout.");
@@ -66,9 +98,24 @@ export default function CheckoutClient04({ storeInfo }: { storeInfo?: any }) {
           </div>
           <h1 className="text-3xl font-black text-gray-900 mb-4 tracking-tight">Order Confirmed!</h1>
           <p className="text-gray-500 mb-8 font-medium">Thank you for your purchase. We will process your order soon.</p>
-          <Link href="/" className="block w-full bg-gray-900 hover:bg-gray-700 transition-colors text-white font-bold py-4 px-8 rounded-full shadow-sm">
-            Continue Shopping
-          </Link>
+          
+          {orderId && (
+            <div className="bg-gray-50 rounded-full py-3 px-6 mb-8 inline-block border border-gray-200">
+              <p className="text-[10px] text-gray-500 uppercase tracking-widest mb-0.5">Order Number</p>
+              <p className="font-mono text-gray-900 font-bold">#{orderId}</p>
+            </div>
+          )}
+
+          <div className="space-y-3">
+            {orderId && (
+              <Link href={`/track-order?id=${orderId}`} className="block w-full bg-black hover:bg-gray-800 transition-colors text-white font-bold py-4 px-8 rounded-full shadow-sm">
+                Track Order
+              </Link>
+            )}
+            <Link href="/" className="block w-full bg-gray-100 hover:bg-gray-200 transition-colors text-gray-900 font-bold py-4 px-8 rounded-full shadow-sm">
+              Continue Shopping
+            </Link>
+          </div>
         </div>
       </div>
     );
@@ -85,17 +132,45 @@ export default function CheckoutClient04({ storeInfo }: { storeInfo?: any }) {
               <form id="checkout-form" onSubmit={handleCheckout} className="space-y-8">
                 <div>
                   <h2 className="text-sm font-bold text-gray-900 uppercase tracking-wider mb-4">Contact</h2>
-                  <input required type="tel" value={phone} onChange={e => setPhone(e.target.value)} placeholder="Phone Number" className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900" />
+                  <input type="tel" value={phone} onChange={e => { setPhone(e.target.value); if (fieldErrors.phone) setFieldErrors(prev => ({ ...prev, phone: [] })) }} placeholder="Phone Number" className={`w-full bg-gray-50 border ${fieldErrors.phone?.length ? 'border-red-500' : 'border-gray-200'} rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900`} />
+                  {fieldErrors.phone?.[0] && <p className="text-xs text-red-500 mt-1">{fieldErrors.phone[0]}</p>}
                 </div>
                 <div>
                   <h2 className="text-sm font-bold text-gray-900 uppercase tracking-wider mb-4">Shipping Address</h2>
                   <div className="space-y-4">
-                    <input required type="text" value={fullName} onChange={e => setFullName(e.target.value)} placeholder="Full Name" className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900" />
-                    <input required type="text" value={address} onChange={e => setAddress(e.target.value)} placeholder="Street Address" className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900" />
-                    <select required value={division} onChange={e => setDivision(e.target.value)} className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900 appearance-none">
-                      <option value="" disabled>Select Division</option>
-                      {['Dhaka', 'Chattogram', 'Khulna', 'Rajshahi', 'Sylhet', 'Barishal', 'Rangpur', 'Mymensingh'].map(d => <option key={d} value={d}>{d}</option>)}
-                    </select>
+                    <div>
+                      <input type="text" value={fullName} onChange={e => { setFullName(e.target.value); if (fieldErrors.fullName) setFieldErrors(prev => ({ ...prev, fullName: [] })) }} placeholder="Full Name" className={`w-full bg-gray-50 border ${fieldErrors.fullName?.length ? 'border-red-500' : 'border-gray-200'} rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900`} />
+                      {fieldErrors.fullName?.[0] && <p className="text-xs text-red-500 mt-1">{fieldErrors.fullName[0]}</p>}
+                    </div>
+                    <div>
+                      <input type="text" value={address} onChange={e => { setAddress(e.target.value); if (fieldErrors.address) setFieldErrors(prev => ({ ...prev, address: [] })) }} placeholder="Street Address" className={`w-full bg-gray-50 border ${fieldErrors.address?.length ? 'border-red-500' : 'border-gray-200'} rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900`} />
+                      {fieldErrors.address?.[0] && <p className="text-xs text-red-500 mt-1">{fieldErrors.address[0]}</p>}
+                    </div>
+                    <div>
+                      <select value={division} onChange={e => { setDivision(e.target.value); setDistrict(''); setUpazila(''); if (fieldErrors.division) setFieldErrors(prev => ({ ...prev, division: [] })) }} className={`w-full bg-gray-50 border ${fieldErrors.division?.length ? 'border-red-500' : 'border-gray-200'} rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900 appearance-none`}>
+                        <option value="" disabled>Select Division</option>
+                        {divisionsList.map(d => <option key={d} value={d}>{d}</option>)}
+                      </select>
+                      {fieldErrors.division?.[0] && <p className="text-xs text-red-500 mt-1">{fieldErrors.division[0]}</p>}
+                    </div>
+                    {division && (
+                      <div>
+                        <select value={district} onChange={e => { setDistrict(e.target.value); setUpazila(''); if (fieldErrors.district) setFieldErrors(prev => ({ ...prev, district: [] })) }} className={`w-full bg-gray-50 border ${fieldErrors.district?.length ? 'border-red-500' : 'border-gray-200'} rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900 appearance-none`}>
+                          <option value="" disabled>Select District</option>
+                          {districtsList.map(d => <option key={d.district} value={d.district}>{d.district}</option>)}
+                        </select>
+                        {fieldErrors.district?.[0] && <p className="text-xs text-red-500 mt-1">{fieldErrors.district[0]}</p>}
+                      </div>
+                    )}
+                    {district && (
+                      <div>
+                        <select value={upazila} onChange={e => { setUpazila(e.target.value); if (fieldErrors.upazila) setFieldErrors(prev => ({ ...prev, upazila: [] })) }} className={`w-full bg-gray-50 border ${fieldErrors.upazila?.length ? 'border-red-500' : 'border-gray-200'} rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900 appearance-none`}>
+                          <option value="" disabled>Select Subdistrict / Thana</option>
+                          {upazilasList.map(u => <option key={u} value={u}>{u}</option>)}
+                        </select>
+                        {fieldErrors.upazila?.[0] && <p className="text-xs text-red-500 mt-1">{fieldErrors.upazila[0]}</p>}
+                      </div>
+                    )}
                   </div>
                 </div>
                 <div>

@@ -24,30 +24,37 @@ export default async function Header04({ storeInfo }: { storeInfo?: any }) {
         Free shipping on orders over ৳999 &nbsp;|&nbsp; <Link href="/products" className="hover:underline">All Products</Link>
       </div>
 
-      <div className="max-w-[1400px] mx-auto px-4 sm:px-6 py-4 flex items-center justify-between gap-6">
-        {/* Logo */}
-        <Link href="/" className="flex items-center gap-3 shrink-0">
-          {info?.logo ? (
-            <img src={info.logo} alt={info?.name || 'Store'} className="w-10 h-10 rounded-full object-contain border border-gray-100" />
-          ) : null}
-          <h1 className="text-xl font-black tracking-tight text-gray-900 uppercase">
-            {info?.name || tenantSlug}
-          </h1>
-        </Link>
+      <div className="max-w-[1400px] mx-auto px-4 sm:px-6 py-4 flex flex-col gap-4">
+        <div className="flex items-center justify-between gap-6">
+          {/* Logo */}
+          <Link href="/" className="flex items-center gap-3 shrink-0">
+            {info?.logo ? (
+              <img src={info.logo} alt={info?.name || 'Store'} className="w-10 h-10 rounded-full object-contain border border-gray-100" />
+            ) : null}
+            <h1 className="text-xl font-black tracking-tight text-gray-900 uppercase">
+              {info?.name || tenantSlug}
+            </h1>
+          </Link>
 
-        {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center gap-8 text-sm font-semibold text-gray-600">
-          <Link href="/" className="hover:text-gray-900 transition-colors">Home</Link>
-          <Link href="/products" className="hover:text-gray-900 transition-colors">All Products</Link>
-          <Link href="/cart" className="hover:text-gray-900 transition-colors">Cart</Link>
-        </nav>
+          {/* Desktop Navigation */}
+          <nav className="hidden md:flex items-center gap-8 text-sm font-semibold text-gray-600">
+            <Link href="/" className="hover:text-gray-900 transition-colors">Home</Link>
+            <Link href="/products" className="hover:text-gray-900 transition-colors">All Products</Link>
+            <Link href="/cart" className="hover:text-gray-900 transition-colors">Cart</Link>
+          </nav>
 
-        {/* Search + Cart */}
-        <div className="flex items-center gap-4">
-          <div className="hidden sm:block w-56 lg:w-72">
-            <GlobalSearch04 tenantSlug={tenantSlug} />
+          {/* Search + Cart */}
+          <div className="flex items-center gap-4">
+            <div className="hidden sm:block w-56 lg:w-72">
+              <GlobalSearch04 tenantSlug={tenantSlug} />
+            </div>
+            <HeaderCartIcon04 />
           </div>
-          <HeaderCartIcon04 />
+        </div>
+        
+        {/* Mobile Search */}
+        <div className="block sm:hidden w-full">
+          <GlobalSearch04 tenantSlug={tenantSlug} />
         </div>
       </div>
     </header>

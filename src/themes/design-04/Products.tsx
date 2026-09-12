@@ -7,6 +7,7 @@ import Pagination04 from './components/ui/Pagination';
 import ProductCard04 from './components/ui/ProductCard';
 import Header04 from './components/layout/Header';
 import Footer04 from './components/layout/Footer';
+import FilterDrawer from './components/ui/FilterDrawer';
 
 async function getStoreInfo(tenantSlug: string) {
   try {
@@ -87,9 +88,13 @@ export default async function ProductsPage04({ searchParams }: any) {
         )}
 
         <div className="flex flex-col md:flex-row gap-10">
-          <aside className="w-full md:w-[280px] shrink-0">
+          <aside className="hidden md:block w-[280px] shrink-0">
             <FilterSidebar04 availableBrands={availableBrands} />
           </aside>
+
+          <div className="md:hidden">
+            <FilterDrawer categoryId="" availableBrands={availableBrands} />
+          </div>
 
         <section className="flex-1">
           <div className="flex flex-col sm:flex-row justify-between items-center bg-white p-4 rounded-2xl border border-gray-100 shadow-sm mb-6 gap-4">

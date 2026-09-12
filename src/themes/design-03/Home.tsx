@@ -87,7 +87,7 @@ export default async function Design03Home({ tenantSlug }: { tenantSlug: string 
 
         {/* Categories Grid */}
         <section className="border-b border-white/10 bg-[#050505]">
-          <div className="grid grid-cols-1 md:grid-cols-3">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-2 sm:gap-4">
             <div className="p-8 md:p-12 md:col-span-3 border-b border-white/10 flex justify-between items-end">
               <div>
                 <h3 className="text-sm text-cyan-400 font-mono mb-2 uppercase tracking-widest">Database</h3>
@@ -129,10 +129,10 @@ export default async function Design03Home({ tenantSlug }: { tenantSlug: string 
             <h3 className="text-sm text-cyan-400 font-mono mb-2 uppercase tracking-widest">Top Tier</h3>
             <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tighter">Bestselling</h2>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-0">
             {bestsellers.map((product: any, index: number) => (
               <div key={product._id || product.id} className={`border-b sm:border-r border-white/10 ${index % 4 === 3 ? 'lg:border-r-0' : ''}`}>
-                <Design03ProductCard product={product} theme={theme} />
+                <Design03ProductCard product={product} isBestSelling={true} theme={theme} />
               </div>
             ))}
           </div>

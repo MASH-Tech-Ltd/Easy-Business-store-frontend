@@ -5,27 +5,103 @@ import { useCart } from '@/context/CartContext';
 import Link from 'next/link';
 import { Check, ShieldCheck, ChevronRight } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import { bdLocations } from '@/data/locations';
+import { z } from 'zod';
 
-export default function CheckoutClient05({ theme }: { theme?: any }) {
-  const { cartItems: items, totalPrice: subtotal, clearCart } = useCart();
+const checkoutSchema = z.object({
+  email: z.string().email({ message: "Please enter a valid email address" }).optional().or(z.literal('')),
+  phone: z.string().regex(/^(?:\+88|88)?01[3-9]\d{8}$/, { message: "Please enter a valid BD phone number (e.g. 01712345678)" }),
+  firstName: z.string().min(2, { message: "First name must be at least 2 characters long" }),
+  lastName: z.string().min(2, { message: "Last name must be at least 2 characters long" }),
+  address: z.string().min(5, { message: "Please provide a detailed address" }),
+  division: z.string().min(1, { message: "Please select a division" }),
+  district: z.string().min(1, { message: "Please select a district" }),
+  upazila: z.string().min(1, { message: "Please select a subdistrict/thana" }),
+});
+
+export default function CheckoutClient05({ theme, storeInfo }: { theme?: any; storeInfo?: any }) {
+  const { cartItems: items, totalPrice: subtotal, clearCart, isInitialized } = useCart();
   const router = useRouter();
   const [isProcessing, setIsProcessing] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [orderId, setOrderId] = useState<string | null>(null);
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string[]>>({});
+
+  const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [address, setAddress] = useState('');
+  const [division, setDivision] = useState('Dhaka');
+  const [district, setDistrict] = useState('');
+  const [upazila, setUpazila] = useState('');
+  
+  const divisionsList = bdLocations.map((d) => d.division);
+  const districtsList = bdLocations.find((d) => d.division === division)?.districts || [];
+  const upazilasList = districtsList.find((d) => d.district === district)?.upazilas || [];
 
   const shippingEstimate = items.length > 0 ? 60 : 0;
   const taxEstimate = subtotal * 0.15;
   const total = subtotal + shippingEstimate + taxEstimate;
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    
+    const result = checkoutSchema.safeParse({ email, phone, firstName, lastName, address, division, district, upazila });
+    if (!result.success) {
+      setFieldErrors(result.error.flatten().fieldErrors as Record<string, string[]>);
+      return;
+    }
+    setFieldErrors({});
+
     setIsProcessing(true);
-    // Simulate API call
-    setTimeout(() => {
+    try {
+      const payload = {
+        customerName: `${firstName} ${lastName}`.trim(),
+        customerPhone: phone,
+        shippingAddress: `${address}, ${upazila}, ${district}, ${division}`,
+        items: items.map(item => ({
+          productId: item.id,
+          title: item.title,
+          price: item.price,
+          quantity: item.quantity,
+          image: item.image || (item as any).images?.[0]?.secure_url
+        })),
+        tenantId: storeInfo?._id,
+        subTotal: subtotal,
+        shippingCharge: shippingEstimate,
+        totalPrice: total,
+        paymentStatus: 'unpaid'
+      };
+
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/orders/create-order`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || "Checkout failed");
+      
+      if (data?.data) {
+        setOrderId(data.data.orderId);
+      }
+      
       setIsProcessing(false);
       setIsSuccess(true);
       clearCart();
-    }, 1500);
+    } catch (error) {
+      console.error(error);
+      setIsProcessing(false);
+      alert("Something went wrong during checkout. Please try again.");
+    }
   };
+
+  React.useEffect(() => {
+    if (isInitialized && items.length === 0 && !isSuccess) {
+      router.push('/cart');
+    }
+  }, [items.length, isSuccess, router, isInitialized]);
 
   if (isSuccess) {
     return (
@@ -34,20 +110,35 @@ export default function CheckoutClient05({ theme }: { theme?: any }) {
           <Check className="w-10 h-10 text-green-500" strokeWidth={3} />
         </div>
         <h1 className="text-3xl font-bold text-gray-900 mb-4 tracking-tight">Order Confirmed</h1>
-        <p className="text-gray-500 max-w-md mx-auto mb-10 leading-relaxed">
+        <p className="text-gray-500 max-w-md mx-auto mb-8 leading-relaxed">
           Thank you for your purchase. We've received your order and will email you the confirmation details shortly.
         </p>
-        <Link href="/" 
-          style={theme?.primaryColor ? { backgroundColor: theme.primaryColor } : {}}
-          className="bg-black text-white px-8 py-4 rounded-full font-semibold hover:bg-gray-800 transition-colors">
-          Return to Store
-        </Link>
+
+          {orderId && (
+            <div className="bg-gray-50 rounded-xl py-4 px-6 mb-10 inline-block border border-gray-200">
+              <p className="text-xs text-gray-500 uppercase tracking-widest mb-1 font-bold text-center">Order Number</p>
+              <p className="font-mono text-gray-900 font-bold text-center text-lg">#{orderId}</p>
+            </div>
+          )}
+
+        <div className="flex flex-col sm:flex-row gap-4 justify-center w-full max-w-md">
+          {orderId && (
+            <Link href={`/track-order?id=${orderId}`} 
+              className="bg-white text-gray-900 border border-gray-200 px-8 py-4 rounded-full font-semibold hover:bg-gray-50 transition-colors w-full sm:w-auto">
+              Track Order
+            </Link>
+          )}
+          <Link href="/" 
+            style={theme?.primaryColor ? { backgroundColor: theme.primaryColor } : {}}
+            className="bg-black text-white px-8 py-4 rounded-full font-semibold hover:bg-gray-800 transition-colors w-full sm:w-auto">
+            Return to Store
+          </Link>
+        </div>
       </div>
     );
   }
 
-  if (items.length === 0) {
-    router.push('/cart');
+  if (!isInitialized || (items.length === 0 && !isSuccess)) {
     return null;
   }
 
@@ -64,11 +155,13 @@ export default function CheckoutClient05({ theme }: { theme?: any }) {
               <div className="space-y-4">
                 <div>
                   <label className="block text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-2">Email Address</label>
-                  <input type="email" required className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3.5 text-sm focus:outline-none focus:border-black focus:ring-1 focus:ring-black transition-all shadow-sm placeholder:text-gray-300" placeholder="hello@example.com" />
+                  <input type="email" value={email} onChange={e => { setEmail(e.target.value); if (fieldErrors.email) setFieldErrors(prev => ({ ...prev, email: [] })) }} className={`w-full bg-white border ${fieldErrors.email?.length ? 'border-red-500' : 'border-gray-200'} rounded-xl px-4 py-3.5 text-sm focus:outline-none focus:border-black focus:ring-1 focus:ring-black transition-all shadow-sm placeholder:text-gray-300`} placeholder="hello@example.com" />
+                  {fieldErrors.email?.[0] && <p className="text-xs text-red-500 mt-2 font-medium">{fieldErrors.email[0]}</p>}
                 </div>
                 <div>
                   <label className="block text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-2">Phone Number</label>
-                  <input type="tel" required className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3.5 text-sm focus:outline-none focus:border-black focus:ring-1 focus:ring-black transition-all shadow-sm placeholder:text-gray-300" placeholder="+880 1XXXXXXXXX" />
+                  <input type="tel" value={phone} onChange={e => { setPhone(e.target.value); if (fieldErrors.phone) setFieldErrors(prev => ({ ...prev, phone: [] })) }} className={`w-full bg-white border ${fieldErrors.phone?.length ? 'border-red-500' : 'border-gray-200'} rounded-xl px-4 py-3.5 text-sm focus:outline-none focus:border-black focus:ring-1 focus:ring-black transition-all shadow-sm placeholder:text-gray-300`} placeholder="+880 1XXXXXXXXX" />
+                  {fieldErrors.phone?.[0] && <p className="text-xs text-red-500 mt-2 font-medium">{fieldErrors.phone[0]}</p>}
                 </div>
               </div>
             </section>
@@ -78,24 +171,53 @@ export default function CheckoutClient05({ theme }: { theme?: any }) {
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-2">First Name</label>
-                  <input type="text" required className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3.5 text-sm focus:outline-none focus:border-black focus:ring-1 focus:ring-black transition-all shadow-sm" />
+                  <input type="text" value={firstName} onChange={e => { setFirstName(e.target.value); if (fieldErrors.firstName) setFieldErrors(prev => ({ ...prev, firstName: [] })) }} className={`w-full bg-white border ${fieldErrors.firstName?.length ? 'border-red-500' : 'border-gray-200'} rounded-xl px-4 py-3.5 text-sm focus:outline-none focus:border-black focus:ring-1 focus:ring-black transition-all shadow-sm`} />
+                  {fieldErrors.firstName?.[0] && <p className="text-xs text-red-500 mt-2 font-medium">{fieldErrors.firstName[0]}</p>}
                 </div>
                 <div>
                   <label className="block text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-2">Last Name</label>
-                  <input type="text" required className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3.5 text-sm focus:outline-none focus:border-black focus:ring-1 focus:ring-black transition-all shadow-sm" />
+                  <input type="text" value={lastName} onChange={e => { setLastName(e.target.value); if (fieldErrors.lastName) setFieldErrors(prev => ({ ...prev, lastName: [] })) }} className={`w-full bg-white border ${fieldErrors.lastName?.length ? 'border-red-500' : 'border-gray-200'} rounded-xl px-4 py-3.5 text-sm focus:outline-none focus:border-black focus:ring-1 focus:ring-black transition-all shadow-sm`} />
+                  {fieldErrors.lastName?.[0] && <p className="text-xs text-red-500 mt-2 font-medium">{fieldErrors.lastName[0]}</p>}
                 </div>
                 <div className="col-span-2">
                   <label className="block text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-2">Street Address</label>
-                  <input type="text" required className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3.5 text-sm focus:outline-none focus:border-black focus:ring-1 focus:ring-black transition-all shadow-sm" />
+                  <input type="text" value={address} onChange={e => { setAddress(e.target.value); if (fieldErrors.address) setFieldErrors(prev => ({ ...prev, address: [] })) }} className={`w-full bg-white border ${fieldErrors.address?.length ? 'border-red-500' : 'border-gray-200'} rounded-xl px-4 py-3.5 text-sm focus:outline-none focus:border-black focus:ring-1 focus:ring-black transition-all shadow-sm`} />
+                  {fieldErrors.address?.[0] && <p className="text-xs text-red-500 mt-2 font-medium">{fieldErrors.address[0]}</p>}
                 </div>
-                <div>
-                  <label className="block text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-2">City</label>
-                  <input type="text" required className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3.5 text-sm focus:outline-none focus:border-black focus:ring-1 focus:ring-black transition-all shadow-sm" />
+                <div className="col-span-2">
+                  <label className="block text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-2">Division</label>
+                  <select value={division} onChange={(e) => { setDivision(e.target.value); setDistrict(''); setUpazila(''); if (fieldErrors.division) setFieldErrors(prev => ({ ...prev, division: [] })) }} className={`w-full bg-white border ${fieldErrors.division?.length ? 'border-red-500' : 'border-gray-200'} rounded-xl px-4 py-3.5 text-sm focus:outline-none focus:border-black focus:ring-1 focus:ring-black transition-all shadow-sm appearance-none`}>
+                    <option value="" disabled>Select Division</option>
+                    {divisionsList.map(d => (
+                      <option key={d} value={d}>{d}</option>
+                    ))}
+                  </select>
+                  {fieldErrors.division?.[0] && <p className="text-xs text-red-500 mt-2 font-medium">{fieldErrors.division[0]}</p>}
                 </div>
-                <div>
-                  <label className="block text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-2">Postal Code</label>
-                  <input type="text" required className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3.5 text-sm focus:outline-none focus:border-black focus:ring-1 focus:ring-black transition-all shadow-sm" />
-                </div>
+                {division && (
+                  <div className="col-span-2 sm:col-span-1">
+                    <label className="block text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-2">District</label>
+                    <select value={district} onChange={(e) => { setDistrict(e.target.value); setUpazila(''); if (fieldErrors.district) setFieldErrors(prev => ({ ...prev, district: [] })) }} className={`w-full bg-white border ${fieldErrors.district?.length ? 'border-red-500' : 'border-gray-200'} rounded-xl px-4 py-3.5 text-sm focus:outline-none focus:border-black focus:ring-1 focus:ring-black transition-all shadow-sm appearance-none`}>
+                      <option value="" disabled>Select District</option>
+                      {districtsList.map(d => (
+                        <option key={d.district} value={d.district}>{d.district}</option>
+                      ))}
+                    </select>
+                    {fieldErrors.district?.[0] && <p className="text-xs text-red-500 mt-2 font-medium">{fieldErrors.district[0]}</p>}
+                  </div>
+                )}
+                {district && (
+                  <div className="col-span-2 sm:col-span-1">
+                    <label className="block text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-2">Subdistrict / Thana</label>
+                    <select value={upazila} onChange={(e) => { setUpazila(e.target.value); if (fieldErrors.upazila) setFieldErrors(prev => ({ ...prev, upazila: [] })) }} className={`w-full bg-white border ${fieldErrors.upazila?.length ? 'border-red-500' : 'border-gray-200'} rounded-xl px-4 py-3.5 text-sm focus:outline-none focus:border-black focus:ring-1 focus:ring-black transition-all shadow-sm appearance-none`}>
+                      <option value="" disabled>Select Subdistrict</option>
+                      {upazilasList.map(u => (
+                        <option key={u} value={u}>{u}</option>
+                      ))}
+                    </select>
+                    {fieldErrors.upazila?.[0] && <p className="text-xs text-red-500 mt-2 font-medium">{fieldErrors.upazila[0]}</p>}
+                  </div>
+                )}
               </div>
             </section>
 

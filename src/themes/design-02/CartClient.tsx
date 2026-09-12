@@ -37,36 +37,36 @@ export default function Design02CartClient() {
               </h2>
               <div className="divide-y divide-gray-100 border-t border-gray-100">
                 {cartItems.map((item) => (
-                  <div key={item.id} className="py-8 flex flex-col sm:flex-row items-center gap-8 group">
-                    <div className="w-32 h-32 bg-gray-50 rounded-lg flex items-center justify-center overflow-hidden shrink-0">
+                  <div key={item.id} className="py-6 flex flex-row items-center gap-4 sm:gap-8 group">
+                    <div className="w-16 h-16 sm:w-32 sm:h-32 bg-gray-50 rounded-lg flex items-center justify-center overflow-hidden shrink-0">
                       {item.image ? (
                         <img src={item.image} alt={item.title} className="w-full h-full object-cover mix-blend-multiply" />
                       ) : (
-                        <span className="text-gray-400 text-sm">No Image</span>
+                        <span className="text-gray-400 text-xs sm:text-sm">No Image</span>
                       )}
                     </div>
                     
-                    <div className="flex-1 flex flex-col text-center sm:text-left">
-                      <h3 className="text-lg font-medium text-gray-900 mb-2">{item.title}</h3>
-                      <div className="text-xl font-light text-gray-900">৳{item.price.toLocaleString()}</div>
+                    <div className="flex-1 flex flex-col text-left">
+                      <h3 className="text-sm sm:text-lg font-medium text-gray-900 mb-1 sm:mb-2 line-clamp-2">{item.title}</h3>
+                      <div className="text-sm sm:text-xl font-light text-gray-900">৳{item.price.toLocaleString()}</div>
                     </div>
                     
-                    <div className="flex items-center gap-8 w-full sm:w-auto justify-between sm:justify-end">
+                    <div className="flex flex-col sm:flex-row items-end sm:items-center gap-2 sm:gap-8 justify-end shrink-0">
                       <div className="flex items-center border border-gray-200 rounded">
                         <button 
                           onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                          className="w-10 h-10 flex items-center justify-center text-gray-500 hover:text-gray-900 hover:bg-gray-50 transition-colors"
+                          className="w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center text-gray-500 hover:text-gray-900 hover:bg-gray-50 transition-colors"
                         >
-                          <Minus size={16} />
+                          <Minus size={14} />
                         </button>
-                        <div className="w-12 text-center font-medium text-gray-900 text-sm">
+                        <div className="w-8 sm:w-12 text-center font-medium text-gray-900 text-xs sm:text-sm">
                           {item.quantity}
                         </div>
                         <button 
                           onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                          className="w-10 h-10 flex items-center justify-center text-gray-500 hover:text-gray-900 hover:bg-gray-50 transition-colors"
+                          className="w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center text-gray-500 hover:text-gray-900 hover:bg-gray-50 transition-colors"
                         >
-                          <Plus size={16} />
+                          <Plus size={14} />
                         </button>
                       </div>
                       
@@ -75,7 +75,7 @@ export default function Design02CartClient() {
                         className="text-gray-400 hover:text-gray-900 transition-colors"
                         title="Remove item"
                       >
-                        <Trash2 size={20} />
+                        <Trash2 size={16} className="sm:w-5 sm:h-5" />
                       </button>
                     </div>
                   </div>

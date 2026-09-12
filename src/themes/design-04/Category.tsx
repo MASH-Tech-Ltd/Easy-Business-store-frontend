@@ -2,6 +2,7 @@ import { headers } from 'next/headers';
 import Link from 'next/link';
 import type { Metadata, ResolvingMetadata } from 'next';
 import FilterSidebar04 from './components/ui/FilterSidebar';
+import FilterDrawer from './components/ui/FilterDrawer';
 import SortSelect04 from './components/ui/SortSelect';
 import ViewToggle04 from './components/ui/ViewToggle';
 import Pagination04 from './components/ui/Pagination';
@@ -93,9 +94,13 @@ export default async function CategoryPage04({ params, searchParams }: any) {
       </div>
 
       <main className="max-w-[1400px] mx-auto px-6 py-12 flex-1 w-full flex flex-col md:flex-row gap-10">
-        <aside className="w-full md:w-[280px] shrink-0">
+        <aside className="hidden md:block w-[280px] shrink-0">
           <FilterSidebar04 categoryId={categoryId} availableBrands={availableBrands} />
         </aside>
+
+        <div className="md:hidden">
+          <FilterDrawer categoryId={categoryId} availableBrands={availableBrands} />
+        </div>
 
         <section className="flex-1">
           <div className="flex flex-col sm:flex-row justify-between items-center bg-white p-4 rounded-2xl border border-gray-100 shadow-sm mb-6 gap-4">

@@ -7,33 +7,40 @@ export default function Footer({
   storeInfo: any;
   theme?: any;
 }) {
+  const year = new Date().getFullYear();
+  const footer = theme?.footer || {};
+  const socialLinks = footer.socialLinks || {};
+  const contactInfo = footer.contactInfo || {};
+  const policies = footer.policies || {};
+  const copyrightText =
+    footer.copyrightText ||
+    `© ${year} ${storeInfo?.name || "Minimal Store"}. All rights reserved.`;
+
   return (
     <footer className="py-16 bg-gray-50 text-gray-900 border-t border-gray-100 mt-auto">
       <div className="max-w-7xl mx-auto px-8 grid grid-cols-1 md:grid-cols-4 gap-12">
-        <div className="col-span-1 md:col-span-2">
-          <h2 className="text-2xl font-semibold tracking-tight mb-4">
+        <div className="col-span-1">
+          <h2 className="text-2xl font-semibold tracking-tight mb-4 flex items-center gap-2">
             {storeInfo?.logo ? (
               <img
                 src={storeInfo.logo}
                 alt={storeInfo?.name || "Minimal Store"}
-                className="w-10 h-10 rounded-full object-cover mb-4"
+                className="w-10 h-10 rounded-full object-cover"
               />
             ) : null}
             {storeInfo?.name || "Minimal Store"}
           </h2>
           <p className="text-gray-500 text-sm max-w-sm mb-6">
-            {theme?.footer?.description ||
+            {storeInfo?.description ||
               "Experience the best curated collection of premium products designed for modern living. Quality and simplicity combined."}
           </p>
-          {(theme?.footer?.socialLinks?.facebook ||
-            theme?.footer?.socialLinks?.instagram ||
-            theme?.footer?.socialLinks?.twitter ||
-            theme?.footer?.socialLinks?.youtube ||
-            theme?.footer?.socialLinks?.tiktok) && (
+          {(socialLinks.facebook ||
+            socialLinks.youtube ||
+            socialLinks.tiktok) && (
             <div className="flex gap-4">
-              {theme?.footer?.socialLinks?.facebook && (
+              {socialLinks.facebook && (
                 <a
-                  href={theme.footer.socialLinks.facebook}
+                  href={socialLinks.facebook}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="w-9 h-9 rounded-full flex items-center justify-center text-gray-400 hover:text-white hover:bg-[#1877F2] transition-all"
@@ -52,53 +59,9 @@ export default function Footer({
                   </svg>
                 </a>
               )}
-              {theme?.footer?.socialLinks?.instagram && (
+              {socialLinks.youtube && (
                 <a
-                  href={theme.footer.socialLinks.instagram}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-9 h-9 rounded-full flex items-center justify-center text-gray-400 hover:text-white hover:bg-[#E4405F] transition-all"
-                >
-                  <svg
-                    width="20"
-                    height="20"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
-                    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
-                    <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
-                  </svg>
-                </a>
-              )}
-              {theme?.footer?.socialLinks?.twitter && (
-                <a
-                  href={theme.footer.socialLinks.twitter}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-9 h-9 rounded-full flex items-center justify-center text-gray-400 hover:text-white hover:bg-[#1DA1F2] transition-all"
-                >
-                  <svg
-                    width="20"
-                    height="20"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z" />
-                  </svg>
-                </a>
-              )}
-              {theme?.footer?.socialLinks?.youtube && (
-                <a
-                  href={theme.footer.socialLinks.youtube}
+                  href={socialLinks.youtube}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="w-9 h-9 rounded-full flex items-center justify-center text-gray-400 hover:text-white hover:bg-[#FF0000] transition-all"
@@ -118,9 +81,9 @@ export default function Footer({
                   </svg>
                 </a>
               )}
-              {theme?.footer?.socialLinks?.tiktok && (
+              {socialLinks.tiktok && (
                 <a
-                  href={theme.footer.socialLinks.tiktok}
+                  href={socialLinks.tiktok}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="w-9 h-9 rounded-full flex items-center justify-center text-gray-400 hover:text-white hover:bg-[#000000] transition-all"
@@ -175,7 +138,15 @@ export default function Footer({
             Support
           </h3>
           <ul className="space-y-3 text-sm text-gray-500">
-            {theme?.footer?.policies?.aboutUs && (
+            <li>
+              <Link
+                href="/track-order"
+                className="hover:text-gray-900 transition-colors"
+              >
+                Track Order
+              </Link>
+            </li>
+            {policies.aboutUs && (
               <li>
                 <Link
                   href="/policies/about-us"
@@ -185,7 +156,7 @@ export default function Footer({
                 </Link>
               </li>
             )}
-            {theme?.footer?.policies?.privacyPolicy && (
+            {policies.privacyPolicy && (
               <li>
                 <Link
                   href="/policies/privacy-policy"
@@ -195,7 +166,7 @@ export default function Footer({
                 </Link>
               </li>
             )}
-            {theme?.footer?.policies?.termsAndConditions && (
+            {policies.termsAndConditions && (
               <li>
                 <Link
                   href="/policies/terms-and-conditions"
@@ -205,7 +176,7 @@ export default function Footer({
                 </Link>
               </li>
             )}
-            {theme?.footer?.policies?.returnPolicy && (
+            {policies.returnPolicy && (
               <li>
                 <Link
                   href="/policies/return-policy"
@@ -215,10 +186,10 @@ export default function Footer({
                 </Link>
               </li>
             )}
-            {!theme?.footer?.policies?.aboutUs &&
-              !theme?.footer?.policies?.privacyPolicy &&
-              !theme?.footer?.policies?.termsAndConditions &&
-              !theme?.footer?.policies?.returnPolicy && (
+            {!policies.aboutUs &&
+              !policies.privacyPolicy &&
+              !policies.termsAndConditions &&
+              !policies.returnPolicy && (
                 <>
                   <li>
                     <Link
@@ -248,12 +219,44 @@ export default function Footer({
               )}
           </ul>
         </div>
+        {/* Contact Info */}
+        {(contactInfo.email || contactInfo.phone || contactInfo.address) && (
+          <div>
+            <h3 className="text-sm font-bold uppercase tracking-wider mb-4">
+              Contact
+            </h3>
+            <ul className="space-y-3 text-sm text-gray-500">
+              {contactInfo.email && (
+                <li className="flex items-start gap-2">
+                  <a
+                    href={`mailto:${contactInfo.email}`}
+                    className="hover:text-gray-900 transition-colors break-all"
+                  >
+                    {contactInfo.email}
+                  </a>
+                </li>
+              )}
+              {contactInfo.phone && (
+                <li className="flex items-start gap-2">
+                  <a
+                    href={`tel:${contactInfo.phone}`}
+                    className="hover:text-gray-900 transition-colors"
+                  >
+                    {contactInfo.phone}
+                  </a>
+                </li>
+              )}
+              {contactInfo.address && (
+                <li className="flex items-start gap-2">
+                  <span>{contactInfo.address}</span>
+                </li>
+              )}
+            </ul>
+          </div>
+        )}
       </div>
       <div className="max-w-7xl mx-auto px-8 mt-16 pt-8 border-t border-gray-200 text-center text-sm text-gray-400 flex flex-col items-center gap-1">
-        <p>
-          &copy; {new Date().getFullYear()} {storeInfo?.name || "Minimal Store"}
-          . All rights reserved.
-        </p>
+        <p>{copyrightText}</p>
         <a
           href="https://mash-tech-ltd.vercel.app"
           target="_blank"

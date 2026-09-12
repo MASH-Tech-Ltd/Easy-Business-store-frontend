@@ -159,7 +159,7 @@ export default async function Design02CategoryPage({ params, searchParams }: any
               <div className={
                 resolvedSearchParams.view === 'list' 
                   ? "flex flex-col gap-6 mb-12" 
-                  : "grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-8 gap-y-12 mb-12"
+                  : "grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-4 sm:gap-x-8 gap-y-8 sm:gap-y-12 mb-12"
               }>
                 {products.map((product: any) => (
                   <Design02ProductCard 
