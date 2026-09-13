@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useState } from 'react';
 import Design02FilterSidebar from './FilterSidebar';
@@ -6,9 +6,10 @@ import Design02FilterSidebar from './FilterSidebar';
 interface FilterDrawerProps {
   categoryId: string;
   availableBrands?: string[];
+  theme?: any;
 }
 
-export default function Design02FilterDrawer({ categoryId, availableBrands = [] }: FilterDrawerProps) {
+export default function Design02FilterDrawer({ categoryId, availableBrands = [], theme }: FilterDrawerProps) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (

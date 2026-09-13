@@ -1,10 +1,12 @@
-'use client';
+﻿'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { getTranslation } from '@/utils/translations';
 
-export default function GlobalSearch({ tenantSlug }: { tenantSlug: string }) {
+export default function GlobalSearch({ tenantSlug, language = 'en', theme }: { tenantSlug: string, language?: string, theme?: any }) {
+  const t = (key: any) => getTranslation(language, key);
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -53,7 +55,7 @@ export default function GlobalSearch({ tenantSlug }: { tenantSlug: string }) {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           onFocus={() => { if (query.trim()) setIsOpen(true); }}
-          placeholder="Search for products..."
+          placeholder={t("searchForProducts") || "Search for products..."}
           className="w-full h-10 pl-10 pr-4 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-gray-300 focus:bg-white transition-all"
         />
         <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
@@ -81,7 +83,7 @@ export default function GlobalSearch({ tenantSlug }: { tenantSlug: string }) {
                       <div className="text-sm font-semibold text-gray-900 truncate">{product.title}</div>
                       <div className="text-xs text-gray-500">{product.brand || 'Generic'}</div>
                     </div>
-                    <div className="text-sm font-bold text-gray-900">{theme?.currencySymbol || '৳'}{product.discountedPrice?.toLocaleString()}</div>
+                    <div className="text-sm font-bold text-gray-900">{theme?.currencySymbol || '৳'}{' '}{product.discountedPrice?.toLocaleString()}</div>
                   </Link>
                 ))}
               </div>

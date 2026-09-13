@@ -67,7 +67,14 @@ export type TranslationKeys =
   | 'checkout'
   | 'selectDistrict'
   | 'selectSubdistrict'
-  | 'processing';
+  | 'processing'
+  | 'returnHome'
+  | 'productNotFound'
+  | 'newCollection'
+  | 'priceRange'
+  | 'clearFilters'
+  | 'searchForProducts'
+  | 'searchProducts';
 
 export const translations: Record<Language, Record<TranslationKeys, string>> = {
   en: {
@@ -137,7 +144,14 @@ export const translations: Record<Language, Record<TranslationKeys, string>> = {
     checkout: 'Checkout',
     selectDistrict: 'Select District',
     selectSubdistrict: 'Select Subdistrict / Thana',
-    processing: 'Processing...'
+    processing: 'Processing...',
+    returnHome: 'Return Home',
+    productNotFound: 'Product not found',
+    newCollection: 'New Collection',
+    priceRange: 'Price Range',
+    clearFilters: 'Clear Filters',
+    searchForProducts: 'Search for products...',
+    searchProducts: 'Search products...'
   },
   bn: {
     addToCart: 'কার্টে যোগ করুন',
@@ -206,7 +220,14 @@ export const translations: Record<Language, Record<TranslationKeys, string>> = {
     checkout: 'চেকআউট',
     selectDistrict: 'জেলা নির্বাচন করুন',
     selectSubdistrict: 'উপজেলা/থানা নির্বাচন করুন',
-    processing: 'প্রক্রিয়াকরণ চলছে...'
+    processing: 'প্রক্রিয়াকরণ চলছে...',
+    returnHome: 'হোমে ফিরে যান',
+    productNotFound: 'পণ্য পাওয়া যায়নি',
+    newCollection: 'নতুন সংগ্রহ',
+    priceRange: 'দামের পরিসর',
+    clearFilters: 'ফিল্টার মুছুন',
+    searchForProducts: 'পণ্য খুঁজুন...',
+    searchProducts: 'পণ্য খুঁজুন...'
   }
 };
 

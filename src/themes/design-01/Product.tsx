@@ -1,4 +1,4 @@
-import { storefrontFetch } from "../../utils/storefrontFetch";
+﻿import { storefrontFetch } from "../../utils/storefrontFetch";
 import { headers } from 'next/headers';
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
@@ -61,7 +61,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <h1 className="text-2xl font-bold mb-4">Product not found</h1>
+          <h1 className="text-2xl font-bold mb-4">{t('productNotFound') || 'Product not found'}</h1>
           <Link href="/" className="text-primary hover:underline">Return to Home</Link>
         </div>
       </div>

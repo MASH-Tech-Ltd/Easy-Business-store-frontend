@@ -1,4 +1,4 @@
-import { storefrontFetch } from "../../utils/storefrontFetch";
+﻿import { storefrontFetch } from "../../utils/storefrontFetch";
 import { headers } from 'next/headers';
 import Link from 'next/link';
 import FilterSidebar04 from './components/ui/FilterSidebar';
@@ -9,6 +9,7 @@ import ProductCard04 from './components/ui/ProductCard';
 import Header04 from './components/layout/Header';
 import Footer04 from './components/layout/Footer';
 import FilterDrawer from './components/ui/FilterDrawer';
+import { getTranslation } from '@/utils/translations';
 
 async function getStoreInfo(tenantSlug: string) {
   try {
@@ -36,6 +37,7 @@ async function getAllProducts(tenantSlug: string, searchParams: any) {
 }
 
 export default async function ProductsPage04({ searchParams }: any) {
+
   const resolvedSearchParams = await (searchParams || {});
   const headersList = await headers();
   const tenantSlug = headersList.get('x-tenant-slug') || 'main';
@@ -47,6 +49,9 @@ export default async function ProductsPage04({ searchParams }: any) {
     storefrontFetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/brands`, { next: { revalidate: 60 } }).then(r => r.json()),
     storefrontFetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/categories`, { next: { revalidate: 60 } }).then(r => r.json())
   ]);
+  const language = storeInfo?.language || "en";
+  const t = (key: any) => getTranslation(language || 'en', key);
+
 
   const theme = themeRes?.data;
   const products = productResponse.data || [];
@@ -61,9 +66,9 @@ export default async function ProductsPage04({ searchParams }: any) {
 
       {/* Banner */}
       <div className="bg-white border-b border-gray-100 py-12 px-6 text-center">
-        <h1 className="text-4xl font-black text-gray-900 tracking-tight mb-4">All Products</h1>
+        <h1 className="text-4xl font-black text-gray-900 tracking-tight mb-4">{t('allProducts') || 'All Products'}</h1>
         <div className="flex items-center justify-center text-sm font-semibold text-gray-400 gap-2">
-          <Link href="/" className="hover:text-gray-900 transition-colors">Home</Link>
+          <Link href="/" className="hover:text-gray-900 transition-colors">{t('home') || 'Home'}</Link>
           <span>/</span>
           <span className="text-gray-900">Products</span>
         </div>
@@ -73,7 +78,7 @@ export default async function ProductsPage04({ searchParams }: any) {
         {/* Categories Bar */}
         {categories.length > 0 && (
           <div className="mb-10">
-            <h3 className="text-sm font-bold text-gray-900 uppercase tracking-wider mb-4 text-center">Categories</h3>
+            <h3 className="text-sm font-bold text-gray-900 uppercase tracking-wider mb-4 text-center">{t('categories') || 'Categories'}</h3>
             <div className="flex flex-wrap justify-center gap-2">
               <Link href="/products" className="px-4 py-2 text-sm rounded-full border font-semibold transition-all bg-gray-900 border-gray-900 text-white shadow-sm">
                 All
@@ -90,11 +95,11 @@ export default async function ProductsPage04({ searchParams }: any) {
 
         <div className="flex flex-col md:flex-row gap-10">
           <aside className="hidden md:block w-[280px] shrink-0">
-            <FilterSidebar04 availableBrands={availableBrands} />
+            <FilterSidebar04 availableBrands={availableBrands} theme={theme} />
           </aside>
 
           <div className="md:hidden">
-            <FilterDrawer categoryId="" availableBrands={availableBrands} />
+            <FilterDrawer categoryId="" availableBrands={availableBrands} theme={theme} />
           </div>
 
         <section className="flex-1">

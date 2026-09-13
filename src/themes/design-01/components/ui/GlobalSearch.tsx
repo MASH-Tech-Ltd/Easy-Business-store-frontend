@@ -1,10 +1,14 @@
-'use client';
+﻿'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { getTranslation } from '@/utils/translations';
 
 export default function GlobalSearch({ tenantSlug }: { tenantSlug: string }) {
+  const language = "en";
+  const t = (key: any) => getTranslation(language || 'en', key);
+
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -71,7 +75,7 @@ export default function GlobalSearch({ tenantSlug }: { tenantSlug: string }) {
           onFocus={() => {
             if (query.trim()) setIsOpen(true);
           }}
-          placeholder="Search for products..."
+          placeholder={t("searchForProducts") || "Search for products..."}
           className="w-full h-11 pl-11 pr-4 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:bg-white transition-all"
         />
         <svg 

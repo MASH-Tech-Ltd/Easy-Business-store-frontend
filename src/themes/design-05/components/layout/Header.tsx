@@ -1,9 +1,10 @@
-import { storefrontFetch } from "../../../../utils/storefrontFetch";
+﻿import { storefrontFetch } from "../../../../utils/storefrontFetch";
 import React from 'react';
 import Link from 'next/link';
 import { headers } from 'next/headers';
 import HeaderCartIcon05 from '../ui/HeaderCartIcon';
 import GlobalSearch05 from '../ui/GlobalSearch';
+import { getTranslation } from '@/utils/translations';
 
 async function getStoreInfo(tenantSlug: string) {
   try {
@@ -14,6 +15,10 @@ async function getStoreInfo(tenantSlug: string) {
 }
 
 export default async function Header05({ storeInfo }: { storeInfo?: any }) {
+  const language = storeInfo?.language || "en";
+  const t = (key: any) => getTranslation(language || 'en', key);
+
+
   const headersList = await headers();
   const tenantSlug = headersList.get('x-tenant-slug') || 'main';
   const info = storeInfo || await getStoreInfo(tenantSlug);
@@ -40,7 +45,7 @@ export default async function Header05({ storeInfo }: { storeInfo?: any }) {
           <nav className="hidden md:flex items-center gap-8 text-[15px] font-medium text-gray-500">
             <Link href="/" className="hover:text-black transition-colors">Discover</Link>
             <Link href="/products" className="hover:text-black transition-colors">Collection</Link>
-            <Link href="/categories" className="hover:text-black transition-colors">Categories</Link>
+            <Link href="/categories" className="hover:text-black transition-colors">{t('categories') || 'Categories'}</Link>
           </nav>
 
           {/* Actions */}

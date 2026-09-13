@@ -14,8 +14,8 @@ export default function DashboardLayout({
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
-    const token = localStorage.getItem('accessToken');
-    if (!token) {
+    const user = localStorage.getItem('user');
+    if (!user) {
       router.push('/login');
     } else {
       setIsAuthenticated(true);

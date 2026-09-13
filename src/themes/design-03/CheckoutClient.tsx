@@ -6,7 +6,9 @@ import { useRouter } from 'next/navigation';
 import { CheckCircle2 } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
 import { bdLocations } from '@/data/locations';
+import { computeShipping } from '@/utils/shipping';
 import { z } from 'zod';
+import { getTranslation } from '@/utils/translations';
 
 const checkoutSchema = z.object({
   phone: z.string().regex(/^(?:\+88|88)?01[3-9]\d{8}$/, { message: "VALID BD PHONE REQUIRED" }),
@@ -18,6 +20,10 @@ const checkoutSchema = z.object({
 });
 
 export default function CheckoutClient03({ storeInfo, theme }: { storeInfo?: any; theme?: any }) {
+  const language = storeInfo?.language || "en";
+  const t = (key: any) => getTranslation(language || 'en', key);
+
+
   const { cartItems, totalPrice, clearCart, isInitialized } = useCart();
   const [status, setStatus] = useState<'idle' | 'processing' | 'success'>('idle');
   const [orderId, setOrderId] = useState<string | null>(null);
@@ -35,7 +41,7 @@ export default function CheckoutClient03({ storeInfo, theme }: { storeInfo?: any
   const districtsList = bdLocations.find((d) => d.division === division)?.districts || [];
   const upazilasList = districtsList.find((d) => d.district === district)?.upazilas || [];
 
-  const deliveryCharge = 120;
+  const { cost: deliveryCharge, zoneName: shippingZoneName } = computeShipping(division, district, theme?.shippingZones || [], theme?.defaultShippingCost ?? 120);
   const grandTotal = totalPrice > 0 ? totalPrice + deliveryCharge : 0;
 
   const handleCheckout = async (e: React.FormEvent) => {
@@ -136,12 +142,12 @@ export default function CheckoutClient03({ storeInfo, theme }: { storeInfo?: any
       <div className="w-full px-8 py-4 flex items-center text-xs font-mono uppercase tracking-widest text-gray-500 gap-3 border-b border-white/10 bg-black">
         <Link href="/" className="hover:text-cyan-400 transition-colors">ROOT</Link>
         <span className="text-white/20">/</span>
-        <span className="text-white">CHECKOUT</span>
+        <span className="text-white">{t('checkout') || 'Checkout'}</span>
       </div>
 
       <div className="p-8 md:p-12 border-b border-white/10 bg-black">
         <div className="text-[10px] text-cyan-400 font-mono mb-2 uppercase tracking-widest">SECURE PAYMENT</div>
-        <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tighter text-white">CHECKOUT</h2>
+        <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tighter text-white">{t('checkout') || 'Checkout'}</h2>
       </div>
 
       <div className="flex flex-col lg:flex-row h-full">
@@ -197,18 +203,18 @@ export default function CheckoutClient03({ storeInfo, theme }: { storeInfo?: any
           <h3 className="text-xs font-mono text-white uppercase tracking-widest mb-6 border-b border-white/10 pb-4">Transaction Summary</h3>
           <div className="space-y-4 font-mono text-sm text-gray-400 mb-8 flex-1">
             <div className="flex justify-between uppercase">
-              <span>Subtotal</span>
-              <span className="text-white">{theme?.currencySymbol || '৳'}{totalPrice.toLocaleString()}</span>
+              <span>{t('subtotal') || 'Subtotal'}</span>
+              <span className="text-white">{theme?.currencySymbol || '৳'}{' '}{totalPrice.toLocaleString()}</span>
             </div>
             <div className="flex justify-between uppercase">
-              <span>Logistics</span>
-              <span className="text-white">{theme?.currencySymbol || '৳'}{deliveryCharge.toLocaleString()}</span>
+              <span>Logistics {shippingZoneName ? `(${shippingZoneName})` : ''}</span>
+              <span className="text-white">{theme?.currencySymbol || '৳'}{' '}{deliveryCharge.toLocaleString()}</span>
             </div>
           </div>
           <div className="border-t border-white/10 pt-6 mb-8">
             <div className="flex justify-between items-end">
               <span className="text-xs font-mono text-gray-500 uppercase tracking-widest">Total Required</span>
-              <span className="text-3xl font-black text-cyan-400 tracking-tighter">{theme?.currencySymbol || '৳'}{grandTotal.toLocaleString()}</span>
+              <span className="text-3xl font-black text-cyan-400 tracking-tighter">{theme?.currencySymbol || '৳'}{' '}{grandTotal.toLocaleString()}</span>
             </div>
           </div>
           <button 

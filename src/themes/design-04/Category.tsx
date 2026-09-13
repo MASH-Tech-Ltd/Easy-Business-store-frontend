@@ -1,6 +1,7 @@
-import { storefrontFetch } from "../../utils/storefrontFetch";
+﻿import { storefrontFetch } from "../../utils/storefrontFetch";
 import { headers } from 'next/headers';
 import Link from 'next/link';
+import { getTranslation } from '@/utils/translations';
 import type { Metadata, ResolvingMetadata } from 'next';
 import FilterSidebar04 from './components/ui/FilterSidebar';
 import FilterDrawer from './components/ui/FilterDrawer';
@@ -80,6 +81,9 @@ export default async function CategoryPage04({ params, searchParams }: any) {
   const pagination = productResponse.pagination || { total: 0, page: 1, totalPages: 1 };
   const isListView = resolvedSearchParams.view === 'list';
 
+  const language = storeInfo?.language || 'en';
+  const t = (key: any) => getTranslation(language, key);
+
   return (
     <div className="min-h-screen bg-gray-50 font-sans flex flex-col">
       <Header04 storeInfo={storeInfo} />
@@ -88,7 +92,7 @@ export default async function CategoryPage04({ params, searchParams }: any) {
       <div className="bg-white border-b border-gray-100 py-12 px-6 text-center">
         <h1 className="text-4xl font-black text-gray-900 tracking-tight mb-4">{category?.name || 'Shop'}</h1>
         <div className="flex items-center justify-center text-sm font-semibold text-gray-400 gap-2">
-          <Link href="/" className="hover:text-gray-900 transition-colors">Home</Link>
+          <Link href="/" className="hover:text-gray-900 transition-colors">{t('home') || 'Home'}</Link>
           <span>/</span>
           <span className="text-gray-900">{category?.name}</span>
         </div>
@@ -96,11 +100,11 @@ export default async function CategoryPage04({ params, searchParams }: any) {
 
       <main className="max-w-[1400px] mx-auto px-6 py-12 flex-1 w-full flex flex-col md:flex-row gap-10">
         <aside className="hidden md:block w-[280px] shrink-0">
-          <FilterSidebar04 categoryId={categoryId} availableBrands={availableBrands} />
+          <FilterSidebar04 categoryId={categoryId} availableBrands={availableBrands} theme={theme} />
         </aside>
 
         <div className="md:hidden">
-          <FilterDrawer categoryId={categoryId} availableBrands={availableBrands} />
+          <FilterDrawer categoryId={categoryId} availableBrands={availableBrands} theme={theme} />
         </div>
 
         <section className="flex-1">

@@ -1,4 +1,4 @@
-import dynamic from 'next/dynamic';
+﻿import dynamic from 'next/dynamic';
 
 export const themeRegistry: Record<string, any> = {
   'design-01': {

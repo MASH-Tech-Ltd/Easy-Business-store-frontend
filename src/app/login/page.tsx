@@ -17,7 +17,7 @@ export default function LoginPage() {
     try {
       const res = await api.post('/auth/login', formData);
       if (res.data.success || res.data.status === 'ok') {
-        localStorage.setItem('accessToken', res.data.data.accessToken);
+        localStorage.setItem('user', JSON.stringify(res.data.data?.user || { loggedIn: true }));
         toast.success(res.data.message || 'Welcome back to your dashboard!');
         router.push('/dashboard');
       }

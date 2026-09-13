@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
@@ -66,7 +66,7 @@ export default function GlobalSearch05({ tenantSlug }: { tenantSlug: string }) {
                       <div className="text-sm font-semibold text-gray-900 truncate">{product.title}</div>
                       <div className="text-[11px] font-medium text-gray-400 uppercase tracking-wider mt-0.5">{product.brand || 'Minimalist'}</div>
                     </div>
-                    <div className="text-sm font-bold text-gray-900">{theme?.currencySymbol || '৳'}{product.discountedPrice?.toLocaleString()}</div>
+                    <div className="text-sm font-bold text-gray-900">{theme?.currencySymbol || '৳'}{' '}{product.discountedPrice?.toLocaleString()}</div>
                   </Link>
                 ))}
               </div>

@@ -1,4 +1,4 @@
-import { storefrontFetch } from "../../utils/storefrontFetch";
+﻿import { storefrontFetch } from "../../utils/storefrontFetch";
 import { headers } from 'next/headers';
 import Link from 'next/link';
 import ProductGallery from '@/components/ProductGallery';
@@ -6,6 +6,7 @@ import AddToCartClient from './AddToCartClient';
 import type { Metadata, ResolvingMetadata } from 'next';
 import Header04 from './components/layout/Header';
 import Footer04 from './components/layout/Footer';
+import { getTranslation } from '@/utils/translations';
 
 async function getStoreInfo(tenantSlug: string) {
   try {
@@ -29,6 +30,7 @@ async function getTheme(tenantSlug: string) {
 }
 
 export default async function ProductPage04({ params }: { params: Promise<{ slug: string }> }) {
+
   const resolvedParams = await params;
   const headersList = await headers();
   const tenantSlug = headersList.get('x-tenant-slug') || 'main';
@@ -38,13 +40,16 @@ export default async function ProductPage04({ params }: { params: Promise<{ slug
     getProduct(tenantSlug, resolvedParams.slug),
     getTheme(tenantSlug)
   ]);
+  const language = storeInfo?.language || "en";
+  const t = (key: any) => getTranslation(language || 'en', key);
+
 
   if (!product) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">
-          <h1 className="text-3xl font-black text-gray-900 mb-4">Product not found</h1>
-          <Link href="/" className="text-gray-500 hover:text-gray-900 underline font-semibold">Return Home</Link>
+          <h1 className="text-3xl font-black text-gray-900 mb-4">{t('productNotFound') || 'Product not found'}</h1>
+          <Link href="/" className="text-gray-500 hover:text-gray-900 underline font-semibold">{t('returnHome') || 'Return Home'}</Link>
         </div>
       </div>
     );
@@ -52,12 +57,12 @@ export default async function ProductPage04({ params }: { params: Promise<{ slug
 
   return (
     <div className="min-h-screen bg-gray-50 font-sans flex flex-col">
-      <Header04 storeInfo={storeInfo} />
+      <Header04 storeInfo={storeInfo} theme={theme} />
 
       {/* Breadcrumb */}
       <div className="bg-white border-b border-gray-100 py-6 px-6">
         <div className="max-w-[1400px] mx-auto flex items-center text-sm font-semibold text-gray-400 gap-2">
-          <Link href="/" className="hover:text-gray-900 transition-colors">Home</Link>
+          <Link href="/" className="hover:text-gray-900 transition-colors">{t('home') || 'Home'}</Link>
           <span>/</span>
           <span className="hover:text-gray-900 cursor-pointer">{product.categoryId?.name || 'Category'}</span>
           <span>/</span>
@@ -84,14 +89,14 @@ export default async function ProductPage04({ params }: { params: Promise<{ slug
                 {product.stock > 0 ? (
                   <span className="text-green-600">In Stock ({product.stock})</span>
                 ) : (
-                  <span className="text-red-500">Out of Stock</span>
+                  <span className="text-red-500">{t('outOfStock') || 'Out of Stock'}</span>
                 )}
               </div>
 
               <div className="flex items-end gap-4 mb-8">
-                <span className="text-4xl font-black text-gray-900 tracking-tight">{theme?.currencySymbol || '৳'}{product.discountedPrice.toLocaleString()}</span>
+                <span className="text-4xl font-black text-gray-900 tracking-tight">{theme?.currencySymbol || '৳'}{' '}{product.discountedPrice.toLocaleString()}</span>
                 {product.originalPrice > product.discountedPrice && (
-                  <span className="text-lg text-gray-400 line-through font-semibold pb-1">{theme?.currencySymbol || '৳'}{product.originalPrice.toLocaleString()}</span>
+                  <span className="text-lg text-gray-400 line-through font-semibold pb-1">{theme?.currencySymbol || '৳'}{' '}{product.originalPrice.toLocaleString()}</span>
                 )}
               </div>
 
@@ -186,7 +191,7 @@ export default async function ProductPage04({ params }: { params: Promise<{ slug
         </div>
       </main>
 
-      <Footer04 storeInfo={storeInfo} />
+      <Footer04 storeInfo={storeInfo} theme={theme} />
     </div>
   );
 }

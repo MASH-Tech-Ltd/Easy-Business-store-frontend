@@ -1,10 +1,11 @@
-'use client';
+﻿'use client';
 
 import React from 'react';
 import Link from 'next/link';
 import { useCart } from '@/context/CartContext';
 import { useTranslation } from '@/context/LanguageContext';
 import { Minus, Plus, Trash2 } from 'lucide-react';
+import { getTranslation } from '@/utils/translations';
 
 export default function Design02CartClient({ theme }: { theme?: any }) {
   const { cartItems, updateQuantity, removeFromCart, totalItems, totalPrice } = useCart();
@@ -48,7 +49,7 @@ export default function Design02CartClient({ theme }: { theme?: any }) {
                     
                     <div className="flex-1 flex flex-col text-left">
                       <h3 className="text-sm sm:text-lg font-medium text-gray-900 mb-1 sm:mb-2 line-clamp-2">{item.title}</h3>
-                      <div className="text-sm sm:text-xl font-light text-gray-900">{theme?.currencySymbol || '৳'}{item.price.toLocaleString()}</div>
+                      <div className="text-sm sm:text-xl font-light text-gray-900">{theme?.currencySymbol || '৳'}{' '}{item.price.toLocaleString()}</div>
                     </div>
                     
                     <div className="flex flex-col sm:flex-row items-end sm:items-center gap-2 sm:gap-8 justify-end shrink-0">
@@ -90,7 +91,7 @@ export default function Design02CartClient({ theme }: { theme?: any }) {
                 <div className="space-y-4 mb-8 text-sm">
                   <div className="flex justify-between text-gray-600">
                     <span>{t('subtotal') || 'Subtotal'}</span>
-                    <span className="font-medium text-gray-900">{theme?.currencySymbol || '৳'}{totalPrice.toLocaleString()}</span>
+                    <span className="font-medium text-gray-900">{theme?.currencySymbol || '৳'}{' '}{totalPrice.toLocaleString()}</span>
                   </div>
                   <div className="flex justify-between text-gray-600">
                     <span>{t('shipping') || 'Shipping'}</span>
@@ -99,7 +100,7 @@ export default function Design02CartClient({ theme }: { theme?: any }) {
                   <div className="h-px bg-gray-200 w-full my-4"></div>
                   <div className="flex justify-between text-lg font-medium text-gray-900">
                     <span>{t('total') || 'Total'}</span>
-                    <span>{theme?.currencySymbol || '৳'}{totalPrice.toLocaleString()}</span>
+                    <span>{theme?.currencySymbol || '৳'}{' '}{totalPrice.toLocaleString()}</span>
                   </div>
                 </div>
 

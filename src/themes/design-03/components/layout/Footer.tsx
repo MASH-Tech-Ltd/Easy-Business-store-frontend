@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { Mail, Phone, MapPin } from "lucide-react";
 
 export default function Footer03({
@@ -25,10 +25,11 @@ export default function Footer03({
             )}
             {storeInfo?.name || "Premium Store"}
           </h3>
-          <p className="text-gray-500 text-xs leading-relaxed max-w-sm mb-8 uppercase">
-            {storeInfo?.description ||
-              "Curated premium electronics for modern lifestyles. Precision engineered databank."}
-          </p>
+            {storeInfo?.description && (
+              <p className="text-gray-400 text-sm max-w-sm mb-6 leading-relaxed">
+                {storeInfo.description}
+              </p>
+            )}
           {(footer?.socialLinks?.facebook || footer?.socialLinks?.youtube) && (
             <div className="flex gap-2">
               {footer.socialLinks.facebook && (

@@ -1,9 +1,10 @@
-import { storefrontFetch } from "../../../../utils/storefrontFetch";
+﻿import { storefrontFetch } from "../../../../utils/storefrontFetch";
 import React from 'react';
 import Link from 'next/link';
 import { headers } from 'next/headers';
 import HeaderCartIcon04 from '../ui/HeaderCartIcon';
 import GlobalSearch04 from '../ui/GlobalSearch';
+import { getTranslation } from '@/utils/translations';
 
 async function getStoreInfo(tenantSlug: string) {
   try {
@@ -27,11 +28,14 @@ export default async function Header04({ storeInfo, theme: initialTheme }: { sto
   const info = storeInfo || await getStoreInfo(tenantSlug);
   const theme = initialTheme || await getTheme(tenantSlug);
 
+  const language = info?.language || 'en';
+  const t = (key: any) => getTranslation(language, key);
+
   return (
     <header className="bg-white border-b border-gray-100 sticky top-0 z-50">
       {/* Top thin bar */}
       <div className="bg-gray-900 text-white text-center text-xs py-2 px-4 tracking-widest font-medium">
-        Free shipping on orders over {theme?.currencySymbol || '৳'}999 &nbsp;|&nbsp; <Link href="/products" className="hover:underline">All Products</Link>
+        Free shipping on orders over {theme?.currencySymbol || '৳'}{' '}999 &nbsp;|&nbsp; <Link href="/products" className="hover:underline">{t('allProducts') || 'All Products'}</Link>
       </div>
 
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 py-4 flex flex-col gap-4">
@@ -48,23 +52,30 @@ export default async function Header04({ storeInfo, theme: initialTheme }: { sto
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-8 text-sm font-semibold text-gray-600">
-            <Link href="/" className="hover:text-gray-900 transition-colors">Home</Link>
-            <Link href="/products" className="hover:text-gray-900 transition-colors">All Products</Link>
+            <Link href="/" className="hover:text-gray-900 transition-colors">{t('home') || 'Home'}</Link>
+            <Link href="/products" className="hover:text-gray-900 transition-colors">{t('allProducts') || 'All Products'}</Link>
             <Link href="/cart" className="hover:text-gray-900 transition-colors">Cart</Link>
           </nav>
 
           {/* Search + Cart */}
           <div className="flex items-center gap-4">
             <div className="hidden sm:block w-56 lg:w-72">
-              <GlobalSearch04 tenantSlug={tenantSlug} />
+              <GlobalSearch04 tenantSlug={tenantSlug} language={language} theme={theme} />
+            </div>
+            <div className="sm:hidden">
+              <button className="p-2 text-gray-500 hover:text-gray-900 transition-colors">
+                <svg className="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+                </svg>
+              </button>
             </div>
             <HeaderCartIcon04 />
           </div>
         </div>
-        
+
         {/* Mobile Search */}
         <div className="block sm:hidden w-full">
-          <GlobalSearch04 tenantSlug={tenantSlug} />
+          <GlobalSearch04 tenantSlug={tenantSlug} language={language} theme={theme} />
         </div>
       </div>
     </header>

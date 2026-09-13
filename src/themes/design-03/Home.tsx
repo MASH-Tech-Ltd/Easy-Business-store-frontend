@@ -1,12 +1,14 @@
-import { getStoreInfo, getTheme } from '@/core/api/store';
+﻿import { getStoreInfo, getTheme } from '@/core/api/store';
 import { getProducts, getBestsellingProducts, getJustForYouProducts } from '@/core/api/product';
 import { getCategories } from '@/core/api/category';
 import Link from 'next/link';
 import Header03 from './components/layout/Header';
 import Footer03 from './components/layout/Footer';
 import Design03ProductCard from './components/ui/ProductCard';
+import { getTranslation } from '@/utils/translations';
 
 export default async function Design03Home({ tenantSlug }: { tenantSlug: string }) {
+
   if (tenantSlug === 'main') {
     return (
       <div className="min-h-screen flex items-center justify-center bg-black text-white">
@@ -23,6 +25,9 @@ export default async function Design03Home({ tenantSlug }: { tenantSlug: string 
     getStoreInfo(tenantSlug),
     getTheme(tenantSlug)
   ]);
+  const language = storeInfo?.language || "en";
+  const t = (key: any) => getTranslation(language || 'en', key);
+
 
   const displayCategories = categories?.slice(0, 6) || [];
 
@@ -91,7 +96,7 @@ export default async function Design03Home({ tenantSlug }: { tenantSlug: string 
             <div className="p-8 md:p-12 md:col-span-3 border-b border-white/10 flex justify-between items-end">
               <div>
                 <h3 className="text-sm text-cyan-400 font-mono mb-2 uppercase tracking-widest">Database</h3>
-                <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tighter">Categories</h2>
+                <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tighter">{t('categories') || 'Categories'}</h2>
               </div>
               <Link href="/categories" className="text-xs font-bold uppercase tracking-widest hover:text-cyan-400 transition-colors hidden md:block">
                 View Directory [ALL]

@@ -1,8 +1,9 @@
-"use client";
+﻿"use client";
 
 import React from "react";
 import { Mail, Phone, MapPin } from "lucide-react";
 import Link from "next/link";
+import { getTranslation } from "@/utils/translations";
 
 export default function Footer04({
   storeInfo,
@@ -11,6 +12,8 @@ export default function Footer04({
   storeInfo?: any;
   theme?: any;
 }) {
+  const language = storeInfo?.language || "en";
+  const t = (key: any) => getTranslation(language, key);
   const year = new Date().getFullYear();
   const footer = theme?.footer || {};
   const socialLinks = footer.socialLinks || {};
@@ -39,10 +42,11 @@ export default function Footer04({
                 {storeInfo?.name || "Store"}
               </span>
             </div>
-            <p className="text-sm text-gray-400 leading-relaxed mb-5">
-              {storeInfo?.description ||
-                "Quality products curated just for you."}
-            </p>
+            {storeInfo?.description && (
+              <p className="text-sm text-gray-400 leading-relaxed mb-5">
+                {storeInfo.description}
+              </p>
+            )}
             {(socialLinks.facebook ||
               socialLinks.youtube ||
               socialLinks.tiktok) && (
@@ -112,9 +116,7 @@ export default function Footer04({
                 <Link
                   href="/"
                   className="hover:text-gray-900 transition-colors"
-                >
-                  Home
-                </Link>
+                >{t('home') || 'Home'}</Link>
               </li>
               <li>
                 <Link
@@ -199,9 +201,7 @@ export default function Footer04({
           {/* Contact */}
           {(contactInfo.email || contactInfo.phone || contactInfo.address) && (
             <div>
-              <h4 className="font-bold text-gray-900 text-sm uppercase tracking-wider mb-4">
-                Contact
-              </h4>
+              <h4 className="font-bold text-gray-900 text-sm uppercase tracking-wider mb-4">{t('contact') || 'Contact'}</h4>
               <ul className="space-y-3 text-sm text-gray-500">
                 {contactInfo.email && (
                   <li className="flex items-start gap-2">

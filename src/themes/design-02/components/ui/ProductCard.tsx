@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import Link from 'next/link';
 import ProductCardActions from './ProductCardActions';
 
@@ -37,9 +37,9 @@ export default function Design02ProductCard({ product, isList = false, isBestSel
             <p className="text-sm text-gray-500 line-clamp-2 mb-4">{product.shortDescription}</p>
           )}
           <div className="mt-auto flex items-center gap-4">
-            <span className="font-semibold text-gray-900 text-lg">{theme?.currencySymbol || '৳'}{product.discountedPrice || product.originalPrice || product.price}</span>
+            <span className="font-semibold text-gray-900 text-lg">{theme?.currencySymbol || '৳'}{' '}{product.discountedPrice || product.originalPrice || product.price}</span>
             {product.originalPrice > (product.discountedPrice || 0) && (
-              <span className="text-sm text-gray-400 line-through">{theme?.currencySymbol || '৳'}{product.originalPrice}</span>
+              <span className="text-sm text-gray-400 line-through">{theme?.currencySymbol || '৳'}{' '}{product.originalPrice}</span>
             )}
           </div>
         </div>
@@ -77,9 +77,9 @@ export default function Design02ProductCard({ product, isList = false, isBestSel
       </div>
       <h4 className="text-lg font-medium text-gray-900 group-hover:underline truncate">{product.title || product.name}</h4>
       <div className="mt-2 flex items-center gap-3">
-        <span className="font-semibold text-gray-900">{theme?.currencySymbol || '৳'}{product.discountedPrice || product.originalPrice || product.price}</span>
+        <span className="font-semibold text-gray-900">{theme?.currencySymbol || '৳'}{' '}{product.discountedPrice || product.originalPrice || product.price}</span>
         {product.originalPrice > (product.discountedPrice || 0) && (
-          <span className="text-sm text-gray-400 line-through">{theme?.currencySymbol || '৳'}{product.originalPrice}</span>
+          <span className="text-sm text-gray-400 line-through">{theme?.currencySymbol || '৳'}{' '}{product.originalPrice}</span>
         )}
       </div>
     </Link>

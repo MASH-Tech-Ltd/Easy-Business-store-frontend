@@ -1,10 +1,11 @@
-import { getStoreInfo, getTheme } from '@/core/api/store';
+﻿import { getStoreInfo, getTheme } from '@/core/api/store';
 import { getProducts, getBestsellingProducts } from '@/core/api/product';
 import { getCategories } from '@/core/api/category';
 import Link from 'next/link';
 import Header04 from './components/layout/Header';
 import Footer04 from './components/layout/Footer';
 import ProductCard04 from './components/ui/ProductCard';
+import { getTranslation } from '@/utils/translations';
 
 export default async function Design04Home({ tenantSlug }: { tenantSlug: string }) {
   if (tenantSlug === 'main') {
@@ -26,6 +27,9 @@ export default async function Design04Home({ tenantSlug }: { tenantSlug: string 
   const displayCategories = (categories || []).slice(0, 8);
   const displayBestsellers = (bestsellers || []).slice(0, 8);
   const displayProducts = (products || []).slice(0, 8);
+
+  const language = storeInfo?.language || 'en';
+  const t = (key: any) => getTranslation(language, key);
 
   return (
     <div className="min-h-screen bg-white font-sans flex flex-col">
@@ -82,7 +86,7 @@ export default async function Design04Home({ tenantSlug }: { tenantSlug: string 
       {displayCategories.length > 0 && (
         <section className="max-w-[1400px] mx-auto px-6 py-14 w-full">
           <div className="flex items-center justify-between mb-8">
-            <h2 className="text-2xl font-black text-gray-900 tracking-tight">Categories</h2>
+            <h2 className="text-2xl font-black text-gray-900 tracking-tight">{t('categories') || 'Categories'}</h2>
             <Link href="/categories" className="text-sm font-semibold text-gray-500 hover:text-gray-900 transition-colors">View all →</Link>
           </div>
           {/* Masonry-style grid matching screenshot layout */}

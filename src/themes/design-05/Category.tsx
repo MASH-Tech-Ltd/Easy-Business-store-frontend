@@ -9,8 +9,10 @@ import ProductCard05 from './components/ui/ProductCard';
 import Header05 from './components/layout/Header';
 import Footer05 from './components/layout/Footer';
 import FilterDrawer from './components/ui/FilterDrawer';
+import { getTranslation } from '@/utils/translations';
 
 export default async function CategoryPage05({ params, searchParams }: any) {
+
   const resolvedParams = await (params || {});
   const resolvedSearchParams = await (searchParams || {});
   const categoryId = resolvedParams.slug || resolvedParams.categoryId;
@@ -24,8 +26,9 @@ export default async function CategoryPage05({ params, searchParams }: any) {
     storefrontFetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/theme`, { next: { revalidate: 60 } }),
     storefrontFetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/categories`, { next: { revalidate: 60 } })
   ]);
-
   const storeInfo = storeInfoRes.ok ? (await storeInfoRes.json()) : { data: null };
+  const language = storeInfo?.language || storeInfo?.data?.language || "en";
+  const t = (key: any) => getTranslation(language || 'en', key);
   const themeData = themeRes.ok ? (await themeRes.json()) : { data: null };
   const categoriesData = categoriesRes.ok ? (await categoriesRes.json()) : { data: [] };
 
@@ -76,9 +79,9 @@ export default async function CategoryPage05({ params, searchParams }: any) {
       <div className="pt-16 pb-8 px-6 lg:px-12 text-center">
         <h1 className="text-4xl lg:text-5xl font-bold text-gray-900 tracking-tight mb-4">{categoryData?.name || 'Category'}</h1>
         <div className="flex items-center justify-center text-[13px] font-semibold text-gray-400 uppercase tracking-widest gap-3">
-          <Link href="/" className="hover:text-black transition-colors">Home</Link>
+          <Link href="/" className="hover:text-black transition-colors">{t('home') || 'Home'}</Link>
           <span className="text-gray-300">/</span>
-          <Link href="/categories" className="hover:text-black transition-colors">Categories</Link>
+          <Link href="/categories" className="hover:text-black transition-colors">{t('categories') || 'Categories'}</Link>
           <span className="text-gray-300">/</span>
           <span className="text-black">{categoryData?.name || 'Unknown'}</span>
         </div>
@@ -86,11 +89,11 @@ export default async function CategoryPage05({ params, searchParams }: any) {
 
       <main className="max-w-[1400px] mx-auto px-6 lg:px-12 py-12 flex-1 w-full flex flex-col lg:flex-row gap-12">
         <aside className="hidden lg:block w-[260px] shrink-0">
-          <FilterSidebar05 categoryId={categoryId} availableBrands={availableBrands} />
+          <FilterSidebar05 categoryId={categoryId} availableBrands={availableBrands} theme={theme} />
         </aside>
 
         <div className="lg:hidden">
-          <FilterDrawer categoryId={categoryId} availableBrands={availableBrands} />
+          <FilterDrawer categoryId={categoryId} availableBrands={availableBrands} theme={theme} />
         </div>
 
         <section className="flex-1">

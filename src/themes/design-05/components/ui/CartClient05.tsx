@@ -4,13 +4,18 @@ import React from 'react';
 import { useCart } from '@/context/CartContext';
 import Link from 'next/link';
 import { Trash2, ArrowRight, Minus, Plus, ShoppingBag } from 'lucide-react';
+import { getTranslation } from '@/utils/translations';
 
 export default function CartClient05({ theme }: { theme?: any }) {
+  const language = "en";
+  const t = (key: any) => getTranslation(language || 'en', key);
+
   const { cartItems: items, updateQuantity, removeFromCart, totalPrice: subtotal } = useCart();
 
-  const shippingEstimate = items.length > 0 ? 60 : 0;
-  const taxEstimate = subtotal * 0.15;
-  const total = subtotal + shippingEstimate + taxEstimate;
+  const defaultShipping = theme?.defaultShippingCost ?? 120;
+  const shippingEstimate = items.length > 0 ? defaultShipping : 0;
+  const taxEstimate = Math.round(subtotal * 0.15);
+  const total = Math.round(subtotal + shippingEstimate + taxEstimate);
 
   if (items.length === 0) {
     return (
@@ -38,7 +43,7 @@ export default function CartClient05({ theme }: { theme?: any }) {
             <div className="hidden md:grid grid-cols-12 gap-6 text-[11px] font-bold text-gray-400 uppercase tracking-widest pb-6 border-b border-gray-100 mb-8">
               <div className="col-span-6">Product</div>
               <div className="col-span-3 text-center">Quantity</div>
-              <div className="col-span-3 text-right">Total</div>
+              <div className="col-span-3 text-right">{t('total') || 'Total'}</div>
             </div>
 
             <div className="space-y-8">
@@ -58,7 +63,7 @@ export default function CartClient05({ theme }: { theme?: any }) {
                       <Link href={`/product/${item.id}`} className="text-sm font-semibold text-gray-900 mb-1 hover:text-gray-600 transition-colors line-clamp-2 leading-tight">
                         {item.title}
                       </Link>
-                      <span className="text-sm font-medium text-gray-400 mb-3">{theme?.currencySymbol || '৳'}{item.price.toLocaleString()}</span>
+                      <span className="text-sm font-medium text-gray-400 mb-3">{theme?.currencySymbol || '৳'} {Math.round(item.price).toLocaleString()}</span>
                       
                       <button onClick={() => removeFromCart(item.id)} className="flex items-center gap-1.5 text-xs font-semibold text-gray-400 hover:text-red-500 transition-colors w-fit">
                         <Trash2 className="w-3.5 h-3.5" /> Remove
@@ -84,7 +89,7 @@ export default function CartClient05({ theme }: { theme?: any }) {
                     </div>
                     
                     <div className="col-span-3 text-right">
-                      <span className="text-base font-bold text-gray-900">{theme?.currencySymbol || '৳'}{(item.price * item.quantity).toLocaleString()}</span>
+                      <span className="text-base font-bold text-gray-900">{theme?.currencySymbol || '৳'} {Math.round(item.price * item.quantity).toLocaleString()}</span>
                     </div>
                   </div>
                 </div>
@@ -95,27 +100,27 @@ export default function CartClient05({ theme }: { theme?: any }) {
           {/* Order Summary */}
           <div className="w-full lg:w-[320px] shrink-0">
             <div className="bg-[#F8F9FA] rounded-[2rem] p-8 border border-gray-100 sticky top-12">
-              <h2 className="text-[13px] font-bold text-gray-400 uppercase tracking-widest mb-6 pb-6 border-b border-gray-200">Order Summary</h2>
+              <h2 className="text-[13px] font-bold text-gray-400 uppercase tracking-widest mb-6 pb-6 border-b border-gray-200">{t('orderSummary') || 'Order Summary'}</h2>
               
               <div className="space-y-4 mb-8">
                 <div className="flex justify-between items-center text-sm">
-                  <span className="text-gray-500">Subtotal</span>
-                  <span className="font-semibold text-gray-900">{theme?.currencySymbol || '৳'}{subtotal.toLocaleString()}</span>
+                  <span className="text-gray-500">{t('subtotal') || 'Subtotal'}</span>
+                  <span className="font-semibold text-gray-900">{theme?.currencySymbol || '৳'} {Math.round(subtotal).toLocaleString()}</span>
                 </div>
                 <div className="flex justify-between items-center text-sm">
-                  <span className="text-gray-500">Shipping</span>
-                  <span className="font-semibold text-gray-900">{theme?.currencySymbol || '৳'}{shippingEstimate.toLocaleString()}</span>
+                  <span className="text-gray-500">{t('shipping') || 'Shipping'}</span>
+                  <span className="font-semibold text-gray-900">{theme?.currencySymbol || '৳'} {shippingEstimate.toLocaleString()}</span>
                 </div>
                 <div className="flex justify-between items-center text-sm">
                   <span className="text-gray-500">Estimated Taxes</span>
-                  <span className="font-semibold text-gray-900">{theme?.currencySymbol || '৳'}{taxEstimate.toLocaleString()}</span>
+                  <span className="font-semibold text-gray-900">{theme?.currencySymbol || '৳'} {taxEstimate.toLocaleString()}</span>
                 </div>
               </div>
 
               <div className="pt-6 border-t border-gray-200 mb-8">
                 <div className="flex justify-between items-end">
-                  <span className="font-bold text-gray-900">Total</span>
-                  <span className="text-2xl font-black text-gray-900 tracking-tight">{theme?.currencySymbol || '৳'}{total.toLocaleString()}</span>
+                  <span className="font-bold text-gray-900">{t('total') || 'Total'}</span>
+                  <span className="text-2xl font-black text-gray-900 tracking-tight">{theme?.currencySymbol || '৳'} {total.toLocaleString()}</span>
                 </div>
               </div>
 

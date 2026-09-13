@@ -7,6 +7,8 @@ import { Check, ShieldCheck, ChevronRight } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { bdLocations } from '@/data/locations';
 import { z } from 'zod';
+import { getTranslation } from '@/utils/translations';
+import { computeShipping } from '@/utils/shipping';
 
 const checkoutSchema = z.object({
   email: z.string().email({ message: "Please enter a valid email address" }).optional().or(z.literal('')),
@@ -20,6 +22,10 @@ const checkoutSchema = z.object({
 });
 
 export default function CheckoutClient05({ theme, storeInfo }: { theme?: any; storeInfo?: any }) {
+  const language = storeInfo?.language || "en";
+  const t = (key: any) => getTranslation(language || 'en', key);
+
+
   const { cartItems: items, totalPrice: subtotal, clearCart, isInitialized } = useCart();
   const router = useRouter();
   const [isProcessing, setIsProcessing] = useState(false);
@@ -40,9 +46,9 @@ export default function CheckoutClient05({ theme, storeInfo }: { theme?: any; st
   const districtsList = bdLocations.find((d) => d.division === division)?.districts || [];
   const upazilasList = districtsList.find((d) => d.district === district)?.upazilas || [];
 
-  const shippingEstimate = items.length > 0 ? 60 : 0;
-  const taxEstimate = subtotal * 0.15;
-  const total = subtotal + shippingEstimate + taxEstimate;
+  const { cost: shippingEstimate, zoneName: shippingZoneName } = computeShipping(division, district, theme?.shippingZones || [], theme?.defaultShippingCost ?? 120);
+  const taxEstimate = Math.round(subtotal * 0.15);
+  const total = Math.round(subtotal + shippingEstimate + taxEstimate);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -229,7 +235,9 @@ export default function CheckoutClient05({ theme, storeInfo }: { theme?: any; st
                     <div className="w-4 h-4 rounded-full border-[5px] border-black flex-shrink-0" />
                     <span className="font-semibold text-gray-900 text-sm">Cash on Delivery</span>
                   </div>
-                  <span className="text-[11px] font-bold uppercase tracking-widest text-gray-400">Pay at door</span>
+                  <span className="text-xs font-bold text-gray-900">
+                    {shippingZoneName ? `${shippingZoneName} ` : ''}+{subtotal > 0 ? shippingEstimate.toLocaleString() : 0} {theme?.currencySymbol || '৳'}
+                  </span>
                 </label>
                 <label className="flex items-center justify-between p-4 bg-white border border-gray-200 rounded-xl cursor-pointer hover:border-gray-300 transition-colors shadow-sm opacity-50">
                   <div className="flex items-center gap-3">
@@ -246,7 +254,7 @@ export default function CheckoutClient05({ theme, storeInfo }: { theme?: any; st
         {/* Right: Summary */}
         <div className="w-full lg:w-[420px] shrink-0">
           <div className="bg-white rounded-[2rem] p-8 lg:p-10 border border-gray-100 shadow-sm sticky top-12">
-            <h2 className="text-lg font-bold text-gray-900 mb-8 tracking-tight">Order Summary</h2>
+            <h2 className="text-lg font-bold text-gray-900 mb-8 tracking-tight">{t('orderSummary') || 'Order Summary'}</h2>
             
             <div className="flex flex-col gap-6 mb-8 max-h-[300px] overflow-y-auto custom-scrollbar pr-2">
               {items.map(item => (
@@ -263,7 +271,7 @@ export default function CheckoutClient05({ theme, storeInfo }: { theme?: any; st
                   </div>
                   <div className="flex-1 min-w-0 pt-1">
                     <h4 className="text-sm font-semibold text-gray-900 line-clamp-2 leading-tight mb-1">{item.title}</h4>
-                    <span className="text-sm font-medium text-gray-500">{item.quantity} × {theme?.currencySymbol || '৳'}{item.price.toLocaleString()}</span>
+                    <span className="text-sm font-medium text-gray-500">{item.quantity} × {theme?.currencySymbol || '৳'} {Math.round(item.price).toLocaleString()}</span>
                   </div>
                 </div>
               ))}
@@ -271,23 +279,23 @@ export default function CheckoutClient05({ theme, storeInfo }: { theme?: any; st
 
             <div className="space-y-4 mb-8">
               <div className="flex justify-between text-sm">
-                <span className="text-gray-500">Subtotal</span>
-                <span className="font-semibold text-gray-900">{theme?.currencySymbol || '৳'}{subtotal.toLocaleString()}</span>
+                <span className="text-gray-500">{t('subtotal') || 'Subtotal'}</span>
+                <span className="font-semibold text-gray-900">{theme?.currencySymbol || '৳'} {Math.round(subtotal).toLocaleString()}</span>
               </div>
               <div className="flex justify-between text-sm">
-                <span className="text-gray-500">Shipping</span>
-                <span className="font-semibold text-gray-900">{theme?.currencySymbol || '৳'}{shippingEstimate.toLocaleString()}</span>
+                <span className="text-gray-500">{t('shipping') || 'Shipping'} {shippingZoneName ? `(${shippingZoneName})` : ''}</span>
+                <span className="font-semibold text-gray-900">{theme?.currencySymbol || '৳'} {shippingEstimate.toLocaleString()}</span>
               </div>
               <div className="flex justify-between text-sm">
                 <span className="text-gray-500">Taxes</span>
-                <span className="font-semibold text-gray-900">{theme?.currencySymbol || '৳'}{taxEstimate.toLocaleString()}</span>
+                <span className="font-semibold text-gray-900">{theme?.currencySymbol || '৳'} {taxEstimate.toLocaleString()}</span>
               </div>
             </div>
 
             <div className="border-t border-gray-100 pt-6">
               <div className="flex justify-between items-end">
-                <span className="font-bold text-gray-900 tracking-tight">Total</span>
-                <span className="text-3xl font-black text-gray-900 tracking-tighter">{theme?.currencySymbol || '৳'}{total.toLocaleString()}</span>
+                <span className="font-bold text-gray-900 tracking-tight">{t('total') || 'Total'}</span>
+                <span className="text-3xl font-black text-gray-900 tracking-tighter">{theme?.currencySymbol || '৳'} {total.toLocaleString()}</span>
               </div>
             </div>
 
@@ -295,7 +303,7 @@ export default function CheckoutClient05({ theme, storeInfo }: { theme?: any; st
               <button type="submit" form="checkout-form" disabled={isProcessing} 
                 style={theme?.buttonColors?.buyNow ? { backgroundColor: theme.buttonColors.buyNow } : theme?.primaryColor ? { backgroundColor: theme.primaryColor } : {}}
                 className="w-full bg-black text-white px-6 py-5 rounded-full font-bold text-[15px] hover:bg-gray-800 transition-colors shadow-lg disabled:opacity-70 flex items-center justify-center gap-2">
-                {isProcessing ? 'Processing Order...' : `Complete Order • ${theme?.currencySymbol || '৳'}${total.toLocaleString()}`}
+                {isProcessing ? 'Processing Order...' : `Complete Order • ${theme?.currencySymbol || '৳'} ${total.toLocaleString()}`}
               </button>
               
               <p className="text-center text-xs text-gray-400 flex items-center justify-center gap-2 mt-4">

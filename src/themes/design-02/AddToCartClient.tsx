@@ -1,9 +1,10 @@
-'use client';
+﻿'use client';
 
 import React, { useState } from 'react';
 import { useCart } from '@/context/CartContext';
 import { useRouter } from 'next/navigation';
 import { useTranslation } from '@/context/LanguageContext';
+import { getTranslation } from '@/utils/translations';
 
 export default function AddToCartClient({ product, theme }: { product: any; theme?: any }) {
   const [quantity, setQuantity] = useState(1);

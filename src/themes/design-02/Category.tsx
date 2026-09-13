@@ -10,6 +10,7 @@ import Design02ProductCard from './components/ui/ProductCard';
 import Header from './components/layout/Header';
 import Footer from './components/layout/Footer';
 import { getTheme } from '@/core/api/store';
+import { getTranslation } from '@/utils/translations';
 
 async function getStoreInfo(tenantSlug: string) {
   try {
@@ -66,6 +67,9 @@ export async function generateMetadata(
     getStoreInfo(tenantSlug),
     storefrontFetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/categories`, { next: { revalidate: 60 } }).then(res => res.json().catch(() => null)).catch(() => null)
   ]);
+  const language = storeInfo?.language || "en";
+  const t = (key: any) => getTranslation(language || 'en', key);
+
 
   const categories = categoriesRes?.data || [];
   const category = categories.find((c: any) => c.slug === resolvedParams.slug || c._id === resolvedParams.slug);
@@ -81,6 +85,7 @@ export async function generateMetadata(
 }
 
 export default async function Design02CategoryPage({ params, searchParams }: any) {
+
   const resolvedParams = await params;
   const resolvedSearchParams = await searchParams || {};
   const categorySlug = resolvedParams.slug;
@@ -112,10 +117,12 @@ export default async function Design02CategoryPage({ params, searchParams }: any
   const products = productResponse.data || [];
   const availableBrands = brandsRes?.data || [];
   const pagination = productResponse.pagination || { total: 0, page: 1, totalPages: 1 };
+
+  const language = storeInfo?.language || 'en';
+  const t = (key: any) => getTranslation(language, key);
   
   const currentPage = pagination.page;
   const totalPages = pagination.totalPages;
-
   return (
     <div className="min-h-screen bg-white text-gray-900 flex flex-col font-sans">
       <Header storeInfo={storeInfo} />
@@ -123,7 +130,7 @@ export default async function Design02CategoryPage({ params, searchParams }: any
       {/* Breadcrumb & Title Area */}
       <div className="max-w-7xl mx-auto px-8 py-12 text-center border-b border-gray-50">
         <div className="text-xs font-medium text-gray-400 mb-6 uppercase tracking-widest">
-          <Link href="/" className="hover:text-gray-900 transition-colors">Home</Link>
+          <Link href="/" className="hover:text-gray-900 transition-colors">{t('home') || 'Home'}</Link>
           <span className="mx-3">/</span>
           <span className="text-gray-900">{category?.name || 'Category'}</span>
         </div>

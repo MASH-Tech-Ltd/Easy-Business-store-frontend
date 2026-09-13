@@ -1,4 +1,4 @@
-import { getStoreInfo, getTheme } from "@/core/api/store";
+﻿import { getStoreInfo, getTheme } from "@/core/api/store";
 import { getProducts, getBestsellingProducts } from "@/core/api/product";
 import { getCategories } from "@/core/api/category";
 import Link from "next/link";

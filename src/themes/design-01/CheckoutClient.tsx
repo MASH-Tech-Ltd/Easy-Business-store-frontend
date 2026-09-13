@@ -15,6 +15,8 @@ import { useCart } from "@/context/CartContext";
 import { useTranslation } from "@/context/LanguageContext";
 import { z } from "zod";
 import { bdLocations } from "@/data/locations";
+import { computeShipping } from "@/utils/shipping";
+import { getTranslation } from '@/utils/translations';
 
 const checkoutSchema = z.object({
   phone: z.string().regex(/^(?:\+88|88)?01[3-9]\d{8}$/, { message: "Please enter a valid BD phone number (e.g. 01712345678)" }),
@@ -27,7 +29,9 @@ const checkoutSchema = z.object({
   upazila: z.string().min(1, { message: "Please select a subdistrict/thana" }),
 });
 
-export default function CheckoutClient({ storeInfo }: { storeInfo?: any }) {
+export default function CheckoutClient({ storeInfo, theme }: { storeInfo?: any; theme?: any }) {
+
+
   const {
     cartItems,
     updateQuantity,
@@ -78,7 +82,7 @@ export default function CheckoutClient({ storeInfo }: { storeInfo?: any }) {
   const districtsList = bdLocations.find(d => d.division === division)?.districts || [];
   const upazilasList = districtsList.find(d => d.district === district)?.upazilas || [];
 
-  const deliveryCharge = 120;
+  const { cost: deliveryCharge, zoneName: shippingZoneName } = computeShipping(division, district, theme?.shippingZones || [], theme?.defaultShippingCost ?? 120);
   const grandTotal = totalPrice > 0 ? totalPrice + deliveryCharge : 0;
 
   const handleCheckout = async () => {
@@ -159,8 +163,7 @@ export default function CheckoutClient({ storeInfo }: { storeInfo?: any }) {
     }
   };
 
-  if (status === "success") {
-    return (
+  if (status === "success") {    return (
       <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center p-6">
         <div className="bg-white p-12 rounded-3xl shadow-sm text-center max-w-md w-full">
           <div className="w-20 h-20 bg-green-100 text-green-500 rounded-full flex items-center justify-center mx-auto mb-6">
@@ -420,8 +423,13 @@ export default function CheckoutClient({ storeInfo }: { storeInfo?: any }) {
                     {t("cashOnDelivery")}
                   </span>
                 </div>
-                <div className="w-5 h-5 bg-primary rounded-full flex items-center justify-center text-white">
-                  <Check size={12} strokeWidth={3} />
+                <div className="flex items-center gap-3">
+                  <span className="text-sm font-bold text-primary">
+                    {shippingZoneName ? `${shippingZoneName} ` : ''}+{totalPrice > 0 ? deliveryCharge.toLocaleString() : 0} {t("bdt")}
+                  </span>
+                  <div className="w-5 h-5 bg-primary rounded-full flex items-center justify-center text-white shrink-0">
+                    <Check size={12} strokeWidth={3} />
+                  </div>
                 </div>
               </div>
 
@@ -529,7 +537,7 @@ export default function CheckoutClient({ storeInfo }: { storeInfo?: any }) {
                   <span className="font-bold text-gray-900">0 {t("bdt")}</span>
                 </div>
                 <div className="flex justify-between text-[13px] text-gray-600">
-                  <span>{t("deliveryCharge")}</span>
+                  <span>{t("deliveryCharge")} {shippingZoneName ? `(${shippingZoneName})` : ''}</span>
                   <span className="font-bold text-gray-900">
                     {totalPrice > 0 ? deliveryCharge.toLocaleString() : 0}{" "}
                     {t("bdt")}

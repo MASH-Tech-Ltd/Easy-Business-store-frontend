@@ -1,10 +1,14 @@
-'use client';
+﻿'use client';
 
 import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 import { useState, FormEvent } from 'react';
 import { Filter, X } from 'lucide-react';
+import { getTranslation } from '@/utils/translations';
 
-export default function FilterSidebar05({ categoryId, availableBrands = [] }: { categoryId?: string; availableBrands?: string[] }) {
+export default function FilterSidebar05({ categoryId, availableBrands = [], theme }: { categoryId?: string; availableBrands?: string[]; theme?: any; }) {
+  const language = "en";
+  const t = (key: any) => getTranslation(language || 'en', key);
+
   const router = useRouter();
   const searchParams = useSearchParams();
   const pathname = usePathname();
@@ -44,7 +48,7 @@ export default function FilterSidebar05({ categoryId, availableBrands = [] }: { 
       <form onSubmit={applyFilters} className="space-y-10">
         {/* Price */}
         <div>
-          <label className="block text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-4">Price Range</label>
+          <label className="block text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-4">{t('priceRange') || 'Price Range'}</label>
           <div className="flex items-center gap-3">
             <input type="number" placeholder="Min" value={minPrice} onChange={(e) => setMinPrice(e.target.value)}
               className="w-full border-b border-gray-200 py-2 text-sm focus:outline-none focus:border-black transition-colors placeholder:text-gray-300" />
@@ -74,7 +78,7 @@ export default function FilterSidebar05({ categoryId, availableBrands = [] }: { 
 
         {/* Availability */}
         <div>
-          <label className="block text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-4">Availability</label>
+          <label className="block text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-4">{t('availability') || 'Availability'}</label>
           <label className="flex items-center gap-3 cursor-pointer group">
             <div className={`w-4 h-4 rounded flex items-center justify-center transition-colors ${inStock ? 'bg-black border-black' : 'border border-gray-300 group-hover:border-black'}`}>
               {inStock && <svg className="w-3 h-3 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>}

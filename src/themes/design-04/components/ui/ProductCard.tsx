@@ -1,12 +1,14 @@
-'use client';
+﻿'use client';
 
 import React from 'react';
 import Link from 'next/link';
 import { ShoppingCart } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
 import { useRouter } from 'next/navigation';
+import { getTranslation } from '@/utils/translations';
 
-export default function ProductCard04({ product, isList = false, isBestSelling = false, theme }: { product: any; isList?: boolean; isBestSelling?: boolean; theme?: any }) {
+export default function ProductCard04({ product, isList = false, isBestSelling = false, theme, language = 'en' }: { product: any; isList?: boolean; isBestSelling?: boolean; theme?: any, language?: string }) {
+  const t = (key: any) => getTranslation(language, key);
   const { addToCart } = useCart();
   const router = useRouter();
 
@@ -57,8 +59,8 @@ export default function ProductCard04({ product, isList = false, isBestSelling =
           <h4 className="text-base font-semibold text-gray-900 mb-1 line-clamp-2">{product.title || product.name}</h4>
           {product.shortDescription && <p className="text-sm text-gray-400 line-clamp-2 mb-3">{product.shortDescription}</p>}
           <div className="flex items-center gap-2">
-            <span className="font-black text-gray-900 text-lg">{theme?.currencySymbol || '৳'}{price.toLocaleString()}</span>
-            {hasDiscount && <span className="text-sm text-gray-400 line-through">{theme?.currencySymbol || '৳'}{product.originalPrice.toLocaleString()}</span>}
+            <span className="font-black text-gray-900 text-lg">{theme?.currencySymbol || '৳'}{' '}{price.toLocaleString()}</span>
+            {hasDiscount && <span className="text-sm text-gray-400 line-through">{theme?.currencySymbol || '৳'}{' '}{product.originalPrice.toLocaleString()}</span>}
           </div>
         </div>
       </Link>
@@ -100,9 +102,9 @@ export default function ProductCard04({ product, isList = false, isBestSelling =
           </h4>
         </Link>
         <div className="flex items-center gap-2 mb-4">
-          <span className="font-black text-gray-900 text-base">{theme?.currencySymbol || '৳'}{price.toLocaleString()}</span>
+          <span className="font-black text-gray-900 text-base">{theme?.currencySymbol || '৳'}{' '}{price.toLocaleString()}</span>
           {hasDiscount && (
-            <span className="text-xs text-gray-400 line-through">{theme?.currencySymbol || '৳'}{product.originalPrice.toLocaleString()}</span>
+            <span className="text-xs text-gray-400 line-through">{theme?.currencySymbol || '৳'}{' '}{product.originalPrice.toLocaleString()}</span>
           )}
         </div>
 
@@ -112,9 +114,7 @@ export default function ProductCard04({ product, isList = false, isBestSelling =
           className="mt-auto w-full flex items-center justify-center gap-2 py-2.5 text-sm font-semibold text-white rounded-xl hover:opacity-90 active:scale-95 transition-all cursor-pointer"
           style={{ backgroundColor: addToCartColor }}
         >
-          <ShoppingCart className="w-4 h-4" />
-          Add to cart
-        </button>
+          <ShoppingCart className="w-4 h-4" />{t('addToCart') || 'Add to Cart'}</button>
       </div>
     </div>
   );

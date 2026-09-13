@@ -1,4 +1,4 @@
-import { storefrontFetch } from "../../../../utils/storefrontFetch";
+﻿import { storefrontFetch } from "../../../../utils/storefrontFetch";
 import Link from 'next/link';
 import { headers } from 'next/headers';
 import { ShoppingCart, Home, Grid, ChevronRight } from 'lucide-react';

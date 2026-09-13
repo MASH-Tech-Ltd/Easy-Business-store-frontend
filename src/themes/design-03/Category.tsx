@@ -1,4 +1,4 @@
-import { storefrontFetch } from "../../utils/storefrontFetch";
+﻿import { storefrontFetch } from "../../utils/storefrontFetch";
 import { headers } from 'next/headers';
 import type { Metadata, ResolvingMetadata } from 'next';
 import Link from 'next/link';
@@ -104,12 +104,12 @@ export default async function Design03CategoryPage({ params, searchParams }: any
         <div className="grid grid-cols-1 lg:grid-cols-[260px_1fr] flex-1">
           {/* Sidebar */}
           <aside className="hidden lg:block border-r border-white/10 bg-black">
-            <FilterSidebar03 categoryId={categoryId} availableBrands={availableBrands} />
+            <FilterSidebar03 categoryId={categoryId} availableBrands={availableBrands} theme={theme} />
           </aside>
 
           {/* Mobile Filter Drawer Toggle */}
           <div className="lg:hidden">
-            <FilterDrawer categoryId={categoryId} availableBrands={availableBrands} />
+            <FilterDrawer categoryId={categoryId} availableBrands={availableBrands} theme={theme} />
           </div>
 
           {/* Product Grid */}

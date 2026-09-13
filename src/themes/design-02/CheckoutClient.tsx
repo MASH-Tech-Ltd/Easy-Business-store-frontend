@@ -8,6 +8,8 @@ import { useCart } from "@/context/CartContext";
 import { useTranslation } from "@/context/LanguageContext";
 import { z } from "zod";
 import { bdLocations } from "@/data/locations";
+import { computeShipping } from "@/utils/shipping";
+import { getTranslation } from '@/utils/translations';
 
 const checkoutSchema = z.object({
   phone: z.string().regex(/^(?:\+88|88)?01[3-9]\d{8}$/, { message: "Please enter a valid BD phone number (e.g. 01712345678)" }),
@@ -25,6 +27,8 @@ export default function Design02CheckoutClient({ theme,
 }: {
   storeInfo?: any; theme?: any;
 }) {
+
+
   const {
     cartItems,
     updateQuantity,
@@ -79,7 +83,7 @@ export default function Design02CheckoutClient({ theme,
   const upazilasList =
     districtsList.find((d) => d.district === district)?.upazilas || [];
 
-  const deliveryCharge = 120;
+  const { cost: deliveryCharge, zoneName: shippingZoneName } = computeShipping(division, district, theme?.shippingZones || [], theme?.defaultShippingCost ?? 120);
   const grandTotal = totalPrice > 0 ? totalPrice + deliveryCharge : 0;
 
   const handleCheckout = async () => {
@@ -384,8 +388,13 @@ export default function Design02CheckoutClient({ theme,
                 <span className="font-medium text-gray-900">
                   {t("cashOnDelivery") || "Cash on Delivery"}
                 </span>
-                <div className="w-6 h-6 bg-gray-900 rounded-full flex items-center justify-center text-white">
-                  <Check size={14} strokeWidth={3} />
+                <div className="flex items-center gap-3">
+                  <span className="text-sm font-bold text-gray-900">
+                    {shippingZoneName ? `${shippingZoneName} ` : ''}+{totalPrice > 0 ? deliveryCharge.toLocaleString() : 0} {theme?.currencySymbol || '৳'}
+                  </span>
+                  <div className="w-6 h-6 bg-gray-900 rounded-full flex items-center justify-center text-white shrink-0">
+                    <Check size={14} strokeWidth={3} />
+                  </div>
                 </div>
               </div>
             </section>
@@ -431,7 +440,7 @@ export default function Design02CheckoutClient({ theme,
                         </p>
                       </div>
                       <div className="text-sm font-medium text-gray-900 pt-1">
-                        {theme?.currencySymbol || '৳'}{(item.price * item.quantity).toLocaleString()}
+                        {theme?.currencySymbol || '৳'}{' '}{(item.price * item.quantity).toLocaleString()}
                       </div>
                     </div>
                   ))
@@ -442,18 +451,18 @@ export default function Design02CheckoutClient({ theme,
                 <div className="flex justify-between text-gray-600">
                   <span>{t("subTotal") || "Subtotal"}</span>
                   <span className="font-medium text-gray-900">
-                    {theme?.currencySymbol || '৳'}{totalPrice.toLocaleString()}
+                    {theme?.currencySymbol || '৳'}{' '}{totalPrice.toLocaleString()}
                   </span>
                 </div>
                 <div className="flex justify-between text-gray-600">
-                  <span>{t("deliveryCharge") || "Delivery"}</span>
+                  <span>{t("deliveryCharge") || "Delivery"} {shippingZoneName ? `(${shippingZoneName})` : ''}</span>
                   <span className="font-medium text-gray-900">
-                    {theme?.currencySymbol || '৳'}{totalPrice > 0 ? deliveryCharge.toLocaleString() : 0}
+                    {theme?.currencySymbol || '৳'}{' '}{totalPrice > 0 ? deliveryCharge.toLocaleString() : 0}
                   </span>
                 </div>
                 <div className="pt-4 flex justify-between text-lg font-medium text-gray-900 border-t border-gray-200">
                   <span>{t("total") || "Total"}</span>
-                  <span>{theme?.currencySymbol || '৳'}{grandTotal.toLocaleString()}</span>
+                  <span>{theme?.currencySymbol || '৳'}{' '}{grandTotal.toLocaleString()}</span>
                 </div>
               </div>
   

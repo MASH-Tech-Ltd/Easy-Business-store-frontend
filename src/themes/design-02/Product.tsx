@@ -1,4 +1,4 @@
-import { storefrontFetch } from "../../utils/storefrontFetch";
+﻿import { storefrontFetch } from "../../utils/storefrontFetch";
 import { headers } from 'next/headers';
 import Link from 'next/link';
 import ProductGallery from '@/components/ProductGallery';
@@ -58,7 +58,7 @@ export default async function Design02ProductPage({ params }: { params: Promise<
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center font-light">
-          <h1 className="text-2xl mb-4">Product not found</h1>
+          <h1 className="text-2xl mb-4">{t('productNotFound') || 'Product not found'}</h1>
           <Link href="/" className="text-gray-900 underline">Return to Home</Link>
         </div>
       </div>
@@ -71,7 +71,7 @@ export default async function Design02ProductPage({ params }: { params: Promise<
       <Header storeInfo={storeInfo} />
 
       <div className="max-w-7xl mx-auto w-full px-8 py-6 flex items-center text-xs text-gray-400 gap-3">
-        <Link href="/" className="hover:text-gray-900 transition-colors">Home</Link>
+        <Link href="/" className="hover:text-gray-900 transition-colors">{t('home') || 'Home'}</Link>
         <span>/</span>
         <span className="hover:text-gray-900 cursor-pointer">{product.categoryId?.name || 'Category'}</span>
         <span>/</span>
@@ -108,10 +108,10 @@ export default async function Design02ProductPage({ params }: { params: Promise<
             <h1 className="text-4xl font-light text-gray-900 mb-4 leading-tight">{product.title}</h1>
             
             <div className="text-2xl font-medium text-gray-900 mb-8">
-              {theme?.currencySymbol || '৳'}{product.discountPrice || product.discountedPrice || product.price}
+              {theme?.currencySymbol || '৳'}{' '}{product.discountPrice || product.discountedPrice || product.price}
               {(product.originalPrice > (product.discountPrice || product.discountedPrice)) && (
                 <span className="text-lg text-gray-400 line-through ml-4 font-light">
-                  {theme?.currencySymbol || '৳'}{product.originalPrice}
+                  {theme?.currencySymbol || '৳'}{' '}{product.originalPrice}
                 </span>
               )}
             </div>

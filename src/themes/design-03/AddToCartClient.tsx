@@ -1,10 +1,14 @@
-'use client';
+﻿'use client';
 
 import React, { useState } from 'react';
 import { useCart } from '@/context/CartContext';
 import { useRouter } from 'next/navigation';
+import { getTranslation } from '@/utils/translations';
 
 export default function AddToCartClient03({ product, theme }: { product: any; theme?: any }) {
+  const language = "en";
+  const t = (key: any) => getTranslation(language || 'en', key);
+
   const [quantity, setQuantity] = useState(1);
   const { addToCart } = useCart();
   const router = useRouter();
@@ -42,16 +46,12 @@ export default function AddToCartClient03({ product, theme }: { product: any; th
         onClick={handleAddToCart}
         className="text-white font-bold py-3 px-8 rounded-xl text-sm shadow-lg hover:opacity-90 transition-all cursor-pointer"
         style={{ backgroundColor: addToCartColor }}
-      >
-        Add to Cart
-      </button>
+      >{t('addToCart') || 'Add to Cart'}</button>
       <button
         onClick={handleBuyNow}
         className="text-white font-bold py-3 px-8 rounded-xl text-sm shadow-lg hover:opacity-90 transition-all cursor-pointer"
         style={{ backgroundColor: buyNowColor }}
-      >
-        Buy Now
-      </button>
+      >{t('buyNow') || 'Buy Now'}</button>
     </div>
   );
 }

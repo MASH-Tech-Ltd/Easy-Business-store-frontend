@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import CartClient from './CartClient';
 import Footer from './components/layout/Footer';
 import Header from './components/layout/Header';

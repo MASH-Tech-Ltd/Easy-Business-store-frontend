@@ -1,10 +1,14 @@
-'use client';
+﻿'use client';
 
 import React from 'react';
 import { useCart } from '@/context/CartContext';
 import { useRouter } from 'next/navigation';
+import { getTranslation } from '@/utils/translations';
 
 export default function ProductCardActions({ product, theme }: { product: any, theme?: any }) {
+  const language = "en";
+  const t = (key: any) => getTranslation(language || 'en', key);
+
   const { addToCart } = useCart();
   const router = useRouter();
 
@@ -37,16 +41,12 @@ export default function ProductCardActions({ product, theme }: { product: any, t
         onClick={handleAddToCart}
         className="flex-1 text-white font-medium py-1 px-1 rounded-sm shadow hover:opacity-90 transition-colors text-[10px] uppercase tracking-wider text-center"
         style={{ backgroundColor: addToCartColor }}
-      >
-        Add to Cart
-      </button>
+      >{t('addToCart') || 'Add to Cart'}</button>
       <button 
         onClick={handleBuyNow}
         className="flex-1 text-white font-medium py-1 px-1 rounded-sm shadow hover:opacity-90 transition-colors text-[10px] uppercase tracking-wider text-center"
         style={{ backgroundColor: buyNowColor }}
-      >
-        Buy Now
-      </button>
+      >{t('buyNow') || 'Buy Now'}</button>
     </div>
   );
 }

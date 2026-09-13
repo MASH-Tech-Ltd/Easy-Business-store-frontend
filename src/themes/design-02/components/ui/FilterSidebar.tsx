@@ -1,9 +1,9 @@
-'use client';
+﻿'use client';
 
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useState, FormEvent } from 'react';
 
-export default function Design02FilterSidebar({ categoryId, availableBrands = [] }: { categoryId: string, availableBrands?: string[] }) {
+export default function Design02FilterSidebar({ categoryId, availableBrands = [], theme }: { categoryId: string, availableBrands?: string[], theme?: any }) {
   const router = useRouter();
   const searchParams = useSearchParams();
   

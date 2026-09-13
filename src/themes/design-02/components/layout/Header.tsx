@@ -1,11 +1,14 @@
-import Link from 'next/link';
+﻿import Link from 'next/link';
 import { headers } from 'next/headers';
 import GlobalSearch from '../ui/GlobalSearch';
 import HeaderCartIcon02 from '../ui/HeaderCartIcon';
+import { getTranslation } from '@/utils/translations';
 
 export default async function Header({ storeInfo }: { storeInfo: any }) {
   const headersList = await headers();
   const tenantSlug = headersList.get('x-tenant-slug') || 'main';
+  const language = storeInfo?.language || 'en';
+  const t = (key: any) => getTranslation(language, key);
 
   return (
     <header className="py-4 border-b border-gray-100 bg-white/80 backdrop-blur-md sticky top-0 z-50">
@@ -29,7 +32,7 @@ export default async function Header({ storeInfo }: { storeInfo: any }) {
           <GlobalSearch tenantSlug={tenantSlug} />
         </div>
         <nav className="flex items-center space-x-8 text-sm font-medium hidden md:flex">
-          <Link href="/" className="hover:text-gray-500 transition-colors">Home</Link>
+          <Link href="/" className="hover:text-gray-500 transition-colors">{t('home') || 'Home'}</Link>
           <Link href="/categories" className="hover:text-gray-500 transition-colors">Shop</Link>
           <HeaderCartIcon02 />
         </nav>

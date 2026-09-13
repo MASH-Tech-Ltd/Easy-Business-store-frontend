@@ -1,4 +1,5 @@
-import Link from "next/link";
+﻿import Link from "next/link";
+import { getTranslation } from '@/utils/translations';
 
 export default function Footer({
   storeInfo,
@@ -7,6 +8,8 @@ export default function Footer({
   storeInfo: any;
   theme?: any;
 }) {
+  const language = storeInfo?.language || 'en';
+  const t = (key: any) => getTranslation(language, key);
   const year = new Date().getFullYear();
   const footer = theme?.footer || {};
   const socialLinks = footer.socialLinks || {};
@@ -30,10 +33,11 @@ export default function Footer({
             ) : null}
             {storeInfo?.name || "Minimal Store"}
           </h2>
-          <p className="text-gray-500 text-sm max-w-sm mb-6">
-            {storeInfo?.description ||
-              "Experience the best curated collection of premium products designed for modern living. Quality and simplicity combined."}
-          </p>
+            {storeInfo?.description && (
+              <p className="text-gray-400 font-light text-sm max-w-sm mb-6 leading-relaxed">
+                {storeInfo.description}
+              </p>
+            )}
           {(socialLinks.facebook ||
             socialLinks.youtube ||
             socialLinks.tiktok) && (
@@ -222,9 +226,7 @@ export default function Footer({
         {/* Contact Info */}
         {(contactInfo.email || contactInfo.phone || contactInfo.address) && (
           <div>
-            <h3 className="text-sm font-bold uppercase tracking-wider mb-4">
-              Contact
-            </h3>
+            <h3 className="text-sm font-bold uppercase tracking-wider mb-4">{t('contact') || 'Contact'}</h3>
             <ul className="space-y-3 text-sm text-gray-500">
               {contactInfo.email && (
                 <li className="flex items-start gap-2">

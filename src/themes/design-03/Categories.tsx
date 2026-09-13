@@ -1,4 +1,4 @@
-import { storefrontFetch } from "../../utils/storefrontFetch";
+﻿import { storefrontFetch } from "../../utils/storefrontFetch";
 import Link from 'next/link';
 import { getStoreInfo, getTheme } from '@/core/api/store';
 import Header03 from './components/layout/Header';

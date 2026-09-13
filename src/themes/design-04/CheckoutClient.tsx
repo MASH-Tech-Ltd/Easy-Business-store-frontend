@@ -6,7 +6,9 @@ import { useRouter } from 'next/navigation';
 import { CheckCircle2 } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
 import { bdLocations } from '@/data/locations';
+import { computeShipping } from '@/utils/shipping';
 import { z } from 'zod';
+import { getTranslation } from '@/utils/translations';
 
 const checkoutSchema = z.object({
   phone: z.string().regex(/^(?:\+88|88)?01[3-9]\d{8}$/, { message: "Please enter a valid BD phone number (e.g. 01712345678)" }),
@@ -18,6 +20,10 @@ const checkoutSchema = z.object({
 });
 
 export default function CheckoutClient04({ storeInfo, theme }: { storeInfo?: any; theme?: any }) {
+  const language = storeInfo?.language || "en";
+  const t = (key: any) => getTranslation(language || 'en', key);
+
+
   const { cartItems, totalItems, totalPrice, clearCart } = useCart();
   const [status, setStatus] = useState<'idle' | 'processing' | 'success'>('idle');
   const [orderId, setOrderId] = useState<string | null>(null);
@@ -35,7 +41,7 @@ export default function CheckoutClient04({ storeInfo, theme }: { storeInfo?: any
   const districtsList = bdLocations.find((d) => d.division === division)?.districts || [];
   const upazilasList = districtsList.find((d) => d.district === district)?.upazilas || [];
 
-  const deliveryCharge = 120;
+  const { cost: deliveryCharge, zoneName: shippingZoneName } = computeShipping(division, district, theme?.shippingZones || [], theme?.defaultShippingCost ?? 120);
   const grandTotal = totalPrice > 0 ? totalPrice + deliveryCharge : 0;
 
   const handleCheckout = async (e: React.FormEvent) => {
@@ -128,10 +134,10 @@ export default function CheckoutClient04({ storeInfo, theme }: { storeInfo?: any
           
           <div className="flex-1">
             <div className="bg-white rounded-3xl shadow-sm border border-gray-100 p-8 lg:p-12">
-              <h1 className="text-2xl font-black text-gray-900 mb-8 tracking-tight">Checkout</h1>
+              <h1 className="text-2xl font-black text-gray-900 mb-8 tracking-tight">{t('checkout') || 'Checkout'}</h1>
               <form id="checkout-form" onSubmit={handleCheckout} className="space-y-8">
                 <div>
-                  <h2 className="text-sm font-bold text-gray-900 uppercase tracking-wider mb-4">Contact</h2>
+                  <h2 className="text-sm font-bold text-gray-900 uppercase tracking-wider mb-4">{t('contact') || 'Contact'}</h2>
                   <input type="tel" value={phone} onChange={e => { setPhone(e.target.value); if (fieldErrors.phone) setFieldErrors(prev => ({ ...prev, phone: [] })) }} placeholder="Phone Number" className={`w-full bg-gray-50 border ${fieldErrors.phone?.length ? 'border-red-500' : 'border-gray-200'} rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900`} />
                   {fieldErrors.phone?.[0] && <p className="text-xs text-red-500 mt-1">{fieldErrors.phone[0]}</p>}
                 </div>
@@ -174,10 +180,15 @@ export default function CheckoutClient04({ storeInfo, theme }: { storeInfo?: any
                   </div>
                 </div>
                 <div>
-                  <h2 className="text-sm font-bold text-gray-900 uppercase tracking-wider mb-4">Payment</h2>
+                  <h2 className="text-sm font-bold text-gray-900 uppercase tracking-wider mb-4">{t('paymentOptions') || 'Payment'}</h2>
                   <div className="border-2 border-gray-900 rounded-xl p-4 flex items-center justify-between bg-gray-50">
                     <span className="font-bold text-gray-900">Cash on Delivery</span>
-                    <div className="w-6 h-6 bg-gray-900 rounded-full flex items-center justify-center text-white"><CheckCircle2 size={14} /></div>
+                    <div className="flex items-center gap-3">
+                      <span className="text-sm font-bold text-gray-900">
+                        {shippingZoneName ? `${shippingZoneName} ` : ''}+{totalPrice > 0 ? deliveryCharge.toLocaleString() : 0} {theme?.currencySymbol || '৳'}
+                      </span>
+                      <div className="w-6 h-6 bg-gray-900 rounded-full flex items-center justify-center text-white shrink-0"><CheckCircle2 size={14} /></div>
+                    </div>
                   </div>
                 </div>
               </form>
@@ -186,7 +197,7 @@ export default function CheckoutClient04({ storeInfo, theme }: { storeInfo?: any
 
           <div className="lg:w-96 shrink-0">
             <div className="bg-gray-900 rounded-3xl p-8 text-white sticky top-28 shadow-xl">
-              <h2 className="text-xl font-bold mb-8">Order Summary</h2>
+              <h2 className="text-xl font-bold mb-8">{t('orderSummary') || 'Order Summary'}</h2>
               <div className="divide-y divide-gray-800 mb-8 max-h-[300px] overflow-y-auto">
                 {cartItems.map((item) => (
                   <div key={item.id} className="py-4 flex gap-4 first:pt-0 items-center">
@@ -195,15 +206,15 @@ export default function CheckoutClient04({ storeInfo, theme }: { storeInfo?: any
                       <div className="text-sm font-medium text-white line-clamp-1">{item.title}</div>
                       <div className="text-xs text-gray-400">Qty: {item.quantity}</div>
                     </div>
-                    <div className="font-bold">{theme?.currencySymbol || '৳'}{item.price.toLocaleString()}</div>
+                    <div className="font-bold">{theme?.currencySymbol || '৳'}{' '}{item.price.toLocaleString()}</div>
                   </div>
                 ))}
               </div>
               <div className="space-y-4 mb-8 text-sm font-medium text-gray-300 border-t border-gray-800 pt-6">
-                <div className="flex justify-between"><span>Subtotal</span><span className="text-white">{theme?.currencySymbol || '৳'}{totalPrice.toLocaleString()}</span></div>
-                <div className="flex justify-between"><span>Shipping</span><span className="text-white">{theme?.currencySymbol || '৳'}{deliveryCharge.toLocaleString()}</span></div>
+                <div className="flex justify-between"><span>{t('subtotal') || 'Subtotal'}</span><span className="text-white">{theme?.currencySymbol || '৳'}{' '}{totalPrice.toLocaleString()}</span></div>
+                <div className="flex justify-between"><span>{t('shipping') || 'Shipping'} {shippingZoneName ? `(${shippingZoneName})` : ''}</span><span className="text-white">{theme?.currencySymbol || '৳'}{' '}{deliveryCharge.toLocaleString()}</span></div>
                 <div className="h-px bg-gray-700 w-full my-4"></div>
-                <div className="flex justify-between text-lg font-black text-white"><span>Total</span><span>{theme?.currencySymbol || '৳'}{grandTotal.toLocaleString()}</span></div>
+                <div className="flex justify-between text-lg font-black text-white"><span>{t('total') || 'Total'}</span><span>{theme?.currencySymbol || '৳'}{' '}{grandTotal.toLocaleString()}</span></div>
               </div>
               <button form="checkout-form" type="submit" disabled={status === 'processing' || cartItems.length === 0} className="w-full py-4 bg-white text-gray-900 font-bold rounded-full hover:bg-gray-200 transition-colors shadow-md disabled:opacity-50">
                 {status === 'processing' ? 'Processing...' : 'Place Order'}

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React from "react";
 import { Mail, Phone, MapPin } from "lucide-react";
@@ -56,6 +56,7 @@ const Twitter = (props: React.SVGProps<SVGSVGElement>) => (
   </svg>
 );
 import Link from "next/link";
+import { getTranslation } from '@/utils/translations';
 
 export default function Footer05({
   storeInfo,
@@ -64,6 +65,10 @@ export default function Footer05({
   storeInfo?: any;
   theme?: any;
 }) {
+  const language = storeInfo?.language || "en";
+  const t = (key: any) => getTranslation(language || 'en', key);
+
+
   const year = new Date().getFullYear();
   const footer = theme?.footer || {};
   const socialLinks = footer.socialLinks || {};
@@ -72,7 +77,6 @@ export default function Footer05({
   const copyrightText =
     footer.copyrightText ||
     `© ${year} ${storeInfo?.name || "Minimal Store"}. All rights reserved.`;
-
   return (
     <footer className="bg-white border-t border-gray-100 mt-auto pt-20 pb-10">
       <div className="max-w-[1400px] mx-auto px-6 lg:px-12">
@@ -87,10 +91,11 @@ export default function Footer05({
                 {storeInfo?.name || "Minimal"}
               </span>
             </Link>
-            <p className="text-gray-500 text-[15px] leading-relaxed max-w-sm mb-8">
-              {storeInfo?.description ||
-                "A curated collection of premium products designed to elevate your everyday life. Simple, beautiful, functional."}
-            </p>
+            {storeInfo?.description && (
+              <p className="text-gray-500 font-medium leading-relaxed max-w-sm mb-6">
+                {storeInfo.description}
+              </p>
+            )}
             <div className="flex items-center gap-4 text-gray-400">
               {socialLinks.facebook && (
                 <a
@@ -145,9 +150,7 @@ export default function Footer05({
                   <Link
                     href="/categories"
                     className="hover:text-black transition-colors"
-                  >
-                    Categories
-                  </Link>
+                  >{t('categories') || 'Categories'}</Link>
                 </li>
                 <li>
                   <Link
@@ -226,9 +229,7 @@ export default function Footer05({
               contactInfo.phone ||
               contactInfo.address) && (
               <div className="col-span-2 sm:col-span-1">
-                <h3 className="font-semibold text-gray-900 mb-6 text-sm tracking-wide">
-                  Contact
-                </h3>
+                <h3 className="font-semibold text-gray-900 mb-6 text-sm tracking-wide">{t('contact') || 'Contact'}</h3>
                 <ul className="space-y-4 text-[15px] text-gray-500">
                   {contactInfo.email && (
                     <li className="flex items-start gap-3 group">
@@ -293,7 +294,7 @@ export default function Footer05({
               English (US)
             </span>
             <span className="hover:text-gray-600 transition-colors cursor-pointer">
-              BDT ({theme?.currencySymbol || '৳'})
+              BDT ({theme?.currencySymbol || '৳'}{' '})
             </span>
           </div>
         </div>

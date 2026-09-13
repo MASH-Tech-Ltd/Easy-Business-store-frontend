@@ -1,4 +1,4 @@
-import { storefrontFetch } from "../../utils/storefrontFetch";
+﻿import { storefrontFetch } from "../../utils/storefrontFetch";
 import { headers } from 'next/headers';
 import type { Metadata, ResolvingMetadata } from 'next';
 import Link from 'next/link';
@@ -10,6 +10,7 @@ import ProductCard from './components/ui/ProductCard';
 import FilterDrawer from './components/ui/FilterDrawer';
 import Header from './components/layout/Header';
 import Footer from './components/layout/Footer';
+import { getTranslation } from '@/utils/translations';
 
 async function getStoreInfo(tenantSlug: string) {
   try {
@@ -66,6 +67,9 @@ export async function generateMetadata(
     getStoreInfo(tenantSlug),
     storefrontFetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/categories`, { next: { revalidate: 60 } }).then(res => res.json().catch(() => null)).catch(() => null)
   ]);
+  const language = storeInfo?.language || "en";
+  const t = (key: any) => getTranslation(language || 'en', key);
+
 
   const categories = categoriesRes?.data || [];
   const category = categories.find((c: any) => c.slug === resolvedParams.slug || c._id === resolvedParams.slug);
@@ -85,6 +89,7 @@ export async function generateMetadata(
 }
 
 export default async function CategoryPage({ params, searchParams }: any) {
+
   const resolvedParams = await params;
   const resolvedSearchParams = await searchParams;
   const categorySlug = resolvedParams.slug;
@@ -120,7 +125,6 @@ export default async function CategoryPage({ params, searchParams }: any) {
   
   const currentPage = pagination.page;
   const totalPages = pagination.totalPages;
-
   return (
     <div className="min-h-screen bg-white text-gray-900 flex flex-col">
       <Header />
@@ -130,9 +134,7 @@ export default async function CategoryPage({ params, searchParams }: any) {
           <Link href="/" className="hover:text-gray-900 flex items-center gap-1">
             <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" className="w-4 h-4">
               <path d="M11.47 3.84a.75.75 0 011.06 0l8.99 9a.75.75 0 11-1.06 1.06l-4.635-4.643V20.25a.75.75 0 01-.75.75h-3.75v-4.5a.75.75 0 00-.75-.75h-3a.75.75 0 00-.75.75v4.5H3.75a.75.75 0 01-.75-.75V11.25l-2.025 2.025a.75.75 0 11-1.06-1.06l8.99-9zM12 5.093l-6.75 6.756v8.401h2.25v-4.5a2.25 2.25 0 012.25-2.25h4.5a2.25 2.25 0 012.25 2.25v4.5h2.25v-8.401L12 5.093z" />
-            </svg>
-            Home
-          </Link>
+            </svg>{t('home') || 'Home'}</Link>
           <span>&rarr;</span>
           <span className="text-gray-900">{category?.name || 'Category'}</span>
         </div>
@@ -164,12 +166,12 @@ export default async function CategoryPage({ params, searchParams }: any) {
         
         {/* Sidebar */}
         <aside className="hidden md:block">
-          <FilterSidebar categoryId={categoryId} availableBrands={availableBrands} />
+          <FilterSidebar categoryId={categoryId} availableBrands={availableBrands} theme={theme} />
         </aside>
 
         {/* Mobile Filter Drawer Toggle */}
         <div className="md:hidden">
-          <FilterDrawer categoryId={categoryId} availableBrands={availableBrands} />
+          <FilterDrawer categoryId={categoryId} availableBrands={availableBrands} theme={theme} />
         </div>
 
         {/* Product Grid */}

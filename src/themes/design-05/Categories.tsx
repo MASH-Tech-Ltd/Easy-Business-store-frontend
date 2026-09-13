@@ -3,8 +3,10 @@ import { headers } from 'next/headers';
 import Link from 'next/link';
 import Header05 from './components/layout/Header';
 import Footer05 from './components/layout/Footer';
+import { getTranslation } from '@/utils/translations';
 
 export default async function CategoriesPage05() {
+
   const headersList = await headers();
   const tenantSlug = headersList.get('x-tenant-slug') || 'main';
 
@@ -13,11 +15,11 @@ export default async function CategoriesPage05() {
     storefrontFetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/theme`, { next: { revalidate: 60 } }),
     storefrontFetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/categories`, { next: { revalidate: 60 } })
   ]);
-
   const storeInfo = storeInfoRes.ok ? (await storeInfoRes.json()).data : null;
+  const language = storeInfo?.language || "en";
+  const t = (key: any) => getTranslation(language || 'en', key);
   const theme = themeRes.ok ? (await themeRes.json()).data : null;
   const categories = categoriesRes.ok ? (await categoriesRes.json()).data || [] : [];
-
   return (
     <div className="min-h-screen bg-white font-sans flex flex-col">
       <Header05 storeInfo={storeInfo} />
@@ -25,9 +27,9 @@ export default async function CategoriesPage05() {
       <div className="pt-16 pb-8 px-6 lg:px-12 text-center">
         <h1 className="text-4xl lg:text-5xl font-bold text-gray-900 tracking-tight mb-4">All Categories</h1>
         <div className="flex items-center justify-center text-[13px] font-semibold text-gray-400 uppercase tracking-widest gap-3">
-          <Link href="/" className="hover:text-black transition-colors">Home</Link>
+          <Link href="/" className="hover:text-black transition-colors">{t('home') || 'Home'}</Link>
           <span className="text-gray-300">/</span>
-          <span className="text-black">Categories</span>
+          <span className="text-black">{t('categories') || 'Categories'}</span>
         </div>
       </div>
 

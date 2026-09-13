@@ -1,4 +1,4 @@
-import { headers } from 'next/headers';
+﻿import { headers } from 'next/headers';
 import { getStoreInfo, getTheme } from '@/core/api/store';
 import Header03 from './components/layout/Header';
 import Footer03 from './components/layout/Footer';

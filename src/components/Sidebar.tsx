@@ -46,7 +46,7 @@ export default function Sidebar() {
   ];
 
   const handleLogout = () => {
-    localStorage.removeItem('tenantAccessToken');
+    localStorage.removeItem('user');
     window.location.href = '/login';
   };
 

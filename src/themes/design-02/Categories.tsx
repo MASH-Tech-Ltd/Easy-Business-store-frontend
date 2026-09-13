@@ -1,8 +1,9 @@
-import { storefrontFetch } from "../../utils/storefrontFetch";
+﻿import { storefrontFetch } from "../../utils/storefrontFetch";
 import Link from 'next/link';
 import Header from './components/layout/Header';
 import Footer from './components/layout/Footer';
 import { getTheme } from '@/core/api/store';
+import { getTranslation } from '@/utils/translations';
 
 async function getCategories(tenantSlug: string) {
   try {
@@ -28,11 +29,14 @@ async function getStoreInfo(tenantSlug: string) {
 }
 
 export default async function Design02Categories({ tenantSlug }: { tenantSlug: string }) {
+
   const [categories, storeInfo, theme] = await Promise.all([
     getCategories(tenantSlug),
     getStoreInfo(tenantSlug),
     getTheme(tenantSlug)
   ]);
+  const language = storeInfo?.language || "en";
+  const t = (key: any) => getTranslation(language || 'en', key);
 
   return (
     <div className="min-h-screen bg-white text-gray-900 flex flex-col font-sans">
@@ -41,7 +45,7 @@ export default async function Design02Categories({ tenantSlug }: { tenantSlug: s
       {/* Breadcrumb & Title Area */}
       <div className="max-w-7xl mx-auto px-8 py-12 text-center border-b border-gray-50">
         <div className="text-xs font-medium text-gray-400 mb-6 uppercase tracking-widest">
-          <Link href="/" className="hover:text-gray-900 transition-colors">Home</Link>
+          <Link href="/" className="hover:text-gray-900 transition-colors">{t('home') || 'Home'}</Link>
           <span className="mx-3">/</span>
           <span className="text-gray-900">Collections</span>
         </div>

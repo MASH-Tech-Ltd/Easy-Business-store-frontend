@@ -1,9 +1,9 @@
-'use client';
+﻿'use client';
 
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useState, FormEvent } from 'react';
 
-export default function FilterSidebar03({ categoryId, availableBrands = [] }: { categoryId: string; availableBrands?: string[] }) {
+export default function FilterSidebar03({ categoryId, availableBrands = [], theme }: { categoryId?: string; availableBrands?: string[]; theme?: any; }) {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -43,7 +43,7 @@ export default function FilterSidebar03({ categoryId, availableBrands = [] }: { 
         </div>
 
         <div>
-          <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Price Range ({theme?.currencySymbol || '৳'})</label>
+          <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Price Range ({theme?.currencySymbol || '৳'}{' '})</label>
           <div className="flex items-center gap-2">
             <input
               type="number" placeholder="Min" value={minPrice}

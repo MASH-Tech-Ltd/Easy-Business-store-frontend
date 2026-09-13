@@ -1,12 +1,16 @@
-'use client';
+﻿'use client';
 
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { ShoppingCart, Star, Check } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
 import { useRouter } from 'next/navigation';
+import { getTranslation } from '@/utils/translations';
 
 export default function ProductClient05({ product, theme }: { product: any; theme?: any }) {
+  const language = "en";
+  const t = (key: any) => getTranslation(language || 'en', key);
+
   const { addToCart } = useCart();
   const router = useRouter();
   const [activeImage, setActiveImage] = useState(product.images?.[0]?.secure_url || product.image || '');
@@ -36,7 +40,7 @@ export default function ProductClient05({ product, theme }: { product: any; them
       
       {/* Breadcrumb */}
       <div className="flex items-center text-[13px] font-semibold text-gray-400 uppercase tracking-widest gap-3 mb-10">
-        <Link href="/" className="hover:text-black transition-colors">Home</Link>
+        <Link href="/" className="hover:text-black transition-colors">{t('home') || 'Home'}</Link>
         <span className="text-gray-300">/</span>
         <Link href="/products" className="hover:text-black transition-colors">Products</Link>
         <span className="text-gray-300">/</span>
@@ -77,19 +81,16 @@ export default function ProductClient05({ product, theme }: { product: any; them
             
             <div className="flex items-center gap-6 mb-6">
               <div className="flex items-center gap-3">
-                <span className="text-3xl font-semibold text-gray-900">{theme?.currencySymbol || '৳'}{price.toLocaleString()}</span>
+                <span className="text-3xl font-semibold text-gray-900">{theme?.currencySymbol || '৳'}{' '}{price.toLocaleString()}</span>
                 {hasDiscount && (
-                  <span className="text-xl text-gray-400 line-through">{theme?.currencySymbol || '৳'}{product.originalPrice.toLocaleString()}</span>
+                  <span className="text-xl text-gray-400 line-through">{theme?.currencySymbol || '৳'}{' '}{product.originalPrice.toLocaleString()}</span>
                 )}
               </div>
               {inStock ? (
                 <div className="flex items-center gap-1.5 px-3 py-1 bg-green-50 text-green-700 text-xs font-bold uppercase tracking-widest rounded-full">
-                  <Check className="w-3.5 h-3.5" /> In Stock
-                </div>
+                  <Check className="w-3.5 h-3.5" />{t('inStock') || 'In Stock'}</div>
               ) : (
-                <div className="px-3 py-1 bg-red-50 text-red-700 text-xs font-bold uppercase tracking-widest rounded-full">
-                  Out of Stock
-                </div>
+                <div className="px-3 py-1 bg-red-50 text-red-700 text-xs font-bold uppercase tracking-widest rounded-full">{t('outOfStock') || 'Out of Stock'}</div>
               )}
             </div>
 
@@ -115,13 +116,10 @@ export default function ProductClient05({ product, theme }: { product: any; them
             <button onClick={handleAddToCart} disabled={!inStock}
               style={theme?.buttonColors?.addToCart ? { backgroundColor: theme.buttonColors.addToCart, borderColor: theme.buttonColors.addToCart, color: '#fff' } : {}}
               className="flex-1 bg-white border border-gray-200 text-gray-900 font-semibold py-4 rounded-full flex items-center justify-center gap-2 hover:border-black hover:bg-gray-50 transition-all disabled:opacity-50 disabled:cursor-not-allowed">
-              <ShoppingCart className="w-5 h-5" /> Add to Cart
-            </button>
+              <ShoppingCart className="w-5 h-5" />{t('addToCart') || 'Add to Cart'}</button>
             <button onClick={handleBuyNow} disabled={!inStock}
               style={theme?.buttonColors?.buyNow ? { backgroundColor: theme.buttonColors.buyNow } : theme?.primaryColor ? { backgroundColor: theme.primaryColor } : {}}
-              className="flex-1 bg-black text-white font-semibold py-4 rounded-full flex items-center justify-center hover:bg-gray-800 transition-colors shadow-lg disabled:opacity-50 disabled:cursor-not-allowed">
-              Buy Now
-            </button>
+              className="flex-1 bg-black text-white font-semibold py-4 rounded-full flex items-center justify-center hover:bg-gray-800 transition-colors shadow-lg disabled:opacity-50 disabled:cursor-not-allowed">{t('buyNow') || 'Buy Now'}</button>
           </div>
 
           {/* Description Section */}

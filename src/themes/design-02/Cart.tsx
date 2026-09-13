@@ -1,4 +1,4 @@
-import { headers } from 'next/headers';
+﻿import { headers } from 'next/headers';
 import Link from 'next/link';
 import { getStoreInfo, getTheme } from '@/core/api/store';
 import Design02CartClient from './CartClient';

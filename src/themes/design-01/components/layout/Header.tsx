@@ -1,9 +1,10 @@
-import { storefrontFetch } from "../../../../utils/storefrontFetch";
+﻿import { storefrontFetch } from "../../../../utils/storefrontFetch";
 import React from 'react';
 import Link from 'next/link';
 import { headers } from 'next/headers';
 import HeaderCartIcon from '../ui/HeaderCartIcon';
 import GlobalSearch from '../ui/GlobalSearch';
+import { getTranslation } from '@/utils/translations';
 
 async function getStoreInfo(tenantSlug: string) {
   try {
@@ -21,6 +22,8 @@ export default async function Header() {
   const tenantSlug = headersList.get('x-tenant-slug') || 'main';
   const storeInfo = await getStoreInfo(tenantSlug);
 
+  const language = storeInfo?.language || "en";
+  const t = (key: any) => getTranslation(language, key);
   return (
     <header id="main-header" className="bg-white border-b border-gray-100 py-4 sm:py-6 sticky top-0 z-50 shadow-sm">
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 flex flex-col md:flex-row gap-4 justify-between items-center">
@@ -37,7 +40,7 @@ export default async function Header() {
           </Link>
           
           <nav className="flex md:hidden items-center gap-4 font-semibold text-sm text-gray-600">
-            <Link href="/" className="hover:text-gray-900 transition-colors">Home</Link>
+            <Link href="/" className="hover:text-gray-900 transition-colors">{t('home') || 'Home'}</Link>
             <HeaderCartIcon />
           </nav>
         </div>
@@ -49,7 +52,7 @@ export default async function Header() {
         
         {/* Desktop Nav */}
         <nav className="hidden md:flex items-center gap-6 font-semibold text-sm text-gray-600">
-          <Link href="/" className="hover:text-gray-900 transition-colors">Home</Link>
+          <Link href="/" className="hover:text-gray-900 transition-colors">{t('home') || 'Home'}</Link>
           <HeaderCartIcon />
         </nav>
 

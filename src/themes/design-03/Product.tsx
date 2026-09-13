@@ -1,4 +1,4 @@
-import { storefrontFetch } from "../../utils/storefrontFetch";
+﻿import { storefrontFetch } from "../../utils/storefrontFetch";
 import { headers } from 'next/headers';
 import Link from 'next/link';
 import ProductGallery from '@/components/ProductGallery';
@@ -94,9 +94,9 @@ export default async function Design03ProductPage({ params }: { params: Promise<
               
               {/* Price */}
               <div className="flex items-end gap-4">
-                <span className="text-5xl font-black text-cyan-400 tracking-tighter">{theme?.currencySymbol || '৳'}{product.discountedPrice || product.originalPrice || product.price}</span>
+                <span className="text-5xl font-black text-cyan-400 tracking-tighter">{theme?.currencySymbol || '৳'}{' '}{product.discountedPrice || product.originalPrice || product.price}</span>
                 {(product.originalPrice > (product.discountedPrice || 0)) && (
-                  <span className="text-xl text-gray-600 line-through font-mono mb-1">{theme?.currencySymbol || '৳'}{product.originalPrice}</span>
+                  <span className="text-xl text-gray-600 line-through font-mono mb-1">{theme?.currencySymbol || '৳'}{' '}{product.originalPrice}</span>
                 )}
               </div>
             </div>

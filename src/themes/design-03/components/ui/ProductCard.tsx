@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import Link from 'next/link';
 import ProductCardActions03 from './ProductCardActions';
 
@@ -41,8 +41,8 @@ export default function Design03ProductCard({ product, isList = false, isBestSel
             <p className="text-sm text-gray-500 line-clamp-2 mb-4 font-mono">{product.shortDescription}</p>
           )}
           <div className="mt-auto flex items-end gap-3">
-            <span className="font-black text-white text-2xl tracking-tighter">{theme?.currencySymbol || '৳'}{price}</span>
-            {hasDiscount && <span className="text-sm text-gray-600 line-through font-mono mb-1">{theme?.currencySymbol || '৳'}{product.originalPrice}</span>}
+            <span className="font-black text-white text-2xl tracking-tighter">{theme?.currencySymbol || '৳'}{' '}{price}</span>
+            {hasDiscount && <span className="text-sm text-gray-600 line-through font-mono mb-1">{theme?.currencySymbol || '৳'}{' '}{product.originalPrice}</span>}
           </div>
         </div>
       </Link>
@@ -87,8 +87,8 @@ export default function Design03ProductCard({ product, isList = false, isBestSel
           </div>
           <h4 className="text-lg font-black uppercase tracking-tighter text-white truncate mb-2">{product.title || product.name}</h4>
           <div className="flex items-center gap-3">
-            <span className="font-black text-cyan-400 tracking-tighter text-xl">{theme?.currencySymbol || '৳'}{price}</span>
-            {hasDiscount && <span className="text-xs text-gray-600 line-through font-mono">{theme?.currencySymbol || '৳'}{product.originalPrice}</span>}
+            <span className="font-black text-cyan-400 tracking-tighter text-xl">{theme?.currencySymbol || '৳'}{' '}{price}</span>
+            {hasDiscount && <span className="text-xs text-gray-600 line-through font-mono">{theme?.currencySymbol || '৳'}{' '}{product.originalPrice}</span>}
           </div>
         </div>
       </Link>

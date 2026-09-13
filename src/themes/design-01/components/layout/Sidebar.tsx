@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { getTranslation } from '@/utils/translations';
 
 async function getCategories() {

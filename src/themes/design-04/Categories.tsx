@@ -1,4 +1,4 @@
-import { storefrontFetch } from "../../utils/storefrontFetch";
+﻿import { storefrontFetch } from "../../utils/storefrontFetch";
 import Link from 'next/link';
 import Footer04 from './components/layout/Footer';
 import Header04 from './components/layout/Header';
@@ -18,23 +18,35 @@ async function getStoreInfo(tenantSlug: string) {
     return res.ok ? (await res.json()).data : null;
   } catch { return null; }
 }
+async function getTheme(tenantSlug: string) {
+  try {
+    const res = await storefrontFetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/theme`, { next: { revalidate: 60 } });
+    return res.ok ? (await res.json()).data : null;
+  } catch { return null; }
+}
+
+import { getTranslation } from '@/utils/translations';
 
 export default async function Design04Categories({ tenantSlug }: { tenantSlug: string }) {
-  const [categories, storeInfo] = await Promise.all([
+  const [categories, storeInfo, theme] = await Promise.all([
     getCategories(tenantSlug),
-    getStoreInfo(tenantSlug)
+    getStoreInfo(tenantSlug),
+    getTheme(tenantSlug)
   ]);
+
+  const language = storeInfo?.language || 'en';
+  const t = (key: any) => getTranslation(language, key);
 
   return (
     <div className="min-h-screen bg-gray-50 font-sans flex flex-col">
-      <Header04 storeInfo={storeInfo} />
+      <Header04 storeInfo={storeInfo} theme={theme} />
       
       <div className="bg-white border-b border-gray-100 py-12 px-6 text-center">
-        <h1 className="text-4xl font-black text-gray-900 tracking-tight mb-4">Categories</h1>
+        <h1 className="text-4xl font-black text-gray-900 tracking-tight mb-4">{t('categories') || 'Categories'}</h1>
         <div className="flex items-center justify-center text-sm font-semibold text-gray-400 gap-2">
-          <Link href="/" className="hover:text-gray-900 transition-colors">Home</Link>
+          <Link href="/" className="hover:text-gray-900 transition-colors">{t('home') || 'Home'}</Link>
           <span>/</span>
-          <span className="text-gray-900">Categories</span>
+          <span className="text-gray-900">{t('categories') || 'Categories'}</span>
         </div>
       </div>
 
@@ -66,7 +78,7 @@ export default async function Design04Categories({ tenantSlug }: { tenantSlug: s
           </div>
         )}
       </main>
-      <Footer04 storeInfo={storeInfo} />
+      <Footer04 storeInfo={storeInfo} theme={theme} />
     </div>
   );
 }

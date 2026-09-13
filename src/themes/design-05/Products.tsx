@@ -1,4 +1,4 @@
-import { storefrontFetch } from "../../utils/storefrontFetch";
+﻿import { storefrontFetch } from "../../utils/storefrontFetch";
 import { headers } from 'next/headers';
 import Link from 'next/link';
 import FilterSidebar05 from './components/ui/FilterSidebar';
@@ -9,6 +9,7 @@ import ProductCard05 from './components/ui/ProductCard';
 import Header05 from './components/layout/Header';
 import Footer05 from './components/layout/Footer';
 import FilterDrawer from './components/ui/FilterDrawer';
+import { getTranslation } from '@/utils/translations';
 
 async function getStoreInfo(tenantSlug: string) {
   try {
@@ -36,6 +37,7 @@ async function getAllProducts(tenantSlug: string, searchParams: any) {
 }
 
 export default async function ProductsPage05({ searchParams }: any) {
+
   const resolvedSearchParams = await (searchParams || {});
   const headersList = await headers();
   const tenantSlug = headersList.get('x-tenant-slug') || 'main';
@@ -47,6 +49,9 @@ export default async function ProductsPage05({ searchParams }: any) {
     storefrontFetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/brands`, { next: { revalidate: 60 } }).then(r => r.json()),
     storefrontFetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/categories`, { next: { revalidate: 60 } }).then(r => r.json())
   ]);
+  const language = storeInfo?.language || "en";
+  const t = (key: any) => getTranslation(language || 'en', key);
+
 
   const theme = themeRes?.data;
   const products = productResponse.data || [];
@@ -62,7 +67,7 @@ export default async function ProductsPage05({ searchParams }: any) {
       <div className="pt-16 pb-8 px-6 lg:px-12 text-center">
         <h1 className="text-4xl lg:text-5xl font-bold text-gray-900 tracking-tight mb-4">Collection</h1>
         <div className="flex items-center justify-center text-[13px] font-semibold text-gray-400 uppercase tracking-widest gap-3">
-          <Link href="/" className="hover:text-black transition-colors">Home</Link>
+          <Link href="/" className="hover:text-black transition-colors">{t('home') || 'Home'}</Link>
           <span className="text-gray-300">/</span>
           <span className="text-black">Products</span>
         </div>
@@ -71,12 +76,12 @@ export default async function ProductsPage05({ searchParams }: any) {
       <main className="max-w-[1400px] mx-auto px-6 lg:px-12 py-12 flex-1 w-full flex flex-col lg:flex-row gap-12">
         {/* Sidebar */}
         <aside className="hidden lg:block w-[260px] shrink-0">
-          <FilterSidebar05 availableBrands={availableBrands} />
+          <FilterSidebar05 availableBrands={availableBrands} theme={theme} />
         </aside>
 
         {/* Mobile Filter Drawer Toggle */}
         <div className="lg:hidden">
-          <FilterDrawer categoryId="" availableBrands={availableBrands} />
+          <FilterDrawer categoryId="" availableBrands={availableBrands} theme={theme} />
         </div>
 
         {/* Content */}

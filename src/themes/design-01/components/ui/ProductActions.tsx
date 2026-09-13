@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useState } from 'react';
 import { ShoppingCart, Zap, Minus, Plus } from 'lucide-react';
@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { useCart } from '@/context/CartContext';
 
 import { useTranslation } from '@/context/LanguageContext';
+import { getTranslation } from '@/utils/translations';
 
 interface ProductActionsProps {
   product: {

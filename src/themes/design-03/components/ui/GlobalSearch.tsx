@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
@@ -96,7 +96,7 @@ export default function GlobalSearch03({ tenantSlug }: { tenantSlug: string }) {
                       <div className="text-[10px] text-gray-500 uppercase tracking-widest">ID: {product._id?.substring(0,8) || 'UNK'}</div>
                     </div>
                     <div className="text-xs font-black text-cyan-400">
-                      {theme?.currencySymbol || '৳'}{product.discountedPrice?.toLocaleString()}
+                      {theme?.currencySymbol || '৳'}{' '}{product.discountedPrice?.toLocaleString()}
                     </div>
                   </Link>
                 ))}

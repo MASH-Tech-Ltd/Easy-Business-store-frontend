@@ -1,12 +1,14 @@
-'use client';
+﻿'use client';
 
 import React from 'react';
 import Link from 'next/link';
 import { useCart } from '@/context/CartContext';
 import { useTranslation } from '@/context/LanguageContext';
 import { Minus, Plus, Trash2, ArrowLeft } from 'lucide-react';
+import { getTranslation } from '@/utils/translations';
 
 export default function CartClient() {
+
   const { cartItems, updateQuantity, removeFromCart, totalItems, totalPrice } = useCart();
   const { t } = useTranslation();
 
