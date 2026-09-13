@@ -1,3 +1,4 @@
+import { storefrontFetch } from "../../utils/storefrontFetch";
 import { headers } from 'next/headers';
 import type { Metadata, ResolvingMetadata } from 'next';
 import Link from 'next/link';
@@ -12,7 +13,7 @@ import Footer from './components/layout/Footer';
 
 async function getStoreInfo(tenantSlug: string) {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/info`, { next: { revalidate: 10 } });
+    const res = await storefrontFetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/info`, { next: { revalidate: 10 } });
     if (!res.ok) return null;
     const json = await res.json();
     return json.data;
@@ -23,7 +24,7 @@ async function getStoreInfo(tenantSlug: string) {
 
 async function getCategory(tenantSlug: string, categoryId: string) {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/categories`, { next: { revalidate: 60 } });
+    const res = await storefrontFetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/categories`, { next: { revalidate: 60 } });
     if (!res.ok) return null;
     const json = await res.json();
     return json.data.find((c: any) => c._id === categoryId);
@@ -44,7 +45,7 @@ async function getFilteredProducts(tenantSlug: string, categoryId: string, searc
     if (searchParams.brand) query.set('brand', searchParams.brand);
     if (searchParams.inStock) query.set('inStock', searchParams.inStock);
 
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/products?${query.toString()}`, { next: { revalidate: 60 } });
+    const res = await storefrontFetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/products?${query.toString()}`, { next: { revalidate: 60 } });
     if (!res.ok) return { data: [], pagination: { total: 0, page: 1, totalPages: 1 } };
     const json = await res.json();
     return json.data || { data: [], pagination: { total: 0, page: 1, totalPages: 1 } };
@@ -63,7 +64,7 @@ export async function generateMetadata(
   
   const [storeInfo, categoriesRes] = await Promise.all([
     getStoreInfo(tenantSlug),
-    fetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/categories`, { next: { revalidate: 60 } }).then(res => res.json().catch(() => null)).catch(() => null)
+    storefrontFetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/categories`, { next: { revalidate: 60 } }).then(res => res.json().catch(() => null)).catch(() => null)
   ]);
 
   const categories = categoriesRes?.data || [];
@@ -94,7 +95,7 @@ export default async function CategoryPage({ params, searchParams }: any) {
   // First fetch categories and store info to find the actual category ID
   const [storeInfo, categoriesRes] = await Promise.all([
     getStoreInfo(tenantSlug),
-    fetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/categories`, { next: { revalidate: 60 } }).then(res => res.json())
+    storefrontFetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/categories`, { next: { revalidate: 60 } }).then(res => res.json())
   ]);
 
   const categories = categoriesRes?.data || [];
@@ -106,7 +107,7 @@ export default async function CategoryPage({ params, searchParams }: any) {
   const [productResponse, brandsRes] = categoryId 
     ? await Promise.all([
         getFilteredProducts(tenantSlug, categoryId, resolvedSearchParams),
-        fetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/brands?categoryId=${categoryId}`, { next: { revalidate: 60 } }).then(res => res.json())
+        storefrontFetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/brands?categoryId=${categoryId}`, { next: { revalidate: 60 } }).then(res => res.json())
       ])
     : [
         { data: [], pagination: { total: 0, page: 1, totalPages: 1 } },

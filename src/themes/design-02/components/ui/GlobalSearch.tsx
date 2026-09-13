@@ -81,7 +81,7 @@ export default function GlobalSearch({ tenantSlug }: { tenantSlug: string }) {
                       <div className="text-sm font-semibold text-gray-900 truncate">{product.title}</div>
                       <div className="text-xs text-gray-500">{product.brand || 'Generic'}</div>
                     </div>
-                    <div className="text-sm font-bold text-gray-900">৳{product.discountedPrice?.toLocaleString()}</div>
+                    <div className="text-sm font-bold text-gray-900">{theme?.currencySymbol || '৳'}{product.discountedPrice?.toLocaleString()}</div>
                   </Link>
                 ))}
               </div>

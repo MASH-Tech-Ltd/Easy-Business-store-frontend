@@ -1,3 +1,4 @@
+import { storefrontFetch } from "../../utils/storefrontFetch";
 import { headers } from 'next/headers';
 import Link from 'next/link';
 import ProductGallery from '@/components/ProductGallery';
@@ -8,7 +9,7 @@ import Footer from './components/layout/Footer';
 
 async function getStoreInfo(tenantSlug: string) {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/info`, { next: { revalidate: 60 } });
+    const res = await storefrontFetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/info`, { next: { revalidate: 60 } });
     if (!res.ok) return null;
     const json = await res.json();
     return json.data;
@@ -19,7 +20,7 @@ async function getStoreInfo(tenantSlug: string) {
 
 async function getTheme(tenantSlug: string) {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/theme`, { next: { revalidate: 60 } });
+    const res = await storefrontFetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/theme`, { next: { revalidate: 60 } });
     if (!res.ok) return null;
     const json = await res.json();
     return json.data;
@@ -30,7 +31,7 @@ async function getTheme(tenantSlug: string) {
 
 async function getProduct(tenantSlug: string, productSlug: string) {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/products/${productSlug}`, { next: { revalidate: 60 } });
+    const res = await storefrontFetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/products/${productSlug}`, { next: { revalidate: 60 } });
     if (!res.ok) return null;
     const json = await res.json();
     return json.data || null;
@@ -107,10 +108,10 @@ export default async function Design02ProductPage({ params }: { params: Promise<
             <h1 className="text-4xl font-light text-gray-900 mb-4 leading-tight">{product.title}</h1>
             
             <div className="text-2xl font-medium text-gray-900 mb-8">
-              ৳{product.discountPrice || product.discountedPrice || product.price}
+              {theme?.currencySymbol || '৳'}{product.discountPrice || product.discountedPrice || product.price}
               {(product.originalPrice > (product.discountPrice || product.discountedPrice)) && (
                 <span className="text-lg text-gray-400 line-through ml-4 font-light">
-                  ৳{product.originalPrice}
+                  {theme?.currencySymbol || '৳'}{product.originalPrice}
                 </span>
               )}
             </div>
@@ -118,20 +119,20 @@ export default async function Design02ProductPage({ params }: { params: Promise<
 
             <div className="mt-8 mb-8 space-y-4 text-sm text-gray-500">
               <div className="flex justify-between border-b border-gray-100 pb-2">
-                <span>Availability</span>
+                <span>{t('availability')}</span>
                 <span className={product.stock > 0 ? "text-gray-900" : "text-gray-400"}>
-                  {product.stock > 0 ? 'In Stock' : 'Out of Stock'}
+                  {product.stock > 0 ? t('inStock') : t('outOfStock')}
                 </span>
               </div>
               <div className="flex justify-between border-b border-gray-100 pb-2">
-                <span>SKU</span>
+                <span>{t('sku')}</span>
                 <span className="text-gray-900">{product.sku || product._id.slice(-6)}</span>
               </div>
             </div>
 
             {product.features && product.features.length > 0 && (
               <div className="mb-10">
-                <h3 className="text-sm font-bold text-gray-900 mb-4 uppercase tracking-wider">Key Highlights</h3>
+                <h3 className="text-sm font-bold text-gray-900 mb-4 uppercase tracking-wider">{t('keyHighlights')}</h3>
                 <ul className="space-y-3">
                   {product.features.map((feature: string, idx: number) => (
                     <li key={idx} className="flex items-start gap-3 text-sm text-gray-600 leading-relaxed">
@@ -160,7 +161,7 @@ export default async function Design02ProductPage({ params }: { params: Promise<
               
               {product.specifications && product.specifications.length > 0 && (
                 <div>
-                  <h3 className="text-xl font-medium text-gray-900 mb-6 border-b border-gray-100 pb-4">Technical Specifications</h3>
+                  <h3 className="text-xl font-medium text-gray-900 mb-6 border-b border-gray-100 pb-4">{t('technicalSpecifications')}</h3>
                   <div className="bg-gray-50 rounded-xl p-6 md:p-8">
                     {product.specifications.map((group: any, gIdx: number) => (
                       <div key={gIdx} className={`grid grid-cols-1 md:grid-cols-4 gap-6 md:gap-12 ${gIdx > 0 ? "mt-8 border-t border-gray-200 pt-8" : ""}`}>
@@ -185,7 +186,7 @@ export default async function Design02ProductPage({ params }: { params: Promise<
               
               {product.description && (
                 <div className="prose prose-gray max-w-none font-light leading-relaxed">
-                  <h3 className="text-xl font-medium text-gray-900 mb-6 border-b border-gray-100 pb-4">Product Details</h3>
+                  <h3 className="text-xl font-medium text-gray-900 mb-6 border-b border-gray-100 pb-4">{t('productDetails')}</h3>
                   <div dangerouslySetInnerHTML={{ __html: product.description }} />
                 </div>
               )}
@@ -193,7 +194,7 @@ export default async function Design02ProductPage({ params }: { params: Promise<
               {/* External Videos Section */}
               {product.videos && product.videos.length > 0 && (
                 <div>
-                  <h3 className="text-xl font-medium text-gray-900 mb-6 border-b border-gray-100 pb-4">Product Videos</h3>
+                  <h3 className="text-xl font-medium text-gray-900 mb-6 border-b border-gray-100 pb-4">{t('productVideos')}</h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {product.videos.map((video: string, index: number) => {
                       let embedUrl = video;

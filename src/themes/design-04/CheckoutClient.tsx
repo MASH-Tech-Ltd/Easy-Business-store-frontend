@@ -17,7 +17,7 @@ const checkoutSchema = z.object({
   upazila: z.string().min(1, { message: "Please select a subdistrict/thana" }),
 });
 
-export default function CheckoutClient04({ storeInfo }: { storeInfo?: any }) {
+export default function CheckoutClient04({ storeInfo, theme }: { storeInfo?: any; theme?: any }) {
   const { cartItems, totalItems, totalPrice, clearCart } = useCart();
   const [status, setStatus] = useState<'idle' | 'processing' | 'success'>('idle');
   const [orderId, setOrderId] = useState<string | null>(null);
@@ -195,15 +195,15 @@ export default function CheckoutClient04({ storeInfo }: { storeInfo?: any }) {
                       <div className="text-sm font-medium text-white line-clamp-1">{item.title}</div>
                       <div className="text-xs text-gray-400">Qty: {item.quantity}</div>
                     </div>
-                    <div className="font-bold">৳{item.price.toLocaleString()}</div>
+                    <div className="font-bold">{theme?.currencySymbol || '৳'}{item.price.toLocaleString()}</div>
                   </div>
                 ))}
               </div>
               <div className="space-y-4 mb-8 text-sm font-medium text-gray-300 border-t border-gray-800 pt-6">
-                <div className="flex justify-between"><span>Subtotal</span><span className="text-white">৳{totalPrice.toLocaleString()}</span></div>
-                <div className="flex justify-between"><span>Shipping</span><span className="text-white">৳{deliveryCharge.toLocaleString()}</span></div>
+                <div className="flex justify-between"><span>Subtotal</span><span className="text-white">{theme?.currencySymbol || '৳'}{totalPrice.toLocaleString()}</span></div>
+                <div className="flex justify-between"><span>Shipping</span><span className="text-white">{theme?.currencySymbol || '৳'}{deliveryCharge.toLocaleString()}</span></div>
                 <div className="h-px bg-gray-700 w-full my-4"></div>
-                <div className="flex justify-between text-lg font-black text-white"><span>Total</span><span>৳{grandTotal.toLocaleString()}</span></div>
+                <div className="flex justify-between text-lg font-black text-white"><span>Total</span><span>{theme?.currencySymbol || '৳'}{grandTotal.toLocaleString()}</span></div>
               </div>
               <button form="checkout-form" type="submit" disabled={status === 'processing' || cartItems.length === 0} className="w-full py-4 bg-white text-gray-900 font-bold rounded-full hover:bg-gray-200 transition-colors shadow-md disabled:opacity-50">
                 {status === 'processing' ? 'Processing...' : 'Place Order'}

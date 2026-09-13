@@ -16,9 +16,11 @@ const notoSansBengali = Noto_Sans_Bengali({
   variable: "--font-noto-sans-bengali",
 });
 
+import { storefrontFetch } from "@/utils/storefrontFetch";
+
 async function getTheme(tenantSlug: string) {
   try {
-    const res = await fetch(
+    const res = await storefrontFetch(
       `${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/theme`,
       { next: { revalidate: 60 } },
     );
@@ -32,7 +34,7 @@ async function getTheme(tenantSlug: string) {
 
 async function getStoreInfo(tenantSlug: string) {
   try {
-    const res = await fetch(
+    const res = await storefrontFetch(
       `${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/info`,
       { next: { revalidate: 60 } },
     );
@@ -46,11 +48,14 @@ async function getStoreInfo(tenantSlug: string) {
 
 async function getStoreStatus(tenantSlug: string) {
   try {
-    const res = await fetch(
+    const res = await storefrontFetch(
       `${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/status`,
       { next: { revalidate: 60 } },
     );
-    if (!res.ok) return null;
+    if (!res.ok) {
+      if (res.status === 404) return { storeDown: true, reason: 'Store not found' };
+      return null;
+    }
     const json = await res.json();
     return json.data;
   } catch (error) {
@@ -116,8 +121,9 @@ export default async function RootLayout({
 
   const theme = await getTheme(tenantSlug);
   const storeInfo = await getStoreInfo(tenantSlug);
+  const storeStatus = await getStoreStatus(tenantSlug);
 
-  if (!storeInfo && tenantSlug !== "main") {
+  if ((!storeInfo || storeStatus?.reason === 'Store not found') && tenantSlug !== "main") {
     return (
       <html lang="en">
         <body className={`${inter.variable} font-sans antialiased bg-gray-50`}>
@@ -152,8 +158,6 @@ export default async function RootLayout({
       </html>
     );
   }
-
-  const storeStatus = await getStoreStatus(tenantSlug);
 
   if (storeStatus?.storeDown && tenantSlug !== "main") {
     const isTrialExpired = storeStatus.reason === "Trial expired";

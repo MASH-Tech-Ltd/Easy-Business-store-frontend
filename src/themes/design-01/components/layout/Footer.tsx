@@ -1,3 +1,4 @@
+import { storefrontFetch } from "../../../../utils/storefrontFetch";
 import React from "react";
 import Link from "next/link";
 import { Mail, Phone, MapPin } from "lucide-react";
@@ -6,7 +7,7 @@ import { getTranslation, TranslationKeys } from "@/utils/translations";
 
 async function getTheme(tenantSlug: string) {
   try {
-    const res = await fetch(
+    const res = await storefrontFetch(
       `${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/theme`,
       { next: { revalidate: 60 } },
     );
@@ -20,7 +21,7 @@ async function getTheme(tenantSlug: string) {
 
 async function getStoreInfo(tenantSlug: string) {
   try {
-    const res = await fetch(
+    const res = await storefrontFetch(
       `${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/info`,
       { next: { revalidate: 60 } },
     );

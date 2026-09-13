@@ -1,3 +1,4 @@
+import { storefrontFetch } from "../../../../utils/storefrontFetch";
 import React from 'react';
 import Link from 'next/link';
 import { headers } from 'next/headers';
@@ -6,22 +7,31 @@ import GlobalSearch04 from '../ui/GlobalSearch';
 
 async function getStoreInfo(tenantSlug: string) {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/info`, { next: { revalidate: 60 } });
+    const res = await storefrontFetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/info`, { next: { revalidate: 60 } });
     if (!res.ok) return null;
     return (await res.json()).data;
   } catch { return null; }
 }
 
-export default async function Header04({ storeInfo }: { storeInfo?: any }) {
+async function getTheme(tenantSlug: string) {
+  try {
+    const res = await storefrontFetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/theme`, { next: { revalidate: 60 } });
+    if (!res.ok) return null;
+    return (await res.json()).data;
+  } catch { return null; }
+}
+
+export default async function Header04({ storeInfo, theme: initialTheme }: { storeInfo?: any; theme?: any }) {
   const headersList = await headers();
   const tenantSlug = headersList.get('x-tenant-slug') || 'main';
   const info = storeInfo || await getStoreInfo(tenantSlug);
+  const theme = initialTheme || await getTheme(tenantSlug);
 
   return (
     <header className="bg-white border-b border-gray-100 sticky top-0 z-50">
       {/* Top thin bar */}
       <div className="bg-gray-900 text-white text-center text-xs py-2 px-4 tracking-widest font-medium">
-        Free shipping on orders over ৳999 &nbsp;|&nbsp; <Link href="/products" className="hover:underline">All Products</Link>
+        Free shipping on orders over {theme?.currencySymbol || '৳'}999 &nbsp;|&nbsp; <Link href="/products" className="hover:underline">All Products</Link>
       </div>
 
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 py-4 flex flex-col gap-4">

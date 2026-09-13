@@ -1,3 +1,4 @@
+import { storefrontFetch } from "../../utils/storefrontFetch";
 import React from 'react';
 import { headers } from 'next/headers';
 import CheckoutClient from './CheckoutClient';
@@ -6,7 +7,7 @@ import Header from './components/layout/Header';
 
 async function getStoreInfo(tenantSlug: string) {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/info`, { next: { revalidate: 60 } });
+    const res = await storefrontFetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/info`, { next: { revalidate: 60 } });
     if (!res.ok) return null;
     const json = await res.json();
     return json.data;

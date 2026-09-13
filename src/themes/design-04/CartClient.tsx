@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useCart } from '@/context/CartContext';
 import { Minus, Plus, Trash2 } from 'lucide-react';
 
-export default function CartClient04() {
+export default function CartClient04({ theme }: { theme?: any }) {
   const { cartItems, updateQuantity, removeFromCart, totalItems, totalPrice } = useCart();
 
   return (
@@ -34,7 +34,7 @@ export default function CartClient04() {
                   </div>
                   <div className="flex-1 text-left">
                     <h3 className="text-sm sm:text-base font-semibold text-gray-900 mb-1 line-clamp-2">{item.title}</h3>
-                    <div className="text-base sm:text-lg font-black text-gray-900">৳{item.price.toLocaleString()}</div>
+                    <div className="text-base sm:text-lg font-black text-gray-900">{theme?.currencySymbol || '৳'}{item.price.toLocaleString()}</div>
                   </div>
                   <div className="flex flex-col sm:flex-row items-end sm:items-center gap-2 sm:gap-6 shrink-0">
                     <div className="flex items-center border border-gray-200 rounded-full bg-white p-1">
@@ -52,10 +52,10 @@ export default function CartClient04() {
             <div className="bg-gray-900 rounded-3xl p-8 text-white sticky top-28 shadow-xl">
               <h2 className="text-xl font-bold mb-8">Order Summary</h2>
               <div className="space-y-4 mb-8 text-sm font-medium text-gray-300">
-                <div className="flex justify-between"><span>Subtotal ({totalItems} items)</span><span className="text-white">৳{totalPrice.toLocaleString()}</span></div>
+                <div className="flex justify-between"><span>Subtotal ({totalItems} items)</span><span className="text-white">{theme?.currencySymbol || '৳'}{totalPrice.toLocaleString()}</span></div>
                 <div className="flex justify-between"><span>Shipping</span><span className="text-white">Calculated at checkout</span></div>
                 <div className="h-px bg-gray-700 w-full my-4"></div>
-                <div className="flex justify-between text-lg font-black text-white"><span>Total</span><span>৳{totalPrice.toLocaleString()}</span></div>
+                <div className="flex justify-between text-lg font-black text-white"><span>Total</span><span>{theme?.currencySymbol || '৳'}{totalPrice.toLocaleString()}</span></div>
               </div>
               <Link href="/checkout" className="block w-full py-4 bg-white text-gray-900 text-center font-bold rounded-full hover:bg-gray-200 transition-colors shadow-md">
                 Proceed to Checkout

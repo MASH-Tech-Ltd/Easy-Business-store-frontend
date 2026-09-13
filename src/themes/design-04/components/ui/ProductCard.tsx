@@ -57,8 +57,8 @@ export default function ProductCard04({ product, isList = false, isBestSelling =
           <h4 className="text-base font-semibold text-gray-900 mb-1 line-clamp-2">{product.title || product.name}</h4>
           {product.shortDescription && <p className="text-sm text-gray-400 line-clamp-2 mb-3">{product.shortDescription}</p>}
           <div className="flex items-center gap-2">
-            <span className="font-black text-gray-900 text-lg">৳{price.toLocaleString()}</span>
-            {hasDiscount && <span className="text-sm text-gray-400 line-through">৳{product.originalPrice.toLocaleString()}</span>}
+            <span className="font-black text-gray-900 text-lg">{theme?.currencySymbol || '৳'}{price.toLocaleString()}</span>
+            {hasDiscount && <span className="text-sm text-gray-400 line-through">{theme?.currencySymbol || '৳'}{product.originalPrice.toLocaleString()}</span>}
           </div>
         </div>
       </Link>
@@ -100,9 +100,9 @@ export default function ProductCard04({ product, isList = false, isBestSelling =
           </h4>
         </Link>
         <div className="flex items-center gap-2 mb-4">
-          <span className="font-black text-gray-900 text-base">৳{price.toLocaleString()}</span>
+          <span className="font-black text-gray-900 text-base">{theme?.currencySymbol || '৳'}{price.toLocaleString()}</span>
           {hasDiscount && (
-            <span className="text-xs text-gray-400 line-through">৳{product.originalPrice.toLocaleString()}</span>
+            <span className="text-xs text-gray-400 line-through">{theme?.currencySymbol || '৳'}{product.originalPrice.toLocaleString()}</span>
           )}
         </div>
 

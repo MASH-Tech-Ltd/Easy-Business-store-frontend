@@ -17,7 +17,7 @@ const checkoutSchema = z.object({
   upazila: z.string().min(1, { message: "UPAZILA SELECTION REQUIRED" }),
 });
 
-export default function CheckoutClient03({ storeInfo }: { storeInfo?: any }) {
+export default function CheckoutClient03({ storeInfo, theme }: { storeInfo?: any; theme?: any }) {
   const { cartItems, totalPrice, clearCart, isInitialized } = useCart();
   const [status, setStatus] = useState<'idle' | 'processing' | 'success'>('idle');
   const [orderId, setOrderId] = useState<string | null>(null);
@@ -198,17 +198,17 @@ export default function CheckoutClient03({ storeInfo }: { storeInfo?: any }) {
           <div className="space-y-4 font-mono text-sm text-gray-400 mb-8 flex-1">
             <div className="flex justify-between uppercase">
               <span>Subtotal</span>
-              <span className="text-white">৳{totalPrice.toLocaleString()}</span>
+              <span className="text-white">{theme?.currencySymbol || '৳'}{totalPrice.toLocaleString()}</span>
             </div>
             <div className="flex justify-between uppercase">
               <span>Logistics</span>
-              <span className="text-white">৳{deliveryCharge.toLocaleString()}</span>
+              <span className="text-white">{theme?.currencySymbol || '৳'}{deliveryCharge.toLocaleString()}</span>
             </div>
           </div>
           <div className="border-t border-white/10 pt-6 mb-8">
             <div className="flex justify-between items-end">
               <span className="text-xs font-mono text-gray-500 uppercase tracking-widest">Total Required</span>
-              <span className="text-3xl font-black text-cyan-400 tracking-tighter">৳{grandTotal.toLocaleString()}</span>
+              <span className="text-3xl font-black text-cyan-400 tracking-tighter">{theme?.currencySymbol || '৳'}{grandTotal.toLocaleString()}</span>
             </div>
           </div>
           <button 

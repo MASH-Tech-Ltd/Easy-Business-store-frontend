@@ -25,7 +25,7 @@ export default function GlobalSearch({ tenantSlug }: { tenantSlug: string }) {
       if (!query.trim()) { setResults([]); setIsOpen(false); return; }
       setIsLoading(true); setIsOpen(true);
       try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/products?search=${encodeURIComponent(query)}&limit=10`);
+        const res = await fetch(`/api/search?tenantSlug=${tenantSlug}&query=${encodeURIComponent(query)}&limit=10`);
         const json = await res.json();
         if (json.data?.data) setResults(json.data.data);
       } catch { } finally { setIsLoading(false); }
@@ -66,7 +66,7 @@ export default function GlobalSearch({ tenantSlug }: { tenantSlug: string }) {
                       <div className="text-sm font-semibold text-gray-900 truncate">{product.title}</div>
                       <div className="text-xs text-gray-400">{product.brand || ''}</div>
                     </div>
-                    <div className="text-sm font-bold text-gray-900">৳{product.discountedPrice?.toLocaleString()}</div>
+                    <div className="text-sm font-bold text-gray-900">{theme?.currencySymbol || '৳'}{product.discountedPrice?.toLocaleString()}</div>
                   </Link>
                 ))}
               </div>

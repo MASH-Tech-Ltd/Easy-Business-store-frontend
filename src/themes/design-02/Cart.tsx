@@ -15,7 +15,7 @@ export default async function Design02CartPage({ tenantSlug }: { tenantSlug: str
     <div className="min-h-screen bg-white text-gray-900 flex flex-col font-sans">
       <Header storeInfo={storeInfo} />
 
-      <Design02CartClient />
+      <Design02CartClient theme={theme} />
 
       <Footer storeInfo={storeInfo} theme={theme} />
     </div>

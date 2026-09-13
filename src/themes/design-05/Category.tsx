@@ -1,3 +1,4 @@
+import { storefrontFetch } from "../../utils/storefrontFetch";
 import { headers } from 'next/headers';
 import Link from 'next/link';
 import FilterSidebar05 from './components/ui/FilterSidebar';
@@ -19,9 +20,9 @@ export default async function CategoryPage05({ params, searchParams }: any) {
 
   // 1. Fetch categories, store info, and theme first
   const [storeInfoRes, themeRes, categoriesRes] = await Promise.all([
-    fetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/info`, { next: { revalidate: 60 } }),
-    fetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/theme`, { next: { revalidate: 60 } }),
-    fetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/categories`, { next: { revalidate: 60 } })
+    storefrontFetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/info`, { next: { revalidate: 60 } }),
+    storefrontFetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/theme`, { next: { revalidate: 60 } }),
+    storefrontFetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/categories`, { next: { revalidate: 60 } })
   ]);
 
   const storeInfo = storeInfoRes.ok ? (await storeInfoRes.json()) : { data: null };
@@ -47,7 +48,7 @@ export default async function CategoryPage05({ params, searchParams }: any) {
       if (resolvedSearchParams.inStock) query.set('inStock', resolvedSearchParams.inStock);
 
       query.set('categoryId', cId);
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/products?${query.toString()}`, { next: { revalidate: 60 } });
+      const res = await storefrontFetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/products?${query.toString()}`, { next: { revalidate: 60 } });
       if (!res.ok) return { data: [], pagination: { total: 0, page: 1, totalPages: 1 } };
       return (await res.json()).data || { data: [], pagination: { total: 0, page: 1, totalPages: 1 } };
     } catch { return { data: [], pagination: { total: 0, page: 1, totalPages: 1 } }; }
@@ -56,7 +57,7 @@ export default async function CategoryPage05({ params, searchParams }: any) {
   const [productResponse, brandsRes] = realCategoryId
     ? await Promise.all([
         fetchCategoryProducts(realCategoryId),
-        fetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/brands?categoryId=${realCategoryId}`, { next: { revalidate: 60 } }).then(r => r.json()).catch(() => ({ data: [] }))
+        storefrontFetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/brands?categoryId=${realCategoryId}`, { next: { revalidate: 60 } }).then(r => r.json()).catch(() => ({ data: [] }))
       ])
     : [
         { data: [], pagination: { total: 0, page: 1, totalPages: 1 } },

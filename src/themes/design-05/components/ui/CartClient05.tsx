@@ -58,7 +58,7 @@ export default function CartClient05({ theme }: { theme?: any }) {
                       <Link href={`/product/${item.id}`} className="text-sm font-semibold text-gray-900 mb-1 hover:text-gray-600 transition-colors line-clamp-2 leading-tight">
                         {item.title}
                       </Link>
-                      <span className="text-sm font-medium text-gray-400 mb-3">৳{item.price.toLocaleString()}</span>
+                      <span className="text-sm font-medium text-gray-400 mb-3">{theme?.currencySymbol || '৳'}{item.price.toLocaleString()}</span>
                       
                       <button onClick={() => removeFromCart(item.id)} className="flex items-center gap-1.5 text-xs font-semibold text-gray-400 hover:text-red-500 transition-colors w-fit">
                         <Trash2 className="w-3.5 h-3.5" /> Remove
@@ -84,7 +84,7 @@ export default function CartClient05({ theme }: { theme?: any }) {
                     </div>
                     
                     <div className="col-span-3 text-right">
-                      <span className="text-base font-bold text-gray-900">৳{(item.price * item.quantity).toLocaleString()}</span>
+                      <span className="text-base font-bold text-gray-900">{theme?.currencySymbol || '৳'}{(item.price * item.quantity).toLocaleString()}</span>
                     </div>
                   </div>
                 </div>
@@ -100,22 +100,22 @@ export default function CartClient05({ theme }: { theme?: any }) {
               <div className="space-y-4 mb-8">
                 <div className="flex justify-between items-center text-sm">
                   <span className="text-gray-500">Subtotal</span>
-                  <span className="font-semibold text-gray-900">৳{subtotal.toLocaleString()}</span>
+                  <span className="font-semibold text-gray-900">{theme?.currencySymbol || '৳'}{subtotal.toLocaleString()}</span>
                 </div>
                 <div className="flex justify-between items-center text-sm">
                   <span className="text-gray-500">Shipping</span>
-                  <span className="font-semibold text-gray-900">৳{shippingEstimate.toLocaleString()}</span>
+                  <span className="font-semibold text-gray-900">{theme?.currencySymbol || '৳'}{shippingEstimate.toLocaleString()}</span>
                 </div>
                 <div className="flex justify-between items-center text-sm">
                   <span className="text-gray-500">Estimated Taxes</span>
-                  <span className="font-semibold text-gray-900">৳{taxEstimate.toLocaleString()}</span>
+                  <span className="font-semibold text-gray-900">{theme?.currencySymbol || '৳'}{taxEstimate.toLocaleString()}</span>
                 </div>
               </div>
 
               <div className="pt-6 border-t border-gray-200 mb-8">
                 <div className="flex justify-between items-end">
                   <span className="font-bold text-gray-900">Total</span>
-                  <span className="text-2xl font-black text-gray-900 tracking-tight">৳{total.toLocaleString()}</span>
+                  <span className="text-2xl font-black text-gray-900 tracking-tight">{theme?.currencySymbol || '৳'}{total.toLocaleString()}</span>
                 </div>
               </div>
 

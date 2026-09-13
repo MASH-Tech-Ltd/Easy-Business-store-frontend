@@ -7,7 +7,7 @@ export default function CartPage04() {
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col font-sans">
       <Header04 />
-      <CartClient04 />
+      <CartClient04 theme={theme} />
       <Footer04 />
     </div>
   );

@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { Minus, Plus, Trash2 } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
 
-export default function CartClient03() {
+export default function CartClient03({ theme }: { theme?: any }) {
   const { cartItems, updateQuantity, removeFromCart, totalItems, totalPrice } = useCart();
   const [mounted, setMounted] = useState(false);
   const router = useRouter();
@@ -56,7 +56,7 @@ export default function CartClient03() {
               <div className="flex-1 min-w-0 w-full">
                 <div className="text-[8px] sm:text-[10px] text-gray-500 font-mono mb-1 uppercase tracking-widest">ID: {item.id.substring(0,8)}</div>
                 <h4 className="text-sm sm:text-xl font-black uppercase tracking-tighter text-white mb-1 sm:mb-2 line-clamp-2">{item.title}</h4>
-                <p className="text-lg sm:text-2xl font-black text-cyan-400 tracking-tighter">৳{(item.price * item.quantity).toLocaleString()}</p>
+                <p className="text-lg sm:text-2xl font-black text-cyan-400 tracking-tighter">{theme?.currencySymbol || '৳'}{(item.price * item.quantity).toLocaleString()}</p>
               </div>
               <div className="flex flex-col sm:flex-row items-end sm:items-center gap-2 sm:gap-6 shrink-0">
                 <div className="flex items-center border border-white/20 bg-black">
@@ -83,15 +83,15 @@ export default function CartClient03() {
             <div className="space-y-6 mb-8 text-xs font-mono uppercase tracking-widest">
               <div className="flex justify-between text-gray-500">
                 <span>SUBTOTAL [{totalItems}]</span>
-                <span className="text-white">৳{totalPrice.toLocaleString()}</span>
+                <span className="text-white">{theme?.currencySymbol || '৳'}{totalPrice.toLocaleString()}</span>
               </div>
               <div className="flex justify-between text-gray-500">
                 <span>DELIVERY</span>
-                <span className="text-white">৳120</span>
+                <span className="text-white">{theme?.currencySymbol || '৳'}120</span>
               </div>
               <div className="pt-6 border-t border-white/10 flex justify-between text-white font-black text-xl tracking-tighter">
                 <span>TOTAL</span>
-                <span className="text-cyan-400">৳{(totalPrice + 120).toLocaleString()}</span>
+                <span className="text-cyan-400">{theme?.currencySymbol || '৳'}{(totalPrice + 120).toLocaleString()}</span>
               </div>
             </div>
             <button

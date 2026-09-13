@@ -1,3 +1,4 @@
+import { storefrontFetch } from "../../../../utils/storefrontFetch";
 import Link from 'next/link';
 import { headers } from 'next/headers';
 import { ShoppingCart, Home, Grid, ChevronRight } from 'lucide-react';
@@ -5,7 +6,7 @@ import GlobalSearch03 from '../ui/GlobalSearch';
 
 async function getStoreInfo(tenantSlug: string) {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/info`, { next: { revalidate: 60 } });
+    const res = await storefrontFetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/info`, { next: { revalidate: 60 } });
     if (!res.ok) return null;
     return (await res.json()).data;
   } catch { return null; }

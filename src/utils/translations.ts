@@ -56,7 +56,18 @@ export type TranslationKeys =
   | 'items'
   | 'continueShopping'
   | 'orderConfirmed'
-  | 'thankYouPurchase';
+  | 'thankYouPurchase'
+  | 'allProducts'
+  | 'freeShippingOver'
+  | 'availability'
+  | 'sku'
+  | 'keyHighlights'
+  | 'technicalSpecifications'
+  | 'productDetails'
+  | 'checkout'
+  | 'selectDistrict'
+  | 'selectSubdistrict'
+  | 'processing';
 
 export const translations: Record<Language, Record<TranslationKeys, string>> = {
   en: {
@@ -115,7 +126,18 @@ export const translations: Record<Language, Record<TranslationKeys, string>> = {
     items: 'items',
     continueShopping: 'Continue Shopping',
     orderConfirmed: 'Order Confirmed!',
-    thankYouPurchase: "Thank you for your purchase. We've received your order and will process it shortly."
+    thankYouPurchase: "Thank you for your purchase. We've received your order and will process it shortly.",
+    allProducts: 'All Products',
+    freeShippingOver: 'Free shipping on orders over',
+    availability: 'Availability',
+    sku: 'SKU',
+    keyHighlights: 'Key Highlights',
+    technicalSpecifications: 'Technical Specifications',
+    productDetails: 'Product Details',
+    checkout: 'Checkout',
+    selectDistrict: 'Select District',
+    selectSubdistrict: 'Select Subdistrict / Thana',
+    processing: 'Processing...'
   },
   bn: {
     addToCart: 'কার্টে যোগ করুন',
@@ -173,7 +195,18 @@ export const translations: Record<Language, Record<TranslationKeys, string>> = {
     items: 'আইটেম',
     continueShopping: 'কেনাকাটা চালিয়ে যান',
     orderConfirmed: 'অর্ডার কনফার্ম হয়েছে!',
-    thankYouPurchase: "আপনার ক্রয়ের জন্য ধন্যবাদ। আমরা আপনার অর্ডার পেয়েছি এবং শীঘ্রই এটি প্রক্রিয়া করব।"
+    thankYouPurchase: "আপনার ক্রয়ের জন্য ধন্যবাদ। আমরা আপনার অর্ডার পেয়েছি এবং শীঘ্রই এটি প্রক্রিয়া করব।",
+    allProducts: 'সব পণ্য',
+    freeShippingOver: 'এর বেশি অর্ডারে ফ্রি শিপিং',
+    availability: 'উপলব্ধতা',
+    sku: 'এসকিউ',
+    keyHighlights: 'মূল বৈশিষ্ট্য',
+    technicalSpecifications: 'প্রযুক্তিগত বৈশিষ্ট্য',
+    productDetails: 'পণ্যের বিবরণ',
+    checkout: 'চেকআউট',
+    selectDistrict: 'জেলা নির্বাচন করুন',
+    selectSubdistrict: 'উপজেলা/থানা নির্বাচন করুন',
+    processing: 'প্রক্রিয়াকরণ চলছে...'
   }
 };
 

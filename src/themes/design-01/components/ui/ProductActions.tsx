@@ -5,6 +5,8 @@ import { ShoppingCart, Zap, Minus, Plus } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useCart } from '@/context/CartContext';
 
+import { useTranslation } from '@/context/LanguageContext';
+
 interface ProductActionsProps {
   product: {
     _id?: string;
@@ -20,6 +22,7 @@ export default function ProductActions({ product }: ProductActionsProps) {
   const [quantity, setQuantity] = useState(1);
   const router = useRouter();
   const { addToCart } = useCart();
+  const { t } = useTranslation();
   const productId = product._id || product.id;
 
   const handleDecrease = () => {
@@ -63,14 +66,14 @@ export default function ProductActions({ product }: ProductActionsProps) {
           className="flex-1 flex items-center justify-center space-x-2 py-3 border-2 border-primary text-primary rounded hover:bg-gray-50 transition-colors font-bold"
         >
           <ShoppingCart size={20} />
-          <span>কার্টে যোগ করুন</span>
+          <span>{t('addToCart')}</span>
         </button>
         <button 
           onClick={handleOrderNow}
           className="flex-1 flex items-center justify-center space-x-2 py-3 bg-primary text-white rounded hover:bg-primary transition-colors font-bold shadow-md"
         >
           <Zap size={20} />
-          <span>অর্ডার করুন</span>
+          <span>{t('buyNow')}</span>
         </button>
       </div>
     </>

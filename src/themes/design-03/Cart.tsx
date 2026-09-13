@@ -13,7 +13,7 @@ export default async function Design03CartPage() {
     <div className="min-h-screen bg-black text-white flex flex-col font-sans selection:bg-cyan-500/30">
       <Header03 storeInfo={storeInfo} />
       <div className="flex flex-col flex-1">
-        <CartClient03 />
+        <CartClient03 theme={theme} />
         <div className="lg:ml-64">
            <Footer03 storeInfo={storeInfo} theme={theme} />
         </div>

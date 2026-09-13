@@ -1,3 +1,4 @@
+import { storefrontFetch } from "../../utils/storefrontFetch";
 import { headers } from 'next/headers';
 import Link from 'next/link';
 import ProductGallery from '@/components/ProductGallery';
@@ -8,14 +9,21 @@ import Footer04 from './components/layout/Footer';
 
 async function getStoreInfo(tenantSlug: string) {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/info`, { next: { revalidate: 60 } });
+    const res = await storefrontFetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/info`, { next: { revalidate: 60 } });
     return res.ok ? (await res.json()).data : null;
   } catch { return null; }
 }
 
 async function getProduct(tenantSlug: string, productSlug: string) {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/products/${productSlug}`, { next: { revalidate: 60 } });
+    const res = await storefrontFetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/products/${productSlug}`, { next: { revalidate: 60 } });
+    return res.ok ? (await res.json()).data : null;
+  } catch { return null; }
+}
+
+async function getTheme(tenantSlug: string) {
+  try {
+    const res = await storefrontFetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/theme`, { next: { revalidate: 60 } });
     return res.ok ? (await res.json()).data : null;
   } catch { return null; }
 }
@@ -25,9 +33,10 @@ export default async function ProductPage04({ params }: { params: Promise<{ slug
   const headersList = await headers();
   const tenantSlug = headersList.get('x-tenant-slug') || 'main';
 
-  const [storeInfo, product] = await Promise.all([
+  const [storeInfo, product, theme] = await Promise.all([
     getStoreInfo(tenantSlug),
-    getProduct(tenantSlug, resolvedParams.slug)
+    getProduct(tenantSlug, resolvedParams.slug),
+    getTheme(tenantSlug)
   ]);
 
   if (!product) {
@@ -80,9 +89,9 @@ export default async function ProductPage04({ params }: { params: Promise<{ slug
               </div>
 
               <div className="flex items-end gap-4 mb-8">
-                <span className="text-4xl font-black text-gray-900 tracking-tight">৳{product.discountedPrice.toLocaleString()}</span>
+                <span className="text-4xl font-black text-gray-900 tracking-tight">{theme?.currencySymbol || '৳'}{product.discountedPrice.toLocaleString()}</span>
                 {product.originalPrice > product.discountedPrice && (
-                  <span className="text-lg text-gray-400 line-through font-semibold pb-1">৳{product.originalPrice.toLocaleString()}</span>
+                  <span className="text-lg text-gray-400 line-through font-semibold pb-1">{theme?.currencySymbol || '৳'}{product.originalPrice.toLocaleString()}</span>
                 )}
               </div>
 

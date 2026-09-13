@@ -1,3 +1,4 @@
+import { storefrontFetch } from "../../utils/storefrontFetch";
 import { headers } from 'next/headers';
 import Link from 'next/link';
 import ProductGallery from '@/components/ProductGallery';
@@ -8,7 +9,7 @@ import Footer03 from './components/layout/Footer';
 
 async function getStoreInfo(tenantSlug: string) {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/info`, { next: { revalidate: 60 } });
+    const res = await storefrontFetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/info`, { next: { revalidate: 60 } });
     if (!res.ok) return null;
     return (await res.json()).data;
   } catch { return null; }
@@ -16,7 +17,7 @@ async function getStoreInfo(tenantSlug: string) {
 
 async function getProduct(tenantSlug: string, productSlug: string) {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/products/${productSlug}`, { next: { revalidate: 60 } });
+    const res = await storefrontFetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/products/${productSlug}`, { next: { revalidate: 60 } });
     if (!res.ok) return null;
     return (await res.json()).data || null;
   } catch { return null; }
@@ -93,9 +94,9 @@ export default async function Design03ProductPage({ params }: { params: Promise<
               
               {/* Price */}
               <div className="flex items-end gap-4">
-                <span className="text-5xl font-black text-cyan-400 tracking-tighter">৳{product.discountedPrice || product.originalPrice || product.price}</span>
+                <span className="text-5xl font-black text-cyan-400 tracking-tighter">{theme?.currencySymbol || '৳'}{product.discountedPrice || product.originalPrice || product.price}</span>
                 {(product.originalPrice > (product.discountedPrice || 0)) && (
-                  <span className="text-xl text-gray-600 line-through font-mono mb-1">৳{product.originalPrice}</span>
+                  <span className="text-xl text-gray-600 line-through font-mono mb-1">{theme?.currencySymbol || '৳'}{product.originalPrice}</span>
                 )}
               </div>
             </div>

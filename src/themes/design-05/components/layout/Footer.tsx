@@ -293,7 +293,7 @@ export default function Footer05({
               English (US)
             </span>
             <span className="hover:text-gray-600 transition-colors cursor-pointer">
-              BDT (৳)
+              BDT ({theme?.currencySymbol || '৳'})
             </span>
           </div>
         </div>

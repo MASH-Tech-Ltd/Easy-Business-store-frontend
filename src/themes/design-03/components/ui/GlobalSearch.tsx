@@ -35,7 +35,7 @@ export default function GlobalSearch03({ tenantSlug }: { tenantSlug: string }) {
       setIsOpen(true);
       
       try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/products?search=${encodeURIComponent(query)}&limit=10`);
+        const res = await fetch(`/api/search?tenantSlug=${tenantSlug}&query=${encodeURIComponent(query)}&limit=10`);
         const json = await res.json();
         if (json.data && json.data.data) {
           setResults(json.data.data);
@@ -96,7 +96,7 @@ export default function GlobalSearch03({ tenantSlug }: { tenantSlug: string }) {
                       <div className="text-[10px] text-gray-500 uppercase tracking-widest">ID: {product._id?.substring(0,8) || 'UNK'}</div>
                     </div>
                     <div className="text-xs font-black text-cyan-400">
-                      ৳{product.discountedPrice?.toLocaleString()}
+                      {theme?.currencySymbol || '৳'}{product.discountedPrice?.toLocaleString()}
                     </div>
                   </Link>
                 ))}

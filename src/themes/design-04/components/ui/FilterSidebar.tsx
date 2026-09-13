@@ -45,7 +45,7 @@ export default function FilterSidebar04({ categoryId, availableBrands = [] }: { 
         </div>
 
         <div>
-          <label className="block text-xs font-bold text-gray-600 uppercase tracking-wider mb-2">Price Range (৳)</label>
+          <label className="block text-xs font-bold text-gray-600 uppercase tracking-wider mb-2">Price Range ({theme?.currencySymbol || '৳'})</label>
           <div className="flex items-center gap-2">
             <input type="number" placeholder="Min" value={minPrice} onChange={(e) => setMinPrice(e.target.value)}
               className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900 text-gray-900" />

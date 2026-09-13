@@ -263,7 +263,7 @@ export default function CheckoutClient05({ theme, storeInfo }: { theme?: any; st
                   </div>
                   <div className="flex-1 min-w-0 pt-1">
                     <h4 className="text-sm font-semibold text-gray-900 line-clamp-2 leading-tight mb-1">{item.title}</h4>
-                    <span className="text-sm font-medium text-gray-500">{item.quantity} × ৳{item.price.toLocaleString()}</span>
+                    <span className="text-sm font-medium text-gray-500">{item.quantity} × {theme?.currencySymbol || '৳'}{item.price.toLocaleString()}</span>
                   </div>
                 </div>
               ))}
@@ -272,22 +272,22 @@ export default function CheckoutClient05({ theme, storeInfo }: { theme?: any; st
             <div className="space-y-4 mb-8">
               <div className="flex justify-between text-sm">
                 <span className="text-gray-500">Subtotal</span>
-                <span className="font-semibold text-gray-900">৳{subtotal.toLocaleString()}</span>
+                <span className="font-semibold text-gray-900">{theme?.currencySymbol || '৳'}{subtotal.toLocaleString()}</span>
               </div>
               <div className="flex justify-between text-sm">
                 <span className="text-gray-500">Shipping</span>
-                <span className="font-semibold text-gray-900">৳{shippingEstimate.toLocaleString()}</span>
+                <span className="font-semibold text-gray-900">{theme?.currencySymbol || '৳'}{shippingEstimate.toLocaleString()}</span>
               </div>
               <div className="flex justify-between text-sm">
                 <span className="text-gray-500">Taxes</span>
-                <span className="font-semibold text-gray-900">৳{taxEstimate.toLocaleString()}</span>
+                <span className="font-semibold text-gray-900">{theme?.currencySymbol || '৳'}{taxEstimate.toLocaleString()}</span>
               </div>
             </div>
 
             <div className="border-t border-gray-100 pt-6">
               <div className="flex justify-between items-end">
                 <span className="font-bold text-gray-900 tracking-tight">Total</span>
-                <span className="text-3xl font-black text-gray-900 tracking-tighter">৳{total.toLocaleString()}</span>
+                <span className="text-3xl font-black text-gray-900 tracking-tighter">{theme?.currencySymbol || '৳'}{total.toLocaleString()}</span>
               </div>
             </div>
 
@@ -295,7 +295,7 @@ export default function CheckoutClient05({ theme, storeInfo }: { theme?: any; st
               <button type="submit" form="checkout-form" disabled={isProcessing} 
                 style={theme?.buttonColors?.buyNow ? { backgroundColor: theme.buttonColors.buyNow } : theme?.primaryColor ? { backgroundColor: theme.primaryColor } : {}}
                 className="w-full bg-black text-white px-6 py-5 rounded-full font-bold text-[15px] hover:bg-gray-800 transition-colors shadow-lg disabled:opacity-70 flex items-center justify-center gap-2">
-                {isProcessing ? 'Processing Order...' : `Complete Order • ৳${total.toLocaleString()}`}
+                {isProcessing ? 'Processing Order...' : `Complete Order • ${theme?.currencySymbol || '৳'}${total.toLocaleString()}`}
               </button>
               
               <p className="text-center text-xs text-gray-400 flex items-center justify-center gap-2 mt-4">

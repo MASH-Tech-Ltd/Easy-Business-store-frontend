@@ -1,10 +1,11 @@
+import { storefrontFetch } from "../../utils/storefrontFetch";
 import Link from 'next/link';
 import Footer04 from './components/layout/Footer';
 import Header04 from './components/layout/Header';
 
 async function getCategories(tenantSlug: string) {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/categories`, { next: { revalidate: 60 } });
+    const res = await storefrontFetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/categories`, { next: { revalidate: 60 } });
     if (!res.ok) return [];
     const json = await res.json();
     const data = json?.data?.data || json?.data || [];
@@ -13,7 +14,7 @@ async function getCategories(tenantSlug: string) {
 }
 async function getStoreInfo(tenantSlug: string) {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/info`, { next: { revalidate: 60 } });
+    const res = await storefrontFetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/info`, { next: { revalidate: 60 } });
     return res.ok ? (await res.json()).data : null;
   } catch { return null; }
 }

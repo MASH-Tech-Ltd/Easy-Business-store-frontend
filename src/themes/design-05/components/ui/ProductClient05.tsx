@@ -77,9 +77,9 @@ export default function ProductClient05({ product, theme }: { product: any; them
             
             <div className="flex items-center gap-6 mb-6">
               <div className="flex items-center gap-3">
-                <span className="text-3xl font-semibold text-gray-900">৳{price.toLocaleString()}</span>
+                <span className="text-3xl font-semibold text-gray-900">{theme?.currencySymbol || '৳'}{price.toLocaleString()}</span>
                 {hasDiscount && (
-                  <span className="text-xl text-gray-400 line-through">৳{product.originalPrice.toLocaleString()}</span>
+                  <span className="text-xl text-gray-400 line-through">{theme?.currencySymbol || '৳'}{product.originalPrice.toLocaleString()}</span>
                 )}
               </div>
               {inStock ? (

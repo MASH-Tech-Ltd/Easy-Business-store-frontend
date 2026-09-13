@@ -15,7 +15,7 @@ export default async function Design02CheckoutPage({ tenantSlug }: { tenantSlug:
     <div className="min-h-screen bg-white text-gray-900 flex flex-col font-sans">
       <Header storeInfo={storeInfo} />
 
-      <Design02CheckoutClient storeInfo={storeInfo} />
+      <Design02CheckoutClient storeInfo={storeInfo} theme={theme} />
 
       <Footer storeInfo={storeInfo} theme={theme} />
     </div>

@@ -47,8 +47,8 @@ export default function ProductCard05({ product, isList = false, isBestSelling =
           <h4 className="text-lg font-medium text-gray-900 mb-2 line-clamp-2">{product.title || product.name}</h4>
           {product.shortDescription && <p className="text-sm text-gray-500 line-clamp-2 mb-4 leading-relaxed">{product.shortDescription}</p>}
           <div className="flex items-center gap-3 mb-6">
-            <span className="font-semibold text-gray-900 text-xl">৳{price.toLocaleString()}</span>
-            {hasDiscount && <span className="text-sm text-gray-400 line-through">৳{product.originalPrice.toLocaleString()}</span>}
+            <span className="font-semibold text-gray-900 text-xl">{theme?.currencySymbol || '৳'}{price.toLocaleString()}</span>
+            {hasDiscount && <span className="text-sm text-gray-400 line-through">{theme?.currencySymbol || '৳'}{product.originalPrice.toLocaleString()}</span>}
           </div>
           <button onClick={handleAddToCart} 
             style={theme?.buttonColors?.addToCart ? { backgroundColor: theme.buttonColors.addToCart, borderColor: theme.buttonColors.addToCart, color: '#fff' } : {}}
@@ -98,8 +98,8 @@ export default function ProductCard05({ product, isList = false, isBestSelling =
           </h4>
         </Link>
         <div className="flex items-center gap-2.5">
-          <span className="font-semibold text-gray-900 text-base">৳{price.toLocaleString()}</span>
-          {hasDiscount && <span className="text-xs text-gray-400 line-through">৳{product.originalPrice.toLocaleString()}</span>}
+          <span className="font-semibold text-gray-900 text-base">{theme?.currencySymbol || '৳'}{price.toLocaleString()}</span>
+          {hasDiscount && <span className="text-xs text-gray-400 line-through">{theme?.currencySymbol || '৳'}{product.originalPrice.toLocaleString()}</span>}
         </div>
       </div>
     </div>

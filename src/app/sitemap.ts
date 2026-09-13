@@ -1,3 +1,4 @@
+import { storefrontFetch } from "../utils/storefrontFetch";
 import { MetadataRoute } from 'next';
 import { headers } from 'next/headers';
 
@@ -25,7 +26,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   try {
     // Fetch categories
-    const categoriesRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/categories`, { next: { revalidate: 3600 } });
+    const categoriesRes = await storefrontFetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/categories`, { next: { revalidate: 3600 } });
     if (categoriesRes.ok) {
       const categoriesJson = await categoriesRes.json();
       const categories = categoriesJson.data || [];
@@ -41,7 +42,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }
 
     // Fetch products (using a high limit to get all for sitemap)
-    const productsRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/products?limit=1000`, { next: { revalidate: 3600 } });
+    const productsRes = await storefrontFetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/products?limit=1000`, { next: { revalidate: 3600 } });
     if (productsRes.ok) {
       const productsJson = await productsRes.json();
       const products = productsJson.data || [];
