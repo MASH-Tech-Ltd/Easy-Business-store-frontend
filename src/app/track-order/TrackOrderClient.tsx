@@ -19,7 +19,7 @@ export function TrackOrderContent({ tenantId }: { tenantId?: string }) {
     setError('');
     setOrder(null);
     try {
-      const url = new URL(`${process.env.NEXT_PUBLIC_API_URL}/orders/track/${encodeURIComponent(id)}`);
+      const url = new URL(`/api/orders/track/${encodeURIComponent(id)}`, window.location.origin);
       if (tenantId) {
         url.searchParams.append('tenantId', tenantId);
       }

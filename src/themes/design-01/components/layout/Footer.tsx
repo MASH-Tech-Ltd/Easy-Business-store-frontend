@@ -1,4 +1,4 @@
-﻿import { storefrontFetch } from "../../../../utils/storefrontFetch";
+import { storefrontFetch } from "../../../../utils/storefrontFetch";
 import React from "react";
 import Link from "next/link";
 import { Mail, Phone, MapPin } from "lucide-react";
@@ -89,6 +89,12 @@ export default async function Footer() {
                 {storeInfo?.name || tenantSlug.toUpperCase()}
               </span>
             </div>
+            
+            {storeInfo?.description && (
+              <p className="text-sm text-gray-500 mt-4 mb-2 max-w-xs leading-relaxed">
+                {storeInfo.description}
+              </p>
+            )}
 
             {(socialLinks.facebook ||
               socialLinks.youtube ||

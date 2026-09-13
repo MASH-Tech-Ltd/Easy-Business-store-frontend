@@ -1,4 +1,4 @@
-﻿import { storefrontFetch } from "../../utils/storefrontFetch";
+import { storefrontFetch } from "../../utils/storefrontFetch";
 import { headers } from 'next/headers';
 import type { Metadata, ResolvingMetadata } from 'next';
 import Link from 'next/link';
@@ -107,6 +107,10 @@ export default async function CategoryPage({ params, searchParams }: any) {
   const category = categories.find((c: any) => c.slug === categorySlug || c._id === categorySlug);
   
   const categoryId = category?._id;
+
+  const language = storeInfo?.language || "en";
+  const t = (key: any) => getTranslation(language, key);
+  const theme = storeInfo?.theme || {};
 
   // Now fetch the products and brands with the correct categoryId
   const [productResponse, brandsRes] = categoryId 
