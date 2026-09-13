@@ -46,6 +46,31 @@ export default function CheckoutClient04({ storeInfo, theme }: { storeInfo?: any
   const districtsList = bdLocations.find((d) => d.division === division)?.districts || [];
   const upazilasList = districtsList.find((d) => d.district === district)?.upazilas || [];
 
+  // Track Checkout Leads (Abandoned Checkout)
+  React.useEffect(() => {
+    if (!phone && !fullName && !address) return;
+    if (status === 'success' || status === 'processing') return;
+
+    const timeoutId = setTimeout(() => {
+      fetch('/api/checkout-leads', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          firstName: fullName.split(' ')[0] || fullName,
+          lastName: fullName.split(' ').slice(1).join(' ') || undefined,
+          phone,
+          address,
+          division,
+          district,
+          upazila,
+          status: 'abandoned'
+        })
+      }).catch(err => console.error("Failed to track lead", err));
+    }, 2000);
+
+    return () => clearTimeout(timeoutId);
+  }, [phone, fullName, address, division, district, upazila, status]);
+
   const { cost: deliveryCharge, zoneName: shippingZoneName } = computeShipping(division, district, theme?.shippingZones || [], theme?.defaultShippingCost ?? 120);
   const grandTotal = totalPrice > 0 ? totalPrice + deliveryCharge : 0;
 

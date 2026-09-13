@@ -77,6 +77,31 @@ export default function CheckoutClient({ storeInfo, theme }: { storeInfo?: any; 
     }
   }, []);
 
+  // Track Checkout Leads (Abandoned Checkout)
+  React.useEffect(() => {
+    if (!phone && !fullName && !address) return;
+    if (status === 'success' || status === 'processing') return;
+
+    const timeoutId = setTimeout(() => {
+      fetch('/api/checkout-leads', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          firstName: fullName.split(' ')[0] || fullName,
+          lastName: fullName.split(' ').slice(1).join(' ') || undefined,
+          phone,
+          address,
+          division,
+          district,
+          upazila,
+          status: 'abandoned'
+        })
+      }).catch(err => console.error("Failed to track lead", err));
+    }, 2000);
+
+    return () => clearTimeout(timeoutId);
+  }, [phone, fullName, address, division, district, upazila, status]);
+
   // Static Location Derived Data
   const divisionsList = bdLocations.map(d => d.division);
   const districtsList = bdLocations.find(d => d.division === division)?.districts || [];

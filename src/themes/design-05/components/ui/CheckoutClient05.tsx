@@ -46,6 +46,32 @@ export default function CheckoutClient05({ theme, storeInfo }: { theme?: any; st
   const districtsList = bdLocations.find((d) => d.division === division)?.districts || [];
   const upazilasList = districtsList.find((d) => d.district === district)?.upazilas || [];
 
+  // Track Checkout Leads (Abandoned Checkout)
+  React.useEffect(() => {
+    if (!phone && !firstName && !address) return;
+    if (isSuccess || isProcessing) return;
+
+    const timeoutId = setTimeout(() => {
+      fetch('/api/checkout-leads', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          firstName,
+          lastName,
+          email,
+          phone,
+          address,
+          division,
+          district,
+          upazila,
+          status: 'abandoned'
+        })
+      }).catch(err => console.error("Failed to track lead", err));
+    }, 2000);
+
+    return () => clearTimeout(timeoutId);
+  }, [phone, firstName, lastName, email, address, division, district, upazila, isSuccess, isProcessing]);
+
   const { cost: shippingEstimate, zoneName: shippingZoneName } = computeShipping(division, district, theme?.shippingZones || [], theme?.defaultShippingCost ?? 120);
   const taxEstimate = Math.round(subtotal * 0.15);
   const total = Math.round(subtotal + shippingEstimate + taxEstimate);
