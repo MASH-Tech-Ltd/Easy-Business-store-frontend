@@ -1,9 +1,9 @@
-﻿'use client';
+'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 
-export default function GlobalSearch05({ tenantSlug }: { tenantSlug: string }) {
+export default function GlobalSearch05({ tenantSlug, theme }: { tenantSlug: string; theme?: any }) {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -25,7 +25,7 @@ export default function GlobalSearch05({ tenantSlug }: { tenantSlug: string }) {
       if (!query.trim()) { setResults([]); setIsOpen(false); return; }
       setIsLoading(true); setIsOpen(true);
       try {
-        const res = await fetch(`/api/search?tenantSlug=${tenantSlug}&query=${encodeURIComponent(query)}&limit=10`);
+        const res = await fetch(`/api/search?query=${encodeURIComponent(query)}&limit=10`);
         const json = await res.json();
         if (json.data?.data) setResults(json.data.data);
       } catch { } finally { setIsLoading(false); }

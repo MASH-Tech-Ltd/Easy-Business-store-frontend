@@ -27,7 +27,12 @@ export default function CheckoutClient04({ storeInfo, theme }: { storeInfo?: any
   const { cartItems, totalItems, totalPrice, clearCart } = useCart();
   const [status, setStatus] = useState<'idle' | 'processing' | 'success'>('idle');
   const [orderId, setOrderId] = useState<string | null>(null);
+  const [mounted, setMounted] = useState(false);
   const router = useRouter();
+  
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string[]>>({});
   
   const [phone, setPhone] = useState('');
@@ -67,14 +72,14 @@ export default function CheckoutClient04({ storeInfo, theme }: { storeInfo?: any
           quantity: item.quantity,
           image: item.image
         })),
-        tenantId: storeInfo?._id,
+        
         subTotal: totalPrice,
         shippingCharge: deliveryCharge,
         totalPrice: grandTotal,
         paymentStatus: 'unpaid'
       };
 
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/orders/create-order`, {
+      const res = await fetch(`/api/checkout`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
@@ -94,6 +99,8 @@ export default function CheckoutClient04({ storeInfo, theme }: { storeInfo?: any
       alert("Something went wrong during checkout.");
     }
   };
+
+  if (!mounted) return null;
 
   if (status === 'success') {
     return (

@@ -117,7 +117,7 @@ export default function Design02CheckoutClient({ theme,
           quantity: item.quantity,
           image: item.image,
         })),
-        tenantId: storeInfo?._id,
+        
         subTotal: totalPrice,
         shippingCharge: deliveryCharge,
         totalPrice: grandTotal,
@@ -125,7 +125,7 @@ export default function Design02CheckoutClient({ theme,
       };
 
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/orders/create-order`,
+        `/api/checkout`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -154,12 +154,21 @@ export default function Design02CheckoutClient({ theme,
 
       setStatus("success");
       clearCart();
-    } catch (e) {
+    } catch (e: any) {
       console.error(e);
       setStatus("idle");
-      alert("Something went wrong during checkout. Please try again.");
+      
+      const errorMessage = e.message || "";
+      if (errorMessage.includes("Product not found or does not belong to this tenant")) {
+        alert("Your cart contains products that are no longer available. Your cart will be cleared.");
+        clearCart();
+      } else {
+        alert(errorMessage || "Something went wrong during checkout. Please try again.");
+      }
     }
   };
+
+  if (!mounted) return null;
 
   if (status === "success") {
     return (

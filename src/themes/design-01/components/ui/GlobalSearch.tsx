@@ -49,7 +49,7 @@ export default function GlobalSearch({ tenantSlug }: { tenantSlug: string }) {
       setIsOpen(true);
       
       try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/products?search=${encodeURIComponent(query)}&limit=10`);
+        const res = await fetch(`/api/search?query=${encodeURIComponent(query)}&limit=10`);
         const json = await res.json();
         if (json.data && json.data.data) {
           setResults(json.data.data);

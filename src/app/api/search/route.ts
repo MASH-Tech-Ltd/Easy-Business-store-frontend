@@ -1,9 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { storefrontFetch } from '@/utils/storefrontFetch';
+import { getTenantSlugFromReq } from '@/utils/tenant';
 
 export async function GET(req: NextRequest) {
   const searchParams = req.nextUrl.searchParams;
-  const tenantSlug = searchParams.get('tenantSlug');
+  const tenantSlug = getTenantSlugFromReq(req);
   const query = searchParams.get('query');
   const limit = searchParams.get('limit') || '10';
 

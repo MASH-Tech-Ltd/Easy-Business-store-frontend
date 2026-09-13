@@ -1,11 +1,11 @@
-﻿'use client';
+'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Search } from 'lucide-react';
 
-export default function GlobalSearch03({ tenantSlug }: { tenantSlug: string }) {
+export default function GlobalSearch03({ tenantSlug, theme }: { tenantSlug: string; theme?: any }) {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -35,7 +35,7 @@ export default function GlobalSearch03({ tenantSlug }: { tenantSlug: string }) {
       setIsOpen(true);
       
       try {
-        const res = await fetch(`/api/search?tenantSlug=${tenantSlug}&query=${encodeURIComponent(query)}&limit=10`);
+        const res = await fetch(`/api/search?query=${encodeURIComponent(query)}&limit=10`);
         const json = await res.json();
         if (json.data && json.data.data) {
           setResults(json.data.data);

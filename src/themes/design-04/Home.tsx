@@ -1,4 +1,4 @@
-﻿import { getStoreInfo, getTheme } from '@/core/api/store';
+import { getStoreInfo, getTheme } from '@/core/api/store';
 import { getProducts, getBestsellingProducts } from '@/core/api/product';
 import { getCategories } from '@/core/api/category';
 import Link from 'next/link';
@@ -40,23 +40,29 @@ export default async function Design04Home({ tenantSlug }: { tenantSlug: string 
         <div className="max-w-[1400px] mx-auto px-6 py-12 md:py-20 grid md:grid-cols-2 gap-10 items-center">
           {/* Left: Text */}
           <div>
-            <p className="text-sm font-medium text-gray-400 tracking-wider uppercase mb-3">
-              {theme?.banner?.subtitle || 'New Collection'}
-            </p>
-            <h2 className="text-5xl md:text-6xl font-black text-gray-900 tracking-tight leading-[1.05] mb-5">
-              {theme?.banner?.title || (
-                <>Electronics<br/><span className="text-gray-400">Are Unique</span></>
-              )}
-            </h2>
-            <p className="text-gray-400 text-lg mb-8 max-w-md leading-relaxed">
-              Discover premium products curated for every lifestyle and budget.
-            </p>
-            <Link
-              href={theme?.banner?.buttonLink || '/products'}
-              className="inline-block bg-gray-900 text-white font-semibold px-10 py-4 rounded-full hover:bg-gray-700 transition-colors"
-            >
-              {theme?.banner?.buttonText || 'All Products'}
-            </Link>
+            {theme?.banner?.subtitle && (
+              <p className="text-sm font-medium text-gray-400 tracking-wider uppercase mb-3">
+                {theme.banner.subtitle}
+              </p>
+            )}
+            {theme?.banner?.title && (
+              <h2 className="text-5xl md:text-6xl font-black text-gray-900 tracking-tight leading-[1.05] mb-5">
+                {theme.banner.title}
+              </h2>
+            )}
+            {theme?.banner?.description && (
+              <p className="text-gray-400 text-lg mb-8 max-w-md leading-relaxed">
+                {theme.banner.description}
+              </p>
+            )}
+            {theme?.banner?.buttonText && theme?.banner?.buttonLink && (
+              <Link
+                href={theme.banner.buttonLink}
+                className="inline-block bg-gray-900 text-white font-semibold px-10 py-4 rounded-full hover:bg-gray-700 transition-colors"
+              >
+                {theme.banner.buttonText}
+              </Link>
+            )}
           </div>
 
           {/* Right: Hero Image */}

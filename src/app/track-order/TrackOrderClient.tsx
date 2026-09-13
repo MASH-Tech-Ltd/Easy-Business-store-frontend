@@ -19,10 +19,8 @@ export function TrackOrderContent({ tenantId }: { tenantId?: string }) {
     setError('');
     setOrder(null);
     try {
-      const url = new URL(`/api/orders/track/${encodeURIComponent(id)}`, window.location.origin);
-      if (tenantId) {
-        url.searchParams.append('tenantId', tenantId);
-      }
+      const url = new URL('/api/track', window.location.origin);
+      url.searchParams.append('id', id);
       
       const res = await fetch(url.toString());
       const data = await res.json();
@@ -157,6 +155,16 @@ export function TrackOrderContent({ tenantId }: { tenantId?: string }) {
                         </li>
                       ))}
                     </ul>
+                    {order.isDeliveryChargePaid && (
+                      <div className="mt-8 mb-2 flex justify-center sm:justify-start">
+                        <div className="border-4 border-green-500 text-green-500 font-black px-6 py-2 rounded-lg transform -rotate-6 inline-block shadow-sm opacity-90 select-none bg-white">
+                          <div className="text-center leading-tight">
+                            <div className="text-2xl tracking-widest uppercase">PAID</div>
+                            <div className="text-sm tracking-widest uppercase">Delivery Charge</div>
+                          </div>
+                        </div>
+                      </div>
+                    )}
                   </dd>
                 </div>
                 <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 bg-gray-50">

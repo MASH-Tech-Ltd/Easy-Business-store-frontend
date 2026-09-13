@@ -34,7 +34,7 @@ export default function GlobalSearch({ tenantSlug, language = 'en', theme }: { t
       setIsLoading(true);
       setIsOpen(true);
       try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/products?search=${encodeURIComponent(query)}&limit=10`);
+        const res = await fetch(`/api/search?query=${encodeURIComponent(query)}&limit=10`);
         const json = await res.json();
         if (json.data?.data) setResults(json.data.data);
       } catch (error) {

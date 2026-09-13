@@ -73,14 +73,14 @@ export default function CheckoutClient05({ theme, storeInfo }: { theme?: any; st
           quantity: item.quantity,
           image: item.image || (item as any).images?.[0]?.secure_url
         })),
-        tenantId: storeInfo?._id,
+        
         subTotal: subtotal,
         shippingCharge: shippingEstimate,
         totalPrice: total,
         paymentStatus: 'unpaid'
       };
 
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/orders/create-order`, {
+      const res = await fetch(`/api/checkout`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)

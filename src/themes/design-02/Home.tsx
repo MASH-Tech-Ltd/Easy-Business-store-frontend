@@ -1,4 +1,4 @@
-﻿import { getStoreInfo, getTheme } from '@/core/api/store';
+import { getStoreInfo, getTheme } from '@/core/api/store';
 import { getProducts, getBestsellingProducts, getJustForYouProducts } from '@/core/api/product';
 import { getCategories } from '@/core/api/category';
 import Link from 'next/link';
@@ -48,15 +48,21 @@ export default async function Design02Home({ tenantSlug }: { tenantSlug: string 
         )}
         <div className="relative z-10 max-w-7xl mx-auto w-full px-8">
           <div className="max-w-2xl text-left">
-            <h2 className="text-4xl md:text-6xl font-bold tracking-tight mb-4 text-gray-900 leading-[1.1] whitespace-pre-line">
-              {theme?.banner?.title || 'Simplicity is the \n ultimate sophistication.'}
-            </h2>
-            <p className="text-gray-600 mb-10 max-w-xl text-lg md:text-xl font-medium">
-              {theme?.banner?.subtitle || 'Discover our curated collection of premium products designed for modern living.'}
-            </p>
-            <Link href={theme?.banner?.buttonLink || '/categories'} className="inline-block px-10 py-4 bg-gray-900 text-white rounded-full text-sm font-bold tracking-wide hover:bg-gray-800 transition-all shadow-xl hover:shadow-2xl transform hover:-translate-y-1 duration-300">
-              {theme?.banner?.buttonText || 'Shop Collection'}
-            </Link>
+            {theme?.banner?.title && (
+              <h2 className="text-4xl md:text-6xl font-bold tracking-tight mb-4 text-gray-900 leading-[1.1] whitespace-pre-line">
+                {theme.banner.title}
+              </h2>
+            )}
+            {theme?.banner?.description && (
+              <p className="text-gray-600 mb-10 max-w-xl text-lg md:text-xl font-medium">
+                {theme.banner.description}
+              </p>
+            )}
+            {theme?.banner?.buttonText && theme?.banner?.buttonLink && (
+              <Link href={theme.banner.buttonLink} className="inline-block px-10 py-4 bg-gray-900 text-white rounded-full text-sm font-bold tracking-wide hover:bg-gray-800 transition-all shadow-xl hover:shadow-2xl transform hover:-translate-y-1 duration-300">
+                {theme.banner.buttonText}
+              </Link>
+            )}
           </div>
         </div>
       </section>

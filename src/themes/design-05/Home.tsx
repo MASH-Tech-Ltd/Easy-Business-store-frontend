@@ -1,4 +1,4 @@
-﻿import { getStoreInfo, getTheme } from "@/core/api/store";
+import { getStoreInfo, getTheme } from "@/core/api/store";
 import { getProducts, getBestsellingProducts } from "@/core/api/product";
 import { getCategories } from "@/core/api/category";
 import Link from "next/link";
@@ -43,34 +43,33 @@ export default async function Design05Home({
         <section className="relative w-full px-6 lg:px-12 py-4 lg:py-6 max-w-[1400px] mx-auto">
           <div className="bg-[#F8F9FA] rounded-[2rem] overflow-hidden flex flex-col lg:flex-row items-center justify-between p-6 lg:p-10 relative">
             <div className="lg:w-1/2 z-10 relative">
-              <h2 className="text-4xl lg:text-5xl font-bold tracking-tighter leading-[1.1] mb-5">
-                {theme?.banner?.title || (
-                  <>
-                    Design.
-                    <br />
-                    Refined.
-                  </>
-                )}
-              </h2>
-              <p className="text-gray-500 text-base lg:text-lg mb-8 max-w-md leading-relaxed">
-                Experience electronics reimagined. Clean lines, premium
-                materials, and unparalleled performance.
-              </p>
-              <Link
-                href={theme?.banner?.buttonLink || "/products"}
-                className="inline-flex items-center justify-center bg-black text-white px-8 py-4 rounded-full font-semibold text-sm hover:bg-gray-800 transition-colors gap-2 group"
-              >
-                {theme?.banner?.buttonText || "Explore Collection"}
-                <svg
-                  className="w-4 h-4 group-hover:translate-x-1 transition-transform"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
+              {theme?.banner?.title && (
+                <h2 className="text-4xl lg:text-5xl font-bold tracking-tighter leading-[1.1] mb-5">
+                  {theme.banner.title}
+                </h2>
+              )}
+              {theme?.banner?.description && (
+                <p className="text-gray-500 text-base lg:text-lg mb-8 max-w-md leading-relaxed">
+                  {theme.banner.description}
+                </p>
+              )}
+              {theme?.banner?.buttonText && theme?.banner?.buttonLink && (
+                <Link
+                  href={theme.banner.buttonLink}
+                  className="inline-flex items-center justify-center bg-black text-white px-8 py-4 rounded-full font-semibold text-sm hover:bg-gray-800 transition-colors gap-2 group"
                 >
-                  <path d="M5 12h14M12 5l7 7-7 7" />
-                </svg>
-              </Link>
+                  {theme.banner.buttonText}
+                  <svg
+                    className="w-4 h-4 group-hover:translate-x-1 transition-transform"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                  >
+                    <path d="M5 12h14M12 5l7 7-7 7" />
+                  </svg>
+                </Link>
+              )}
             </div>
 
             <div className="lg:w-1/2 mt-6 lg:mt-0 relative flex justify-center h-[200px] lg:h-[320px] w-full">

@@ -1,4 +1,4 @@
-﻿import { getStoreInfo, getTheme } from '@/core/api/store';
+import { getStoreInfo, getTheme } from '@/core/api/store';
 import { getProducts, getBestsellingProducts, getJustForYouProducts } from '@/core/api/product';
 import { getCategories } from '@/core/api/category';
 import Link from 'next/link';
@@ -46,20 +46,24 @@ export default async function Design03Home({ tenantSlug }: { tenantSlug: string 
             <div className="p-8 md:p-16 flex flex-col justify-center border-b md:border-b-0 md:border-r border-white/10 relative overflow-hidden bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]">
               <div className="relative z-10">
                 <div className="inline-block px-3 py-1 bg-cyan-400 text-black text-[10px] font-black uppercase tracking-widest mb-6">System Initialized</div>
-                <h2 className="text-5xl md:text-7xl lg:text-8xl font-black tracking-tighter leading-[0.9] uppercase mb-8">
-                  {theme?.banner?.title || (
-                    <>PRECISION<br/><span className="text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-500">ENGINEERED</span></>
-                  )}
-                </h2>
-                <p className="text-lg md:text-xl text-gray-400 font-mono mb-12 max-w-xl leading-relaxed">
-                  {theme?.banner?.subtitle || 'Discover our curated collection of premium electronics. Form meets function in high-fidelity.'}
-                </p>
-                <Link 
-                  href={theme?.banner?.buttonLink || '/categories'} 
-                  className="inline-flex items-center justify-center px-12 py-5 bg-white text-black text-sm font-black uppercase tracking-[0.2em] hover:bg-cyan-400 transition-colors border border-transparent hover:border-white"
-                >
-                  {theme?.banner?.buttonText || 'Initialize Protocol'}
-                </Link>
+                {theme?.banner?.title && (
+                  <h2 className="text-5xl md:text-7xl lg:text-8xl font-black tracking-tighter leading-[0.9] uppercase mb-8">
+                    {theme.banner.title}
+                  </h2>
+                )}
+                {theme?.banner?.description && (
+                  <p className="text-lg md:text-xl text-gray-400 font-mono mb-12 max-w-xl leading-relaxed">
+                    {theme.banner.description}
+                  </p>
+                )}
+                {theme?.banner?.buttonText && theme?.banner?.buttonLink && (
+                  <Link 
+                    href={theme.banner.buttonLink} 
+                    className="inline-flex items-center justify-center px-12 py-5 bg-white text-black text-sm font-black uppercase tracking-[0.2em] hover:bg-cyan-400 transition-colors border border-transparent hover:border-white"
+                  >
+                    {theme.banner.buttonText}
+                  </Link>
+                )}
               </div>
             </div>
 

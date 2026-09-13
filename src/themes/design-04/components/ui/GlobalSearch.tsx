@@ -27,7 +27,7 @@ export default function GlobalSearch({ tenantSlug, language = 'en', theme }: { t
       if (!query.trim()) { setResults([]); setIsOpen(false); return; }
       setIsLoading(true); setIsOpen(true);
       try {
-        const res = await fetch(`/api/search?tenantSlug=${tenantSlug}&query=${encodeURIComponent(query)}&limit=10`);
+        const res = await fetch(`/api/search?query=${encodeURIComponent(query)}&limit=10`);
         const json = await res.json();
         if (json.data?.data) setResults(json.data.data);
       } catch { } finally { setIsLoading(false); }

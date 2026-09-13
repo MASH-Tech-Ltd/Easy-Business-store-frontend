@@ -1,4 +1,4 @@
-﻿import { headers } from 'next/headers';
+import { headers } from 'next/headers';
 import Link from 'next/link';
 import { Laptop, Cpu, Smartphone, Speaker, Wind, Tv, Gamepad2, Printer, Camera, Component, ArrowRight } from 'lucide-react';
 import Footer from './components/layout/Footer';
@@ -69,30 +69,24 @@ export default async function Design01Home({ tenantSlug }: { tenantSlug: string 
                 {theme.banner.subtitle}
               </span>
             )}
-            {!theme?.banner?.subtitle && (
-              <span className="inline-block py-1 px-3 rounded-full bg-blue-800/50 text-blue-200 text-sm font-semibold mb-6 border border-blue-700/50 backdrop-blur-sm">
-                New Arrivals Available
-              </span>
+            {theme?.banner?.title && (
+              <h1 className="text-5xl md:text-6xl font-extrabold tracking-tight mb-6 leading-tight whitespace-pre-line">
+                {theme.banner.title}
+              </h1>
             )}
-            <h1 className="text-5xl md:text-6xl font-extrabold tracking-tight mb-6 leading-tight whitespace-pre-line">
-              {theme?.banner?.title || (
-                <>
-                  Upgrade Your Tech <br />
-                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-300">
-                    Experience Today.
-                  </span>
-                </>
-              )}
-            </h1>
-            <p className="text-lg md:text-xl text-blue-100 mb-8 leading-relaxed">
-              {theme?.banner?.subtitle || 'Discover the latest gadgets and accessories at unbeatable prices. Shop our curated collection now.'}
-            </p>
-            <Link 
-              href={theme?.banner?.buttonLink || '/categories'} 
-              className="inline-flex items-center gap-2 bg-white text-indigo-900 px-8 py-4 rounded-lg font-bold text-lg hover:bg-blue-50 transition-colors shadow-lg hover:shadow-xl"
-            >
-              {theme?.banner?.buttonText || 'Shop Now'} <ArrowRight className="w-5 h-5" />
-            </Link>
+            {theme?.banner?.description && (
+              <p className="text-lg md:text-xl text-blue-100 mb-8 leading-relaxed">
+                {theme.banner.description}
+              </p>
+            )}
+            {theme?.banner?.buttonText && theme?.banner?.buttonLink && (
+              <Link 
+                href={theme.banner.buttonLink} 
+                className="inline-flex items-center gap-2 bg-white text-indigo-900 px-8 py-4 rounded-lg font-bold text-lg hover:bg-blue-50 transition-colors shadow-lg hover:shadow-xl"
+              >
+                {theme.banner.buttonText} <ArrowRight className="w-5 h-5" />
+              </Link>
+            )}
           </div>
         </div>
       </section>
