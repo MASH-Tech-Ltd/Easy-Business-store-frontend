@@ -110,6 +110,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
 import Providers from "../components/Providers";
 import { LanguageProvider } from "../context/LanguageContext";
+import VisitTracker from "../components/VisitTracker";
 
 export default async function RootLayout({
   children,
@@ -445,6 +446,7 @@ export default async function RootLayout({
         />
         <LanguageProvider initialLanguage={language}>
           <Providers>
+            {storeInfo?._id && <VisitTracker tenantId={storeInfo._id} />}
             {children}
           </Providers>
         </LanguageProvider>
