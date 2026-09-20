@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { useCart } from '@/context/CartContext';
 import Link from 'next/link';
-import { Check, ShieldCheck, ChevronRight } from 'lucide-react';
+import { Check, ShieldCheck, ChevronRight, Banknote } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { bdLocations } from '@/data/locations';
 import { z } from 'zod';
@@ -32,6 +32,8 @@ export default function CheckoutClient05({ theme, storeInfo }: { theme?: any; st
   const [isSuccess, setIsSuccess] = useState(false);
   const [orderId, setOrderId] = useState<string | null>(null);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string[]>>({});
+
+  const manualPaymentMethods = storeInfo?.settings?.manualPaymentMethods?.filter((m: any) => m.isActive) || [];
 
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
@@ -147,9 +149,34 @@ export default function CheckoutClient05({ theme, storeInfo }: { theme?: any; st
         </p>
 
           {orderId && (
-            <div className="bg-gray-50 rounded-xl py-4 px-6 mb-10 inline-block border border-gray-200">
+            <div className="bg-gray-50 rounded-xl py-4 px-6 mb-8 inline-block border border-gray-200">
               <p className="text-xs text-gray-500 uppercase tracking-widest mb-1 font-bold text-center">Order Number</p>
               <p className="font-mono text-gray-900 font-bold text-center text-lg">#{orderId}</p>
+            </div>
+          )}
+
+          {manualPaymentMethods.length > 0 && orderId && (
+            <div className="mb-10 text-left border border-gray-200 rounded-2xl overflow-hidden bg-white shadow-sm max-w-lg w-full mx-auto">
+              <div className="bg-gray-50 p-5 border-b border-gray-200 text-center sm:text-left">
+                <h3 className="font-bold text-gray-900 flex items-center justify-center sm:justify-start gap-2">
+                  <Banknote className="w-5 h-5 text-[#5022C3]" /> Payment Instructions
+                </h3>
+                <p className="text-sm text-gray-500 mt-1 font-medium">Please complete your payment using one of the methods below.</p>
+              </div>
+              <div className="p-5 space-y-4">
+                {manualPaymentMethods.map((method: any, idx: number) => (
+                  <div key={idx} className="pb-4 border-b border-gray-100 last:border-0 last:pb-0">
+                    <div className="flex items-center gap-2 mb-3 justify-center sm:justify-start">
+                      <span className="bg-[#5022C3] text-white text-xs font-bold px-3 py-1 rounded-full">{method.provider}</span>
+                      <span className="text-xs font-bold text-gray-600 bg-gray-100 px-3 py-1 rounded-full border border-gray-200">{method.type}</span>
+                    </div>
+                    <p className="font-mono font-black text-xl text-gray-900 mb-2 text-center sm:text-left tracking-tight">{method.number}</p>
+                    {method.instructions && (
+                      <p className="text-sm text-gray-600 bg-gray-50 p-4 rounded-xl border border-gray-100 text-center sm:text-left font-medium">{method.instructions}</p>
+                    )}
+                  </div>
+                ))}
+              </div>
             </div>
           )}
 

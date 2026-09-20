@@ -34,22 +34,29 @@ export async function generateMetadata(
   const title = `${product.title} | ${storeInfo?.name || tenantSlug.toUpperCase()}`;
   const description = product.shortDescription || product.description?.substring(0, 160)?.replace(/<[^>]*>?/gm, '') || `Buy ${product.title}`;
 
+  const fallbackImage = storeInfo?.logo || '/favicon.ico';
+  const imageUrl = product.images?.[0]?.secure_url || fallbackImage;
+
   return {
     title,
     description,
+    keywords: [product.title, product.category, storeInfo?.name, 'buy online', 'ecommerce'].filter(Boolean).join(', '),
+    alternates: {
+      canonical: `${baseUrl}/product/${resolvedParams.slug}`,
+    },
     openGraph: {
       title,
       description,
       url: `${baseUrl}/product/${resolvedParams.slug}`,
       siteName: storeInfo?.name || tenantSlug.toUpperCase(),
-      images: product.images?.[0]?.secure_url ? [
+      images: [
         {
-          url: product.images[0].secure_url,
+          url: imageUrl,
           width: 800,
           height: 800,
           alt: product.title,
         }
-      ] : [],
+      ],
       locale: 'en_US',
       type: 'website',
     },
@@ -57,7 +64,7 @@ export async function generateMetadata(
       card: 'summary_large_image',
       title,
       description,
-      images: product.images?.[0]?.secure_url ? [product.images[0].secure_url] : [],
+      images: [imageUrl],
     }
   };
 }

@@ -10,6 +10,7 @@ import {
   Trash2,
   Check,
   AlertTriangle,
+  Banknote,
 } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import { useTranslation } from "@/context/LanguageContext";
@@ -48,6 +49,8 @@ export default function CheckoutClient({ storeInfo, theme }: { storeInfo?: any; 
   const [mounted, setMounted] = useState(false);
   const [orderId, setOrderId] = useState<string | null>(null);
   const router = useRouter();
+
+  const manualPaymentMethods = storeInfo?.settings?.manualPaymentMethods?.filter((m: any) => m.isActive) || [];
 
   React.useEffect(() => {
     setMounted(true);
@@ -210,9 +213,34 @@ export default function CheckoutClient({ storeInfo, theme }: { storeInfo?: any; 
           <p className="text-gray-500 mb-6">{t("thankYouPurchase")}</p>
           
           {orderId && (
-            <div className="bg-gray-50 p-4 rounded-xl mb-8 border border-gray-100">
+            <div className="bg-gray-50 p-4 rounded-xl mb-6 border border-gray-100">
               <p className="text-sm text-gray-500 mb-1">Order ID</p>
               <p className="font-mono font-bold text-gray-900">#{orderId}</p>
+            </div>
+          )}
+
+          {manualPaymentMethods.length > 0 && orderId && (
+            <div className="mb-8 text-left border border-purple-100 rounded-xl overflow-hidden bg-white shadow-sm">
+              <div className="bg-purple-50 p-4 border-b border-purple-100">
+                <h3 className="font-bold text-purple-900 flex items-center gap-2">
+                  <Banknote className="w-5 h-5" /> Payment Instructions
+                </h3>
+                <p className="text-sm text-purple-700 mt-1">Please complete your payment using one of the methods below.</p>
+              </div>
+              <div className="p-4 space-y-4">
+                {manualPaymentMethods.map((method: any, idx: number) => (
+                  <div key={idx} className="pb-4 border-b border-gray-100 last:border-0 last:pb-0">
+                    <div className="flex items-center gap-2 mb-2">
+                      <span className="bg-[#5022C3] text-white text-xs font-bold px-2 py-1 rounded">{method.provider}</span>
+                      <span className="text-sm font-medium text-gray-500 bg-gray-100 px-2 py-1 rounded">{method.type}</span>
+                    </div>
+                    <p className="font-mono font-bold text-lg text-gray-900 mb-2">{method.number}</p>
+                    {method.instructions && (
+                      <p className="text-sm text-gray-600 bg-gray-50 p-3 rounded-lg border border-gray-100">{method.instructions}</p>
+                    )}
+                  </div>
+                ))}
+              </div>
             </div>
           )}
 

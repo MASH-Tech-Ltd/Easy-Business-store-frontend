@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { CheckCircle2, Minus, Plus, Trash2, Check } from "lucide-react";
+import { CheckCircle2, Minus, Plus, Trash2, Check, Banknote } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import { useTranslation } from "@/context/LanguageContext";
 import { z } from "zod";
@@ -45,6 +45,8 @@ export default function Design02CheckoutClient({ theme,
   const [mounted, setMounted] = useState(false);
   const [orderId, setOrderId] = useState<string | null>(null);
   const router = useRouter();
+
+  const manualPaymentMethods = storeInfo?.settings?.manualPaymentMethods?.filter((m: any) => m.isActive) || [];
 
   React.useEffect(() => {
     setMounted(true);
@@ -212,6 +214,31 @@ export default function Design02CheckoutClient({ theme,
           <div className="mb-8">
             <p className="text-sm text-gray-500 mb-1 uppercase tracking-wider text-[10px] font-bold">Order ID</p>
             <p className="font-mono text-lg text-gray-900">#{orderId}</p>
+          </div>
+        )}
+
+        {manualPaymentMethods.length > 0 && orderId && (
+          <div className="mb-8 text-left border border-purple-100 rounded-xl overflow-hidden bg-white shadow-sm max-w-lg w-full mx-auto">
+            <div className="bg-purple-50 p-4 border-b border-purple-100 text-center sm:text-left">
+              <h3 className="font-bold text-purple-900 flex items-center justify-center sm:justify-start gap-2">
+                <Banknote className="w-5 h-5" /> Payment Instructions
+              </h3>
+              <p className="text-sm text-purple-700 mt-1">Please complete your payment using one of the methods below.</p>
+            </div>
+            <div className="p-4 space-y-4">
+              {manualPaymentMethods.map((method: any, idx: number) => (
+                <div key={idx} className="pb-4 border-b border-gray-100 last:border-0 last:pb-0">
+                  <div className="flex items-center gap-2 mb-2 justify-center sm:justify-start">
+                    <span className="bg-gray-900 text-white text-xs font-bold px-2 py-1 rounded">{method.provider}</span>
+                    <span className="text-sm font-medium text-gray-500 bg-gray-100 px-2 py-1 rounded">{method.type}</span>
+                  </div>
+                  <p className="font-mono font-bold text-lg text-gray-900 mb-2 text-center sm:text-left">{method.number}</p>
+                  {method.instructions && (
+                    <p className="text-sm text-gray-600 bg-gray-50 p-3 rounded-lg border border-gray-100 text-center sm:text-left">{method.instructions}</p>
+                  )}
+                </div>
+              ))}
+            </div>
           </div>
         )}
 

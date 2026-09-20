@@ -24,7 +24,7 @@ export default async function Design04Home({ tenantSlug }: { tenantSlug: string 
     getTheme(tenantSlug)
   ]);
 
-  const displayCategories = (categories || []).slice(0, 8);
+  const displayCategories = (categories || []).slice(0, 7);
   const displayBestsellers = (bestsellers || []).slice(0, 8);
   const displayProducts = (products || []).slice(0, 8);
 

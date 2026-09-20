@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { CheckCircle2 } from 'lucide-react';
+import { CheckCircle2, Banknote } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
 import { bdLocations } from '@/data/locations';
 import { computeShipping } from '@/utils/shipping';
@@ -29,6 +29,8 @@ export default function CheckoutClient03({ storeInfo, theme }: { storeInfo?: any
   const [orderId, setOrderId] = useState<string | null>(null);
   const router = useRouter();
   const [fieldErrors, setFieldErrors] = useState<Record<string, string[]>>({});
+
+  const manualPaymentMethods = storeInfo?.settings?.manualPaymentMethods?.filter((m: any) => m.isActive) || [];
   
   const [phone, setPhone] = useState('');
   const [fullName, setFullName] = useState('');
@@ -140,6 +142,31 @@ export default function CheckoutClient03({ storeInfo, theme }: { storeInfo?: any
             <div className="bg-white/5 p-4 border border-white/10 mb-8 backdrop-blur-sm">
               <p className="text-xs text-white/50 mb-1 font-mono uppercase tracking-widest">Order Reference</p>
               <p className="font-mono text-cyan-400">#{orderId}</p>
+            </div>
+          )}
+
+          {manualPaymentMethods.length > 0 && orderId && (
+            <div className="mb-8 text-left border border-white/10 bg-[#0a0a0a] max-w-lg w-full mx-auto">
+              <div className="bg-[#111] p-4 border-b border-white/10 text-center sm:text-left">
+                <h3 className="font-mono text-cyan-400 flex items-center justify-center sm:justify-start gap-2 uppercase tracking-widest text-xs">
+                  <Banknote className="w-4 h-4" /> Payment Instructions
+                </h3>
+                <p className="text-xs text-white/50 mt-2 font-mono">Please complete your payment using one of the methods below.</p>
+              </div>
+              <div className="p-4 space-y-4">
+                {manualPaymentMethods.map((method: any, idx: number) => (
+                  <div key={idx} className="pb-4 border-b border-white/10 last:border-0 last:pb-0">
+                    <div className="flex items-center gap-2 mb-2 justify-center sm:justify-start">
+                      <span className="bg-cyan-400/10 text-cyan-400 text-xs font-mono px-2 py-1 uppercase">{method.provider}</span>
+                      <span className="text-[10px] font-mono text-white/50 bg-white/5 px-2 py-1 uppercase">{method.type}</span>
+                    </div>
+                    <p className="font-mono font-bold text-lg text-white mb-2 text-center sm:text-left">{method.number}</p>
+                    {method.instructions && (
+                      <p className="text-[10px] text-white/60 bg-[#111] p-3 border border-white/5 font-mono uppercase text-center sm:text-left">{method.instructions}</p>
+                    )}
+                  </div>
+                ))}
+              </div>
             </div>
           )}
 
