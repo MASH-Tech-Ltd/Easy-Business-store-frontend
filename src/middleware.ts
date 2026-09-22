@@ -39,6 +39,19 @@ export function middleware(request: NextRequest) {
     tenantSlug = currentHost;
   }
 
+  // Ensure it's lowercase to avoid Astha vs astha mismatch
+  tenantSlug = tenantSlug.toLowerCase();
+  
+  // Verification Log as requested
+  if (process.env.NODE_ENV !== 'production') {
+    console.log("=== HOST HEADER PARSING VERIFICATION ===");
+    console.log("Original Host:", hostname);
+    console.log("Current Host (no port):", currentHost);
+    console.log("Base Domain:", baseDomain);
+    console.log("Parsed Subdomain (Tenant Slug):", tenantSlug);
+    console.log("========================================");
+  }
+
   // Rewrite the URL to include the tenant slug dynamically in the path
   // We don't want to actually show this path to the user, so we use rewrite
   // Next.js App Router doesn't perfectly support dynamic param injection from middleware without rewrite
