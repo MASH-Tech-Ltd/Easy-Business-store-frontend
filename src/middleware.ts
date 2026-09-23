@@ -44,7 +44,7 @@ export async function middleware(request: NextRequest) {
     // The /info endpoint returns the canonical slug, which we use for all subsequent calls.
     try {
       const infoRes = await fetch(`${apiUrl}/storefront/${currentHost}/info`, {
-        headers: { 'x-api-key': storefrontApiKey },
+        headers: { 'x-storefront-api-key': storefrontApiKey },
         // Cache for 5 minutes to avoid hitting backend on every request
         next: { revalidate: 300 },
       } as RequestInit);
