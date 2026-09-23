@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+﻿import type { Metadata } from "next";
 import { Inter, Outfit, Roboto, Noto_Sans_Bengali } from "next/font/google";
 import { headers } from "next/headers";
 import "./globals.css";
@@ -73,7 +73,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const baseUrl = `${protocol}://${host}`;
 
   const title = storeInfo?.name ? storeInfo.name : `${tenantSlug.toUpperCase()} Store`;
-  const description = storeInfo?.description || "Powered by MashEasy SaaS Platform";
+  const description = storeInfo?.description || "Powered by MASH ECO SaaS Platform";
   let faviconUrl = storeInfo?.logo || "/favicon.ico";
   if (faviconUrl.includes("cloudinary.com")) {
     // Force the extension to be .png so Cloudinary natively supports transparency
@@ -340,7 +340,7 @@ export default async function RootLayout({
               <div style={{ borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: '20px' }}>
                 <p style={{ fontSize: '12px', color: 'rgba(255,255,255,0.25)', margin: 0 }}>
                   Powered by{' '}
-                  <span style={{ color: 'rgba(255,255,255,0.45)', fontWeight: 600 }}>MashEasy</span>
+                  <span style={{ color: 'rgba(255,255,255,0.45)', fontWeight: 600 }}>MASH ECO</span>
                 </p>
               </div>
             </div>
