@@ -40,9 +40,9 @@ export default function ProductClient05({ product, theme }: { product: any; them
       
       {/* Breadcrumb */}
       <div className="flex items-center text-[13px] font-semibold text-gray-400 uppercase tracking-widest gap-3 mb-10">
-        <Link href="/" className="hover:text-black transition-colors">{t('home') || 'Home'}</Link>
+        <Link prefetch={false} href="/" className="hover:text-black transition-colors">{t('home') || 'Home'}</Link>
         <span className="text-gray-300">/</span>
-        <Link href="/products" className="hover:text-black transition-colors">Products</Link>
+        <Link prefetch={false} href="/products" className="hover:text-black transition-colors">Products</Link>
         <span className="text-gray-300">/</span>
         <span className="text-black truncate max-w-[200px]">{product.title || product.name}</span>
       </div>

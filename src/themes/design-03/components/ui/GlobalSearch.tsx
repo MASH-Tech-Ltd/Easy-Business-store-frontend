@@ -47,7 +47,7 @@ export default function GlobalSearch03({ tenantSlug, theme }: { tenantSlug: stri
       }
     };
 
-    const debounceTimer = setTimeout(searchProducts, 300);
+    const debounceTimer = setTimeout(searchProducts, 3000);
     return () => clearTimeout(debounceTimer);
   }, [query, tenantSlug]);
 
@@ -75,7 +75,7 @@ export default function GlobalSearch03({ tenantSlug, theme }: { tenantSlug: stri
             ) : results.length > 0 ? (
               <div className="flex flex-col">
                 {results.map((product) => (
-                  <Link
+                  <Link prefetch={false}
                     key={product._id}
                     href={`/product/${product.slug}`}
                     onClick={() => {

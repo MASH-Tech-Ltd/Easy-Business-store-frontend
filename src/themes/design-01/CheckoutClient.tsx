@@ -246,14 +246,14 @@ export default function CheckoutClient({ storeInfo, theme }: { storeInfo?: any; 
 
           <div className="space-y-3">
             {orderId && (
-              <Link
+              <Link prefetch={false}
                 href={`/track-order?id=${orderId}`}
                 className="block w-full bg-black hover:bg-gray-800 transition-colors text-white font-bold py-4 px-8 rounded-xl"
               >
                 Track Order
               </Link>
             )}
-            <Link
+            <Link prefetch={false}
               href="/"
               className="block w-full bg-primary hover:opacity-90 transition-opacity text-white font-bold py-4 px-8 rounded-xl"
             >
@@ -578,7 +578,7 @@ export default function CheckoutClient({ storeInfo, theme }: { storeInfo?: any; 
                 </div>
 
                 <div className="pt-4 border-t border-gray-100">
-                  <Link
+                  <Link prefetch={false}
                     href="/"
                     className="text-xs font-bold text-primary hover:opacity-80 flex items-center gap-1"
                   >

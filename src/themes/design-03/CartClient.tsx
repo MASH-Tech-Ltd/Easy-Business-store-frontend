@@ -25,7 +25,7 @@ export default function CartClient03({ theme }: { theme?: any }) {
         <div className="text-[100px] font-black text-white/5 mb-8 leading-none">00</div>
         <h2 className="text-3xl font-black text-white mb-4 uppercase tracking-tighter">DATABANK EMPTY</h2>
         <p className="text-gray-500 font-mono text-sm mb-8 max-w-sm uppercase">No items allocated to your current session.</p>
-        <Link href="/categories" className="px-8 py-4 bg-cyan-400 text-black font-black uppercase tracking-[0.2em] hover:bg-white transition-colors text-xs border border-transparent hover:border-white">
+        <Link prefetch={false} href="/categories" className="px-8 py-4 bg-cyan-400 text-black font-black uppercase tracking-[0.2em] hover:bg-white transition-colors text-xs border border-transparent hover:border-white">
           Access Directory
         </Link>
       </main>
@@ -35,7 +35,7 @@ export default function CartClient03({ theme }: { theme?: any }) {
   return (
     <main className="lg:ml-64 flex-1 w-full bg-[#050505] border-l border-white/10 min-h-screen">
       <div className="w-full px-8 py-4 flex items-center text-xs font-mono uppercase tracking-widest text-gray-500 gap-3 border-b border-white/10 bg-black">
-        <Link href="/" className="hover:text-cyan-400 transition-colors">ROOT</Link>
+        <Link prefetch={false} href="/" className="hover:text-cyan-400 transition-colors">ROOT</Link>
         <span className="text-white/20">/</span>
         <span className="text-white">CART</span>
       </div>
@@ -104,7 +104,7 @@ export default function CartClient03({ theme }: { theme?: any }) {
             >
               [ INITIALIZE CHECKOUT ]
             </button>
-            <Link href="/categories" className="block text-center text-[10px] uppercase tracking-[0.2em] text-gray-500 hover:text-cyan-400 transition-colors">
+            <Link prefetch={false} href="/categories" className="block text-center text-[10px] uppercase tracking-[0.2em] text-gray-500 hover:text-cyan-400 transition-colors">
               &larr; CONTINUE BROWSING
             </Link>
           </div>

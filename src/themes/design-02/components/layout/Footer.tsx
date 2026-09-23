@@ -115,7 +115,7 @@ export default function Footer({
           </h3>
           <ul className="space-y-3 text-sm text-gray-500">
             <li>
-              <Link
+              <Link prefetch={false}
                 href="/categories"
                 className="hover:text-gray-900 transition-colors"
               >
@@ -123,7 +123,7 @@ export default function Footer({
               </Link>
             </li>
             <li>
-              <Link
+              <Link prefetch={false}
                 href="/cart"
                 className="hover:text-gray-900 transition-colors"
               >
@@ -131,7 +131,7 @@ export default function Footer({
               </Link>
             </li>
             <li>
-              <Link href="/" className="hover:text-gray-900 transition-colors">
+              <Link prefetch={false} href="/" className="hover:text-gray-900 transition-colors">
                 New Arrivals
               </Link>
             </li>
@@ -143,7 +143,7 @@ export default function Footer({
           </h3>
           <ul className="space-y-3 text-sm text-gray-500">
             <li>
-              <Link
+              <Link prefetch={false}
                 href="/track-order"
                 className="hover:text-gray-900 transition-colors"
               >
@@ -152,7 +152,7 @@ export default function Footer({
             </li>
             {policies.aboutUs && (
               <li>
-                <Link
+                <Link prefetch={false}
                   href="/policies/about-us"
                   className="hover:text-gray-900 transition-colors"
                 >
@@ -162,7 +162,7 @@ export default function Footer({
             )}
             {policies.privacyPolicy && (
               <li>
-                <Link
+                <Link prefetch={false}
                   href="/policies/privacy-policy"
                   className="hover:text-gray-900 transition-colors"
                 >
@@ -172,7 +172,7 @@ export default function Footer({
             )}
             {policies.termsAndConditions && (
               <li>
-                <Link
+                <Link prefetch={false}
                   href="/policies/terms-and-conditions"
                   className="hover:text-gray-900 transition-colors"
                 >
@@ -182,7 +182,7 @@ export default function Footer({
             )}
             {policies.returnPolicy && (
               <li>
-                <Link
+                <Link prefetch={false}
                   href="/policies/return-policy"
                   className="hover:text-gray-900 transition-colors"
                 >
@@ -196,7 +196,7 @@ export default function Footer({
               !policies.returnPolicy && (
                 <>
                   <li>
-                    <Link
+                    <Link prefetch={false}
                       href="#"
                       className="hover:text-gray-900 transition-colors"
                     >
@@ -204,7 +204,7 @@ export default function Footer({
                     </Link>
                   </li>
                   <li>
-                    <Link
+                    <Link prefetch={false}
                       href="#"
                       className="hover:text-gray-900 transition-colors"
                     >
@@ -212,7 +212,7 @@ export default function Footer({
                     </Link>
                   </li>
                   <li>
-                    <Link
+                    <Link prefetch={false}
                       href="#"
                       className="hover:text-gray-900 transition-colors"
                     >

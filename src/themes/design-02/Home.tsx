@@ -59,7 +59,7 @@ export default async function Design02Home({ tenantSlug }: { tenantSlug: string 
               </p>
             )}
             {theme?.banner?.buttonText && theme?.banner?.buttonLink && (
-              <Link href={theme.banner.buttonLink} className="inline-block px-10 py-4 bg-gray-900 text-white rounded-full text-sm font-bold tracking-wide hover:bg-gray-800 transition-all shadow-xl hover:shadow-2xl transform hover:-translate-y-1 duration-300">
+              <Link prefetch={false} href={theme.banner.buttonLink} className="inline-block px-10 py-4 bg-gray-900 text-white rounded-full text-sm font-bold tracking-wide hover:bg-gray-800 transition-all shadow-xl hover:shadow-2xl transform hover:-translate-y-1 duration-300">
                 {theme.banner.buttonText}
               </Link>
             )}
@@ -73,11 +73,11 @@ export default async function Design02Home({ tenantSlug }: { tenantSlug: string 
         <section>
           <div className="flex items-end justify-between mb-8">
             <h3 className="text-2xl font-semibold tracking-tight">Shop by Category</h3>
-            <Link href="/categories" className="text-sm font-medium text-gray-500 hover:text-gray-900">View All Categories &rarr;</Link>
+            <Link prefetch={false} href="/categories" className="text-sm font-medium text-gray-500 hover:text-gray-900">View All Categories &rarr;</Link>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
             {displayCategories.map((category: any) => (
-              <Link 
+              <Link prefetch={false} 
                 key={category._id} 
                 href={`/category/${category.slug || category._id}`}
                 className="group flex flex-col items-center justify-center p-6 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors border border-transparent hover:border-gray-200"
@@ -113,7 +113,7 @@ export default async function Design02Home({ tenantSlug }: { tenantSlug: string 
         <section>
           <div className="flex items-end justify-between mb-8 border-b border-gray-100 pb-4">
             <h3 className="text-3xl font-light tracking-tight text-gray-900">Just For You</h3>
-            <Link href="/categories" className="text-sm font-medium text-gray-500 hover:text-gray-900">Shop All &rarr;</Link>
+            <Link prefetch={false} href="/categories" className="text-sm font-medium text-gray-500 hover:text-gray-900">Shop All &rarr;</Link>
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-8">
             {featured.map((product: any) => (

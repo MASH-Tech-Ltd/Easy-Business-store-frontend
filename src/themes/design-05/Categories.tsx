@@ -27,7 +27,7 @@ export default async function CategoriesPage05() {
       <div className="pt-16 pb-8 px-6 lg:px-12 text-center">
         <h1 className="text-4xl lg:text-5xl font-bold text-gray-900 tracking-tight mb-4">All Categories</h1>
         <div className="flex items-center justify-center text-[13px] font-semibold text-gray-400 uppercase tracking-widest gap-3">
-          <Link href="/" className="hover:text-black transition-colors">{t('home') || 'Home'}</Link>
+          <Link prefetch={false} href="/" className="hover:text-black transition-colors">{t('home') || 'Home'}</Link>
           <span className="text-gray-300">/</span>
           <span className="text-black">{t('categories') || 'Categories'}</span>
         </div>
@@ -43,7 +43,7 @@ export default async function CategoriesPage05() {
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6 lg:gap-8">
             {categories.map((c: any) => (
-              <Link key={c._id} href={`/category/${c.slug || c._id}`} 
+              <Link prefetch={false} key={c._id} href={`/category/${c.slug || c._id}`} 
                 className="group relative h-[280px] rounded-3xl bg-[#F8F9FA] overflow-hidden flex flex-col p-8 border border-gray-100 hover:border-black transition-all shadow-sm hover:shadow-lg duration-500">
                 
                 <div className="z-10 flex justify-between items-start w-full mb-4">

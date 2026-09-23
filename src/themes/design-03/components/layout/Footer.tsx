@@ -77,12 +77,12 @@ export default function Footer03({
           </div>
           <ul className="space-y-4 text-xs font-bold uppercase tracking-widest text-gray-500">
             <li>
-              <Link href="/" className="hover:text-white transition-colors">
+              <Link prefetch={false} href="/" className="hover:text-white transition-colors">
                 / Home
               </Link>
             </li>
             <li>
-              <Link
+              <Link prefetch={false}
                 href="/categories"
                 className="hover:text-white transition-colors"
               >
@@ -90,18 +90,18 @@ export default function Footer03({
               </Link>
             </li>
             <li>
-              <Link href="/cart" className="hover:text-white transition-colors">
+              <Link prefetch={false} href="/cart" className="hover:text-white transition-colors">
                 / Cart
               </Link>
             </li>
             <li>
-              <Link href="/track-order" className="hover:text-white transition-colors">
+              <Link prefetch={false} href="/track-order" className="hover:text-white transition-colors">
                 / Track Order
               </Link>
             </li>
             {footer?.policies?.aboutUs && (
               <li>
-                <Link
+                <Link prefetch={false}
                   href="/policies/about-us"
                   className="hover:text-white transition-colors"
                 >
@@ -111,7 +111,7 @@ export default function Footer03({
             )}
             {footer?.policies?.privacyPolicy && (
               <li>
-                <Link
+                <Link prefetch={false}
                   href="/policies/privacy-policy"
                   className="hover:text-white transition-colors"
                 >
@@ -121,7 +121,7 @@ export default function Footer03({
             )}
             {footer?.policies?.termsAndConditions && (
               <li>
-                <Link
+                <Link prefetch={false}
                   href="/policies/terms-and-conditions"
                   className="hover:text-white transition-colors"
                 >
@@ -131,7 +131,7 @@ export default function Footer03({
             )}
             {footer?.policies?.returnPolicy && (
               <li>
-                <Link
+                <Link prefetch={false}
                   href="/policies/return-policy"
                   className="hover:text-white transition-colors"
                 >

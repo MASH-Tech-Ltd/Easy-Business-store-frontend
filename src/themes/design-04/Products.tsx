@@ -68,7 +68,7 @@ export default async function ProductsPage04({ searchParams }: any) {
       <div className="bg-white border-b border-gray-100 py-12 px-6 text-center">
         <h1 className="text-4xl font-black text-gray-900 tracking-tight mb-4">{t('allProducts') || 'All Products'}</h1>
         <div className="flex items-center justify-center text-sm font-semibold text-gray-400 gap-2">
-          <Link href="/" className="hover:text-gray-900 transition-colors">{t('home') || 'Home'}</Link>
+          <Link prefetch={false} href="/" className="hover:text-gray-900 transition-colors">{t('home') || 'Home'}</Link>
           <span>/</span>
           <span className="text-gray-900">Products</span>
         </div>
@@ -80,11 +80,11 @@ export default async function ProductsPage04({ searchParams }: any) {
           <div className="mb-10">
             <h3 className="text-sm font-bold text-gray-900 uppercase tracking-wider mb-4 text-center">{t('categories') || 'Categories'}</h3>
             <div className="flex flex-wrap justify-center gap-2">
-              <Link href="/products" className="px-4 py-2 text-sm rounded-full border font-semibold transition-all bg-gray-900 border-gray-900 text-white shadow-sm">
+              <Link prefetch={false} href="/products" className="px-4 py-2 text-sm rounded-full border font-semibold transition-all bg-gray-900 border-gray-900 text-white shadow-sm">
                 All
               </Link>
               {categories.map((c: any) => (
-                <Link key={c._id} href={`/category/${c.slug || c._id}`}
+                <Link prefetch={false} key={c._id} href={`/category/${c.slug || c._id}`}
                   className="px-4 py-2 text-sm rounded-full border font-semibold transition-all border-gray-200 text-gray-600 hover:border-gray-900 hover:text-gray-900 bg-white shadow-sm">
                   {c.name}
                 </Link>

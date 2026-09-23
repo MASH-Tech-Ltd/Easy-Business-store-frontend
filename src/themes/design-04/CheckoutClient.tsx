@@ -173,11 +173,11 @@ export default function CheckoutClient04({ storeInfo, theme }: { storeInfo?: any
 
           <div className="space-y-3">
             {orderId && (
-              <Link href={`/track-order?id=${orderId}`} className="block w-full bg-black hover:bg-gray-800 transition-colors text-white font-bold py-4 px-8 rounded-full shadow-sm">
+              <Link prefetch={false} href={`/track-order?id=${orderId}`} className="block w-full bg-black hover:bg-gray-800 transition-colors text-white font-bold py-4 px-8 rounded-full shadow-sm">
                 Track Order
               </Link>
             )}
-            <Link href="/" className="block w-full bg-gray-100 hover:bg-gray-200 transition-colors text-gray-900 font-bold py-4 px-8 rounded-full shadow-sm">
+            <Link prefetch={false} href="/" className="block w-full bg-gray-100 hover:bg-gray-200 transition-colors text-gray-900 font-bold py-4 px-8 rounded-full shadow-sm">
               Continue Shopping
             </Link>
           </div>

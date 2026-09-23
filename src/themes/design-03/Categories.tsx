@@ -29,7 +29,7 @@ export default async function Design03Categories({ tenantSlug }: { tenantSlug: s
         
         {/* Breadcrumbs */}
         <div className="w-full px-8 py-4 flex items-center text-xs font-mono uppercase tracking-widest text-gray-500 gap-3 border-b border-white/10 bg-black">
-          <Link href="/" className="hover:text-cyan-400 transition-colors">ROOT</Link>
+          <Link prefetch={false} href="/" className="hover:text-cyan-400 transition-colors">ROOT</Link>
           <span className="text-white/20">/</span>
           <span className="text-white">DIRECTORY</span>
         </div>
@@ -56,7 +56,7 @@ export default async function Design03Categories({ tenantSlug }: { tenantSlug: s
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 border-b border-white/10">
               {categories.map((cat: any, index: number) => (
-                <Link
+                <Link prefetch={false}
                   href={`/category/${cat.slug || cat._id}`}
                   key={cat._id}
                   className={`group relative h-64 border-b sm:border-r border-white/10 ${index % 4 === 3 ? 'xl:border-r-0' : ''} bg-[#0a0a0a] overflow-hidden`}

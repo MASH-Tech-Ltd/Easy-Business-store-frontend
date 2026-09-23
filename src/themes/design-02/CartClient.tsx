@@ -23,7 +23,7 @@ export default function Design02CartClient({ theme }: { theme?: any }) {
             </div>
             <h2 className="text-3xl font-light tracking-tight text-gray-900 mb-4">{t('yourCartIsEmpty') || 'Your Cart is Empty'}</h2>
             <p className="text-gray-500 mb-8 max-w-md mx-auto">{t('browseProducts') || 'Looks like you haven\'t added anything to your cart yet.'}</p>
-            <Link 
+            <Link prefetch={false} 
               href="/categories" 
               className="px-8 py-4 bg-gray-900 text-white rounded-md text-sm font-medium hover:bg-gray-800 transition-colors shadow-md"
             >
@@ -104,7 +104,7 @@ export default function Design02CartClient({ theme }: { theme?: any }) {
                   </div>
                 </div>
 
-                <Link 
+                <Link prefetch={false} 
                   href="/checkout" 
                   className="w-full py-4 bg-gray-900 text-white font-medium rounded-md hover:bg-gray-800 transition-colors shadow-md flex justify-center items-center gap-2"
                 >

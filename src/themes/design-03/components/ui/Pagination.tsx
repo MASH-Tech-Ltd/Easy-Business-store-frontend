@@ -57,17 +57,17 @@ export default function Pagination03({ currentPage, totalPages }: PaginationProp
       </div>
       <div className="flex items-center gap-1">
         {currentPage > 1 ? (
-          <Link href={getPageUrl(currentPage - 1)} className="w-8 h-8 flex items-center justify-center rounded border border-white/10 text-gray-400 hover:bg-white/10 hover:text-white transition-colors">‹</Link>
+          <Link prefetch={false} href={getPageUrl(currentPage - 1)} className="w-8 h-8 flex items-center justify-center rounded border border-white/10 text-gray-400 hover:bg-white/10 hover:text-white transition-colors">‹</Link>
         ) : (
           <span className="w-8 h-8 flex items-center justify-center rounded border border-white/5 text-gray-700 cursor-not-allowed">‹</span>
         )}
         {pageNumbers.map(page => (
-          <Link key={page} href={getPageUrl(page)} className={`w-8 h-8 flex items-center justify-center rounded text-sm transition-colors ${currentPage === page ? 'bg-white text-black font-bold' : 'border border-white/10 text-gray-400 hover:bg-white/10 hover:text-white'}`}>
+          <Link prefetch={false} key={page} href={getPageUrl(page)} className={`w-8 h-8 flex items-center justify-center rounded text-sm transition-colors ${currentPage === page ? 'bg-white text-black font-bold' : 'border border-white/10 text-gray-400 hover:bg-white/10 hover:text-white'}`}>
             {page}
           </Link>
         ))}
         {currentPage < totalPages ? (
-          <Link href={getPageUrl(currentPage + 1)} className="w-8 h-8 flex items-center justify-center rounded border border-white/10 text-gray-400 hover:bg-white/10 hover:text-white transition-colors">›</Link>
+          <Link prefetch={false} href={getPageUrl(currentPage + 1)} className="w-8 h-8 flex items-center justify-center rounded border border-white/10 text-gray-400 hover:bg-white/10 hover:text-white transition-colors">›</Link>
         ) : (
           <span className="w-8 h-8 flex items-center justify-center rounded border border-white/5 text-gray-700 cursor-not-allowed">›</span>
         )}

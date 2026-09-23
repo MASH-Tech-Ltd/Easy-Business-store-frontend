@@ -83,7 +83,7 @@ export default function Footer05({
         <div className="grid grid-cols-1 md:grid-cols-12 gap-12 lg:gap-8 mb-16">
           {/* Brand & Intro */}
           <div className="md:col-span-4 lg:col-span-5 pr-4">
-            <Link href="/" className="inline-flex items-center gap-2 mb-6">
+            <Link prefetch={false} href="/" className="inline-flex items-center gap-2 mb-6">
               {storeInfo?.logo && (
                 <img src={storeInfo.logo} alt={storeInfo.name} className="w-8 h-8 rounded-full object-cover" />
               )}
@@ -139,7 +139,7 @@ export default function Footer05({
               </h3>
               <ul className="space-y-4 text-[15px] text-gray-500">
                 <li>
-                  <Link
+                  <Link prefetch={false}
                     href="/products"
                     className="hover:text-black transition-colors"
                   >
@@ -147,13 +147,13 @@ export default function Footer05({
                   </Link>
                 </li>
                 <li>
-                  <Link
+                  <Link prefetch={false}
                     href="/categories"
                     className="hover:text-black transition-colors"
                   >{t('categories') || 'Categories'}</Link>
                 </li>
                 <li>
-                  <Link
+                  <Link prefetch={false}
                     href="/cart"
                     className="hover:text-black transition-colors"
                   >
@@ -161,7 +161,7 @@ export default function Footer05({
                   </Link>
                 </li>
                 <li>
-                  <Link
+                  <Link prefetch={false}
                     href="/track-order"
                     className="hover:text-black transition-colors"
                   >
@@ -170,7 +170,7 @@ export default function Footer05({
                 </li>
                 {policies.aboutUs && (
                   <li>
-                    <Link
+                    <Link prefetch={false}
                       href="/policies/about-us"
                       className="hover:text-black transition-colors"
                     >
@@ -192,7 +192,7 @@ export default function Footer05({
                 <ul className="space-y-4 text-[15px] text-gray-500">
                   {policies.returnPolicy && (
                     <li>
-                      <Link
+                      <Link prefetch={false}
                         href="/policies/return-policy"
                         className="hover:text-black transition-colors"
                       >
@@ -202,7 +202,7 @@ export default function Footer05({
                   )}
                   {policies.privacyPolicy && (
                     <li>
-                      <Link
+                      <Link prefetch={false}
                         href="/policies/privacy-policy"
                         className="hover:text-black transition-colors"
                       >
@@ -212,7 +212,7 @@ export default function Footer05({
                   )}
                   {policies.termsAndConditions && (
                     <li>
-                      <Link
+                      <Link prefetch={false}
                         href="/policies/terms-and-conditions"
                         className="hover:text-black transition-colors"
                       >

@@ -54,7 +54,7 @@ export default async function Design05Home({
                 </p>
               )}
               {theme?.banner?.buttonText && theme?.banner?.buttonLink && (
-                <Link
+                <Link prefetch={false}
                   href={theme.banner.buttonLink}
                   className="inline-flex items-center justify-center bg-black text-white px-8 py-4 rounded-full font-semibold text-sm hover:bg-gray-800 transition-colors gap-2 group"
                 >
@@ -108,7 +108,7 @@ export default async function Design05Home({
                   Curated selections for your lifestyle
                 </p>
               </div>
-              <Link
+              <Link prefetch={false}
                 href="/categories"
                 className="text-sm font-semibold uppercase tracking-widest text-gray-400 hover:text-black transition-colors hidden sm:block"
               >
@@ -118,7 +118,7 @@ export default async function Design05Home({
 
             <div className="flex flex-wrap justify-center gap-4 lg:gap-6">
               {displayCategories.map((c: any) => (
-                <Link
+                <Link prefetch={false}
                   key={c._id}
                   href={`/category/${c.slug || c._id}`}
                   className="w-[calc(50%-0.5rem)] md:w-[calc(25%-0.75rem)] lg:w-[calc(12.5%-1.3125rem)] group relative aspect-square rounded-[1.5rem] overflow-hidden flex flex-col justify-end p-4 lg:p-5 border border-transparent transition-all shadow-sm hover:shadow-xl"
@@ -225,7 +225,7 @@ export default async function Design05Home({
                 </h3>
                 <p className="text-gray-500">Fresh arrivals this week</p>
               </div>
-              <Link
+              <Link prefetch={false}
                 href="/products"
                 className="text-sm font-semibold uppercase tracking-widest text-gray-400 hover:text-black transition-colors hidden sm:block"
               >
@@ -238,7 +238,7 @@ export default async function Design05Home({
               ))}
             </div>
             <div className="text-center mt-12">
-              <Link
+              <Link prefetch={false}
                 href="/products"
                 className="inline-block border border-gray-200 text-gray-900 font-semibold px-10 py-4 rounded-full hover:border-black hover:bg-black hover:text-white transition-all"
               >

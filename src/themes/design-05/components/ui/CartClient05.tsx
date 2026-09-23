@@ -25,7 +25,7 @@ export default function CartClient05({ theme }: { theme?: any }) {
         </div>
         <h2 className="text-3xl font-bold text-gray-900 mb-4 tracking-tight">Your cart is empty</h2>
         <p className="text-gray-500 max-w-md mx-auto mb-10 leading-relaxed">Looks like you haven't added anything to your cart yet. Discover our collection of premium products.</p>
-        <Link href="/" className="bg-black text-white px-8 py-4 rounded-full font-semibold hover:bg-gray-800 transition-colors">
+        <Link prefetch={false} href="/" className="bg-black text-white px-8 py-4 rounded-full font-semibold hover:bg-gray-800 transition-colors">
           Start Shopping
         </Link>
       </div>
@@ -60,7 +60,7 @@ export default function CartClient05({ theme }: { theme?: any }) {
                       )}
                     </div>
                     <div className="flex flex-col justify-center min-w-0 pr-4">
-                      <Link href={`/product/${item.id}`} className="text-sm font-semibold text-gray-900 mb-1 hover:text-gray-600 transition-colors line-clamp-2 leading-tight">
+                      <Link prefetch={false} href={`/product/${item.id}`} className="text-sm font-semibold text-gray-900 mb-1 hover:text-gray-600 transition-colors line-clamp-2 leading-tight">
                         {item.title}
                       </Link>
                       <span className="text-sm font-medium text-gray-400 mb-3">{theme?.currencySymbol || '৳'} {Math.round(item.price).toLocaleString()}</span>
@@ -124,7 +124,7 @@ export default function CartClient05({ theme }: { theme?: any }) {
                 </div>
               </div>
 
-              <Link href="/checkout" 
+              <Link prefetch={false} href="/checkout" 
                 style={theme?.primaryColor ? { backgroundColor: theme.primaryColor } : {}}
                 className="w-full bg-black text-white px-6 py-4 rounded-full font-semibold hover:bg-gray-800 transition-colors shadow-lg flex items-center justify-center gap-2">
                 Proceed to Checkout <ArrowRight className="w-4 h-4" />

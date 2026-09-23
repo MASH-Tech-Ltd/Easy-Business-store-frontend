@@ -49,7 +49,7 @@ export default async function ProductPage04({ params }: { params: Promise<{ slug
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">
           <h1 className="text-3xl font-black text-gray-900 mb-4">{t('productNotFound') || 'Product not found'}</h1>
-          <Link href="/" className="text-gray-500 hover:text-gray-900 underline font-semibold">{t('returnHome') || 'Return Home'}</Link>
+          <Link prefetch={false} href="/" className="text-gray-500 hover:text-gray-900 underline font-semibold">{t('returnHome') || 'Return Home'}</Link>
         </div>
       </div>
     );
@@ -62,7 +62,7 @@ export default async function ProductPage04({ params }: { params: Promise<{ slug
       {/* Breadcrumb */}
       <div className="bg-white border-b border-gray-100 py-6 px-6">
         <div className="max-w-[1400px] mx-auto flex items-center text-sm font-semibold text-gray-400 gap-2">
-          <Link href="/" className="hover:text-gray-900 transition-colors">{t('home') || 'Home'}</Link>
+          <Link prefetch={false} href="/" className="hover:text-gray-900 transition-colors">{t('home') || 'Home'}</Link>
           <span>/</span>
           <span className="hover:text-gray-900 cursor-pointer">{product.categoryId?.name || 'Category'}</span>
           <span>/</span>

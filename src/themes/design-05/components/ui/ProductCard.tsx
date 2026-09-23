@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import React from 'react';
 import Link from 'next/link';
@@ -33,7 +33,7 @@ export default function ProductCard05({ product, isList = false, isBestSelling =
 
   if (isList) {
     return (
-      <Link href={`/product/${productSlug}`} className="group flex bg-white rounded-2xl overflow-hidden hover:bg-gray-50 transition-all border border-transparent hover:border-gray-200">
+      <Link prefetch={false} href={`/product/${productSlug}`} className="group flex bg-white rounded-2xl overflow-hidden hover:bg-gray-50 transition-all border border-transparent hover:border-gray-200">
         <div className="w-48 h-48 bg-gray-50 flex items-center justify-center shrink-0 overflow-hidden mix-blend-multiply p-4">
           {imageUrl ? (
             <img src={imageUrl} alt={product.title} className="w-full h-full object-cover mix-blend-multiply group-hover:scale-105 transition-transform duration-500" />
@@ -64,7 +64,7 @@ export default function ProductCard05({ product, isList = false, isBestSelling =
 
   return (
     <div className="group flex flex-col bg-white overflow-hidden transition-all duration-500">
-      <Link href={`/product/${productSlug}`} className="block relative aspect-[4/5] bg-[#F8F9FA] rounded-2xl overflow-hidden mb-5">
+      <Link prefetch={false} href={`/product/${productSlug}`} className="block relative aspect-[4/5] bg-[#F8F9FA] rounded-2xl overflow-hidden mb-5">
         {savePercent > 0 && (
           <span className="absolute top-4 left-4 bg-black text-white text-[10px] font-bold uppercase tracking-wider px-3 py-1.5 rounded-full z-10">
             Save {savePercent}%
@@ -92,7 +92,7 @@ export default function ProductCard05({ product, isList = false, isBestSelling =
 
       <div className="flex flex-col px-1">
         <div className="text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-1.5">{product.brand || 'Minimal'}</div>
-        <Link href={`/product/${productSlug}`}>
+        <Link prefetch={false} href={`/product/${productSlug}`}>
           <h4 className="text-[15px] font-medium text-gray-900 line-clamp-1 mb-2 hover:text-gray-600 transition-colors">
             {product.title || product.name}
           </h4>

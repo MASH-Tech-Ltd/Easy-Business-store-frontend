@@ -57,29 +57,29 @@ export default function Pagination({ currentPage, totalPages }: PaginationProps)
       </div>
       <div className="flex items-center gap-1">
         {currentPage > 1 ? (
-          <Link href={getPageUrl(currentPage - 1)} className="w-8 h-8 flex items-center justify-center rounded border border-gray-200 text-gray-500 hover:bg-gray-50 transition-colors">‹</Link>
+          <Link prefetch={false} href={getPageUrl(currentPage - 1)} className="w-8 h-8 flex items-center justify-center rounded border border-gray-200 text-gray-500 hover:bg-gray-50 transition-colors">‹</Link>
         ) : (
           <span className="w-8 h-8 flex items-center justify-center rounded border border-gray-100 text-gray-300 cursor-not-allowed">‹</span>
         )}
         {pageNumbers[0] > 1 && (
           <>
-            <Link href={getPageUrl(1)} className="w-8 h-8 flex items-center justify-center rounded border border-gray-200 text-gray-600 hover:bg-gray-50 text-sm">1</Link>
+            <Link prefetch={false} href={getPageUrl(1)} className="w-8 h-8 flex items-center justify-center rounded border border-gray-200 text-gray-600 hover:bg-gray-50 text-sm">1</Link>
             {pageNumbers[0] > 2 && <span className="w-8 h-8 flex items-center justify-center text-gray-400 text-sm">...</span>}
           </>
         )}
         {pageNumbers.map(page => (
-          <Link key={page} href={getPageUrl(page)} className={`w-8 h-8 flex items-center justify-center rounded text-sm transition-colors ${currentPage === page ? 'bg-gray-900 text-white font-bold border border-gray-900' : 'border border-gray-200 text-gray-600 hover:bg-gray-50'}`}>
+          <Link prefetch={false} key={page} href={getPageUrl(page)} className={`w-8 h-8 flex items-center justify-center rounded text-sm transition-colors ${currentPage === page ? 'bg-gray-900 text-white font-bold border border-gray-900' : 'border border-gray-200 text-gray-600 hover:bg-gray-50'}`}>
             {page}
           </Link>
         ))}
         {pageNumbers[pageNumbers.length - 1] < totalPages && (
           <>
             {pageNumbers[pageNumbers.length - 1] < totalPages - 1 && <span className="w-8 h-8 flex items-center justify-center text-gray-400 text-sm">...</span>}
-            <Link href={getPageUrl(totalPages)} className="w-8 h-8 flex items-center justify-center rounded border border-gray-200 text-gray-600 hover:bg-gray-50 text-sm">{totalPages}</Link>
+            <Link prefetch={false} href={getPageUrl(totalPages)} className="w-8 h-8 flex items-center justify-center rounded border border-gray-200 text-gray-600 hover:bg-gray-50 text-sm">{totalPages}</Link>
           </>
         )}
         {currentPage < totalPages ? (
-          <Link href={getPageUrl(currentPage + 1)} className="w-8 h-8 flex items-center justify-center rounded border border-gray-200 text-gray-500 hover:bg-gray-50 transition-colors">›</Link>
+          <Link prefetch={false} href={getPageUrl(currentPage + 1)} className="w-8 h-8 flex items-center justify-center rounded border border-gray-200 text-gray-500 hover:bg-gray-50 transition-colors">›</Link>
         ) : (
           <span className="w-8 h-8 flex items-center justify-center rounded border border-gray-100 text-gray-300 cursor-not-allowed">›</span>
         )}

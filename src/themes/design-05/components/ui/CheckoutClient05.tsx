@@ -182,12 +182,12 @@ export default function CheckoutClient05({ theme, storeInfo }: { theme?: any; st
 
         <div className="flex flex-col sm:flex-row gap-4 justify-center w-full max-w-md">
           {orderId && (
-            <Link href={`/track-order?id=${orderId}`} 
+            <Link prefetch={false} href={`/track-order?id=${orderId}`} 
               className="bg-white text-gray-900 border border-gray-200 px-8 py-4 rounded-full font-semibold hover:bg-gray-50 transition-colors w-full sm:w-auto">
               Track Order
             </Link>
           )}
-          <Link href="/" 
+          <Link prefetch={false} href="/" 
             style={theme?.primaryColor ? { backgroundColor: theme.primaryColor } : {}}
             className="bg-black text-white px-8 py-4 rounded-full font-semibold hover:bg-gray-800 transition-colors w-full sm:w-auto">
             Return to Store

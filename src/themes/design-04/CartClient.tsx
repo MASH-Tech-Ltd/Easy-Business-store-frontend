@@ -23,7 +23,7 @@ export default function CartClient04({ theme, storeInfo }: { theme?: any; storeI
           </div>
           <h2 className="text-2xl font-bold text-gray-900 mb-2">Your cart is empty</h2>
           <p className="text-gray-500 mb-8 font-medium">Looks like you haven't added anything to your cart yet.</p>
-          <Link href="/categories" className="px-10 py-3 bg-gray-900 text-white font-semibold rounded-full hover:bg-gray-700 transition-colors shadow-sm">
+          <Link prefetch={false} href="/categories" className="px-10 py-3 bg-gray-900 text-white font-semibold rounded-full hover:bg-gray-700 transition-colors shadow-sm">
             Continue Shopping
           </Link>
         </div>
@@ -61,7 +61,7 @@ export default function CartClient04({ theme, storeInfo }: { theme?: any; storeI
                 <div className="h-px bg-gray-700 w-full my-4"></div>
                 <div className="flex justify-between text-lg font-black text-white"><span>{t('total') || 'Total'}</span><span>{theme?.currencySymbol || '৳'}{' '}{totalPrice.toLocaleString()}</span></div>
               </div>
-              <Link href="/checkout" className="block w-full py-4 bg-white text-gray-900 text-center font-bold rounded-full hover:bg-gray-200 transition-colors shadow-md">
+              <Link prefetch={false} href="/checkout" className="block w-full py-4 bg-white text-gray-900 text-center font-bold rounded-full hover:bg-gray-200 transition-colors shadow-md">
                 Proceed to Checkout
               </Link>
             </div>

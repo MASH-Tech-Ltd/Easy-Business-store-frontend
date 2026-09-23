@@ -44,7 +44,7 @@ export default async function Design04Categories({ tenantSlug }: { tenantSlug: s
       <div className="bg-white border-b border-gray-100 py-12 px-6 text-center">
         <h1 className="text-4xl font-black text-gray-900 tracking-tight mb-4">{t('categories') || 'Categories'}</h1>
         <div className="flex items-center justify-center text-sm font-semibold text-gray-400 gap-2">
-          <Link href="/" className="hover:text-gray-900 transition-colors">{t('home') || 'Home'}</Link>
+          <Link prefetch={false} href="/" className="hover:text-gray-900 transition-colors">{t('home') || 'Home'}</Link>
           <span>/</span>
           <span className="text-gray-900">{t('categories') || 'Categories'}</span>
         </div>
@@ -58,7 +58,7 @@ export default async function Design04Categories({ tenantSlug }: { tenantSlug: s
         ) : (
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {categories.map((cat: any) => (
-              <Link 
+              <Link prefetch={false} 
                 href={`/category/${cat.slug || cat._id}`} 
                 key={cat._id} 
                 className="group flex flex-col items-center justify-center gap-4 p-8 bg-white rounded-3xl border border-gray-100 shadow-sm hover:shadow-xl hover:border-gray-200 transition-all cursor-pointer"

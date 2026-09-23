@@ -35,13 +35,13 @@ export default async function Header04({ storeInfo, theme: initialTheme }: { sto
     <header className="bg-white border-b border-gray-100 sticky top-0 z-50">
       {/* Top thin bar */}
       <div className="bg-gray-900 text-white text-center text-xs py-2 px-4 tracking-widest font-medium">
-        Free shipping on orders over {theme?.currencySymbol || '৳'}{' '}999 &nbsp;|&nbsp; <Link href="/products" className="hover:underline">{t('allProducts') || 'All Products'}</Link>
+        Free shipping on orders over {theme?.currencySymbol || '৳'}{' '}999 &nbsp;|&nbsp; <Link prefetch={false} href="/products" className="hover:underline">{t('allProducts') || 'All Products'}</Link>
       </div>
 
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 py-4 flex flex-col gap-4">
         <div className="flex items-center justify-between gap-6">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-3 shrink-0">
+          <Link prefetch={false} href="/" className="flex items-center gap-3 shrink-0">
             {info?.logo ? (
               <img src={info.logo} alt={info?.name || 'Store'} className="w-10 h-10 rounded-full object-contain border border-gray-100" />
             ) : null}
@@ -52,9 +52,9 @@ export default async function Header04({ storeInfo, theme: initialTheme }: { sto
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-8 text-sm font-semibold text-gray-600">
-            <Link href="/" className="hover:text-gray-900 transition-colors">{t('home') || 'Home'}</Link>
-            <Link href="/products" className="hover:text-gray-900 transition-colors">{t('allProducts') || 'All Products'}</Link>
-            <Link href="/cart" className="hover:text-gray-900 transition-colors">Cart</Link>
+            <Link prefetch={false} href="/" className="hover:text-gray-900 transition-colors">{t('home') || 'Home'}</Link>
+            <Link prefetch={false} href="/products" className="hover:text-gray-900 transition-colors">{t('allProducts') || 'All Products'}</Link>
+            <Link prefetch={false} href="/cart" className="hover:text-gray-900 transition-colors">Cart</Link>
           </nav>
 
           {/* Search + Cart */}

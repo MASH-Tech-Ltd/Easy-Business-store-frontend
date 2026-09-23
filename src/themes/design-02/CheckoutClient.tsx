@@ -244,14 +244,14 @@ export default function Design02CheckoutClient({ theme,
 
         <div className="flex flex-col sm:flex-row gap-4 items-center justify-center">
           {orderId && (
-            <Link
+            <Link prefetch={false}
               href={`/track-order?id=${orderId}`}
               className="px-8 py-4 bg-gray-900 text-white rounded-md text-sm font-medium hover:bg-gray-800 transition-colors w-full sm:w-auto"
             >
               Track Order
             </Link>
           )}
-          <Link
+          <Link prefetch={false}
             href="/"
             className="px-8 py-4 bg-white text-gray-900 border border-gray-200 rounded-md text-sm font-medium hover:bg-gray-50 transition-colors w-full sm:w-auto"
           >

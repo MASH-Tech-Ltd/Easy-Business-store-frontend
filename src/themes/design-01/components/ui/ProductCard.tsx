@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React from "react";
 import { ShoppingCart, Zap } from "lucide-react";
@@ -82,7 +82,7 @@ export default function ProductCard({ product, isList = false, isBestSelling = f
   };
 
   return (
-    <Link
+    <Link prefetch={false}
       href={`/product/${productSlug}`}
       className={`group flex bg-white rounded-2xl shadow-sm hover:shadow-xl border border-gray-100 hover:border-indigo-100 transition-all duration-300 overflow-hidden relative ${isList ? "flex-row" : "flex-col"}`}
     >

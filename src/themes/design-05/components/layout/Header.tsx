@@ -28,7 +28,7 @@ export default async function Header05({ storeInfo }: { storeInfo?: any }) {
       <div className="max-w-[1400px] mx-auto px-6 lg:px-12 py-4 flex flex-col gap-4">
         <div className="flex items-center justify-between gap-8 h-12">
           {/* Brand */}
-          <Link href="/" className="flex items-center gap-3 shrink-0 group">
+          <Link prefetch={false} href="/" className="flex items-center gap-3 shrink-0 group">
             {info?.logo ? (
               <img src={info.logo} alt={info?.name || 'Store'} className="w-10 h-10 rounded-xl object-contain border border-gray-100 group-hover:scale-105 transition-transform" />
             ) : (
@@ -43,9 +43,9 @@ export default async function Header05({ storeInfo }: { storeInfo?: any }) {
 
           {/* Navigation */}
           <nav className="hidden md:flex items-center gap-8 text-[15px] font-medium text-gray-500">
-            <Link href="/" className="hover:text-black transition-colors">Discover</Link>
-            <Link href="/products" className="hover:text-black transition-colors">Collection</Link>
-            <Link href="/categories" className="hover:text-black transition-colors">{t('categories') || 'Categories'}</Link>
+            <Link prefetch={false} href="/" className="hover:text-black transition-colors">Discover</Link>
+            <Link prefetch={false} href="/products" className="hover:text-black transition-colors">Collection</Link>
+            <Link prefetch={false} href="/categories" className="hover:text-black transition-colors">{t('categories') || 'Categories'}</Link>
           </nav>
 
           {/* Actions */}

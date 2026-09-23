@@ -180,7 +180,7 @@ export default async function Footer() {
               <ul className="space-y-3">
                 {policies.aboutUs && (
                   <li>
-                    <Link
+                    <Link prefetch={false}
                       href="/policies/about-us"
                       className="text-sm text-gray-500 hover:text-primary transition-colors"
                     >
@@ -190,7 +190,7 @@ export default async function Footer() {
                 )}
                 {policies.privacyPolicy && (
                   <li>
-                    <Link
+                    <Link prefetch={false}
                       href="/policies/privacy-policy"
                       className="text-sm text-gray-500 hover:text-primary transition-colors"
                     >
@@ -200,7 +200,7 @@ export default async function Footer() {
                 )}
                 {policies.termsAndConditions && (
                   <li>
-                    <Link
+                    <Link prefetch={false}
                       href="/policies/terms-and-conditions"
                       className="text-sm text-gray-500 hover:text-primary transition-colors"
                     >
@@ -210,7 +210,7 @@ export default async function Footer() {
                 )}
                 {policies.returnPolicy && (
                   <li>
-                    <Link
+                    <Link prefetch={false}
                       href="/policies/return-policy"
                       className="text-sm text-gray-500 hover:text-primary transition-colors"
                     >
@@ -229,7 +229,7 @@ export default async function Footer() {
             </h3>
             <ul className="space-y-3">
               <li>
-                <Link
+                <Link prefetch={false}
                   href="/track-order"
                   className="text-sm text-gray-500 hover:text-primary transition-colors"
                 >

@@ -57,7 +57,7 @@ export default async function Design03Home({ tenantSlug }: { tenantSlug: string 
                   </p>
                 )}
                 {theme?.banner?.buttonText && theme?.banner?.buttonLink && (
-                  <Link 
+                  <Link prefetch={false} 
                     href={theme.banner.buttonLink} 
                     className="inline-flex items-center justify-center px-12 py-5 bg-white text-black text-sm font-black uppercase tracking-[0.2em] hover:bg-cyan-400 transition-colors border border-transparent hover:border-white"
                   >
@@ -102,13 +102,13 @@ export default async function Design03Home({ tenantSlug }: { tenantSlug: string 
                 <h3 className="text-sm text-cyan-400 font-mono mb-2 uppercase tracking-widest">Database</h3>
                 <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tighter">{t('categories') || 'Categories'}</h2>
               </div>
-              <Link href="/categories" className="text-xs font-bold uppercase tracking-widest hover:text-cyan-400 transition-colors hidden md:block">
+              <Link prefetch={false} href="/categories" className="text-xs font-bold uppercase tracking-widest hover:text-cyan-400 transition-colors hidden md:block">
                 View Directory [ALL]
               </Link>
             </div>
             
             {displayCategories.map((category: any, index: number) => (
-              <Link
+              <Link prefetch={false}
                 key={category._id}
                 href={`/category/${category.slug || category._id}`}
                 className={`group relative h-64 border-b border-white/10 md:border-r ${index % 3 === 2 ? 'md:border-r-0' : ''} bg-[#0a0a0a] overflow-hidden`}

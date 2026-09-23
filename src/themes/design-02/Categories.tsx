@@ -45,7 +45,7 @@ export default async function Design02Categories({ tenantSlug }: { tenantSlug: s
       {/* Breadcrumb & Title Area */}
       <div className="max-w-7xl mx-auto px-8 py-12 text-center border-b border-gray-50">
         <div className="text-xs font-medium text-gray-400 mb-6 uppercase tracking-widest">
-          <Link href="/" className="hover:text-gray-900 transition-colors">{t('home') || 'Home'}</Link>
+          <Link prefetch={false} href="/" className="hover:text-gray-900 transition-colors">{t('home') || 'Home'}</Link>
           <span className="mx-3">/</span>
           <span className="text-gray-900">Collections</span>
         </div>
@@ -63,7 +63,7 @@ export default async function Design02Categories({ tenantSlug }: { tenantSlug: s
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
             {categories.map((cat: any) => (
-              <Link 
+              <Link prefetch={false} 
                 href={`/category/${cat.slug || cat._id}`} 
                 key={cat._id} 
                 className="group block text-center border border-transparent hover:border-gray-100 p-8 rounded-xl transition-all duration-300 hover:shadow-sm"

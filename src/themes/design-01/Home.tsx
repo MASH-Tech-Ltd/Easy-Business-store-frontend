@@ -80,7 +80,7 @@ export default async function Design01Home({ tenantSlug }: { tenantSlug: string 
               </p>
             )}
             {theme?.banner?.buttonText && theme?.banner?.buttonLink && (
-              <Link 
+              <Link prefetch={false} 
                 href={theme.banner.buttonLink} 
                 className="inline-flex items-center gap-2 bg-white text-indigo-900 px-8 py-4 rounded-lg font-bold text-lg hover:bg-blue-50 transition-colors shadow-lg hover:shadow-xl"
               >
@@ -97,14 +97,14 @@ export default async function Design01Home({ tenantSlug }: { tenantSlug: string 
           <div className="px-6 py-8">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-2xl font-black text-gray-900 tracking-tight">{t('topCategories')}</h2>
-              <Link href="/categories" className="text-sm font-bold text-indigo-600 hover:text-indigo-800 transition-colors flex items-center gap-1">
+              <Link prefetch={false} href="/categories" className="text-sm font-bold text-indigo-600 hover:text-indigo-800 transition-colors flex items-center gap-1">
                 {t('seeAllCategories')} <ArrowRight className="w-4 h-4" />
               </Link>
             </div>
             
             <CategorySlider>
               {categories.map((cat: any) => (
-                <Link href={`/category/${cat.slug || cat._id}`} key={cat._id} className="flex flex-col items-center justify-center gap-3 min-w-[100px] sm:min-w-[140px] snap-start cursor-pointer group">
+                <Link prefetch={false} href={`/category/${cat.slug || cat._id}`} key={cat._id} className="flex flex-col items-center justify-center gap-3 min-w-[100px] sm:min-w-[140px] snap-start cursor-pointer group">
                   <div className="text-gray-600 group-hover:text-indigo-600 group-hover:-translate-y-2 group-hover:shadow-lg transition-all duration-300 w-16 h-16 sm:w-24 sm:h-24 flex items-center justify-center bg-gray-50 rounded-2xl overflow-hidden border border-gray-100">
                     {cat.image?.secure_url ? (
                       <img src={cat.image.secure_url} alt={cat.name} className="w-full h-full object-cover" />

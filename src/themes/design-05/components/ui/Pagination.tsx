@@ -24,7 +24,7 @@ export default function Pagination05({ currentPage, totalPages }: { currentPage:
   return (
     <div className="flex justify-center items-center gap-4 mt-16 pt-8">
       {currentPage > 1 ? (
-        <Link href={getPageUrl(currentPage - 1)} className="text-sm font-medium text-gray-500 hover:text-black transition-colors uppercase tracking-widest flex items-center gap-1">
+        <Link prefetch={false} href={getPageUrl(currentPage - 1)} className="text-sm font-medium text-gray-500 hover:text-black transition-colors uppercase tracking-widest flex items-center gap-1">
           <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M15 18l-6-6 6-6"/></svg> Prev
         </Link>
       ) : (
@@ -36,13 +36,13 @@ export default function Pagination05({ currentPage, totalPages }: { currentPage:
       <div className="flex items-center gap-2 px-6">
         {pages[0] > 1 && (
           <>
-            <Link href={getPageUrl(1)} className="w-8 h-8 flex items-center justify-center rounded-full text-sm font-medium text-gray-500 hover:text-black hover:bg-gray-50 transition-colors">1</Link>
+            <Link prefetch={false} href={getPageUrl(1)} className="w-8 h-8 flex items-center justify-center rounded-full text-sm font-medium text-gray-500 hover:text-black hover:bg-gray-50 transition-colors">1</Link>
             {pages[0] > 2 && <span className="text-gray-300">...</span>}
           </>
         )}
 
         {pages.map(page => (
-          <Link key={page} href={getPageUrl(page)}
+          <Link prefetch={false} key={page} href={getPageUrl(page)}
             className={`w-8 h-8 flex items-center justify-center rounded-full text-sm transition-all ${
               currentPage === page ? 'bg-black text-white font-bold' : 'text-gray-500 hover:text-black hover:bg-gray-50 font-medium'
             }`}>
@@ -53,13 +53,13 @@ export default function Pagination05({ currentPage, totalPages }: { currentPage:
         {pages[pages.length - 1] < totalPages && (
           <>
             {pages[pages.length - 1] < totalPages - 1 && <span className="text-gray-300">...</span>}
-            <Link href={getPageUrl(totalPages)} className="w-8 h-8 flex items-center justify-center rounded-full text-sm font-medium text-gray-500 hover:text-black hover:bg-gray-50 transition-colors">{totalPages}</Link>
+            <Link prefetch={false} href={getPageUrl(totalPages)} className="w-8 h-8 flex items-center justify-center rounded-full text-sm font-medium text-gray-500 hover:text-black hover:bg-gray-50 transition-colors">{totalPages}</Link>
           </>
         )}
       </div>
 
       {currentPage < totalPages ? (
-        <Link href={getPageUrl(currentPage + 1)} className="text-sm font-medium text-gray-500 hover:text-black transition-colors uppercase tracking-widest flex items-center gap-1">
+        <Link prefetch={false} href={getPageUrl(currentPage + 1)} className="text-sm font-medium text-gray-500 hover:text-black transition-colors uppercase tracking-widest flex items-center gap-1">
           Next <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M9 18l6-6-6-6"/></svg>
         </Link>
       ) : (

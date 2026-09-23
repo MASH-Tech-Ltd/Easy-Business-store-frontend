@@ -62,7 +62,7 @@ export default function Sidebar() {
         {navItems.map((item) => {
           const isActive = pathname === item.path;
           return (
-            <Link
+            <Link prefetch={false}
               key={item.name}
               href={item.path}
               className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${
@@ -79,7 +79,7 @@ export default function Sidebar() {
       </nav>
 
       <div className="p-4 border-t border-gray-200 space-y-2">
-        <Link 
+        <Link prefetch={false} 
           href="/dashboard/settings"
           className="flex items-center gap-3 px-4 py-3 w-full rounded-xl text-gray-500 hover:text-gray-900 hover:bg-gray-50 transition-all"
         >

@@ -32,7 +32,7 @@ export default function GlobalSearch({ tenantSlug, language = 'en', theme }: { t
         if (json.data?.data) setResults(json.data.data);
       } catch { } finally { setIsLoading(false); }
     };
-    const t = setTimeout(searchProducts, 300);
+    const t = setTimeout(searchProducts, 3000);
     return () => clearTimeout(t);
   }, [query, tenantSlug]);
 
@@ -59,7 +59,7 @@ export default function GlobalSearch({ tenantSlug, language = 'en', theme }: { t
             ) : results.length > 0 ? (
               <div className="flex flex-col divide-y divide-gray-50">
                 {results.map((product) => (
-                  <Link key={product._id} href={`/product/${product.slug}`} onClick={() => { setIsOpen(false); setQuery(''); }}
+                  <Link prefetch={false} key={product._id} href={`/product/${product.slug}`} onClick={() => { setIsOpen(false); setQuery(''); }}
                     className="flex items-center gap-3 p-3 hover:bg-gray-50 transition-colors">
                     <div className="w-12 h-12 rounded-lg bg-gray-50 flex items-center justify-center shrink-0 overflow-hidden border border-gray-100">
                       <img src={product.images?.[0]?.secure_url || 'https://placehold.co/100'} alt={product.title} className="w-full h-full object-cover" />

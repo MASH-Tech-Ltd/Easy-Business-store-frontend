@@ -172,11 +172,11 @@ export default function CheckoutClient03({ storeInfo, theme }: { storeInfo?: any
 
           <div className="space-y-4">
             {orderId && (
-              <Link href={`/track-order?id=${orderId}`} className="block w-full bg-transparent hover:bg-white/5 transition-colors text-white font-mono uppercase tracking-[0.1em] py-4 px-8 text-xs border border-white/20 hover:border-white">
+              <Link prefetch={false} href={`/track-order?id=${orderId}`} className="block w-full bg-transparent hover:bg-white/5 transition-colors text-white font-mono uppercase tracking-[0.1em] py-4 px-8 text-xs border border-white/20 hover:border-white">
                 Trace Order
               </Link>
             )}
-            <Link href="/" className="block w-full bg-cyan-400 hover:bg-white transition-colors text-black font-black uppercase tracking-[0.2em] py-4 px-8 text-xs border border-transparent hover:border-white">
+            <Link prefetch={false} href="/" className="block w-full bg-cyan-400 hover:bg-white transition-colors text-black font-black uppercase tracking-[0.2em] py-4 px-8 text-xs border border-transparent hover:border-white">
               Return to Root
             </Link>
           </div>
@@ -192,7 +192,7 @@ export default function CheckoutClient03({ storeInfo, theme }: { storeInfo?: any
   return (
     <main className="lg:ml-64 flex-1 w-full bg-[#050505] min-h-screen border-l border-white/10">
       <div className="w-full px-8 py-4 flex items-center text-xs font-mono uppercase tracking-widest text-gray-500 gap-3 border-b border-white/10 bg-black">
-        <Link href="/" className="hover:text-cyan-400 transition-colors">ROOT</Link>
+        <Link prefetch={false} href="/" className="hover:text-cyan-400 transition-colors">ROOT</Link>
         <span className="text-white/20">/</span>
         <span className="text-white">{t('checkout') || 'Checkout'}</span>
       </div>

@@ -43,7 +43,7 @@ export default function GlobalSearch({ tenantSlug, language = 'en', theme }: { t
         setIsLoading(false);
       }
     };
-    const timer = setTimeout(searchProducts, 300);
+    const timer = setTimeout(searchProducts, 3000);
     return () => clearTimeout(timer);
   }, [query, tenantSlug]);
 
@@ -70,7 +70,7 @@ export default function GlobalSearch({ tenantSlug, language = 'en', theme }: { t
             ) : results.length > 0 ? (
               <div className="flex flex-col">
                 {results.map((product) => (
-                  <Link
+                  <Link prefetch={false}
                     key={product._id}
                     href={`/product/${product.slug}`}
                     onClick={() => { setIsOpen(false); setQuery(''); }}

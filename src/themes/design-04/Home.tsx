@@ -56,7 +56,7 @@ export default async function Design04Home({ tenantSlug }: { tenantSlug: string 
               </p>
             )}
             {theme?.banner?.buttonText && theme?.banner?.buttonLink && (
-              <Link
+              <Link prefetch={false}
                 href={theme.banner.buttonLink}
                 className="inline-block bg-gray-900 text-white font-semibold px-10 py-4 rounded-full hover:bg-gray-700 transition-colors"
               >
@@ -93,12 +93,12 @@ export default async function Design04Home({ tenantSlug }: { tenantSlug: string 
         <section className="max-w-[1400px] mx-auto px-6 py-14 w-full">
           <div className="flex items-center justify-between mb-8">
             <h2 className="text-2xl font-black text-gray-900 tracking-tight">{t('categories') || 'Categories'}</h2>
-            <Link href="/categories" className="text-sm font-semibold text-gray-500 hover:text-gray-900 transition-colors">View all →</Link>
+            <Link prefetch={false} href="/categories" className="text-sm font-semibold text-gray-500 hover:text-gray-900 transition-colors">View all →</Link>
           </div>
           {/* Masonry-style grid matching screenshot layout */}
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
             {displayCategories.map((cat: any, idx: number) => (
-              <Link
+              <Link prefetch={false}
                 key={cat._id}
                 href={`/category/${cat.slug || cat._id}`}
                 className={`group relative rounded-2xl overflow-hidden bg-gray-50 hover:shadow-md transition-all duration-300 ${idx === 0 ? 'row-span-2' : ''}`}
@@ -148,7 +148,7 @@ export default async function Design04Home({ tenantSlug }: { tenantSlug: string 
         <section className="max-w-[1400px] mx-auto px-6 py-14 w-full">
           <div className="flex items-center justify-between mb-8">
             <h2 className="text-2xl font-black text-gray-900 tracking-tight">New Arrivals</h2>
-            <Link href="/categories" className="text-sm font-semibold text-gray-500 hover:text-gray-900 transition-colors">View all →</Link>
+            <Link prefetch={false} href="/categories" className="text-sm font-semibold text-gray-500 hover:text-gray-900 transition-colors">View all →</Link>
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-5">
             {displayProducts.map((product: any) => (
@@ -164,7 +164,7 @@ export default async function Design04Home({ tenantSlug }: { tenantSlug: string 
           <div className="max-w-[1400px] mx-auto px-6 w-full">
             <div className="flex items-center justify-between mb-8">
               <h2 className="text-2xl font-black text-gray-900 tracking-tight">Discover More Products</h2>
-              <Link href="/products" className="text-sm font-semibold text-gray-500 hover:text-gray-900 transition-colors">View all →</Link>
+              <Link prefetch={false} href="/products" className="text-sm font-semibold text-gray-500 hover:text-gray-900 transition-colors">View all →</Link>
             </div>
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-5">
               {products.map((product: any) => (
@@ -172,7 +172,7 @@ export default async function Design04Home({ tenantSlug }: { tenantSlug: string 
               ))}
             </div>
             <div className="text-center mt-10">
-              <Link href="/products" className="inline-block border-2 border-gray-900 text-gray-900 font-semibold px-10 py-3 rounded-full hover:bg-gray-900 hover:text-white transition-all">
+              <Link prefetch={false} href="/products" className="inline-block border-2 border-gray-900 text-gray-900 font-semibold px-10 py-3 rounded-full hover:bg-gray-900 hover:text-white transition-all">
                 View All Products
               </Link>
             </div>

@@ -59,7 +59,7 @@ export default async function Design02ProductPage({ params }: { params: Promise<
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center font-light">
           <h1 className="text-2xl mb-4">{t('productNotFound') || 'Product not found'}</h1>
-          <Link href="/" className="text-gray-900 underline">Return to Home</Link>
+          <Link prefetch={false} href="/" className="text-gray-900 underline">Return to Home</Link>
         </div>
       </div>
     );
@@ -71,7 +71,7 @@ export default async function Design02ProductPage({ params }: { params: Promise<
       <Header storeInfo={storeInfo} />
 
       <div className="max-w-7xl mx-auto w-full px-8 py-6 flex items-center text-xs text-gray-400 gap-3">
-        <Link href="/" className="hover:text-gray-900 transition-colors">{t('home') || 'Home'}</Link>
+        <Link prefetch={false} href="/" className="hover:text-gray-900 transition-colors">{t('home') || 'Home'}</Link>
         <span>/</span>
         <span className="hover:text-gray-900 cursor-pointer">{product.categoryId?.name || 'Category'}</span>
         <span>/</span>

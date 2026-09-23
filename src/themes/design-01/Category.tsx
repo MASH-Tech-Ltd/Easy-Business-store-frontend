@@ -135,7 +135,7 @@ export default async function CategoryPage({ params, searchParams }: any) {
       {/* Breadcrumb */}
       <div className="border-b border-gray-100 bg-gray-50">
         <div className="max-w-[1400px] mx-auto px-6 py-4 flex items-center text-xs text-gray-500 font-semibold gap-2">
-          <Link href="/" className="hover:text-gray-900 flex items-center gap-1">
+          <Link prefetch={false} href="/" className="hover:text-gray-900 flex items-center gap-1">
             <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" className="w-4 h-4">
               <path d="M11.47 3.84a.75.75 0 011.06 0l8.99 9a.75.75 0 11-1.06 1.06l-4.635-4.643V20.25a.75.75 0 01-.75.75h-3.75v-4.5a.75.75 0 00-.75-.75h-3a.75.75 0 00-.75.75v4.5H3.75a.75.75 0 01-.75-.75V11.25l-2.025 2.025a.75.75 0 11-1.06-1.06l8.99-9zM12 5.093l-6.75 6.756v8.401h2.25v-4.5a2.25 2.25 0 012.25-2.25h4.5a2.25 2.25 0 012.25 2.25v4.5h2.25v-8.401L12 5.093z" />
             </svg>{t('home') || 'Home'}</Link>
@@ -150,7 +150,7 @@ export default async function CategoryPage({ params, searchParams }: any) {
           {categories.map((c: any) => {
             const isActive = c._id === categoryId;
             return (
-              <Link 
+              <Link prefetch={false} 
                 key={c._id} 
                 href={`/category/${c.slug}`}
                 className={`px-3 py-1.5 text-sm rounded border transition-colors ${

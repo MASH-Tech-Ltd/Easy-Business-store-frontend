@@ -1,4 +1,4 @@
-﻿import React from 'react';
+import React from 'react';
 import Link from 'next/link';
 import ProductCardActions from './ProductCardActions';
 
@@ -14,7 +14,7 @@ export default function Design02ProductCard({ product, isList = false, isBestSel
 
   if (isList) {
     return (
-      <Link href={`/product/${product.slug || product._id || product.id}`} className="group flex bg-white rounded-xl shadow-sm hover:shadow-md border border-gray-100 transition-all duration-300 overflow-hidden relative w-full">
+      <Link prefetch={false} href={`/product/${product.slug || product._id || product.id}`} className="group flex bg-white rounded-xl shadow-sm hover:shadow-md border border-gray-100 transition-all duration-300 overflow-hidden relative w-full">
         <div className="w-48 h-48 bg-gray-50 flex items-center justify-center overflow-hidden shrink-0">
           {imageUrl ? (
             <img 
@@ -48,7 +48,7 @@ export default function Design02ProductCard({ product, isList = false, isBestSel
   }
 
   return (
-    <Link href={`/product/${product.slug || product._id || product.id}`} className="group block">
+    <Link prefetch={false} href={`/product/${product.slug || product._id || product.id}`} className="group block">
       <div className="aspect-[4/5] bg-gray-50 rounded-2xl overflow-hidden mb-4 relative">
         {imageUrl ? (
           <img 

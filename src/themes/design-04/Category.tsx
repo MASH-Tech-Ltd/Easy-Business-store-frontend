@@ -92,7 +92,7 @@ export default async function CategoryPage04({ params, searchParams }: any) {
       <div className="bg-white border-b border-gray-100 py-12 px-6 text-center">
         <h1 className="text-4xl font-black text-gray-900 tracking-tight mb-4">{category?.name || 'Shop'}</h1>
         <div className="flex items-center justify-center text-sm font-semibold text-gray-400 gap-2">
-          <Link href="/" className="hover:text-gray-900 transition-colors">{t('home') || 'Home'}</Link>
+          <Link prefetch={false} href="/" className="hover:text-gray-900 transition-colors">{t('home') || 'Home'}</Link>
           <span>/</span>
           <span className="text-gray-900">{category?.name}</span>
         </div>

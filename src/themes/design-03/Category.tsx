@@ -96,7 +96,7 @@ export default async function Design03CategoryPage({ params, searchParams }: any
         
         {/* Breadcrumbs - Brutalist */}
         <div className="w-full px-8 py-4 flex items-center text-xs font-mono uppercase tracking-widest text-gray-500 gap-3 border-b border-white/10 bg-black">
-          <Link href="/" className="hover:text-cyan-400 transition-colors">ROOT</Link>
+          <Link prefetch={false} href="/" className="hover:text-cyan-400 transition-colors">ROOT</Link>
           <span className="text-white/20">/</span>
           <span className="text-white">{category?.name || 'CATALOG'}</span>
         </div>

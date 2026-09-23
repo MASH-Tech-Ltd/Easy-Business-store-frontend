@@ -1,4 +1,4 @@
-﻿import React from 'react';
+import React from 'react';
 import Link from 'next/link';
 import ProductCardActions03 from './ProductCardActions';
 
@@ -16,7 +16,7 @@ export default function Design03ProductCard({ product, isList = false, isBestSel
 
   if (isList) {
     return (
-      <Link href={`/product/${product.slug || product._id || product.id}`} className="group flex bg-[#050505] border border-white/10 hover:border-cyan-400 transition-colors duration-300 w-full rounded-none">
+      <Link prefetch={false} href={`/product/${product.slug || product._id || product.id}`} className="group flex bg-[#050505] border border-white/10 hover:border-cyan-400 transition-colors duration-300 w-full rounded-none">
         <div className="w-48 h-48 bg-[#111] border-r border-white/10 flex items-center justify-center shrink-0 relative p-4 group-hover:bg-black transition-colors">
           {imageUrl ? (
             <img src={imageUrl} alt={product.title || product.name} className="w-full h-full object-contain mix-blend-luminosity group-hover:mix-blend-normal transition-all duration-300" />
@@ -51,7 +51,7 @@ export default function Design03ProductCard({ product, isList = false, isBestSel
 
   return (
     <div className="group block relative h-full bg-[#050505] hover:bg-black transition-colors">
-      <Link href={`/product/${product.slug || product._id || product.id}`} className="block">
+      <Link prefetch={false} href={`/product/${product.slug || product._id || product.id}`} className="block">
         <div className="aspect-square bg-[#111] relative border-b border-white/10 p-6 overflow-hidden">
           {imageUrl ? (
             <img src={imageUrl} alt={product.title || product.name} className="w-full h-full object-contain mix-blend-luminosity group-hover:mix-blend-normal transition-all duration-500 scale-95 group-hover:scale-105" />

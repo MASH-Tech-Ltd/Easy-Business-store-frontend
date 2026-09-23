@@ -179,7 +179,7 @@ export function TrackOrderContent({ tenantId }: { tenantId?: string }) {
         )}
 
         <div className="mt-8 text-center">
-          <Link href="/" className="text-sm font-medium text-blue-600 hover:text-blue-500">
+          <Link prefetch={false} href="/" className="text-sm font-medium text-blue-600 hover:text-blue-500">
             &larr; Return to Store
           </Link>
         </div>

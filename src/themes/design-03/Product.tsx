@@ -42,7 +42,7 @@ export default async function Design03ProductPage({ params }: { params: Promise<
           <div className="text-center font-mono">
             <span className="text-red-500 text-6xl block mb-4">!</span>
             <h1 className="text-2xl font-black text-white mb-4 uppercase tracking-widest">RECORD NOT FOUND</h1>
-            <Link href="/" className="text-cyan-400 font-bold hover:text-white transition-colors border border-cyan-400 px-6 py-2 uppercase tracking-widest">Return to ROOT</Link>
+            <Link prefetch={false} href="/" className="text-cyan-400 font-bold hover:text-white transition-colors border border-cyan-400 px-6 py-2 uppercase tracking-widest">Return to ROOT</Link>
           </div>
         </main>
       </div>
@@ -57,7 +57,7 @@ export default async function Design03ProductPage({ params }: { params: Promise<
         
         {/* Breadcrumbs - Brutalist */}
         <div className="w-full px-8 py-4 flex items-center text-xs font-mono uppercase tracking-widest text-gray-500 gap-3 border-b border-white/10 bg-black">
-          <Link href="/" className="hover:text-cyan-400 transition-colors">ROOT</Link>
+          <Link prefetch={false} href="/" className="hover:text-cyan-400 transition-colors">ROOT</Link>
           <span className="text-white/20">/</span>
           <span className="hover:text-cyan-400 transition-colors cursor-pointer">{product.categoryId?.name || 'CATALOG'}</span>
           <span className="text-white/20">/</span>

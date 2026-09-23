@@ -79,9 +79,9 @@ export default async function CategoryPage05({ params, searchParams }: any) {
       <div className="pt-16 pb-8 px-6 lg:px-12 text-center">
         <h1 className="text-4xl lg:text-5xl font-bold text-gray-900 tracking-tight mb-4">{categoryData?.name || 'Category'}</h1>
         <div className="flex items-center justify-center text-[13px] font-semibold text-gray-400 uppercase tracking-widest gap-3">
-          <Link href="/" className="hover:text-black transition-colors">{t('home') || 'Home'}</Link>
+          <Link prefetch={false} href="/" className="hover:text-black transition-colors">{t('home') || 'Home'}</Link>
           <span className="text-gray-300">/</span>
-          <Link href="/categories" className="hover:text-black transition-colors">{t('categories') || 'Categories'}</Link>
+          <Link prefetch={false} href="/categories" className="hover:text-black transition-colors">{t('categories') || 'Categories'}</Link>
           <span className="text-gray-300">/</span>
           <span className="text-black">{categoryData?.name || 'Unknown'}</span>
         </div>

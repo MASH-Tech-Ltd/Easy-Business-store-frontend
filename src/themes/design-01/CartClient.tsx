@@ -24,7 +24,7 @@ export default function CartClient() {
             </div>
             <h2 className="text-2xl font-bold text-gray-900 mb-2">{t('yourCartIsEmpty')}</h2>
             <p className="text-gray-500 mb-8 max-w-md">{t('browseProducts')}</p>
-            <Link 
+            <Link prefetch={false} 
               href="/" 
               className="px-8 py-3 bg-primary text-white font-semibold rounded-lg hover:bg-primary transition-colors shadow-md"
             >
@@ -101,7 +101,7 @@ export default function CartClient() {
                   </div>
                 </div>
 
-                <Link 
+                <Link prefetch={false} 
                   href="/checkout" 
                   className="w-full py-4 bg-primary text-white font-bold rounded-lg hover:bg-primary transition-colors shadow-md flex justify-center items-center gap-2"
                 >

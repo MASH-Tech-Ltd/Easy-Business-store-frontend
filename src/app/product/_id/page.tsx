@@ -29,7 +29,7 @@ export default async function ProductDetails({ params }: { params: Promise<{ id:
         <main className="flex-grow flex items-center justify-center">
           <div className="text-center">
             <h2 className="text-2xl font-bold text-gray-800">Product Not Found</h2>
-            <Link href="/" className="text-blue-600 hover:underline mt-4 inline-block">Go back to home</Link>
+            <Link prefetch={false} href="/" className="text-blue-600 hover:underline mt-4 inline-block">Go back to home</Link>
           </div>
         </main>
         <Footer />
