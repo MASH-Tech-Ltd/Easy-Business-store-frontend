@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
-export function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest) {
   const url = request.nextUrl.clone();
   
   // Get hostname (e.g., 'abcstore.myplatform.com' or 'localhost:3000')
@@ -17,46 +17,51 @@ export function middleware(request: NextRequest) {
   }
 
   // Parse tenant slug from hostname
-  // For dev: support formats like slug.localhost:3000
   let currentHost = hostname;
   // Remove port if exists
   if (currentHost.includes(':')) {
     currentHost = currentHost.split(':')[0];
   }
 
+  // Strip www. prefix
+  if (currentHost.startsWith('www.')) {
+    currentHost = currentHost.replace(/^www\./, '');
+  }
+
   let tenantSlug = '';
   const baseDomain = process.env.NEXT_PUBLIC_BASE_DOMAIN || 'localhost';
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL || '';
+  const storefrontApiKey = process.env.STOREFRONT_API_KEY || '';
 
-  if (currentHost === baseDomain) {
+  if (currentHost === baseDomain || currentHost === `www.${baseDomain}`) {
     // It's the main landing page, no tenant
     tenantSlug = 'main';
   } else if (currentHost.endsWith(`.${baseDomain}`)) {
-    // It's a subdomain (e.g. mikes.localhost -> mikes)
+    // It's a subdomain (e.g. mikes.masheco.com -> mikes)
     tenantSlug = currentHost.replace(`.${baseDomain}`, '');
   } else {
-    // It's a custom domain (e.g. mycoolstore.com)
-    // We pass the full host as the slug to resolve on backend
-    tenantSlug = currentHost;
+    // It's a custom domain (e.g. masheco.tech)
+    // We MUST resolve the real tenant slug from the backend, not use the domain in the API URL
+    try {
+      const infoRes = await fetch(`${apiUrl}/storefront/${currentHost}/info`, {
+        headers: { 'x-api-key': storefrontApiKey },
+        next: { revalidate: 300 }, // cache for 5 minutes
+      });
+      if (infoRes.ok) {
+        const json = await infoRes.json();
+        // Use the real slug from DB — this is the unique identifier for all other API calls
+        tenantSlug = json?.data?.slug || currentHost;
+      } else {
+        tenantSlug = currentHost;
+      }
+    } catch {
+      tenantSlug = currentHost;
+    }
   }
 
-  // Ensure it's lowercase to avoid Astha vs astha mismatch
+  // Ensure it's lowercase
   tenantSlug = tenantSlug.toLowerCase();
-  
-  // Verification Log as requested
-  if (process.env.NODE_ENV !== 'production') {
-    console.log("=== HOST HEADER PARSING VERIFICATION ===");
-    console.log("Original Host:", hostname);
-    console.log("Current Host (no port):", currentHost);
-    console.log("Base Domain:", baseDomain);
-    console.log("Parsed Subdomain (Tenant Slug):", tenantSlug);
-    console.log("========================================");
-  }
 
-  // Rewrite the URL to include the tenant slug dynamically in the path
-  // We don't want to actually show this path to the user, so we use rewrite
-  // Next.js App Router doesn't perfectly support dynamic param injection from middleware without rewrite
-  // We'll pass the tenantSlug via headers so Server Components can read it
-  
   const response = NextResponse.next();
   response.headers.set('x-tenant-slug', tenantSlug);
   return response;
