@@ -76,8 +76,8 @@ export default async function CategoryPage05({ params, searchParams }: any) {
     <div className="min-h-screen bg-white font-sans flex flex-col">
       <Header05 storeInfo={info} />
 
-      <div className="pt-16 pb-8 px-6 lg:px-12 text-center">
-        <h1 className="text-4xl lg:text-5xl font-bold text-gray-900 tracking-tight mb-4">{categoryData?.name || 'Category'}</h1>
+      <div className="pt-6 pb-4 px-6 lg:px-12 text-center">
+        <h1 className="text-3xl lg:text-4xl font-bold text-gray-900 tracking-tight mb-2">{categoryData?.name || 'Category'}</h1>
         <div className="flex items-center justify-center text-[13px] font-semibold text-gray-400 uppercase tracking-widest gap-3">
           <Link prefetch={false} href="/" className="hover:text-black transition-colors">{t('home') || 'Home'}</Link>
           <span className="text-gray-300">/</span>
@@ -87,14 +87,13 @@ export default async function CategoryPage05({ params, searchParams }: any) {
         </div>
       </div>
 
-      <main className="max-w-[1400px] mx-auto px-6 lg:px-12 py-12 flex-1 w-full flex flex-col lg:flex-row gap-12">
+      <main className="max-w-[1400px] mx-auto px-6 lg:px-12 py-6 flex-1 w-full flex flex-col lg:flex-row gap-12">
         <aside className="hidden lg:block w-[260px] shrink-0">
           <FilterSidebar05 categoryId={categoryId} availableBrands={availableBrands} theme={theme} />
         </aside>
 
-        <div className="lg:hidden">
-          <FilterDrawer categoryId={categoryId} availableBrands={availableBrands} theme={theme} />
-        </div>
+        {/* Mobile Filter Drawer - fixed positioned, no layout space */}
+        <FilterDrawer categoryId={categoryId} availableBrands={availableBrands} theme={theme} />
 
         <section className="flex-1">
           <div className="flex flex-col sm:flex-row justify-between items-center border-b border-gray-100 pb-6 mb-8 gap-4">
@@ -114,7 +113,7 @@ export default async function CategoryPage05({ params, searchParams }: any) {
             </div>
           ) : (
             <>
-              <div className={isListView ? "flex flex-col gap-6" : "grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6 lg:gap-8"}>
+              <div className={isListView ? "flex flex-col gap-6" : "grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-6 lg:gap-8"}>
                 {products.map((p: any) => (
                   <ProductCard05 key={p._id} product={p} isList={isListView} theme={theme} />
                 ))}

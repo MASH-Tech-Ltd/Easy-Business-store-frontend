@@ -1,4 +1,4 @@
-﻿import { storefrontFetch } from "../../utils/storefrontFetch";
+import { storefrontFetch } from "../../utils/storefrontFetch";
 import { headers } from 'next/headers';
 import Link from 'next/link';
 import { getTranslation } from '@/utils/translations';
@@ -89,21 +89,21 @@ export default async function CategoryPage04({ params, searchParams }: any) {
       <Header04 storeInfo={storeInfo} />
 
       {/* Banner */}
-      <div className="bg-white border-b border-gray-100 py-12 px-6 text-center">
-        <h1 className="text-4xl font-black text-gray-900 tracking-tight mb-4">{category?.name || 'Shop'}</h1>
-        <div className="flex items-center justify-center text-sm font-semibold text-gray-400 gap-2">
+      <div className="bg-white border-b border-gray-100 py-6 sm:py-12 px-6 text-center">
+        <h1 className="text-2xl sm:text-4xl font-black text-gray-900 tracking-tight mb-2 sm:mb-4">{category?.name || 'Shop'}</h1>
+        <div className="flex items-center justify-center text-xs sm:text-sm font-semibold text-gray-400 gap-2">
           <Link prefetch={false} href="/" className="hover:text-gray-900 transition-colors">{t('home') || 'Home'}</Link>
           <span>/</span>
           <span className="text-gray-900">{category?.name}</span>
         </div>
       </div>
 
-      <main className="max-w-[1400px] mx-auto px-6 py-12 flex-1 w-full flex flex-col md:flex-row gap-10">
-        <aside className="hidden md:block w-[280px] shrink-0">
+      <main className="max-w-[1400px] mx-auto px-6 py-6 sm:py-12 flex-1 w-full flex flex-col lg:flex-row gap-4 lg:gap-10">
+        <aside className="hidden lg:block w-[280px] shrink-0">
           <FilterSidebar04 categoryId={categoryId} availableBrands={availableBrands} theme={theme} />
         </aside>
 
-        <div className="md:hidden">
+        <div className="lg:hidden">
           <FilterDrawer categoryId={categoryId} availableBrands={availableBrands} theme={theme} />
         </div>
 

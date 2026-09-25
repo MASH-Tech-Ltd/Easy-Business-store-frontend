@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCart } from "@/context/CartContext";
 import { useTranslation } from "@/context/LanguageContext";
-import { getTranslation } from '@/utils/translations';
+import { getTranslation } from "@/utils/translations";
 
 interface ProductProps {
   product: {
@@ -27,7 +27,11 @@ interface ProductProps {
   isBestSelling?: boolean;
 }
 
-export default function ProductCard({ product, isList = false, isBestSelling = false }: ProductProps) {
+export default function ProductCard({
+  product,
+  isList = false,
+  isBestSelling = false,
+}: ProductProps) {
   const router = useRouter();
   const { addToCart } = useCart();
   const { t } = useTranslation();
@@ -82,7 +86,8 @@ export default function ProductCard({ product, isList = false, isBestSelling = f
   };
 
   return (
-    <Link prefetch={false}
+    <Link
+      prefetch={false}
       href={`/product/${productSlug}`}
       className={`group flex bg-white rounded-2xl shadow-sm hover:shadow-xl border border-gray-100 hover:border-indigo-100 transition-all duration-300 overflow-hidden relative ${isList ? "flex-row" : "flex-col"}`}
     >
@@ -97,11 +102,11 @@ export default function ProductCard({ product, isList = false, isBestSelling = f
             {(
               product.saveAmount ||
               product.originalPrice - product.discountedPrice
-            ).toLocaleString()}
-            {" "}{t('bdt')} Off
+            ).toLocaleString()}{" "}
+            {t("bdt")} Off
           </div>
         )}
-        {(isBestSelling && product.salesCount && product.salesCount > 30) && (
+        {isBestSelling && product.salesCount && product.salesCount > 30 && (
           <div className="absolute top-2 right-2 bg-amber-500 text-white text-[11px] font-extrabold px-2 py-1 rounded-md z-10 shadow-md flex items-center gap-1">
             🔥 {product.salesCount}+ Sold
           </div>
@@ -138,29 +143,29 @@ export default function ProductCard({ product, isList = false, isBestSelling = f
           <div className="w-64 p-6 flex flex-col justify-center shrink-0 bg-gray-50/50">
             <div className="flex flex-col gap-1 mb-6 text-center">
               <span className="font-extrabold text-indigo-700 text-3xl">
-                {product.discountedPrice.toLocaleString()} {t('bdt')}
+                {product.discountedPrice.toLocaleString()} {t("bdt")}
               </span>
               {product.originalPrice > product.discountedPrice && (
                 <span className="text-sm text-gray-400 line-through font-medium">
-                  {product.originalPrice.toLocaleString()} {t('bdt')}
+                  {product.originalPrice.toLocaleString()} {t("bdt")}
                 </span>
               )}
             </div>
-            
+
             <div className="flex flex-col gap-3">
               <button
                 onClick={handleAddToCart}
                 className="w-full flex items-center justify-center space-x-2 py-3 border-2 border-indigo-600 text-indigo-600 rounded-xl font-bold hover:bg-indigo-50 transition-colors"
               >
                 <ShoppingCart size={18} />
-                <span>{t('addToCart')}</span>
+                <span>{t("addToCart")}</span>
               </button>
               <button
                 onClick={handleBuyNow}
                 className="w-full flex items-center justify-center space-x-2 py-3 bg-indigo-600 text-white rounded-xl font-bold hover:bg-indigo-700 transition-colors shadow-md hover:shadow-lg"
               >
                 <Zap size={18} />
-                <span>{t('buyNow')}</span>
+                <span>{t("buyNow")}</span>
               </button>
             </div>
           </div>
@@ -173,7 +178,7 @@ export default function ProductCard({ product, isList = false, isBestSelling = f
 
           <div className="flex items-center gap-2 mb-5">
             <span className="font-black text-indigo-700 text-lg">
-              {product.discountedPrice.toLocaleString()} {t('bdt')}
+              {product.discountedPrice.toLocaleString()} {t("bdt")}
             </span>
             {product.originalPrice > product.discountedPrice && (
               <span className="text-[13px] text-gray-400 line-through font-medium">
@@ -183,21 +188,21 @@ export default function ProductCard({ product, isList = false, isBestSelling = f
           </div>
 
           {/* Action Buttons */}
-          <div className="mt-auto grid grid-cols-2 gap-2">
+          <div className="mt-auto flex sm:grid sm:grid-cols-2 gap-1.5 sm:gap-2">
             <button
               onClick={handleAddToCart}
-              className="flex items-center justify-center gap-2 py-2.5 border-2 border-indigo-100 text-indigo-600 rounded-lg hover:border-indigo-600 hover:bg-indigo-50 transition-colors font-semibold text-sm"
+              className="flex items-center justify-center shrink-0 w-9 h-9 sm:w-full sm:h-auto sm:py-2.5 border-2 border-indigo-100 text-indigo-600 rounded-lg hover:border-indigo-600 hover:bg-indigo-50 transition-colors font-semibold"
               title="Add to Cart"
             >
               <ShoppingCart size={16} />
             </button>
             <button
               onClick={handleBuyNow}
-              className="flex items-center justify-center gap-2 py-2.5 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors shadow-sm font-semibold text-sm"
+              className="flex-1 sm:w-full flex items-center justify-center gap-1 sm:gap-2 py-2 sm:py-2.5 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors shadow-sm font-semibold text-[11px] sm:text-sm"
               title="Buy Now"
             >
-              <Zap size={16} />
-              <span>{t('buyNow')}</span>
+              <Zap size={14} className="shrink-0" />
+              <span className="truncate">{t("buyNow")}</span>
             </button>
           </div>
         </div>

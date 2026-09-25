@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 import React, { useRef } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
@@ -28,7 +28,7 @@ export default function CategorySlider({ children }: { children: React.ReactNode
       <div 
         id="category-slider-track"
         ref={sliderRef} 
-        className="flex gap-8 overflow-x-auto py-8 px-4 w-full [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] scroll-smooth snap-x snap-mandatory"
+        className="flex gap-4 sm:gap-8 overflow-x-auto py-2 sm:py-8 px-1 sm:px-4 w-full [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] scroll-smooth snap-x snap-mandatory"
       >
         {children}
       </div>

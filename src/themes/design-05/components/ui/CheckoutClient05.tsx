@@ -75,7 +75,7 @@ export default function CheckoutClient05({ theme, storeInfo }: { theme?: any; st
   }, [phone, firstName, lastName, email, address, division, district, upazila, isSuccess, isProcessing]);
 
   const { cost: shippingEstimate, zoneName: shippingZoneName } = computeShipping(division, district, theme?.shippingZones || [], theme?.defaultShippingCost ?? 120);
-  const taxEstimate = Math.round(subtotal * 0.15);
+  const taxEstimate = 0;
   const total = Math.round(subtotal + shippingEstimate + taxEstimate);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {

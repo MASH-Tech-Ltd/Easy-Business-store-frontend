@@ -128,11 +128,13 @@ export default async function Design02CategoryPage({ params, searchParams }: any
       <Header storeInfo={storeInfo} />
 
       {/* Breadcrumb & Title Area */}
-      <div className="max-w-7xl mx-auto px-8 py-12 text-center border-b border-gray-50">
-        <div className="text-xs font-medium text-gray-400 mb-6 uppercase tracking-widest">
+      <div className="max-w-7xl mx-auto px-4 sm:px-8 py-6 sm:py-12 text-center border-b border-gray-50">
+        <div className="text-xs font-medium text-gray-400 mb-4 sm:mb-6 uppercase tracking-widest">
           <Link prefetch={false} href="/" className="hover:text-gray-900 transition-colors">{t('home') || 'Home'}</Link>
           <span className="mx-3">/</span>
-          <span className="text-gray-900">{category?.name || 'Category'}</span>
+          <Link prefetch={false} href={`/category/${category?.slug || category?._id}`} className="hover:text-gray-900 transition-colors text-gray-900">
+            {category?.name || 'Category'}
+          </Link>
         </div>
         <h1 className="text-4xl md:text-5xl font-light tracking-tight">{category?.name || 'Category'}</h1>
         {category?.description && (
@@ -142,17 +144,17 @@ export default async function Design02CategoryPage({ params, searchParams }: any
 
       <Design02FilterDrawer categoryId={categoryId} availableBrands={availableBrands} />
 
-      <main className="max-w-7xl mx-auto px-8 py-12 flex-1 w-full flex flex-col gap-12">
+      <main className="max-w-7xl mx-auto px-4 sm:px-8 py-6 sm:py-12 flex-1 w-full flex flex-col gap-6 sm:gap-12">
         
         {/* Product Grid */}
         <section className="flex flex-col h-full w-full">
-          <div className="mb-8 flex flex-col sm:flex-row justify-between items-start sm:items-center pb-2 border-b border-gray-100 gap-4 sm:gap-0">
-            <div className="flex items-center gap-4">
+          <div className="mb-8 flex flex-col md:flex-row justify-between items-start md:items-center pb-2 border-b border-gray-100 gap-4 md:gap-0">
+            <div className="hidden md:flex items-center gap-4">
               <div className="text-sm font-medium text-gray-500">
                 Showing {products.length} of {pagination.total} products
               </div>
             </div>
-            <div className="flex items-center gap-6 self-end sm:self-auto">
+            <div className="flex items-center gap-4 sm:gap-6 justify-between md:justify-end w-full md:w-auto">
               <SortSelect />
               <ViewToggle />
             </div>

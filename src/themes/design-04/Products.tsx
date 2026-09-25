@@ -1,4 +1,4 @@
-﻿import { storefrontFetch } from "../../utils/storefrontFetch";
+import { storefrontFetch } from "../../utils/storefrontFetch";
 import { headers } from 'next/headers';
 import Link from 'next/link';
 import FilterSidebar04 from './components/ui/FilterSidebar';
@@ -93,12 +93,12 @@ export default async function ProductsPage04({ searchParams }: any) {
           </div>
         )}
 
-        <div className="flex flex-col md:flex-row gap-10">
-          <aside className="hidden md:block w-[280px] shrink-0">
+        <div className="flex flex-col lg:flex-row gap-10">
+          <aside className="hidden lg:block w-[280px] shrink-0">
             <FilterSidebar04 availableBrands={availableBrands} theme={theme} />
           </aside>
 
-          <div className="md:hidden">
+          <div className="lg:hidden">
             <FilterDrawer categoryId="" availableBrands={availableBrands} theme={theme} />
           </div>
 

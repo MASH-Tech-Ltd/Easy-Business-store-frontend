@@ -65,16 +65,18 @@ export default function ProductCard05({ product, isList = false, isBestSelling =
   return (
     <div className="group flex flex-col bg-white overflow-hidden transition-all duration-500">
       <Link prefetch={false} href={`/product/${productSlug}`} className="block relative aspect-[4/5] bg-[#F8F9FA] rounded-2xl overflow-hidden mb-5">
-        {savePercent > 0 && (
-          <span className="absolute top-4 left-4 bg-black text-white text-[10px] font-bold uppercase tracking-wider px-3 py-1.5 rounded-full z-10">
-            Save {savePercent}%
-          </span>
-        )}
-        {(isBestSelling && product.salesCount && product.salesCount > 30) && (
-          <span className="absolute top-4 right-4 bg-amber-500 text-white text-[10px] font-bold uppercase tracking-wider px-3 py-1.5 rounded-full z-10 shadow-sm">
-            🔥 {product.salesCount}+ Sold
-          </span>
-        )}
+        <div className="absolute top-2 sm:top-3 left-2 sm:left-3 right-2 sm:right-3 flex justify-between items-start flex-nowrap gap-1 sm:gap-2 z-10 pointer-events-none overflow-hidden">
+          {savePercent > 0 && (
+            <span className="bg-black text-white text-[8px] sm:text-[9px] lg:text-[10px] font-bold uppercase tracking-wider px-1.5 sm:px-2 lg:px-3 py-0.5 sm:py-1 lg:py-1.5 rounded-full shadow-sm pointer-events-auto whitespace-nowrap">
+              Save {savePercent}%
+            </span>
+          )}
+          {(isBestSelling && product.salesCount && product.salesCount > 30) && (
+            <span className="bg-amber-500 text-white text-[8px] sm:text-[9px] lg:text-[10px] font-bold uppercase tracking-wider px-1.5 sm:px-2 lg:px-3 py-0.5 sm:py-1 lg:py-1.5 rounded-full shadow-sm pointer-events-auto whitespace-nowrap">
+              {product.salesCount}+ Sold
+            </span>
+          )}
+        </div>
         {imageUrl ? (
           <img src={imageUrl} alt={product.title || product.name} className="w-full h-full object-cover mix-blend-multiply group-hover:scale-105 transition-transform duration-700 ease-out" />
         ) : (

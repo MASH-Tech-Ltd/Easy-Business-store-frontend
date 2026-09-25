@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import React from 'react';
 import Link from 'next/link';
@@ -45,7 +45,7 @@ export default function CartClient() {
                     </div>
                     
                     <div className="flex-1 flex flex-col w-full text-left">
-                      <h3 className="text-xs sm:text-sm font-semibold text-gray-900 line-clamp-2 mb-1 sm:mb-2">{item.title}</h3>
+                      <h3 className="text-sm sm:text-base md:text-lg font-semibold text-gray-900 line-clamp-2 mb-1 sm:mb-2">{item.title}</h3>
                       <div className="text-sm sm:text-lg font-bold text-[#D3100B]">{item.price.toLocaleString()} {t('bdt')}</div>
                     </div>
                     

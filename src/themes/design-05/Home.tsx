@@ -30,7 +30,7 @@ export default async function Design05Home({
       getTheme(tenantSlug),
     ]);
 
-  const displayCategories = (categories || []).slice(0, 8);
+  const displayCategories = (categories || []).slice(0, 6);
   const displayBestsellers = (bestsellers || []).slice(0, 8);
   const displayProducts = (products || []).slice(0, 8);
 
@@ -40,16 +40,16 @@ export default async function Design05Home({
 
       <main className="flex-1">
         {/* Hero Section */}
-        <section className="relative w-full px-6 lg:px-12 py-4 lg:py-6 max-w-[1400px] mx-auto">
-          <div className="bg-[#F8F9FA] rounded-[2rem] overflow-hidden flex flex-col lg:flex-row items-center justify-between p-6 lg:p-10 relative">
-            <div className="lg:w-1/2 z-10 relative">
+        <section className="relative w-full px-4 sm:px-6 lg:px-12 py-4 lg:py-6 max-w-[1400px] mx-auto">
+          <div className="bg-[#F8F9FA] rounded-[1.5rem] sm:rounded-[2rem] overflow-hidden flex flex-col-reverse lg:flex-row items-center justify-between p-4 sm:p-6 lg:p-10 relative">
+            <div className="lg:w-1/2 z-10 relative text-center lg:text-left mt-4 lg:mt-0 w-full">
               {theme?.banner?.title && (
-                <h2 className="text-4xl lg:text-5xl font-bold tracking-tighter leading-[1.1] mb-5">
+                <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold tracking-tighter leading-[1.1] mb-3 sm:mb-5">
                   {theme.banner.title}
                 </h2>
               )}
               {theme?.banner?.description && (
-                <p className="text-gray-500 text-base lg:text-lg mb-8 max-w-md leading-relaxed">
+                <p className="text-gray-500 text-sm sm:text-base lg:text-lg mb-6 sm:mb-8 max-w-md mx-auto lg:mx-0 leading-relaxed">
                   {theme.banner.description}
                 </p>
               )}
@@ -72,12 +72,12 @@ export default async function Design05Home({
               )}
             </div>
 
-            <div className="lg:w-1/2 mt-6 lg:mt-0 relative flex justify-center h-[200px] lg:h-[320px] w-full">
+            <div className="lg:w-1/2 relative flex justify-center aspect-[21/9] w-full mb-2 lg:mb-0">
               {theme?.banner?.image ? (
                 <img
                   src={theme.banner.image?.secure_url || theme.banner.image}
                   alt="Hero"
-                  className="w-full h-full object-contain mix-blend-multiply drop-shadow-2xl z-10 relative"
+                  className="w-full h-full object-cover rounded-2xl sm:rounded-3xl drop-shadow-2xl z-10 relative"
                 />
               ) : (
                 <div className="w-full h-full flex items-center justify-center opacity-10">
@@ -110,18 +110,19 @@ export default async function Design05Home({
               </div>
               <Link prefetch={false}
                 href="/categories"
-                className="text-sm font-semibold uppercase tracking-widest text-gray-400 hover:text-black transition-colors hidden sm:block"
+                className="inline-flex items-center gap-1.5 text-sm font-semibold text-gray-400 hover:text-black transition-colors border border-gray-200 hover:border-black rounded-full px-4 py-1.5"
               >
                 View All
+                <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5"><path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7"/></svg>
               </Link>
             </div>
 
-            <div className="flex flex-wrap justify-center gap-4 lg:gap-6">
+            <div className="grid grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4 lg:gap-6">
               {displayCategories.map((c: any) => (
                 <Link prefetch={false}
                   key={c._id}
                   href={`/category/${c.slug || c._id}`}
-                  className="w-[calc(50%-0.5rem)] md:w-[calc(25%-0.75rem)] lg:w-[calc(12.5%-1.3125rem)] group relative aspect-square rounded-[1.5rem] overflow-hidden flex flex-col justify-end p-4 lg:p-5 border border-transparent transition-all shadow-sm hover:shadow-xl"
+                  className="w-full group relative aspect-[4/4] sm:aspect-square rounded-[1.2rem] sm:rounded-[1.5rem] overflow-hidden flex flex-col justify-end p-3 lg:p-5 border border-transparent transition-all shadow-sm hover:shadow-xl"
                 >
                   {/* Background Image */}
                   <div className="absolute inset-0 bg-[#F8F9FA]">
@@ -166,7 +167,7 @@ export default async function Design05Home({
 
         {/* Bestsellers */}
         {displayBestsellers.length > 0 && (
-          <section className="px-6 lg:px-12 py-20 max-w-[1400px] mx-auto">
+          <section className="px-6 lg:px-12 py-8 lg:py-20 max-w-[1400px] mx-auto">
             <div className="flex items-end justify-between mb-12">
               <div>
                 <h3 className="text-2xl font-bold tracking-tight mb-2">
@@ -184,7 +185,7 @@ export default async function Design05Home({
         )}
 
         {/* Banner Section */}
-        <section className="px-6 lg:px-12 py-10 max-w-[1400px] mx-auto">
+        <section className="hidden px-6 lg:px-12 py-10 max-w-[1400px] mx-auto">
           <div className="bg-black text-white rounded-[2rem] p-12 lg:p-20 text-center relative overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-b from-white/10 to-transparent opacity-20 pointer-events-none"></div>
             <div className="relative z-10 max-w-2xl mx-auto">

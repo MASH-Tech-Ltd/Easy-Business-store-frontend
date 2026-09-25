@@ -105,6 +105,13 @@ export default function CheckoutClient({ storeInfo, theme }: { storeInfo?: any; 
     return () => clearTimeout(timeoutId);
   }, [phone, fullName, address, division, district, upazila, status]);
 
+  // Scroll to top when checkout is successful
+  React.useEffect(() => {
+    if (status === "success") {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }, [status]);
+
   // Static Location Derived Data
   const divisionsList = bdLocations.map(d => d.division);
   const districtsList = bdLocations.find(d => d.division === division)?.districts || [];
@@ -126,6 +133,15 @@ export default function CheckoutClient({ storeInfo, theme }: { storeInfo?: any; 
       setFieldErrors(
         result.error.flatten().fieldErrors as Record<string, string[]>,
       );
+      
+      // Auto-scroll to the first field with an error
+      setTimeout(() => {
+        const firstErrorElement = document.querySelector('.border-red-500');
+        if (firstErrorElement) {
+          firstErrorElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      }, 100);
+      
       return;
     }
 
@@ -202,41 +218,41 @@ export default function CheckoutClient({ storeInfo, theme }: { storeInfo?: any; 
 
   if (status === "success") {
     return (
-      <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center p-6">
-        <div className="bg-white p-12 rounded-3xl shadow-sm text-center max-w-md w-full">
-          <div className="w-20 h-20 bg-green-100 text-green-500 rounded-full flex items-center justify-center mx-auto mb-6">
-            <CheckCircle2 className="w-10 h-10" />
+      <div className="flex-1 bg-gray-50 flex flex-col items-center justify-center p-4 sm:p-6 py-8 sm:py-12">
+        <div className="bg-white p-6 sm:p-8 md:p-12 rounded-2xl sm:rounded-3xl shadow-sm text-center max-w-md w-full mx-auto my-auto">
+          <div className="w-16 h-16 sm:w-20 sm:h-20 bg-green-100 text-green-500 rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6">
+            <CheckCircle2 className="w-8 h-8 sm:w-10 sm:h-10" />
           </div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-4">
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2 sm:mb-4">
             {t("orderConfirmed")}
           </h1>
-          <p className="text-gray-500 mb-6">{t("thankYouPurchase")}</p>
+          <p className="text-sm sm:text-base text-gray-500 mb-6 sm:mb-8">{t("thankYouPurchase")}</p>
           
           {orderId && (
             <div className="bg-gray-50 p-4 rounded-xl mb-6 border border-gray-100">
-              <p className="text-sm text-gray-500 mb-1">Order ID</p>
-              <p className="font-mono font-bold text-gray-900">#{orderId}</p>
+              <p className="text-xs sm:text-sm text-gray-500 mb-1">Order ID</p>
+              <p className="font-mono text-lg sm:text-xl font-bold text-gray-900">#{orderId}</p>
             </div>
           )}
 
           {manualPaymentMethods.length > 0 && orderId && (
-            <div className="mb-8 text-left border border-purple-100 rounded-xl overflow-hidden bg-white shadow-sm">
-              <div className="bg-purple-50 p-4 border-b border-purple-100">
-                <h3 className="font-bold text-purple-900 flex items-center gap-2">
-                  <Banknote className="w-5 h-5" /> Payment Instructions
+            <div className="mb-6 sm:mb-8 text-left border border-purple-100 rounded-xl overflow-hidden bg-white shadow-sm">
+              <div className="bg-purple-50 p-3 sm:p-4 border-b border-purple-100">
+                <h3 className="font-bold text-sm sm:text-base text-purple-900 flex items-center gap-2">
+                  <Banknote className="w-4 h-4 sm:w-5 sm:h-5" /> Payment Instructions
                 </h3>
-                <p className="text-sm text-purple-700 mt-1">Please complete your payment using one of the methods below.</p>
+                <p className="text-xs sm:text-sm text-purple-700 mt-1">Please complete your payment using one of the methods below.</p>
               </div>
-              <div className="p-4 space-y-4">
+              <div className="p-3 sm:p-4 space-y-4">
                 {manualPaymentMethods.map((method: any, idx: number) => (
                   <div key={idx} className="pb-4 border-b border-gray-100 last:border-0 last:pb-0">
                     <div className="flex items-center gap-2 mb-2">
-                      <span className="bg-[#5022C3] text-white text-xs font-bold px-2 py-1 rounded">{method.provider}</span>
-                      <span className="text-sm font-medium text-gray-500 bg-gray-100 px-2 py-1 rounded">{method.type}</span>
+                      <span className="bg-[#5022C3] text-white text-[10px] sm:text-xs font-bold px-2 py-1 rounded">{method.provider}</span>
+                      <span className="text-[10px] sm:text-sm font-medium text-gray-500 bg-gray-100 px-2 py-1 rounded">{method.type}</span>
                     </div>
-                    <p className="font-mono font-bold text-lg text-gray-900 mb-2">{method.number}</p>
+                    <p className="font-mono font-bold text-base sm:text-lg text-gray-900 mb-2">{method.number}</p>
                     {method.instructions && (
-                      <p className="text-sm text-gray-600 bg-gray-50 p-3 rounded-lg border border-gray-100">{method.instructions}</p>
+                      <p className="text-xs sm:text-sm text-gray-600 bg-gray-50 p-2 sm:p-3 rounded-lg border border-gray-100">{method.instructions}</p>
                     )}
                   </div>
                 ))}
@@ -248,14 +264,14 @@ export default function CheckoutClient({ storeInfo, theme }: { storeInfo?: any; 
             {orderId && (
               <Link prefetch={false}
                 href={`/track-order?id=${orderId}`}
-                className="block w-full bg-black hover:bg-gray-800 transition-colors text-white font-bold py-4 px-8 rounded-xl"
+                className="block w-full bg-black hover:bg-gray-800 transition-colors text-white font-bold py-3.5 sm:py-4 px-4 sm:px-8 rounded-xl text-sm sm:text-base"
               >
                 Track Order
               </Link>
             )}
             <Link prefetch={false}
               href="/"
-              className="block w-full bg-primary hover:opacity-90 transition-opacity text-white font-bold py-4 px-8 rounded-xl"
+              className="block w-full bg-primary hover:opacity-90 transition-opacity text-white font-bold py-3.5 sm:py-4 px-4 sm:px-8 rounded-xl text-sm sm:text-base"
             >
               {t("continueShopping")}
             </Link>
@@ -267,10 +283,10 @@ export default function CheckoutClient({ storeInfo, theme }: { storeInfo?: any; 
 
   return (
     <div className="min-h-screen bg-[#F8F9FA] pb-20 font-sans">
-      <main className="max-w-[1400px] mx-auto px-6 py-12 w-full">
-        <div className="bg-white border border-gray-200 rounded-xl shadow-sm p-8 lg:p-12 flex flex-col lg:flex-row gap-12 lg:gap-20">
+      <main className="max-w-[1400px] mx-auto px-4 sm:px-6 py-8 sm:py-12 w-full">
+        <div className="bg-white border border-gray-200 rounded-xl shadow-sm p-5 sm:p-8 md:p-6 lg:p-12 flex flex-col md:flex-row gap-8 md:gap-6 lg:gap-20">
           {/* Left Column: Form */}
-          <div className="flex-1 space-y-10">
+          <div className="flex-1 space-y-8 sm:space-y-10 min-w-0">
             <h1 className="text-xl font-bold text-primary">
               {t("placeOrder")}
             </h1>
@@ -510,7 +526,7 @@ export default function CheckoutClient({ storeInfo, theme }: { storeInfo?: any; 
           </div>
 
           {/* Right Column: Order Summary */}
-          <div className="lg:w-[480px] shrink-0 flex flex-col relative before:hidden lg:before:block before:absolute before:-left-10 before:top-0 before:bottom-0 before:w-[1px] before:bg-gray-200">
+          <div className="flex-1 lg:flex-none lg:w-[480px] shrink-0 flex flex-col relative before:hidden md:before:block before:absolute before:-left-3 lg:before:-left-10 before:top-0 before:bottom-0 before:w-[1px] before:bg-gray-200">
             <div className="flex-1 space-y-8">
               {/* Cart Items List */}
               <div>

@@ -1,4 +1,4 @@
-﻿import Link from "next/link";
+import Link from "next/link";
 import { getTranslation } from '@/utils/translations';
 
 export default function Footer({
@@ -20,9 +20,9 @@ export default function Footer({
     `© ${year} ${storeInfo?.name || "Minimal Store"}. All rights reserved.`;
 
   return (
-    <footer className="py-16 bg-gray-50 text-gray-900 border-t border-gray-100 mt-auto">
-      <div className="max-w-7xl mx-auto px-8 grid grid-cols-1 md:grid-cols-4 gap-12">
-        <div className="col-span-1">
+    <footer className="py-12 sm:py-16 bg-gray-50 text-gray-900 border-t border-gray-100 mt-auto">
+      <div className="max-w-7xl mx-auto px-6 sm:px-8 grid grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
+        <div className="col-span-2 lg:col-span-1 mb-2 lg:mb-0">
           <h2 className="text-2xl font-semibold tracking-tight mb-4 flex items-center gap-2">
             {storeInfo?.logo ? (
               <img
@@ -225,7 +225,7 @@ export default function Footer({
         </div>
         {/* Contact Info */}
         {(contactInfo.email || contactInfo.phone || contactInfo.address) && (
-          <div>
+          <div className="col-span-2 lg:col-span-1 mt-2 lg:mt-0">
             <h3 className="text-sm font-bold uppercase tracking-wider mb-4">{t('contact') || 'Contact'}</h3>
             <ul className="space-y-3 text-sm text-gray-500">
               {contactInfo.email && (

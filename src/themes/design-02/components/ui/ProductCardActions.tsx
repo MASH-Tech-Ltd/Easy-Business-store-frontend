@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import React from 'react';
 import { useCart } from '@/context/CartContext';
@@ -36,15 +36,15 @@ export default function ProductCardActions({ product, theme }: { product: any, t
   const buyNowColor = theme?.buttonColors?.buyNow || '#ef4444';
 
   return (
-    <div className="flex gap-2 w-full">
+    <div className="flex flex-col gap-1.5 w-full">
       <button 
         onClick={handleAddToCart}
-        className="flex-1 text-white font-medium py-1 px-1 rounded-sm shadow hover:opacity-90 transition-colors text-[10px] uppercase tracking-wider text-center"
+        className="flex-1 text-white font-medium py-1.5 px-1 sm:py-1 rounded-sm shadow hover:opacity-90 transition-colors text-[9px] sm:text-[10px] uppercase tracking-wider text-center leading-tight"
         style={{ backgroundColor: addToCartColor }}
       >{t('addToCart') || 'Add to Cart'}</button>
       <button 
         onClick={handleBuyNow}
-        className="flex-1 text-white font-medium py-1 px-1 rounded-sm shadow hover:opacity-90 transition-colors text-[10px] uppercase tracking-wider text-center"
+        className="flex-1 text-white font-medium py-1.5 px-1 sm:py-1 rounded-sm shadow hover:opacity-90 transition-colors text-[9px] sm:text-[10px] uppercase tracking-wider text-center leading-tight"
         style={{ backgroundColor: buyNowColor }}
       >{t('buyNow') || 'Buy Now'}</button>
     </div>

@@ -14,7 +14,7 @@ export default function CartClient05({ theme }: { theme?: any }) {
 
   const defaultShipping = theme?.defaultShippingCost ?? 120;
   const shippingEstimate = items.length > 0 ? defaultShipping : 0;
-  const taxEstimate = Math.round(subtotal * 0.15);
+  const taxEstimate = 0;
   const total = Math.round(subtotal + shippingEstimate + taxEstimate);
 
   if (items.length === 0) {

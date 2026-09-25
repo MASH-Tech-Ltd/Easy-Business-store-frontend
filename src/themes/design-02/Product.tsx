@@ -1,4 +1,4 @@
-﻿import { storefrontFetch } from "../../utils/storefrontFetch";
+import { storefrontFetch } from "../../utils/storefrontFetch";
 import { headers } from 'next/headers';
 import Link from 'next/link';
 import ProductGallery from '@/components/ProductGallery';
@@ -73,13 +73,15 @@ export default async function Design02ProductPage({ params }: { params: Promise<
       <div className="max-w-7xl mx-auto w-full px-8 py-6 flex items-center text-xs text-gray-400 gap-3">
         <Link prefetch={false} href="/" className="hover:text-gray-900 transition-colors">{t('home') || 'Home'}</Link>
         <span>/</span>
-        <span className="hover:text-gray-900 cursor-pointer">{product.categoryId?.name || 'Category'}</span>
+        <Link prefetch={false} href={`/category/${product.categoryId?.slug || product.categoryId?._id}`} className="hover:text-gray-900 transition-colors">
+          {product.categoryId?.name || 'Category'}
+        </Link>
         <span>/</span>
         <span className="text-gray-900">{product.title}</span>
       </div>
 
       <main className="max-w-7xl mx-auto px-8 py-8 flex-1 w-full">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 mb-24">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 mb-8 lg:mb-24">
           
           <div className="lg:col-span-7">
             <ProductGallery images={product.images} title={product.title} />
@@ -150,8 +152,8 @@ export default async function Design02ProductPage({ params }: { params: Promise<
           </div>
         </div>
 
-        <div className="max-w-4xl mx-auto mb-24 mt-16 border-t border-gray-100 pt-16">
-          <div className="space-y-16">
+        <div className="max-w-4xl mx-auto mb-12 sm:mb-24 mt-8 sm:mt-16 border-t border-gray-100 pt-8 sm:pt-16">
+          <div className="space-y-8 sm:space-y-16">
 
               {product.shortDescription && (
                 <div className="text-gray-600 font-light leading-relaxed text-lg text-center max-w-3xl mx-auto italic">

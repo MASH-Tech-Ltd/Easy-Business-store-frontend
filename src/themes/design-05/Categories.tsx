@@ -24,8 +24,8 @@ export default async function CategoriesPage05() {
     <div className="min-h-screen bg-white font-sans flex flex-col">
       <Header05 storeInfo={storeInfo} />
 
-      <div className="pt-16 pb-8 px-6 lg:px-12 text-center">
-        <h1 className="text-4xl lg:text-5xl font-bold text-gray-900 tracking-tight mb-4">All Categories</h1>
+      <div className="pt-6 pb-4 px-6 lg:px-12 text-center">
+        <h1 className="text-3xl lg:text-4xl font-bold text-gray-900 tracking-tight mb-2">All Categories</h1>
         <div className="flex items-center justify-center text-[13px] font-semibold text-gray-400 uppercase tracking-widest gap-3">
           <Link prefetch={false} href="/" className="hover:text-black transition-colors">{t('home') || 'Home'}</Link>
           <span className="text-gray-300">/</span>
@@ -33,7 +33,7 @@ export default async function CategoriesPage05() {
         </div>
       </div>
 
-      <main className="max-w-[1400px] mx-auto px-6 lg:px-12 py-12 flex-1 w-full">
+      <main className="max-w-[1400px] mx-auto px-6 lg:px-12 py-6 flex-1 w-full">
         {categories.length === 0 ? (
           <div className="py-32 text-center flex flex-col items-center justify-center">
             <svg className="w-16 h-16 text-gray-200 mb-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1"><path d="M4 6h16M4 12h16M4 18h16"></path></svg>
@@ -41,24 +41,24 @@ export default async function CategoriesPage05() {
             <p className="text-gray-500">Check back later for updates.</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6 lg:gap-8">
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-6 lg:gap-8">
             {categories.map((c: any) => (
               <Link prefetch={false} key={c._id} href={`/category/${c.slug || c._id}`} 
-                className="group relative h-[280px] rounded-3xl bg-[#F8F9FA] overflow-hidden flex flex-col p-8 border border-gray-100 hover:border-black transition-all shadow-sm hover:shadow-lg duration-500">
+                className="group relative h-[220px] sm:h-[280px] rounded-2xl sm:rounded-3xl bg-[#F8F9FA] overflow-hidden flex flex-col p-4 sm:p-8 border border-gray-100 hover:border-black transition-all shadow-sm hover:shadow-lg duration-500">
                 
-                <div className="z-10 flex justify-between items-start w-full mb-4">
-                  <div className="pr-4">
-                    <h2 className="text-2xl font-bold text-gray-900 group-hover:text-black mb-1">{c.name}</h2>
-                    <p className="text-xs text-gray-500 line-clamp-2 group-hover:text-gray-700 leading-relaxed">
-                      {c.description || `Explore our premium selection of ${c.name}.`}
-                    </p>
+                <div className="z-10 flex justify-between items-start w-full mb-2 sm:mb-4">
+                  <div className="min-w-0 pr-2">
+                    <h2 className="text-sm sm:text-xl font-bold text-gray-900 group-hover:text-black mb-0.5 truncate">{c.name}</h2>
+                    {/* <p className="text-[10px] sm:text-xs text-gray-500 line-clamp-1 sm:line-clamp-2 group-hover:text-gray-700 leading-relaxed">
+                      {c.description || `Premium ${c.name}`}
+                    </p> */}
                   </div>
-                  <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center shrink-0 shadow-sm group-hover:bg-black group-hover:text-white transition-colors duration-300">
-                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2"><path strokeLinecap="round" strokeLinejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
+                  <div className="w-7 h-7 sm:w-10 sm:h-10 rounded-full bg-white flex items-center justify-center shrink-0 shadow-sm group-hover:bg-black group-hover:text-white transition-colors duration-300">
+                    <svg className="w-3 h-3 sm:w-4 sm:h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2"><path strokeLinecap="round" strokeLinejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
                   </div>
                 </div>
 
-                <div className="flex-1 w-full mt-4 relative rounded-[1.5rem] overflow-hidden">
+                <div className="flex-1 w-full mt-1 relative rounded-xl sm:rounded-[1.5rem] overflow-hidden">
                   {c.image ? (
                     <img src={c.image?.secure_url || c.image} alt={c.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out" />
                   ) : (

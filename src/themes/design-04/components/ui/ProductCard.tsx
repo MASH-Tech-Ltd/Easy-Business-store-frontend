@@ -71,7 +71,7 @@ export default function ProductCard04({ product, isList = false, isBestSelling =
     <div className="group flex flex-col bg-white border border-gray-100 rounded-2xl overflow-hidden hover:shadow-xl hover:border-gray-200 transition-all duration-300">
       <Link prefetch={false} href={`/product/${productSlug}`} className="block cursor-default">
         {/* Image */}
-        <div className="relative bg-gray-50 aspect-square flex items-center justify-center p-6 overflow-hidden">
+        <div className="relative bg-gray-50 aspect-square flex items-center justify-center overflow-hidden">
           {savePercent > 0 && (
             <span className="absolute top-3 left-3 bg-rose-500 text-white text-[11px] font-bold px-2.5 py-1 rounded-full z-10">
               -{savePercent}%
@@ -81,14 +81,14 @@ export default function ProductCard04({ product, isList = false, isBestSelling =
             <img
               src={imageUrl}
               alt={product.title || product.name}
-              className="w-full h-full object-cover rounded-lg group-hover:scale-105 transition-transform duration-500"
+              className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
             />
           ) : (
             <div className="text-gray-200 text-sm">No image</div>
           )}
           {(isBestSelling && product.salesCount && product.salesCount > 30) && (
             <div className="absolute top-3 right-3 bg-amber-500 text-white text-[10px] font-bold px-2 py-1 rounded-full z-10 shadow-sm flex items-center gap-1">
-              🔥 {product.salesCount}+ Sold
+              {product.salesCount}+ Sold
             </div>
           )}
         </div>

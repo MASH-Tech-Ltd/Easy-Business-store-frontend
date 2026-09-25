@@ -103,6 +103,13 @@ export default function Design02CheckoutClient({ theme,
     return () => clearTimeout(timeoutId);
   }, [phone, fullName, address, division, district, upazila, status]);
 
+  // Scroll to top when checkout is successful
+  React.useEffect(() => {
+    if (status === "success") {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }, [status]);
+
   // Static Location Derived Data
   const divisionsList = bdLocations.map((d) => d.division);
   const districtsList =
@@ -126,6 +133,15 @@ export default function Design02CheckoutClient({ theme,
       setFieldErrors(
         result.error.flatten().fieldErrors as Record<string, string[]>,
       );
+      
+      // Auto-scroll to the first field with an error
+      setTimeout(() => {
+        const firstErrorElement = document.querySelector('.border-red-500');
+        if (firstErrorElement) {
+          firstErrorElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      }, 100);
+      
       return;
     }
 
@@ -199,12 +215,12 @@ export default function Design02CheckoutClient({ theme,
 
   if (status === "success") {
     return (
-      <main className="max-w-7xl mx-auto px-8 py-32 flex-1 w-full flex flex-col items-center justify-center text-center">
-        <div className="w-20 h-20 bg-gray-100 text-gray-900 rounded-full flex items-center justify-center mx-auto mb-8">
-          <CheckCircle2 className="w-10 h-10" />
+      <main className="max-w-7xl mx-auto px-6 sm:px-8 py-6 md:py-32 flex-1 w-full flex flex-col items-center justify-center text-center">
+        <div className="w-12 h-12 md:w-20 md:h-20 bg-gray-100 text-gray-900 rounded-full flex items-center justify-center mx-auto mb-4 md:mb-8">
+          <CheckCircle2 className="w-6 h-6 md:w-10 md:h-10" />
         </div>
-        <h1 className="text-4xl font-light tracking-tight text-gray-900 mb-4">
-          {t("orderConfirmed") || "Order Confirmed"}
+        <h1 className="text-2xl md:text-4xl font-light tracking-tight text-gray-900 mb-2 md:mb-4">
+          {t("orderConfirmed") || "Order Confirmed!"}
         </h1>
         <p className="text-gray-500 mb-8 max-w-md mx-auto">
           {t("thankYouPurchase") || "Thank you for your purchase."}
@@ -263,16 +279,16 @@ export default function Design02CheckoutClient({ theme,
   }
 
     return (
-      <main className="max-w-7xl mx-auto px-8 py-20 flex-1 w-full">
-        <h2 className="text-3xl font-light tracking-tight text-gray-900 mb-12">
+      <main className="max-w-7xl mx-auto px-4 md:px-8 py-8 md:py-20 flex-1 w-full">
+        <h2 className="text-2xl md:text-3xl font-light tracking-tight text-gray-900 mb-6 md:mb-12">
           {t("checkout") || "Checkout"}
         </h2>
   
-        <div className="flex flex-col lg:flex-row gap-16">
+        <div className="flex flex-col lg:flex-row gap-8 lg:gap-16">
           {/* Form Section */}
-          <div className="flex-1 space-y-12">
+          <div className="flex-1 space-y-8 md:space-y-12">
             <section>
-              <h3 className="text-lg font-medium text-gray-900 mb-6 uppercase tracking-wider">
+              <h3 className="text-base md:text-lg font-medium text-gray-900 mb-4 md:mb-6 uppercase tracking-wider">
                 {t("contact") || "Contact"}
               </h3>
               <div className="space-y-4">

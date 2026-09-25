@@ -76,7 +76,7 @@ export default async function Footer() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
           {/* Logo and Social */}
-          <div className="col-span-2 md:col-span-1 flex flex-row items-center justify-between w-full md:flex-col md:items-start md:justify-start md:space-y-4 md:space-x-0 space-x-4">
+          <div className="col-span-2 md:col-span-1 flex flex-col items-start justify-start w-full gap-5 md:gap-4">
             <div className="h-12 flex items-center justify-start shrink-0 gap-3">
               {storeInfo?.logo && (
                 <img
@@ -85,13 +85,13 @@ export default async function Footer() {
                   className="w-12 h-12 rounded-full object-cover shadow-sm border border-gray-100"
                 />
               )}
-              <span className="font-black text-xl text-gray-900">
+              <span className="font-black text-xl text-gray-900 break-words max-w-[200px] sm:max-w-full leading-tight">
                 {storeInfo?.name || tenantSlug.toUpperCase()}
               </span>
             </div>
             
             {storeInfo?.description && (
-              <p className="text-sm text-gray-500 mt-4 mb-2 max-w-xs leading-relaxed">
+              <p className="text-sm text-gray-500 max-w-xs leading-relaxed">
                 {storeInfo.description}
               </p>
             )}
@@ -99,7 +99,7 @@ export default async function Footer() {
             {(socialLinks.facebook ||
               socialLinks.youtube ||
               socialLinks.tiktok) && (
-              <div className="flex gap-2 sm:gap-3 shrink-0">
+              <div className="flex gap-2 sm:gap-3 shrink-0 flex-wrap">
                 {socialLinks.facebook && (
                   <a
                     href={socialLinks.facebook}

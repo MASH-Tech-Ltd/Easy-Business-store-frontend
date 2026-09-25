@@ -127,17 +127,23 @@ export default function CheckoutClient04({ storeInfo, theme }: { storeInfo?: any
     }
   };
 
+  React.useEffect(() => {
+    if (status === 'success') {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }, [status]);
+
   if (!mounted) return null;
 
   if (status === 'success') {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-6">
-        <div className="bg-white p-12 rounded-3xl shadow-sm text-center max-w-md w-full border border-gray-100">
-          <div className="w-20 h-20 bg-green-50 text-green-500 rounded-full flex items-center justify-center mx-auto mb-6">
-            <CheckCircle2 className="w-10 h-10" />
+      <div className="bg-gray-50 flex justify-center py-10 sm:py-20 px-4 sm:px-6">
+        <div className="bg-white p-6 sm:p-12 rounded-3xl shadow-sm text-center max-w-md w-full border border-gray-100">
+          <div className="w-16 h-16 sm:w-20 sm:h-20 bg-green-50 text-green-500 rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6">
+            <CheckCircle2 className="w-8 h-8 sm:w-10 sm:h-10" />
           </div>
-          <h1 className="text-3xl font-black text-gray-900 mb-4 tracking-tight">Order Confirmed!</h1>
-          <p className="text-gray-500 mb-8 font-medium">Thank you for your purchase. We will process your order soon.</p>
+          <h1 className="text-2xl sm:text-3xl font-black text-gray-900 mb-2 sm:mb-4 tracking-tight">Order Confirmed!</h1>
+          <p className="text-sm sm:text-base text-gray-500 mb-6 sm:mb-8 font-medium">Thank you for your purchase. We will process your order soon.</p>
           
           {orderId && (
             <div className="bg-gray-50 rounded-full py-3 px-6 mb-6 inline-block border border-gray-200">
@@ -189,7 +195,7 @@ export default function CheckoutClient04({ storeInfo, theme }: { storeInfo?: any
   return (
     <div className="min-h-screen bg-gray-50 font-sans pb-20">
       <main className="max-w-[1400px] mx-auto px-6 py-12 w-full">
-        <div className="flex flex-col lg:flex-row gap-10">
+        <div className="flex flex-col-reverse md:flex-col lg:flex-row gap-10">
           
           <div className="flex-1">
             <div className="bg-white rounded-3xl shadow-sm border border-gray-100 p-8 lg:p-12">
@@ -250,6 +256,11 @@ export default function CheckoutClient04({ storeInfo, theme }: { storeInfo?: any
                     </div>
                   </div>
                 </div>
+
+                {/* Mobile Place Order Button */}
+                <button type="submit" disabled={status === 'processing' || cartItems.length === 0} className="w-full lg:hidden mt-8 py-4 bg-gray-900 text-white font-bold rounded-xl hover:bg-gray-800 transition-colors shadow-md disabled:opacity-50">
+                  {status === 'processing' ? 'Processing...' : 'Place Order'}
+                </button>
               </form>
             </div>
           </div>
@@ -275,7 +286,7 @@ export default function CheckoutClient04({ storeInfo, theme }: { storeInfo?: any
                 <div className="h-px bg-gray-700 w-full my-4"></div>
                 <div className="flex justify-between text-lg font-black text-white"><span>{t('total') || 'Total'}</span><span>{theme?.currencySymbol || '৳'}{' '}{grandTotal.toLocaleString()}</span></div>
               </div>
-              <button form="checkout-form" type="submit" disabled={status === 'processing' || cartItems.length === 0} className="w-full py-4 bg-white text-gray-900 font-bold rounded-full hover:bg-gray-200 transition-colors shadow-md disabled:opacity-50">
+              <button form="checkout-form" type="submit" disabled={status === 'processing' || cartItems.length === 0} className="hidden lg:block w-full py-4 bg-white text-gray-900 font-bold rounded-full hover:bg-gray-200 transition-colors shadow-md disabled:opacity-50">
                 {status === 'processing' ? 'Processing...' : 'Place Order'}
               </button>
             </div>

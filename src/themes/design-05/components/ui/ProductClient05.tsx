@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import React, { useState } from 'react';
 import Link from 'next/link';
@@ -36,23 +36,25 @@ export default function ProductClient05({ product, theme }: { product: any; them
   };
 
   return (
-    <div className="max-w-[1400px] mx-auto px-6 lg:px-12 py-12">
+    <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-12 py-6 lg:py-12 overflow-hidden">
       
       {/* Breadcrumb */}
-      <div className="flex items-center text-[13px] font-semibold text-gray-400 uppercase tracking-widest gap-3 mb-10">
-        <Link prefetch={false} href="/" className="hover:text-black transition-colors">{t('home') || 'Home'}</Link>
-        <span className="text-gray-300">/</span>
-        <Link prefetch={false} href="/products" className="hover:text-black transition-colors">Products</Link>
-        <span className="text-gray-300">/</span>
-        <span className="text-black truncate max-w-[200px]">{product.title || product.name}</span>
+      <div className="flex flex-wrap items-center text-[11px] sm:text-[13px] font-semibold text-gray-400 uppercase tracking-widest gap-2 mb-6 lg:mb-10 w-full overflow-hidden">
+        <Link prefetch={false} href="/" className="hover:text-black transition-colors shrink-0">{t('home') || 'Home'}</Link>
+        <span className="text-gray-300 shrink-0">/</span>
+        <Link prefetch={false} href="/products" className="hover:text-black transition-colors shrink-0">Products</Link>
+        <span className="text-gray-300 shrink-0">/</span>
+        <span className="text-black truncate min-w-0">{product.title || product.name}</span>
       </div>
 
       <div className="flex flex-col lg:flex-row gap-16 lg:gap-24">
         {/* Images */}
         <div className="lg:w-1/2 flex flex-col gap-6">
-          <div className="aspect-[4/4] bg-[#F8F9FA] rounded-[2rem] p-12 flex items-center justify-center overflow-hidden border border-gray-100">
+          <div className="aspect-[4/4] bg-[#F8F9FA] rounded-[2rem] p-6 sm:p-10 flex items-center justify-center overflow-hidden border border-gray-100 group cursor-zoom-in">
             {activeImage ? (
-              <img src={activeImage} alt={product.title} className="w-full h-full object-cover mix-blend-multiply hover:scale-105 transition-transform duration-700" />
+              <div className="w-full h-full rounded-2xl overflow-hidden">
+                <img src={activeImage} alt={product.title} className="w-full h-full object-cover mix-blend-multiply transition-transform duration-700 ease-out group-hover:scale-110 rounded-2xl" />
+              </div>
             ) : (
               <div className="text-gray-300 font-bold uppercase tracking-widest">No Image</div>
             )}
