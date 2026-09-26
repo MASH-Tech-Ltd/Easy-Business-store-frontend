@@ -1,5 +1,5 @@
-﻿import type { Metadata } from "next";
-import { Inter, Outfit, Roboto, Noto_Sans_Bengali } from "next/font/google";
+import type { Metadata } from "next";
+import { Inter, Outfit, Roboto, Hind_Siliguri } from "next/font/google";
 import { headers } from "next/headers";
 import "./globals.css";
 
@@ -10,10 +10,10 @@ const roboto = Roboto({
   subsets: ["latin"],
   variable: "--font-roboto",
 });
-const notoSansBengali = Noto_Sans_Bengali({
-  weight: ["400", "500", "600", "700", "800"],
+const hindSiliguri = Hind_Siliguri({
+  weight: ["400", "500", "600", "700"],
   subsets: ["bengali"],
-  variable: "--font-noto-sans-bengali",
+  variable: "--font-hind-siliguri",
 });
 
 import { storefrontFetch } from "@/utils/storefrontFetch";
@@ -382,7 +382,7 @@ export default async function RootLayout({
   if (fontChoice === "roboto") fontClass = roboto.variable;
 
   // Append Bengali font variable so it's available
-  fontClass = `${fontClass} ${notoSansBengali.variable}`;
+  fontClass = `${fontClass} ${hindSiliguri.variable}`;
 
   // Map theme templates to colors
   let bgColor = "#ffffff";
@@ -418,9 +418,22 @@ export default async function RootLayout({
             --font-sans: var(--font-${fontChoice}), sans-serif;
           }
           
-          /* When language is Bengali, prepend Noto Sans Bengali to the font stack */
+          /* When language is Bengali, use Hind Siliguri – compact, professional, no layout bloat */
           html[lang="bn"] {
-            --font-sans: var(--font-noto-sans-bengali), var(--font-${fontChoice}), sans-serif !important;
+            --font-sans: var(--font-hind-siliguri), var(--font-${fontChoice}), sans-serif !important;
+            font-size: 70% !important;
+            line-height: 1.5 !important;
+          }
+          html[lang="bn"] * {
+            line-height: 1.5 !important;
+          }
+          html[lang="bn"] h1,
+          html[lang="bn"] h2,
+          html[lang="bn"] h3,
+          html[lang="bn"] h4,
+          html[lang="bn"] h5,
+          html[lang="bn"] h6 {
+            line-height: 1.35 !important;
           }
           
           body {

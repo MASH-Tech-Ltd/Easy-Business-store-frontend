@@ -28,19 +28,39 @@ body {
   .dark-glass {
     @apply bg-slate-900/40 backdrop-blur-xl border border-slate-700/50 shadow-xl;
   }
+}
 
-  /* Decrease specific vertical gaps in Bangla layout as requested by the user */
-  html[lang="bn"] #main-header {
-    padding-top: 0.5rem !important;
-    padding-bottom: 0.5rem !important;
-  }
-  html[lang="bn"] #category-slider-track {
-    padding-top: 0.5rem !important;
-    padding-bottom: 0.5rem !important;
-  }
-  html[lang="bn"] #home-main {
-    padding-top: 1rem !important;
-  }
+/*! ============================================================
+ * BENGALI FONT BLOAT FIX
+ * Hind Siliguri has larger ascent/descent metrics than Inter.
+ * Tailwind utility classes (leading-tight etc.) override
+ * @layer utilities rules, so we place these OUTSIDE layers
+ * with !important to guarantee they win.
+ * ============================================================ */
+
+html[lang="bn"] {
+  font-size: 70% !important;
+}
+
+html[lang="bn"],
+html[lang="bn"] * {
+  line-height: 1.5 !important;
+}
+
+html[lang="bn"] h1,
+html[lang="bn"] h2,
+html[lang="bn"] h3,
+html[lang="bn"] h4,
+html[lang="bn"] h5,
+html[lang="bn"] h6 {
+  line-height: 1.35 !important;
+}
+
+html[lang="bn"] button,
+html[lang="bn"] input,
+html[lang="bn"] select,
+html[lang="bn"] textarea {
+  line-height: 1.5 !important;
 }
 
 @layer base {
