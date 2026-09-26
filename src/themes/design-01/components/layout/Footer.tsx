@@ -9,7 +9,7 @@ async function getTheme(tenantSlug: string) {
   try {
     const res = await storefrontFetch(
       `${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/theme`,
-      { next: { revalidate: 60 } },
+      { next: { revalidate: 0 } },
     );
     if (!res.ok) return null;
     const json = await res.json();
@@ -23,7 +23,7 @@ async function getStoreInfo(tenantSlug: string) {
   try {
     const res = await storefrontFetch(
       `${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/info`,
-      { next: { revalidate: 60 } },
+      { next: { revalidate: 0 } },
     );
     if (!res.ok) return null;
     const json = await res.json();
@@ -168,78 +168,53 @@ export default async function Footer() {
             )}
           </div>
 
-          {/* Policies */}
-          {(policies.aboutUs ||
-            policies.privacyPolicy ||
-            policies.termsAndConditions ||
-            policies.returnPolicy) && (
-            <div className="col-span-1">
-              <h3 className="font-bold text-gray-900 mb-4 text-sm uppercase">
-                {t("policies")}
-              </h3>
-              <ul className="space-y-3">
-                {policies.aboutUs && (
-                  <li>
-                    <Link prefetch={false}
-                      href="/policies/about-us"
-                      className="text-sm text-gray-500 hover:text-primary transition-colors"
-                    >
-                      {t("aboutUs")}
-                    </Link>
-                  </li>
-                )}
-                {policies.privacyPolicy && (
-                  <li>
-                    <Link prefetch={false}
-                      href="/policies/privacy-policy"
-                      className="text-sm text-gray-500 hover:text-primary transition-colors"
-                    >
-                      {t("privacyPolicy")}
-                    </Link>
-                  </li>
-                )}
-                {policies.termsAndConditions && (
-                  <li>
-                    <Link prefetch={false}
-                      href="/policies/terms-and-conditions"
-                      className="text-sm text-gray-500 hover:text-primary transition-colors"
-                    >
-                      {t("termsAndConditions")}
-                    </Link>
-                  </li>
-                )}
-                {policies.returnPolicy && (
-                  <li>
-                    <Link prefetch={false}
-                      href="/policies/return-policy"
-                      className="text-sm text-gray-500 hover:text-primary transition-colors"
-                    >
-                      {t("returnPolicy")}
-                    </Link>
-                  </li>
-                )}
-              </ul>
-            </div>
-          )}
-
-          {/* Quick Links */}
+          {/* SHOP */}
           <div className="col-span-1">
-            <h3 className="font-bold text-gray-900 mb-4 text-sm uppercase">
-              Quick Links
-            </h3>
+            <h3 className="font-bold text-gray-900 mb-4 text-sm uppercase">{t('shop')}</h3>
             <ul className="space-y-3">
               <li>
-                <Link prefetch={false}
-                  href="/track-order"
-                  className="text-sm text-gray-500 hover:text-primary transition-colors"
-                >
-                  Track Order
+                <Link prefetch={false} href="/categories" className="text-sm text-gray-500 hover:text-primary transition-colors">{t('categories') || 'All Categories'}</Link>
+              </li>
+              <li>
+                <Link prefetch={false} href="/cart" className="text-sm text-gray-500 hover:text-primary transition-colors">{t('yourBag')}</Link>
+              </li>
+              <li>
+                <Link prefetch={false} href="/products?sort=newest" className="text-sm text-gray-500 hover:text-primary transition-colors">{t('newCollection') || 'New Arrivals'}</Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* HELP & INFO */}
+          <div className="col-span-1">
+            <h3 className="font-bold text-gray-900 mb-4 text-sm uppercase">{t('helpAndInfo')}</h3>
+            <ul className="space-y-3">
+              <li>
+                <Link prefetch={false} href="/track-order" className="text-sm text-gray-500 hover:text-primary transition-colors">{t('trackOrder')}</Link>
+              </li>
+              <li>
+                <Link prefetch={false} href="/policies/about-us" className="text-sm text-gray-500 hover:text-primary transition-colors">
+                  {t("aboutUs")}
+                </Link>
+              </li>
+              <li>
+                <Link prefetch={false} href="/policies/privacy-policy" className="text-sm text-gray-500 hover:text-primary transition-colors">
+                  {t("privacyPolicy")}
+                </Link>
+              </li>
+              <li>
+                <Link prefetch={false} href="/policies/terms-and-conditions" className="text-sm text-gray-500 hover:text-primary transition-colors">
+                  {t("termsAndConditions")}
+                </Link>
+              </li>
+              <li>
+                <Link prefetch={false} href="/policies/return-policy" className="text-sm text-gray-500 hover:text-primary transition-colors">
+                  {t("returnPolicy")}
                 </Link>
               </li>
             </ul>
           </div>
 
-          {/* Contact Us */}
+          {/* CONTACT */}
           {(contactInfo.email || contactInfo.phone || contactInfo.address) && (
             <div className="col-span-1 break-words">
               <h3 className="font-bold text-gray-900 mb-4 text-sm uppercase">
@@ -297,3 +272,5 @@ export default async function Footer() {
     </footer>
   );
 }
+
+// trigger reload

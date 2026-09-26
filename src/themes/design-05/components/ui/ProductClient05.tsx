@@ -8,7 +8,7 @@ import { useRouter } from 'next/navigation';
 import { getTranslation } from '@/utils/translations';
 
 export default function ProductClient05({ product, theme }: { product: any; theme?: any }) {
-  const language = "en";
+  const language = theme?.language || "en";
   const t = (key: any) => getTranslation(language || 'en', key);
 
   const { addToCart } = useCart();
@@ -42,7 +42,7 @@ export default function ProductClient05({ product, theme }: { product: any; them
       <div className="flex flex-wrap items-center text-[11px] sm:text-[13px] font-semibold text-gray-400 uppercase tracking-widest gap-2 mb-6 lg:mb-10 w-full overflow-hidden">
         <Link prefetch={false} href="/" className="hover:text-black transition-colors shrink-0">{t('home') || 'Home'}</Link>
         <span className="text-gray-300 shrink-0">/</span>
-        <Link prefetch={false} href="/products" className="hover:text-black transition-colors shrink-0">Products</Link>
+        <Link prefetch={false} href="/products" className="hover:text-black transition-colors shrink-0">{t('allProducts') || 'Products'}</Link>
         <span className="text-gray-300 shrink-0">/</span>
         <span className="text-black truncate min-w-0">{product.title || product.name}</span>
       </div>
@@ -56,7 +56,7 @@ export default function ProductClient05({ product, theme }: { product: any; them
                 <img src={activeImage} alt={product.title} className="w-full h-full object-cover mix-blend-multiply transition-transform duration-700 ease-out group-hover:scale-110 rounded-2xl" />
               </div>
             ) : (
-              <div className="text-gray-300 font-bold uppercase tracking-widest">No Image</div>
+              <div className="text-gray-300 font-bold uppercase tracking-widest">{t('noImage') || 'No Image'}</div>
             )}
           </div>
           {product.images && product.images.length > 1 && (
@@ -102,7 +102,7 @@ export default function ProductClient05({ product, theme }: { product: any; them
           </div>
 
           <div className="mb-10">
-            <label className="block text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-4">Quantity</label>
+            <label className="block text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-4">{t('quantity') || 'Quantity'}</label>
             <div className="flex items-center border border-gray-200 rounded-full w-fit p-1 bg-white shadow-sm">
               <button onClick={() => setQuantity(q => Math.max(1, q - 1))} className="w-10 h-10 flex items-center justify-center text-gray-500 hover:text-black hover:bg-gray-50 rounded-full transition-colors">
                 <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="5" y1="12" x2="19" y2="12"></line></svg>
@@ -126,7 +126,7 @@ export default function ProductClient05({ product, theme }: { product: any; them
 
           {/* Description Section */}
           <div className="border border-gray-100 rounded-3xl p-8 bg-[#F8F9FA]">
-            <h3 className="text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-4">Product Information</h3>
+            <h3 className="text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-4">{t('productDetails') || 'Product Information'}</h3>
             <div className="prose prose-sm text-gray-600 max-w-none prose-p:leading-relaxed" dangerouslySetInnerHTML={{ __html: product.description || 'No additional details available.' }} />
           </div>
         </div>
@@ -135,7 +135,7 @@ export default function ProductClient05({ product, theme }: { product: any; them
       {/* Technical Specifications */}
       {product.specifications && product.specifications.length > 0 && (
         <div className="mt-24 pt-16 border-t border-gray-100">
-          <h2 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-12 tracking-tight text-center">Technical Specifications</h2>
+          <h2 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-12 tracking-tight text-center">{t('technicalSpecifications') || 'Technical Specifications'}</h2>
           <div className="max-w-4xl mx-auto space-y-12">
             {product.specifications.map((group: any, gIdx: number) => (
               <div key={gIdx}>
@@ -157,7 +157,7 @@ export default function ProductClient05({ product, theme }: { product: any; them
       {/* External Videos Section */}
       {product.videos && product.videos.length > 0 && (
         <div className="mt-24 pt-16 border-t border-gray-100">
-          <h2 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-12 tracking-tight text-center">Product Videos</h2>
+          <h2 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-12 tracking-tight text-center">{t('productVideos') || 'Product Videos'}</h2>
           <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
             {product.videos.map((video: string, index: number) => {
               let embedUrl = video;

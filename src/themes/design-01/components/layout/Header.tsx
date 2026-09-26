@@ -6,9 +6,21 @@ import HeaderCartIcon from '../ui/HeaderCartIcon';
 import GlobalSearch from '../ui/GlobalSearch';
 import { getTranslation } from '@/utils/translations';
 
+
+async function getTheme(tenantSlug: string) {
+  try {
+    const res = await storefrontFetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/theme`, { next: { revalidate: 0 } });
+    if (!res.ok) return null;
+    const json = await res.json();
+    return json.data;
+  } catch (error) {
+    return null;
+  }
+}
+
 async function getStoreInfo(tenantSlug: string) {
   try {
-    const res = await storefrontFetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/info`, { next: { revalidate: 60 } });
+    const res = await storefrontFetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/info`, { next: { revalidate: 0 } });
     if (!res.ok) return null;
     const json = await res.json();
     return json.data;
@@ -20,9 +32,9 @@ async function getStoreInfo(tenantSlug: string) {
 export default async function Header() {
   const headersList = await headers();
   const tenantSlug = headersList.get('x-tenant-slug') || 'main';
-  const storeInfo = await getStoreInfo(tenantSlug);
+  const [storeInfo, theme] = await Promise.all([getStoreInfo(tenantSlug), getTheme(tenantSlug)]);
 
-  const language = storeInfo?.language || "en";
+  const language = theme?.language || "en";
   const t = (key: any) => getTranslation(language, key);
   return (
     <header id="main-header" className="bg-white border-b border-gray-100 py-4 sm:py-6 sticky top-0 z-50 shadow-sm">
@@ -60,3 +72,5 @@ export default async function Header() {
     </header>
   );
 }
+
+// trigger reload

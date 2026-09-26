@@ -1,4 +1,4 @@
-﻿import { storefrontFetch } from "../../../../utils/storefrontFetch";
+import { storefrontFetch } from "../../../../utils/storefrontFetch";
 import React from 'react';
 import Link from 'next/link';
 import { headers } from 'next/headers';
@@ -28,7 +28,7 @@ export default async function Header04({ storeInfo, theme: initialTheme }: { sto
   const info = storeInfo || await getStoreInfo(tenantSlug);
   const theme = initialTheme || await getTheme(tenantSlug);
 
-  const language = info?.language || 'en';
+  const language = theme?.language || 'en';
   const t = (key: any) => getTranslation(language, key);
 
   return (
@@ -54,7 +54,7 @@ export default async function Header04({ storeInfo, theme: initialTheme }: { sto
           <nav className="hidden md:flex items-center gap-8 text-sm font-semibold text-gray-600">
             <Link prefetch={false} href="/" className="hover:text-gray-900 transition-colors">{t('home') || 'Home'}</Link>
             <Link prefetch={false} href="/products" className="hover:text-gray-900 transition-colors">{t('allProducts') || 'All Products'}</Link>
-            <Link prefetch={false} href="/cart" className="hover:text-gray-900 transition-colors">Cart</Link>
+            <Link prefetch={false} href="/cart" className="hover:text-gray-900 transition-colors">{t('yourBag') || 'Your Bag'}</Link>
           </nav>
 
           {/* Search + Cart */}

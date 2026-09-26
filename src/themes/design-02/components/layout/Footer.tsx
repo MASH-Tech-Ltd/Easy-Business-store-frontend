@@ -8,7 +8,7 @@ export default function Footer({
   storeInfo: any;
   theme?: any;
 }) {
-  const language = storeInfo?.language || 'en';
+  const language = theme?.language || 'en';
   const t = (key: any) => getTranslation(language, key);
   const year = new Date().getFullYear();
   const footer = theme?.footer || {};
@@ -110,123 +110,72 @@ export default function Footer({
           )}
         </div>
         <div>
-          <h3 className="text-sm font-bold uppercase tracking-wider mb-4">
-            Shop
-          </h3>
+          <h3 className="text-sm font-bold uppercase tracking-wider mb-4">{t('shop')}</h3>
           <ul className="space-y-3 text-sm text-gray-500">
             <li>
               <Link prefetch={false}
                 href="/categories"
                 className="hover:text-gray-900 transition-colors"
-              >
-                All Categories
-              </Link>
+              >{t('categories') || 'All Categories'}</Link>
             </li>
             <li>
               <Link prefetch={false}
                 href="/cart"
                 className="hover:text-gray-900 transition-colors"
-              >
-                Your Bag
-              </Link>
+              >{t('yourBag')}</Link>
             </li>
             <li>
-              <Link prefetch={false} href="/" className="hover:text-gray-900 transition-colors">
-                New Arrivals
-              </Link>
+              <Link prefetch={false} href="/products?sort=newest" className="hover:text-gray-900 transition-colors">{t('newCollection') || 'New Arrivals'}</Link>
             </li>
           </ul>
         </div>
         <div>
-          <h3 className="text-sm font-bold uppercase tracking-wider mb-4">
-            Support
-          </h3>
+          <h3 className="text-sm font-bold uppercase tracking-wider mb-4">{t('helpAndInfo')}</h3>
           <ul className="space-y-3 text-sm text-gray-500">
             <li>
               <Link prefetch={false}
                 href="/track-order"
                 className="hover:text-gray-900 transition-colors"
+              >{t('trackOrder')}</Link>
+            </li>
+            <li>
+              <Link prefetch={false}
+                href="/policies/about-us"
+                className="hover:text-gray-900 transition-colors"
               >
-                Track Order
+                {t('aboutUs')}
               </Link>
             </li>
-            {policies.aboutUs && (
-              <li>
-                <Link prefetch={false}
-                  href="/policies/about-us"
-                  className="hover:text-gray-900 transition-colors"
-                >
-                  About Us
-                </Link>
-              </li>
-            )}
-            {policies.privacyPolicy && (
-              <li>
-                <Link prefetch={false}
-                  href="/policies/privacy-policy"
-                  className="hover:text-gray-900 transition-colors"
-                >
-                  Privacy Policy
-                </Link>
-              </li>
-            )}
-            {policies.termsAndConditions && (
-              <li>
-                <Link prefetch={false}
-                  href="/policies/terms-and-conditions"
-                  className="hover:text-gray-900 transition-colors"
-                >
-                  Terms & Conditions
-                </Link>
-              </li>
-            )}
-            {policies.returnPolicy && (
-              <li>
-                <Link prefetch={false}
-                  href="/policies/return-policy"
-                  className="hover:text-gray-900 transition-colors"
-                >
-                  Return Policy
-                </Link>
-              </li>
-            )}
-            {!policies.aboutUs &&
-              !policies.privacyPolicy &&
-              !policies.termsAndConditions &&
-              !policies.returnPolicy && (
-                <>
-                  <li>
-                    <Link prefetch={false}
-                      href="#"
-                      className="hover:text-gray-900 transition-colors"
-                    >
-                      Contact Us
-                    </Link>
-                  </li>
-                  <li>
-                    <Link prefetch={false}
-                      href="#"
-                      className="hover:text-gray-900 transition-colors"
-                    >
-                      Shipping & Returns
-                    </Link>
-                  </li>
-                  <li>
-                    <Link prefetch={false}
-                      href="#"
-                      className="hover:text-gray-900 transition-colors"
-                    >
-                      FAQ
-                    </Link>
-                  </li>
-                </>
-              )}
+            <li>
+              <Link prefetch={false}
+                href="/policies/privacy-policy"
+                className="hover:text-gray-900 transition-colors"
+              >
+                {t('privacyPolicy')}
+              </Link>
+            </li>
+            <li>
+              <Link prefetch={false}
+                href="/policies/terms-and-conditions"
+                className="hover:text-gray-900 transition-colors"
+              >
+                {t('termsAndConditions')}
+              </Link>
+            </li>
+            <li>
+              <Link prefetch={false}
+                href="/policies/return-policy"
+                className="hover:text-gray-900 transition-colors"
+              >
+                {t('returnPolicy')}
+              </Link>
+            </li>
           </ul>
         </div>
         {/* Contact Info */}
         {(contactInfo.email || contactInfo.phone || contactInfo.address) && (
           <div className="col-span-2 lg:col-span-1 mt-2 lg:mt-0">
-            <h3 className="text-sm font-bold uppercase tracking-wider mb-4">{t('contact') || 'Contact'}</h3>
+            <h3 className="text-sm font-bold uppercase tracking-wider mb-4">{t('contactUs')}</h3>
             <ul className="space-y-3 text-sm text-gray-500">
               {contactInfo.email && (
                 <li className="flex items-start gap-2">

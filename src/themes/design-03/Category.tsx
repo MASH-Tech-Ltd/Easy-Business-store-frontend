@@ -49,7 +49,8 @@ export async function generateMetadata(
     storefrontFetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/categories`, { next: { revalidate: 60 } }).then(res => res.json().catch(() => null)).catch(() => null)
   ]);
   const categories = categoriesRes?.data || [];
-  const category = categories.find((c: any) => c.slug === resolvedParams.slug || c._id === resolvedParams.slug);
+  const decodedSlug = decodeURIComponent(resolvedParams.slug);
+  const category = categories.find((c: any) => c.slug === decodedSlug || c._id === decodedSlug);
   if (!category) return { title: 'Category Not Found' };
   return {
     title: `${category.name} | ${storeInfo?.name || tenantSlug.toUpperCase()}`,
@@ -72,7 +73,8 @@ export default async function Design03CategoryPage({ params, searchParams }: any
   ]);
 
   const categories = categoriesRes?.data || [];
-  const category = categories.find((c: any) => c.slug === categorySlug || c._id === categorySlug);
+  const decodedCategorySlug = decodeURIComponent(categorySlug);
+  const category = categories.find((c: any) => c.slug === decodedCategorySlug || c._id === decodedCategorySlug);
   const categoryId = category?._id;
 
   const [productResponse, brandsRes] = categoryId

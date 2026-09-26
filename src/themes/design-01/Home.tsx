@@ -199,6 +199,7 @@ export default async function Design01Home({
                 <ProductCard
                   key={product._id || product.id}
                   product={product}
+                  theme={theme}
                 />
               ))}
             </div>

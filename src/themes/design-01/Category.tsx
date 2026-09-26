@@ -26,6 +26,17 @@ async function getStoreInfo(tenantSlug: string) {
   }
 }
 
+async function getTheme(tenantSlug: string) {
+  try {
+    const res = await storefrontFetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/theme`, { next: { revalidate: 60 } });
+    if (!res.ok) return null;
+    const json = await res.json();
+    return json.data;
+  } catch (error) {
+    return null;
+  }
+}
+
 async function getCategory(tenantSlug: string, categoryId: string) {
   try {
     const res = await storefrontFetch(
@@ -95,8 +106,9 @@ export async function generateMetadata(
   const t = (key: any) => getTranslation(language || "en", key);
 
   const categories = categoriesRes?.data || [];
+  const decodedSlug = decodeURIComponent(resolvedParams.slug);
   const category = categories.find(
-    (c: any) => c.slug === resolvedParams.slug || c._id === resolvedParams.slug,
+    (c: any) => c.slug === decodedSlug || c._id === decodedSlug,
   );
 
   if (!category) {
@@ -125,25 +137,33 @@ export default async function CategoryPage({ params, searchParams }: any) {
   const headersList = await headers();
   const tenantSlug = headersList.get("x-tenant-slug") || "main";
 
-  // First fetch categories and store info to find the actual category ID
-  const [storeInfo, categoriesRes] = await Promise.all([
+  // First fetch categories, store info, and theme
+  const [storeInfo, categoriesRes, themeData] = await Promise.all([
     getStoreInfo(tenantSlug),
     storefrontFetch(
       `${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/categories`,
       { next: { revalidate: 60 } },
     ).then((res) => res.json()),
+    getTheme(tenantSlug)
   ]);
 
   const categories = categoriesRes?.data || [];
+  const decodedCategorySlug = decodeURIComponent(categorySlug);
+  
+  console.log("DEBUG: categorySlug =", categorySlug);
+  console.log("DEBUG: decodedCategorySlug =", decodedCategorySlug);
+  console.log("DEBUG: available slugs =", categories.map((c: any) => c.slug));
+
   const category = categories.find(
-    (c: any) => c.slug === categorySlug || c._id === categorySlug,
+    (c: any) => c.slug === decodedCategorySlug || c._id === decodedCategorySlug,
   );
+  console.log("DEBUG: found category =", category?.name);
 
   const categoryId = category?._id;
 
   const language = storeInfo?.language || "en";
   const t = (key: any) => getTranslation(language, key);
-  const theme = storeInfo?.theme || {};
+  const theme = themeData || {};
 
   // Now fetch the products and brands with the correct categoryId
   const [productResponse, brandsRes] = categoryId
@@ -276,6 +296,7 @@ export default async function CategoryPage({ params, searchParams }: any) {
                     key={product._id || product.id}
                     product={product}
                     isList={resolvedSearchParams.view === "list"}
+                    theme={theme}
                   />
                 ))}
               </div>

@@ -1,3 +1,4 @@
+import { getTranslation } from '../../utils/translations';
 ﻿import { storefrontFetch } from "../../utils/storefrontFetch";
 import { headers } from 'next/headers';
 import Link from 'next/link';
@@ -33,6 +34,9 @@ export default async function Design03ProductPage({ params }: { params: Promise<
     getProduct(tenantSlug, resolvedParams.slug),
     getTheme(tenantSlug)
   ]);
+
+  const language = theme?.language || "en";
+  const t = (key: any) => getTranslation(language, key);
 
   if (!product) {
     return (
@@ -119,7 +123,7 @@ export default async function Design03ProductPage({ params }: { params: Promise<
             {/* Features */}
             {product.features && product.features.length > 0 && (
               <div className="p-8 md:p-12 border-b border-white/10">
-                <h3 className="text-[10px] font-black text-gray-500 uppercase tracking-widest mb-6 border-b border-white/10 pb-2">SPEC / HIGHLIGHTS</h3>
+                <h3 className="text-[10px] font-black text-gray-500 uppercase tracking-widest mb-6 border-b border-white/10 pb-2">{t('keyHighlights') || 'SPEC / HIGHLIGHTS'}</h3>
                 <ul className="space-y-4">
                   {product.features.map((feature: string, i: number) => (
                     <li key={i} className="flex items-start gap-4 text-xs font-mono text-gray-300 uppercase">
@@ -148,7 +152,7 @@ export default async function Design03ProductPage({ params }: { params: Promise<
         {product.specifications && product.specifications.length > 0 && (
           <div className="border-b border-white/10">
             <div className="p-8 md:p-12 border-b border-white/10 bg-[#050505]">
-              <h3 className="text-2xl font-black text-white uppercase tracking-tighter">TECHNICAL DATA</h3>
+              <h3 className="text-2xl font-black text-white uppercase tracking-tighter">{t('technicalSpecifications') || 'TECHNICAL DATA'}</h3>
             </div>
             <div className="bg-black">
               {product.specifications.map((group: any, gIdx: number) => (

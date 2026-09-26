@@ -46,7 +46,7 @@ export default function Footer05({
   storeInfo?: any;
   theme?: any;
 }) {
-  const language = storeInfo?.language || "en";
+  const language = theme?.language || "en";
   const t = (key: any) => getTranslation(language || 'en', key);
 
 
@@ -133,97 +133,67 @@ export default function Footer05({
 
           {/* Links Grid */}
           <div className="md:col-span-8 lg:col-span-7 grid grid-cols-2 sm:grid-cols-3 gap-8">
-            {/* Shop */}
+            {/* SHOP */}
             <div>
-              <h3 className="font-semibold text-gray-900 mb-4 text-xs tracking-wide uppercase">
-                Shop
-              </h3>
+              <h3 className="font-semibold text-gray-900 mb-4 text-xs tracking-wide uppercase">{t('shop')}</h3>
               <ul className="space-y-2 text-xs sm:text-sm text-gray-500">
-                <li>
-                  <Link prefetch={false}
-                    href="/products"
-                    className="hover:text-black transition-colors"
-                  >
-                    All Collection
-                  </Link>
-                </li>
                 <li>
                   <Link prefetch={false}
                     href="/categories"
                     className="hover:text-black transition-colors"
-                  >{t('categories') || 'Categories'}</Link>
+                  >{t('categories') || 'All Categories'}</Link>
                 </li>
                 <li>
                   <Link prefetch={false}
                     href="/cart"
                     className="hover:text-black transition-colors"
-                  >
-                    Your Cart
-                  </Link>
+                  >{t('yourBag')}</Link>
                 </li>
+                <li>
+                  <Link prefetch={false}
+                    href="/products?sort=newest"
+                    className="hover:text-black transition-colors"
+                  >{t('newCollection') || 'New Arrivals'}</Link>
+                </li>
+              </ul>
+            </div>
+
+            {/* HELP & INFO */}
+            <div>
+              <h3 className="font-semibold text-gray-900 mb-4 text-xs tracking-wide uppercase">{t('helpAndInfo')}</h3>
+              <ul className="space-y-2 text-xs sm:text-sm text-gray-500">
                 <li>
                   <Link prefetch={false}
                     href="/track-order"
                     className="hover:text-black transition-colors"
-                  >
-                    Track Order
-                  </Link>
+                  >{t('trackOrder')}</Link>
                 </li>
-                {policies.aboutUs && (
-                  <li>
-                    <Link prefetch={false}
-                      href="/policies/about-us"
-                      className="hover:text-black transition-colors"
-                    >
-                      About
-                    </Link>
-                  </li>
-                )}
+                <li>
+                  <Link prefetch={false}
+                    href="/policies/about-us"
+                    className="hover:text-black transition-colors"
+                  >{t('aboutUs') || 'About Us'}</Link>
+                </li>
+                <li>
+                  <Link prefetch={false}
+                    href="/policies/privacy-policy"
+                    className="hover:text-black transition-colors"
+                  >{t('privacyPolicy') || 'Privacy Policy'}</Link>
+                </li>
+                <li>
+                  <Link prefetch={false}
+                    href="/policies/terms-and-conditions"
+                    className="hover:text-black transition-colors"
+                  >{t('termsAndConditions') || 'Terms & Conditions'}</Link>
+                </li>
+                <li>
+                  <Link prefetch={false}
+                    href="/policies/return-policy"
+                    className="hover:text-black transition-colors"
+                  >{t('returnPolicy') || 'Return Policy'}</Link>
+                </li>
               </ul>
             </div>
-
-            {/* Support */}
-            {(policies.privacyPolicy ||
-              policies.termsAndConditions ||
-              policies.returnPolicy) && (
-              <div>
-                <h3 className="font-semibold text-gray-900 mb-4 text-xs tracking-wide uppercase">
-                  Support
-                </h3>
-                <ul className="space-y-2 text-xs sm:text-sm text-gray-500">
-                  {policies.returnPolicy && (
-                    <li>
-                      <Link prefetch={false}
-                        href="/policies/return-policy"
-                        className="hover:text-black transition-colors"
-                      >
-                        Returns
-                      </Link>
-                    </li>
-                  )}
-                  {policies.privacyPolicy && (
-                    <li>
-                      <Link prefetch={false}
-                        href="/policies/privacy-policy"
-                        className="hover:text-black transition-colors"
-                      >
-                        Privacy
-                      </Link>
-                    </li>
-                  )}
-                  {policies.termsAndConditions && (
-                    <li>
-                      <Link prefetch={false}
-                        href="/policies/terms-and-conditions"
-                        className="hover:text-black transition-colors"
-                      >
-                        Terms
-                      </Link>
-                    </li>
-                  )}
-                </ul>
-              </div>
-            )}
 
             {/* Contact */}
             {(contactInfo.email ||

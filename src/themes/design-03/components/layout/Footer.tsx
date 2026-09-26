@@ -1,4 +1,5 @@
-﻿import Link from "next/link";
+import { getTranslation } from '@/utils/translations';
+import Link from "next/link";
 import { Mail, Phone, MapPin } from "lucide-react";
 
 export default function Footer03({
@@ -8,6 +9,8 @@ export default function Footer03({
   storeInfo?: any;
   theme?: any;
 }) {
+  const language = theme?.language || "en";
+  const t = (key: any) => getTranslation(language, key);
   const year = new Date().getFullYear();
   const footer = theme?.footer;
 
@@ -15,7 +18,7 @@ export default function Footer03({
     <footer className="bg-black border-t border-white/10 mt-auto text-white font-mono">
       <div className="grid grid-cols-1 md:grid-cols-4 divide-y md:divide-y-0 md:divide-x divide-white/10 border-b border-white/10">
         {/* Brand */}
-        <div className="p-8 md:p-12 md:col-span-2">
+        <div className="p-8 md:p-12 md:col-span-1">
           <div className="text-[10px] text-cyan-400 mb-4 uppercase tracking-widest">
             System Identifier
           </div>
@@ -70,83 +73,59 @@ export default function Footer03({
           )}
         </div>
 
-        {/* Quick Links */}
+        {/* SHOP */}
         <div className="p-8 md:p-12">
-          <div className="text-[10px] text-cyan-400 mb-6 uppercase tracking-widest">
-            Directory
-          </div>
+          <div className="text-[10px] text-cyan-400 mb-6 uppercase tracking-widest">{t('shop')}</div>
           <ul className="space-y-4 text-xs font-bold uppercase tracking-widest text-gray-500">
             <li>
-              <Link prefetch={false} href="/" className="hover:text-white transition-colors">
-                / Home
-              </Link>
+              <Link prefetch={false} href="/categories" className="hover:text-white transition-colors">{t('categories') || 'All Categories'}</Link>
             </li>
             <li>
-              <Link prefetch={false}
-                href="/categories"
-                className="hover:text-white transition-colors"
-              >
-                / Database
-              </Link>
+              <Link prefetch={false} href="/cart" className="hover:text-white transition-colors">{t('yourBag')}</Link>
             </li>
             <li>
-              <Link prefetch={false} href="/cart" className="hover:text-white transition-colors">
-                / Cart
-              </Link>
+              <Link prefetch={false} href="/products?sort=newest" className="hover:text-white transition-colors">{t('newCollection') || 'New Arrivals'}</Link>
             </li>
-            <li>
-              <Link prefetch={false} href="/track-order" className="hover:text-white transition-colors">
-                / Track Order
-              </Link>
-            </li>
-            {footer?.policies?.aboutUs && (
-              <li>
-                <Link prefetch={false}
-                  href="/policies/about-us"
-                  className="hover:text-white transition-colors"
-                >
-                  / About
-                </Link>
-              </li>
-            )}
-            {footer?.policies?.privacyPolicy && (
-              <li>
-                <Link prefetch={false}
-                  href="/policies/privacy-policy"
-                  className="hover:text-white transition-colors"
-                >
-                  / Privacy
-                </Link>
-              </li>
-            )}
-            {footer?.policies?.termsAndConditions && (
-              <li>
-                <Link prefetch={false}
-                  href="/policies/terms-and-conditions"
-                  className="hover:text-white transition-colors"
-                >
-                  / Terms
-                </Link>
-              </li>
-            )}
-            {footer?.policies?.returnPolicy && (
-              <li>
-                <Link prefetch={false}
-                  href="/policies/return-policy"
-                  className="hover:text-white transition-colors"
-                >
-                  / Returns
-                </Link>
-              </li>
-            )}
           </ul>
         </div>
 
-        {/* Contact */}
+        {/* HELP & INFO */}
         <div className="p-8 md:p-12">
-          <div className="text-[10px] text-cyan-400 mb-6 uppercase tracking-widest">
-            Comm Link
-          </div>
+          <div className="text-[10px] text-cyan-400 mb-6 uppercase tracking-widest">{t('helpAndInfo')}</div>
+          <ul className="space-y-4 text-xs font-bold uppercase tracking-widest text-gray-500">
+            <li>
+              <Link prefetch={false} href="/track-order" className="hover:text-white transition-colors">{t('trackOrder')}</Link>
+            </li>
+            <li>
+              <Link prefetch={false}
+                href="/policies/about-us"
+                className="hover:text-white transition-colors"
+              >{t('aboutUs') || 'About Us'}</Link>
+            </li>
+            <li>
+              <Link prefetch={false}
+                href="/policies/privacy-policy"
+                className="hover:text-white transition-colors"
+              >{t('privacyPolicy') || 'Privacy Policy'}</Link>
+            </li>
+            <li>
+              <Link prefetch={false}
+                href="/policies/terms-and-conditions"
+                className="hover:text-white transition-colors"
+              >{t('termsAndConditions') || 'Terms & Conditions'}</Link>
+            </li>
+            <li>
+              <Link prefetch={false}
+                href="/policies/return-policy"
+                className="hover:text-white transition-colors"
+              >{t('returnPolicy') || 'Return Policy'}</Link>
+            </li>
+          </ul>
+        </div>
+
+        {/* CONTACT */}
+        <div className="p-8 md:p-12">
+          <div className="text-[10px] text-cyan-400 mb-6 uppercase tracking-widest">{t('contactUs') || 'CONTACT'}</div>
           <ul className="space-y-6 text-xs uppercase tracking-widest text-gray-500">
             {footer?.contactInfo?.email && (
               <li className="flex items-start gap-4">

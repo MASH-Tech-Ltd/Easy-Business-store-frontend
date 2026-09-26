@@ -1,11 +1,11 @@
-﻿'use client';
+'use client';
 
 import React, { useState } from 'react';
 import { useCart } from '@/context/CartContext';
 import { useRouter } from 'next/navigation';
 import { getTranslation } from '@/utils/translations';
 
-export default function AddToCartClient({ product }: { product: any }) {
+export default function AddToCartClient({ product, theme }: { product: any; theme?: any }) {
   const language = "en";
   const t = (key: any) => getTranslation(language || 'en', key);
 
@@ -31,6 +31,10 @@ export default function AddToCartClient({ product }: { product: any }) {
     router.push('/checkout');
   };
 
+  const primaryColor = theme?.primaryColor || '#111827';
+  const addToCartColor = theme?.buttonColors?.addToCart || primaryColor;
+  const buyNowColor = theme?.buttonColors?.buyNow || primaryColor;
+
   return (
     <div className="flex flex-wrap items-center gap-4 mb-4">
       <div className="flex items-center border border-gray-200 rounded-xl overflow-hidden h-11 w-32 bg-white text-gray-900">
@@ -40,11 +44,13 @@ export default function AddToCartClient({ product }: { product: any }) {
       </div>
       <button
         onClick={handleAddToCart}
-        className="bg-black text-white font-bold py-3 px-8 rounded-xl text-sm shadow-lg hover:opacity-90 transition-all cursor-pointer"
+        style={{ backgroundColor: addToCartColor }}
+        className="text-white font-bold py-3 px-8 rounded-xl text-sm shadow-lg hover:opacity-90 transition-all cursor-pointer"
       >{t('addToCart') || 'Add to Cart'}</button>
       <button
         onClick={handleBuyNow}
-        className="bg-gray-900 text-white font-bold py-3 px-8 rounded-xl text-sm shadow-lg hover:opacity-90 transition-all cursor-pointer"
+        style={{ backgroundColor: buyNowColor }}
+        className="text-white font-bold py-3 px-8 rounded-xl text-sm shadow-lg hover:opacity-90 transition-all cursor-pointer"
       >{t('buyNow') || 'Buy Now'}</button>
     </div>
   );

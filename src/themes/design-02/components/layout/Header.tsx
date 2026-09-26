@@ -1,13 +1,27 @@
+import { storefrontFetch } from "@/utils/storefrontFetch";
 ﻿import Link from 'next/link';
 import { headers } from 'next/headers';
 import GlobalSearch from '../ui/GlobalSearch';
 import HeaderCartIcon02 from '../ui/HeaderCartIcon';
 import { getTranslation } from '@/utils/translations';
 
+
+async function getTheme(tenantSlug: string) {
+  try {
+    const res = await storefrontFetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/theme`, { next: { revalidate: 0 } });
+    if (!res.ok) return null;
+    const json = await res.json();
+    return json.data;
+  } catch (error) {
+    return null;
+  }
+}
+
 export default async function Header({ storeInfo }: { storeInfo: any }) {
   const headersList = await headers();
+  const theme = await getTheme(headersList.get('x-tenant-slug') || 'main');
   const tenantSlug = headersList.get('x-tenant-slug') || 'main';
-  const language = storeInfo?.language || 'en';
+  const language = theme?.language || 'en';
   const t = (key: any) => getTranslation(language, key);
 
   return (
@@ -33,7 +47,7 @@ export default async function Header({ storeInfo }: { storeInfo: any }) {
         </div>
         <nav className="flex items-center space-x-8 text-sm font-medium hidden md:flex">
           <Link prefetch={false} href="/" className="hover:text-gray-500 transition-colors">{t('home') || 'Home'}</Link>
-          <Link prefetch={false} href="/categories" className="hover:text-gray-500 transition-colors">Shop</Link>
+          <Link prefetch={false} href="/categories" className="hover:text-gray-500 transition-colors">{t('shop') || 'Shop'}</Link>
           <HeaderCartIcon02 />
         </nav>
       </div>

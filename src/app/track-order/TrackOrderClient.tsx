@@ -9,18 +9,23 @@ export function TrackOrderContent({ tenantId }: { tenantId?: string }) {
   const searchParams = useSearchParams();
   const initialId = searchParams.get('id') || '';
   const [orderId, setOrderId] = useState(initialId);
+  const [phone, setPhone] = useState('');
   const [loading, setLoading] = useState(false);
   const [order, setOrder] = useState<any>(null);
   const [error, setError] = useState('');
 
-  const fetchOrder = async (id: string) => {
-    if (!id) return;
+  const fetchOrder = async (id: string, phn: string) => {
+    if (!id || !phn) {
+      setError('Both Order ID and Phone Number are required');
+      return;
+    }
     setLoading(true);
     setError('');
     setOrder(null);
     try {
       const url = new URL('/api/track', window.location.origin);
       url.searchParams.append('id', id);
+      url.searchParams.append('phone', phn);
       
       const res = await fetch(url.toString());
       const data = await res.json();
@@ -36,14 +41,13 @@ export function TrackOrderContent({ tenantId }: { tenantId?: string }) {
   };
 
   useEffect(() => {
-    if (initialId) {
-      fetchOrder(initialId);
-    }
+    // If we have an initial ID, maybe we shouldn't auto-fetch unless we also have the phone number
+    // But since phone isn't in URL, we just skip auto-fetch
   }, [initialId]);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    fetchOrder(orderId);
+    fetchOrder(orderId, phone);
   };
 
   const getStatusIcon = (status: string) => {
@@ -70,17 +74,34 @@ export function TrackOrderContent({ tenantId }: { tenantId?: string }) {
         </div>
 
         <div className="bg-white shadow rounded-lg p-6 mb-8">
-          <form onSubmit={handleSearch} className="flex gap-4">
-            <div className="flex-1 relative">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <Search className="h-5 w-5 text-gray-400" />
+          <form onSubmit={handleSearch} className="flex flex-col gap-4 sm:flex-row sm:items-end">
+            <div className="flex-1 w-full relative">
+              <label htmlFor="orderId" className="block text-sm font-medium text-gray-700 mb-1">Order ID</label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <Search className="h-5 w-5 text-gray-400" />
+                </div>
+                <input
+                  id="orderId"
+                  type="text"
+                  value={orderId}
+                  onChange={(e) => setOrderId(e.target.value)}
+                  className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-2 focus:ring-black focus:border-black sm:text-sm transition duration-150 ease-in-out"
+                  placeholder="Enter Order ID..."
+                  required
+                />
               </div>
+            </div>
+            
+            <div className="flex-1 w-full relative">
+              <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
               <input
+                id="phone"
                 type="text"
-                value={orderId}
-                onChange={(e) => setOrderId(e.target.value)}
-                className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-black focus:border-black sm:text-sm"
-                placeholder="Enter Order ID..."
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                className="block w-full px-4 py-3 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-2 focus:ring-black focus:border-black sm:text-sm transition duration-150 ease-in-out"
+                placeholder="Enter Phone Number..."
                 required
               />
             </div>
@@ -178,9 +199,16 @@ export function TrackOrderContent({ tenantId }: { tenantId?: string }) {
           </div>
         )}
 
-        <div className="mt-8 text-center">
-          <Link prefetch={false} href="/" className="text-sm font-medium text-blue-600 hover:text-blue-500">
-            &larr; Return to Store
+        <div className="mt-12 text-center">
+          <Link 
+            prefetch={false} 
+            href="/" 
+            className="inline-flex items-center justify-center px-6 py-3 border border-gray-300 shadow-sm text-base font-medium rounded-full text-gray-700 bg-white hover:bg-gray-50 hover:text-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black transition-all duration-200 ease-in-out hover:shadow-md transform hover:-translate-y-0.5"
+          >
+            <svg className="mr-2 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+            Return to Store
           </Link>
         </div>
       </div>

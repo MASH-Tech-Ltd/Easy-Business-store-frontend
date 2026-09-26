@@ -49,11 +49,10 @@ export default async function ProductsPage05({ searchParams }: any) {
     storefrontFetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/brands`, { next: { revalidate: 60 } }).then(r => r.json()),
     storefrontFetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/categories`, { next: { revalidate: 60 } }).then(r => r.json())
   ]);
-  const language = storeInfo?.language || "en";
+  const theme = themeRes?.data;
+  const language = theme?.language || "en";
   const t = (key: any) => getTranslation(language || 'en', key);
 
-
-  const theme = themeRes?.data;
   const products = productResponse.data || [];
   const availableBrands = brandsRes?.data || [];
   const categories = categoriesRes?.data || [];

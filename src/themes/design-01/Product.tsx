@@ -1,4 +1,4 @@
-﻿import { storefrontFetch } from "../../utils/storefrontFetch";
+import { storefrontFetch } from "../../utils/storefrontFetch";
 import { headers } from 'next/headers';
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
@@ -148,7 +148,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
               </div>
             )}
 
-            <AddToCartClient product={product} />
+            <AddToCartClient product={product} theme={theme} />
             
             {/* Short Description */}
             {product.shortDescription && (

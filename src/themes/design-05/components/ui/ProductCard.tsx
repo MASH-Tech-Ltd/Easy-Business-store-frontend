@@ -8,7 +8,7 @@ import { useRouter } from 'next/navigation';
 import { getTranslation } from '@/utils/translations';
 
 export default function ProductCard05({ product, isList = false, isBestSelling = false, theme }: { product: any; isList?: boolean; isBestSelling?: boolean; theme?: any }) {
-  const language = "en";
+  const language = theme?.language || "en";
   const t = (key: any) => getTranslation(language || 'en', key);
 
   const { addToCart } = useCart();

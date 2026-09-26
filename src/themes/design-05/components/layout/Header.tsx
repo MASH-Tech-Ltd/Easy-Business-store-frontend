@@ -1,10 +1,22 @@
-﻿import { storefrontFetch } from "../../../../utils/storefrontFetch";
+import { storefrontFetch } from "../../../../utils/storefrontFetch";
 import React from 'react';
 import Link from 'next/link';
 import { headers } from 'next/headers';
 import HeaderCartIcon05 from '../ui/HeaderCartIcon';
 import GlobalSearch05 from '../ui/GlobalSearch';
 import { getTranslation } from '@/utils/translations';
+
+
+async function getTheme(tenantSlug: string) {
+  try {
+    const res = await storefrontFetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/theme`, { next: { revalidate: 0 } });
+    if (!res.ok) return null;
+    const json = await res.json();
+    return json.data;
+  } catch (error) {
+    return null;
+  }
+}
 
 async function getStoreInfo(tenantSlug: string) {
   try {
@@ -15,12 +27,13 @@ async function getStoreInfo(tenantSlug: string) {
 }
 
 export default async function Header05({ storeInfo }: { storeInfo?: any }) {
-  const language = storeInfo?.language || "en";
-  const t = (key: any) => getTranslation(language || 'en', key);
-
-
   const headersList = await headers();
   const tenantSlug = headersList.get('x-tenant-slug') || 'main';
+  const theme = await getTheme(tenantSlug);
+  
+  const language = theme?.language || "en";
+  const t = (key: any) => getTranslation(language || 'en', key);
+
   const info = storeInfo || await getStoreInfo(tenantSlug);
 
   return (
@@ -43,8 +56,8 @@ export default async function Header05({ storeInfo }: { storeInfo?: any }) {
 
           {/* Navigation */}
           <nav className="hidden md:flex items-center gap-8 text-[15px] font-medium text-gray-500">
-            <Link prefetch={false} href="/" className="hover:text-black transition-colors">Discover</Link>
-            <Link prefetch={false} href="/products" className="hover:text-black transition-colors">Collection</Link>
+            <Link prefetch={false} href="/" className="hover:text-black transition-colors">{t('discover') || 'Discover'}</Link>
+            <Link prefetch={false} href="/products" className="hover:text-black transition-colors">{t('collections') || 'Collection'}</Link>
             <Link prefetch={false} href="/categories" className="hover:text-black transition-colors">{t('categories') || 'Categories'}</Link>
           </nav>
 

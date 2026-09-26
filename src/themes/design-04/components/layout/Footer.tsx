@@ -12,7 +12,7 @@ export default function Footer04({
   storeInfo?: any;
   theme?: any;
 }) {
-  const language = storeInfo?.language || "en";
+  const language = theme?.language || "en";
   const t = (key: any) => getTranslation(language, key);
   const year = new Date().getFullYear();
   const footer = theme?.footer || {};
@@ -116,97 +116,67 @@ export default function Footer04({
             )}
           </div>
 
-          {/* Quick Links */}
+          {/* SHOP */}
           <div>
-            <h4 className="font-bold text-gray-900 text-sm uppercase tracking-wider mb-4">
-              Shop
-            </h4>
+            <h4 className="font-bold text-gray-900 text-sm uppercase tracking-wider mb-4">{t('shop')}</h4>
             <ul className="space-y-3 text-sm text-gray-500">
-              <li>
-                <Link prefetch={false}
-                  href="/"
-                  className="hover:text-gray-900 transition-colors"
-                >{t('home') || 'Home'}</Link>
-              </li>
               <li>
                 <Link prefetch={false}
                   href="/categories"
                   className="hover:text-gray-900 transition-colors"
-                >
-                  All Categories
-                </Link>
+                >{t('categories') || 'All Categories'}</Link>
               </li>
               <li>
                 <Link prefetch={false}
                   href="/cart"
                   className="hover:text-gray-900 transition-colors"
-                >
-                  My Cart
-                </Link>
+                >{t('yourBag')}</Link>
               </li>
+              <li>
+                <Link prefetch={false}
+                  href="/products?sort=newest"
+                  className="hover:text-gray-900 transition-colors"
+                >{t('newCollection') || 'New Arrivals'}</Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* HELP & INFO */}
+          <div>
+            <h4 className="font-bold text-gray-900 text-sm uppercase tracking-wider mb-4">{t('helpAndInfo')}</h4>
+            <ul className="space-y-3 text-sm text-gray-500">
               <li>
                 <Link prefetch={false}
                   href="/track-order"
                   className="hover:text-gray-900 transition-colors"
-                >
-                  Track Order
-                </Link>
+                >{t('trackOrder')}</Link>
               </li>
-              {policies.aboutUs && (
-                <li>
-                  <Link prefetch={false}
-                    href="/policies/about-us"
-                    className="hover:text-gray-900 transition-colors"
-                  >
-                    About Us
-                  </Link>
-                </li>
-              )}
+              <li>
+                <Link prefetch={false}
+                  href="/policies/about-us"
+                  className="hover:text-gray-900 transition-colors"
+                >{t('aboutUs') || 'About Us'}</Link>
+              </li>
+              <li>
+                <Link prefetch={false}
+                  href="/policies/privacy-policy"
+                  className="hover:text-gray-900 transition-colors"
+                >{t('privacyPolicy') || 'Privacy Policy'}</Link>
+              </li>
+              <li>
+                <Link prefetch={false}
+                  href="/policies/terms-and-conditions"
+                  className="hover:text-gray-900 transition-colors"
+                >{t('termsAndConditions') || 'Terms & Conditions'}</Link>
+              </li>
+              <li>
+                <Link prefetch={false}
+                  href="/policies/return-policy"
+                  className="hover:text-gray-900 transition-colors"
+                >{t('returnPolicy') || 'Return Policy'}</Link>
+              </li>
             </ul>
           </div>
-
-          {/* Policies */}
-          {(policies.privacyPolicy ||
-            policies.termsAndConditions ||
-            policies.returnPolicy) && (
-            <div>
-              <h4 className="font-bold text-gray-900 text-sm uppercase tracking-wider mb-4">
-                Policies
-              </h4>
-              <ul className="space-y-3 text-sm text-gray-500">
-                {policies.privacyPolicy && (
-                  <li>
-                    <Link prefetch={false}
-                      href="/policies/privacy-policy"
-                      className="hover:text-gray-900 transition-colors"
-                    >
-                      Privacy Policy
-                    </Link>
-                  </li>
-                )}
-                {policies.termsAndConditions && (
-                  <li>
-                    <Link prefetch={false}
-                      href="/policies/terms-and-conditions"
-                      className="hover:text-gray-900 transition-colors"
-                    >
-                      Terms & Conditions
-                    </Link>
-                  </li>
-                )}
-                {policies.returnPolicy && (
-                  <li>
-                    <Link prefetch={false}
-                      href="/policies/return-policy"
-                      className="hover:text-gray-900 transition-colors"
-                    >
-                      Return Policy
-                    </Link>
-                  </li>
-                )}
-              </ul>
-            </div>
-          )}
 
           {/* Contact */}
           {(contactInfo.email || contactInfo.phone || contactInfo.address) && (

@@ -33,9 +33,16 @@ export default async function PolicyPage({ params }: PageProps) {
 
   let themeId = 'design-01';
   let policyContent = '';
+  let storeInfo = null;
+  let themeInfo = null;
 
   if (tenantSlug !== 'main') {
-    const theme = await getTheme(tenantSlug);
+    const [theme, info] = await Promise.all([
+      getTheme(tenantSlug),
+      getStoreInfo(tenantSlug)
+    ]);
+    storeInfo = info;
+    themeInfo = theme;
     if (theme && theme.themeId && themeRegistry[theme.themeId]) {
       themeId = theme.themeId;
     }
@@ -55,27 +62,64 @@ export default async function PolicyPage({ params }: PageProps) {
   
   const policyTitle = resolvedParams.type.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
 
-  return (
-    <div className="min-h-screen bg-gray-50 flex flex-col">
-      <ThemeHeader />
-      <main className="flex-grow w-full max-w-5xl mx-auto px-6 py-16">
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 md:p-12">
-          <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-8 border-b border-gray-100 pb-6">
-            {policyTitle}
-          </h1>
-          {policyContent ? (
-            <div 
-              className="prose prose-blue max-w-none text-gray-700 whitespace-pre-wrap leading-relaxed"
-              dangerouslySetInnerHTML={{ __html: policyContent }}
-            />
-          ) : (
-            <div className="text-gray-500 italic text-center py-12">
-              No content available for {policyTitle}.
-            </div>
-          )}
+  const contentBlock = (
+    <main className="flex-grow w-full max-w-5xl mx-auto px-6 py-16">
+      <div className={`rounded-2xl p-8 md:p-12 ${themeId === 'design-03' ? 'bg-[#111] text-white border border-white/10' : 'bg-white shadow-sm border border-gray-100'}`}>
+        <h1 className={`text-3xl md:text-4xl font-bold mb-8 border-b pb-6 ${themeId === 'design-03' ? 'text-white border-white/10' : 'text-gray-900 border-gray-100'}`}>
+          {policyTitle}
+        </h1>
+        {policyContent ? (
+          <div 
+            className={`prose max-w-none whitespace-pre-wrap leading-relaxed ${themeId === 'design-03' ? 'prose-invert text-gray-300' : 'prose-blue text-gray-700'}`}
+            dangerouslySetInnerHTML={{ __html: policyContent }}
+          />
+        ) : (
+          <div className="text-gray-500 italic text-center py-12">
+            No content available for {policyTitle}.
+          </div>
+        )}
+      </div>
+    </main>
+  );
+
+  if (themeId === 'design-03') {
+    return (
+      <div className="min-h-screen bg-black text-white flex flex-col font-sans selection:bg-cyan-500/30">
+        <ThemeHeader storeInfo={storeInfo} />
+        <div className="flex flex-col flex-1">
+          <div className="flex-grow lg:ml-64 min-h-screen bg-[#050505] border-l border-white/10">
+            {contentBlock}
+          </div>
+          <div className="lg:ml-64">
+            <ThemeFooter storeInfo={storeInfo} theme={themeInfo} />
+          </div>
         </div>
-      </main>
-      <ThemeFooter />
+      </div>
+    );
+  }
+
+
+
+  if (themeId === 'design-02') {
+    return (
+      <div className="min-h-screen bg-white text-gray-900 flex flex-col font-sans">
+        <ThemeHeader storeInfo={storeInfo} />
+        <div className="flex-grow">
+          {contentBlock}
+        </div>
+        <ThemeFooter storeInfo={storeInfo} theme={themeInfo} />
+      </div>
+    );
+  }
+
+  // Default / design-01 / design-04
+  return (
+    <div className="min-h-screen bg-gray-50 flex flex-col font-sans text-gray-900">
+      <ThemeHeader storeInfo={storeInfo} />
+      <div className="flex-grow">
+        {contentBlock}
+      </div>
+      <ThemeFooter storeInfo={storeInfo} theme={themeInfo} />
     </div>
   );
 }

@@ -1,4 +1,4 @@
-﻿import { storefrontFetch } from "../../utils/storefrontFetch";
+import { storefrontFetch } from "../../utils/storefrontFetch";
 import { headers } from 'next/headers';
 import Link from 'next/link';
 import ProductClient05 from './components/ui/ProductClient05';
@@ -36,7 +36,7 @@ export default async function ProductPage05({ tenantSlug, params }: { tenantSlug
     getProduct(tenantSlug, resolvedParams.slug),
     getTheme(tenantSlug)
   ]);
-  const language = storeInfo?.language || "en";
+  const language = theme?.language || "en";
   const t = (key: any) => getTranslation(language || 'en', key);
 
 

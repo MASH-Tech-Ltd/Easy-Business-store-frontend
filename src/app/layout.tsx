@@ -22,7 +22,7 @@ async function getTheme(tenantSlug: string) {
   try {
     const res = await storefrontFetch(
       `${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/theme`,
-      { next: { revalidate: 60 } },
+      { next: { revalidate: 0 } },
     );
     if (!res.ok) return null;
     const json = await res.json();
@@ -36,7 +36,7 @@ async function getStoreInfo(tenantSlug: string) {
   try {
     const res = await storefrontFetch(
       `${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/info`,
-      { next: { revalidate: 60 } },
+      { next: { revalidate: 0 } },
     );
     if (!res.ok) return null;
     const json = await res.json();
@@ -50,7 +50,7 @@ async function getStoreStatus(tenantSlug: string) {
   try {
     const res = await storefrontFetch(
       `${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/status`,
-      { next: { revalidate: 60 } },
+      { next: { revalidate: 0 } },
     );
     if (!res.ok) {
       if (res.status === 404) return { storeDown: true, reason: 'Store not found' };

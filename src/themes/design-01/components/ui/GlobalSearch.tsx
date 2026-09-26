@@ -1,13 +1,13 @@
-﻿'use client';
+'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { getTranslation } from '@/utils/translations';
+import { useTranslation } from '@/context/LanguageContext';
 
 export default function GlobalSearch({ tenantSlug }: { tenantSlug: string }) {
-  const language = "en";
-  const t = (key: any) => getTranslation(language || 'en', key);
+  const { t } = useTranslation();
 
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<any[]>([]);

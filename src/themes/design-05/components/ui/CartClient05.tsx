@@ -7,7 +7,7 @@ import { Trash2, ArrowRight, Minus, Plus, ShoppingBag } from 'lucide-react';
 import { getTranslation } from '@/utils/translations';
 
 export default function CartClient05({ theme }: { theme?: any }) {
-  const language = "en";
+  const language = theme?.language || "en";
   const t = (key: any) => getTranslation(language || 'en', key);
 
   const { cartItems: items, updateQuantity, removeFromCart, totalPrice: subtotal } = useCart();

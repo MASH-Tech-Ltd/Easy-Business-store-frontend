@@ -15,7 +15,8 @@ export default async function CategoryPage05({ params, searchParams }: any) {
 
   const resolvedParams = await (params || {});
   const resolvedSearchParams = await (searchParams || {});
-  const categoryId = resolvedParams.slug || resolvedParams.categoryId;
+  const rawCategoryId = resolvedParams.slug || resolvedParams.categoryId;
+  const categoryId = rawCategoryId ? decodeURIComponent(rawCategoryId) : '';
   
   const headersList = await headers();
   const tenantSlug = headersList.get('x-tenant-slug') || 'main';
@@ -27,13 +28,14 @@ export default async function CategoryPage05({ params, searchParams }: any) {
     storefrontFetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/categories`, { next: { revalidate: 60 } })
   ]);
   const storeInfo = storeInfoRes.ok ? (await storeInfoRes.json()) : { data: null };
-  const language = storeInfo?.language || storeInfo?.data?.language || "en";
-  const t = (key: any) => getTranslation(language || 'en', key);
   const themeData = themeRes.ok ? (await themeRes.json()) : { data: null };
   const categoriesData = categoriesRes.ok ? (await categoriesRes.json()) : { data: [] };
 
   const info = storeInfo.data;
   const theme = themeData?.data;
+  const language = theme?.language || "en";
+  const t = (key: any) => getTranslation(language || 'en', key);
+
   const categoryData = categoriesData.data?.find((c: any) => c.slug === categoryId || c._id === categoryId);
   const realCategoryId = categoryData?._id;
 
@@ -97,7 +99,7 @@ export default async function CategoryPage05({ params, searchParams }: any) {
 
         <section className="flex-1">
           <div className="flex flex-col sm:flex-row justify-between items-center border-b border-gray-100 pb-6 mb-8 gap-4">
-            <span className="text-sm font-medium text-gray-500">Showing <span className="text-black font-semibold">{products.length}</span> of {pagination.total}</span>
+            <span className="text-sm font-medium text-gray-500">{t('showing') || 'Showing'} <span className="text-black font-semibold">{products.length}</span> {t('of') || 'of'} {pagination.total}</span>
             <div className="flex items-center gap-6">
               <SortSelect05 />
               <div className="w-px h-6 bg-gray-200"></div>
@@ -108,8 +110,8 @@ export default async function CategoryPage05({ params, searchParams }: any) {
           {products.length === 0 ? (
             <div className="py-32 text-center flex flex-col items-center justify-center">
               <svg className="w-16 h-16 text-gray-200 mb-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">No results found</h3>
-              <p className="text-gray-500">Try adjusting your filters or search query.</p>
+              <h3 className="text-xl font-semibold text-gray-900 mb-2">{t('noResultsFound') || 'No results found'}</h3>
+              <p className="text-gray-500">{t('tryAdjustingFilters') || 'Try adjusting your filters or search query.'}</p>
             </div>
           ) : (
             <>

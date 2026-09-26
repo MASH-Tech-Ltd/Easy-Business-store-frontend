@@ -21,6 +21,25 @@ export type TranslationKeys =
   | 'topCategories'
   | 'seeAllCategories'
   | 'collections'
+  | 'discover'
+  | 'discover'
+  | 'quantity'
+  | 'discover'
+  | 'quantity'
+  | 'noImage'
+  | 'filters'
+  | 'reset'
+  | 'min'
+  | 'max'
+  | 'brands'
+  | 'inStockOnly'
+  | 'applyFilters'
+  | 'showing'
+  | 'of'
+  | 'sort'
+  | 'newestCollection'
+  | 'noResultsFound'
+  | 'tryAdjustingFilters'
   | 'cartItems'
   | 'yourCartIsEmpty'
   | 'browseProducts'
@@ -74,7 +93,12 @@ export type TranslationKeys =
   | 'priceRange'
   | 'clearFilters'
   | 'searchForProducts'
-  | 'searchProducts';
+  | 'searchProducts'
+  | 'shop'
+  | 'helpAndInfo'
+  | 'trackOrder'
+  | 'welcomeText'
+  | 'yourBag';
 
 export const translations: Record<Language, Record<TranslationKeys, string>> = {
   en: {
@@ -98,6 +122,9 @@ export const translations: Record<Language, Record<TranslationKeys, string>> = {
     topCategories: 'Top Categories',
     seeAllCategories: 'See all categories',
     collections: 'Collections',
+    discover: 'Discover',
+    quantity: 'Quantity',
+    noImage: 'No Image',
     cartItems: 'Cart Items',
     yourCartIsEmpty: 'Your cart is empty',
     browseProducts: "Looks like you haven't added anything to your cart yet. Browse our products and find something you love!",
@@ -151,7 +178,25 @@ export const translations: Record<Language, Record<TranslationKeys, string>> = {
     priceRange: 'Price Range',
     clearFilters: 'Clear Filters',
     searchForProducts: 'Search for products...',
-    searchProducts: 'Search products...'
+    searchProducts: 'Search products...',
+    shop: 'SHOP',
+    helpAndInfo: 'HELP & INFO',
+    trackOrder: 'Track Order',
+    welcomeText: 'Welcome to our store, your trusted destination for quality daily essentials, lifestyle products, and authentic goods.',
+    yourBag: 'Your Bag',
+    filters: 'Filters',
+    reset: 'Reset',
+    min: 'Min',
+    max: 'Max',
+    brands: 'Brands',
+    inStockOnly: 'In Stock Only',
+    applyFilters: 'Apply Filters',
+    showing: 'Showing',
+    of: 'of',
+    sort: 'SORT',
+    newestCollection: 'Newest Collection',
+    noResultsFound: 'No results found',
+    tryAdjustingFilters: 'Try adjusting your filters or search query.'
   },
   bn: {
     addToCart: 'কার্টে যোগ করুন',
@@ -174,6 +219,9 @@ export const translations: Record<Language, Record<TranslationKeys, string>> = {
     topCategories: 'শীর্ষ ক্যাটাগরি',
     seeAllCategories: 'সব ক্যাটাগরি দেখুন',
     collections: 'কালেকশন',
+    discover: 'আবিষ্কার',
+    quantity: 'পরিমাণ',
+    noImage: 'কোন ছবি নেই',
     cartItems: 'কার্ট আইটেম',
     yourCartIsEmpty: 'আপনার কার্ট খালি',
     browseProducts: "মনে হচ্ছে আপনি এখনও আপনার কার্টে কিছু যোগ করেননি। আমাদের পণ্য ব্রাউজ করুন এবং আপনার পছন্দের কিছু খুঁজে নিন!",
@@ -227,7 +275,25 @@ export const translations: Record<Language, Record<TranslationKeys, string>> = {
     priceRange: 'দামের পরিসর',
     clearFilters: 'ফিল্টার মুছুন',
     searchForProducts: 'পণ্য খুঁজুন...',
-    searchProducts: 'পণ্য খুঁজুন...'
+    searchProducts: 'পণ্য খুঁজুন...',
+    shop: 'শপ',
+    helpAndInfo: 'সাহায্য এবং তথ্য',
+    trackOrder: 'অর্ডার ট্র্যাক করুন',
+    welcomeText: 'আমাদের স্টোরে স্বাগতম, আপনার বিশ্বস্ত গন্তব্য মানসম্মত নিত্যপ্রয়োজনীয়, লাইফস্টাইল পণ্য এবং আসল সামগ্রীর জন্য।',
+    yourBag: 'আপনার ব্যাগ',
+    filters: 'ফিল্টার',
+    reset: 'রিসেট',
+    min: 'সর্বনিম্ন',
+    max: 'সর্বোচ্চ',
+    brands: 'ব্র্যান্ড',
+    inStockOnly: 'শুধুমাত্র স্টকে থাকা',
+    applyFilters: 'ফিল্টার প্রয়োগ করুন',
+    showing: 'দেখাচ্ছে',
+    of: 'এর মধ্যে',
+    sort: 'সাজান',
+    newestCollection: 'নতুন সংগ্রহ',
+    noResultsFound: 'কোনো ফলাফল পাওয়া যায়নি',
+    tryAdjustingFilters: 'আপনার ফিল্টার বা সার্চ পরিবর্তন করে চেষ্টা করুন।'
   }
 };
 

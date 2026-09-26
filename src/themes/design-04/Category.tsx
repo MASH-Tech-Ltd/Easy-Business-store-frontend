@@ -65,7 +65,8 @@ export default async function CategoryPage04({ params, searchParams }: any) {
   ]);
 
   const categories = categoriesRes?.data || [];
-  const category = categories.find((c: any) => c.slug === categorySlug || c._id === categorySlug);
+  const decodedCategorySlug = decodeURIComponent(categorySlug);
+  const category = categories.find((c: any) => c.slug === decodedCategorySlug || c._id === decodedCategorySlug);
   const categoryId = category?._id;
   const theme = themeRes?.data;
 

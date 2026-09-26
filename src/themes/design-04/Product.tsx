@@ -1,4 +1,4 @@
-﻿import { storefrontFetch } from "../../utils/storefrontFetch";
+import { storefrontFetch } from "../../utils/storefrontFetch";
 import { headers } from 'next/headers';
 import Link from 'next/link';
 import ProductGallery from '@/components/ProductGallery';
@@ -40,7 +40,7 @@ export default async function ProductPage04({ params }: { params: Promise<{ slug
     getProduct(tenantSlug, resolvedParams.slug),
     getTheme(tenantSlug)
   ]);
-  const language = storeInfo?.language || "en";
+  const language = theme?.language || "en";
   const t = (key: any) => getTranslation(language || 'en', key);
 
 
@@ -108,13 +108,13 @@ export default async function ProductPage04({ params }: { params: Promise<{ slug
 
               {/* Add to Cart Actions */}
               <div className="bg-gray-50 rounded-2xl p-6 border border-gray-100 mb-8">
-                <AddToCartClient product={product} />
+                <AddToCartClient product={product} theme={theme} />
               </div>
 
               {/* Quick Specs */}
               {product.features && product.features.length > 0 && (
                 <div>
-                  <h3 className="font-bold text-gray-900 uppercase tracking-wider text-xs mb-4">Highlights</h3>
+                  <h3 className="font-bold text-gray-900 uppercase tracking-wider text-xs mb-4">{t('keyHighlights') || 'Highlights'}</h3>
                   <ul className="space-y-2">
                     {product.features.map((feat: string, i: number) => (
                       <li key={i} className="flex items-start gap-2 text-sm text-gray-600 font-medium">
@@ -130,7 +130,7 @@ export default async function ProductPage04({ params }: { params: Promise<{ slug
 
         {/* Full Description & Specs */}
         <div className="bg-white rounded-3xl border border-gray-100 shadow-sm p-8 lg:p-12 mb-12">
-          <h2 className="text-2xl font-black text-gray-900 mb-8">Product Details</h2>
+          <h2 className="text-2xl font-black text-gray-900 mb-8">{t('productDetails') || 'Product Details'}</h2>
           
           {product.description && (
             <div className="prose max-w-none text-gray-600 mb-12" dangerouslySetInnerHTML={{ __html: product.description }} />
@@ -138,7 +138,7 @@ export default async function ProductPage04({ params }: { params: Promise<{ slug
 
           {product.specifications && product.specifications.length > 0 && (
             <div>
-              <h3 className="text-xl font-bold text-gray-900 mb-6">Specifications</h3>
+              <h3 className="text-xl font-bold text-gray-900 mb-6">{t('specifications')}</h3>
               <div className="border border-gray-100 rounded-2xl overflow-hidden divide-y divide-gray-100">
                 {product.specifications.map((specGroup: any, i: number) => (
                   <div key={i} className="grid grid-cols-1 md:grid-cols-4">

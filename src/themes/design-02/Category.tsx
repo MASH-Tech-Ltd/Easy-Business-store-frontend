@@ -72,7 +72,8 @@ export async function generateMetadata(
 
 
   const categories = categoriesRes?.data || [];
-  const category = categories.find((c: any) => c.slug === resolvedParams.slug || c._id === resolvedParams.slug);
+  const decodedSlug = decodeURIComponent(resolvedParams.slug);
+  const category = categories.find((c: any) => c.slug === decodedSlug || c._id === decodedSlug);
 
   if (!category) {
     return { title: 'Category Not Found' };
@@ -100,7 +101,8 @@ export default async function Design02CategoryPage({ params, searchParams }: any
   ]);
 
   const categories = categoriesRes?.data || [];
-  const category = categories.find((c: any) => c.slug === categorySlug || c._id === categorySlug);
+  const decodedCategorySlug = decodeURIComponent(categorySlug);
+  const category = categories.find((c: any) => c.slug === decodedCategorySlug || c._id === decodedCategorySlug);
   
   const categoryId = category?._id;
 

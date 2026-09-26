@@ -10,8 +10,14 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ success: false, message: 'Missing order ID' }, { status: 400 });
   }
 
+  const phone = searchParams.get('phone');
+  if (!phone) {
+    return NextResponse.json({ success: false, message: 'Missing phone number' }, { status: 400 });
+  }
+
   try {
     const url = new URL(`${process.env.NEXT_PUBLIC_API_URL}/orders/track/${encodeURIComponent(id)}`);
+    url.searchParams.append('phone', phone);
     
     const originalHost = req.headers.get('host') || '';
     
