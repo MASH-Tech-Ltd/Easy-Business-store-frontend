@@ -40,7 +40,14 @@ export async function generateMetadata(
   return {
     title,
     description,
-    keywords: [product.title, product.category, storeInfo?.name, 'buy online', 'ecommerce'].filter(Boolean).join(', '),
+    keywords: [
+      product.title,
+      product.category,
+      product.brand,
+      storeInfo?.name,
+      'buy online',
+      'ecommerce',
+    ].filter(Boolean).join(', '),
     alternates: {
       canonical: `${baseUrl}/product/${resolvedParams.slug}`,
     },
@@ -70,19 +77,68 @@ export async function generateMetadata(
 }
 
 export default async function ProductPage({ params }: PageProps) {
+  const resolvedParams = await params;
   const headersList = await headers();
+  const host = headersList.get('host') || 'localhost:3000';
   const tenantSlug = headersList.get('x-tenant-slug') || 'main';
 
+  const protocol = host.includes('localhost') ? 'http' : 'https';
+  const baseUrl = `${protocol}://${host}`;
+
   let themeId = 'design-01';
+  let product = null;
+  let storeInfo = null;
 
   if (tenantSlug !== 'main') {
+    [product, storeInfo] = await Promise.all([
+      getProductBySlug(tenantSlug, resolvedParams.slug),
+      getStoreInfo(tenantSlug),
+    ]);
     const theme = await getTheme(tenantSlug);
     if (theme && theme.themeId && themeRegistry[theme.themeId]) {
       themeId = theme.themeId;
     }
   }
 
+  // Build JSON-LD Product structured data for Google rich results
+  const jsonLd = product ? {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: product.title,
+    description: product.shortDescription || product.description?.replace(/<[^>]*>?/gm, '') || product.title,
+    image: product.images?.map((img: any) => img.secure_url).filter(Boolean) || [],
+    sku: product.sku || product._id,
+    brand: product.brand ? {
+      '@type': 'Brand',
+      name: product.brand,
+    } : undefined,
+    offers: {
+      '@type': 'Offer',
+      url: `${baseUrl}/product/${resolvedParams.slug}`,
+      priceCurrency: storeInfo?.currency || 'BDT',
+      price: product.salePrice ?? product.price ?? 0,
+      availability:
+        (product.stock ?? 1) > 0
+          ? 'https://schema.org/InStock'
+          : 'https://schema.org/OutOfStock',
+      seller: {
+        '@type': 'Organization',
+        name: storeInfo?.name || tenantSlug.toUpperCase(),
+      },
+    },
+  } : null;
+
   const ThemeProduct = themeRegistry[themeId]?.Product || themeRegistry['design-01'].Product;
 
-  return <ThemeProduct tenantSlug={tenantSlug} params={params} />;
+  return (
+    <>
+      {jsonLd && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+      )}
+      <ThemeProduct tenantSlug={tenantSlug} params={params} />
+    </>
+  );
 }

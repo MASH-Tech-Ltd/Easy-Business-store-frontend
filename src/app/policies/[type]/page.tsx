@@ -15,14 +15,42 @@ export async function generateMetadata(
 ): Promise<Metadata> {
   const resolvedParams = await params;
   const headersList = await headers();
+  const host = headersList.get('host') || 'localhost:3000';
   const tenantSlug = headersList.get('x-tenant-slug') || 'main';
-  
+
+  const protocol = host.includes('localhost') ? 'http' : 'https';
+  const baseUrl = `${protocol}://${host}`;
+
   const storeInfo = await getStoreInfo(tenantSlug);
-  
-  const title = `${resolvedParams.type.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')} | ${storeInfo?.name || tenantSlug.toUpperCase()}`;
+  const storeName = storeInfo?.name || tenantSlug.toUpperCase();
+  const policyTitle = resolvedParams.type
+    .split('-')
+    .map((w: string) => w.charAt(0).toUpperCase() + w.slice(1))
+    .join(' ');
+
+  const title = `${policyTitle} | ${storeName}`;
+  const description = `Read the ${policyTitle} of ${storeName}.`;
+  const ogImage = storeInfo?.logo || null;
 
   return {
     title,
+    description,
+    alternates: {
+      canonical: `${baseUrl}/policies/${resolvedParams.type}`,
+    },
+    openGraph: {
+      title,
+      description,
+      url: `${baseUrl}/policies/${resolvedParams.type}`,
+      siteName: storeName,
+      images: ogImage ? [{ url: ogImage, alt: storeName }] : [],
+      type: 'website',
+    },
+    twitter: {
+      card: 'summary',
+      title,
+      description,
+    },
   };
 }
 

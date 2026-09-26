@@ -3,6 +3,23 @@ import { headers } from 'next/headers';
 import { getTheme, getStoreInfo } from '@/core/api/store';
 import { themeRegistry } from '@/themes/themeRegistry';
 import { TrackOrderContent } from './TrackOrderClient';
+import type { Metadata } from 'next';
+
+export async function generateMetadata(): Promise<Metadata> {
+  const headersList = await headers();
+  const tenantSlug = headersList.get('x-tenant-slug') || 'main';
+  const storeInfo = await getStoreInfo(tenantSlug);
+  const storeName = storeInfo?.name || tenantSlug.toUpperCase();
+  return {
+    title: `Track Your Order | ${storeName}`,
+    description: `Track the status of your order at ${storeName}.`,
+    robots: {
+      index: false,
+      follow: false,
+    },
+  };
+}
+
 
 export default async function TrackOrderPage() {
   const headersList = await headers();

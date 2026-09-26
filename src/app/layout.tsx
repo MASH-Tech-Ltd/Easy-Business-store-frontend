@@ -90,6 +90,9 @@ export async function generateMetadata(): Promise<Metadata> {
     icons: {
       icon: faviconUrl,
     },
+    alternates: {
+      canonical: baseUrl,
+    },
     openGraph: {
       title,
       description,
@@ -457,6 +460,31 @@ export default async function RootLayout({
         `,
           }}
         />
+        {/* Organization JSON-LD – present on every store page for brand authority */}
+        {storeInfo && (
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{
+              __html: JSON.stringify({
+                '@context': 'https://schema.org',
+                '@type': 'Organization',
+                name: storeInfo.name,
+                url: `${storeInfo.customDomain ? `https://${storeInfo.customDomain}` : `https://${tenantSlug}.masheco.com`}`,
+                logo: storeInfo.logo || undefined,
+                description: storeInfo.description || undefined,
+                contactPoint: storeInfo.phone
+                  ? [
+                      {
+                        '@type': 'ContactPoint',
+                        telephone: storeInfo.phone,
+                        contactType: 'customer service',
+                      },
+                    ]
+                  : undefined,
+              }),
+            }}
+          />
+        )}
         <LanguageProvider initialLanguage={language}>
           <Providers>
             {storeInfo?._id && <VisitTracker tenantId={storeInfo._id} />}

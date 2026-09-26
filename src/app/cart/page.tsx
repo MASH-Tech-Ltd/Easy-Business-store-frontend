@@ -1,6 +1,17 @@
 import { headers } from 'next/headers';
 import { getTheme } from '@/core/api/store';
 import { themeRegistry } from '@/themes/themeRegistry';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Shopping Cart',
+  description: 'Review your selected items before checkout.',
+  robots: {
+    index: false,
+    follow: false,
+  },
+};
+
 
 export default async function CartPage() {
   const headersList = await headers();
