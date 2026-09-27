@@ -343,7 +343,9 @@ export default async function RootLayout({
               <div style={{ borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: '20px' }}>
                 <p style={{ fontSize: '12px', color: 'rgba(255,255,255,0.25)', margin: 0 }}>
                   Powered by{' '}
-                  <span style={{ color: 'rgba(255,255,255,0.45)', fontWeight: 600 }}>MASH ECO</span>
+                  <a href="https://www.masheco.com" target="_blank" rel="noopener noreferrer" className="text-[rgba(255,255,255,0.45)] hover:text-[rgba(255,255,255,0.8)] transition-colors duration-200" style={{ fontWeight: 600, textDecoration: 'none' }}>
+                    MASH ECO
+                  </a>
                 </p>
               </div>
             </div>
