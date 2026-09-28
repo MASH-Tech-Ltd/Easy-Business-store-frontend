@@ -11,8 +11,13 @@ export async function generateMetadata(): Promise<Metadata> {
   const protocol = host.includes('localhost') ? 'http' : 'https';
   const baseUrl = `${protocol}://${host}`;
 
+/** Strip any " - PLATFORM" or " | PLATFORM" suffix that may have been saved in the DB */
+function cleanStoreName(raw: string): string {
+  return raw.replace(/\s*[-|]\s*MASH\s*ECO\s*$/i, '').trim();
+}
+
   const storeInfo = await getStoreInfo(tenantSlug);
-  const storeName = storeInfo?.name || tenantSlug.toUpperCase();
+  const storeName = cleanStoreName(storeInfo?.name || tenantSlug.toUpperCase());
 
   const title = `All Products | ${storeName}`;
   const description = `Browse all products at ${storeName}. Shop online with fast delivery and great prices.`;

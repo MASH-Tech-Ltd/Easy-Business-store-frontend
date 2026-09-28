@@ -81,6 +81,13 @@ async function getTrackingConfig(tenantSlug: string, clientIp?: string) {
   }
 }
 
+/** Strip any " - PLATFORM" or " | PLATFORM" suffix that may have been saved in the DB */
+function cleanStoreName(raw: string): string {
+  return raw
+    .replace(/\s*[-|]\s*MASH\s*ECO\s*$/i, '')
+    .trim();
+}
+
 export async function generateMetadata(): Promise<Metadata> {
   const headersList = await headers();
   const host = headersList.get("host") || "localhost:3000";
@@ -90,15 +97,15 @@ export async function generateMetadata(): Promise<Metadata> {
   const protocol = host.includes('localhost') ? 'http' : 'https';
   const baseUrl = `${protocol}://${host}`;
 
-  const title = storeInfo?.name ? storeInfo.name : `${tenantSlug.toUpperCase()} Store`;
+  const rawName = storeInfo?.name ?? `${tenantSlug.toUpperCase()} Store`;
+  const title = cleanStoreName(rawName);
   const description = storeInfo?.description || `Welcome to ${title}`;
   let faviconUrl = storeInfo?.logo || "/favicon.ico";
   if (faviconUrl.includes("cloudinary.com")) {
     // Force the extension to be .png so Cloudinary natively supports transparency
     faviconUrl = faviconUrl.replace(/\.[^/.]+$/, ".png");
-    faviconUrl = faviconUrl.replace("/upload/", "/upload/w_64,h_64,c_fill,r_max,f_png/");
-    // Add a random query parameter to bust the browser's aggressive favicon cache
-    faviconUrl = `${faviconUrl}?v=${Date.now()}`;
+    // Google requires favicons to be multiples of 48px (e.g., 48x48, 96x96)
+    faviconUrl = faviconUrl.replace("/upload/", "/upload/w_96,h_96,c_fill,r_max,f_png/");
   }
 
   return {
@@ -503,7 +510,7 @@ export default async function RootLayout({
               __html: JSON.stringify({
                 '@context': 'https://schema.org',
                 '@type': 'OnlineStore',
-                name: storeInfo.name,
+                name: cleanStoreName(storeInfo.name),
                 url: `${storeInfo.customDomain ? `https://${storeInfo.customDomain}` : `https://${tenantSlug}.masheco.com`}`,
                 logo: storeInfo.logo || undefined,
                 description: storeInfo.description || undefined,

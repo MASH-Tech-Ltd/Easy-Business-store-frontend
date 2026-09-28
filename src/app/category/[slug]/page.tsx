@@ -35,7 +35,12 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         .split('-')
         .map((w: string) => w.charAt(0).toUpperCase() + w.slice(1))
         .join(' ');
-  const storeName = storeInfo?.name || tenantSlug.toUpperCase();
+/** Strip any " - PLATFORM" or " | PLATFORM" suffix that may have been saved in the DB */
+function cleanStoreName(raw: string): string {
+  return raw.replace(/\s*[-|]\s*MASH\s*ECO\s*$/i, '').trim();
+}
+
+  const storeName = cleanStoreName(storeInfo?.name || tenantSlug.toUpperCase());
 
   const title = `${categoryName} | ${storeName}`;
   const description =

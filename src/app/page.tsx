@@ -3,6 +3,11 @@ import { getTheme, getStoreInfo } from '@/core/api/store';
 import { themeRegistry } from '@/themes/themeRegistry';
 import type { Metadata } from 'next';
 
+/** Strip any " - PLATFORM" or " | PLATFORM" suffix that may have been saved in the DB */
+function cleanStoreName(raw: string): string {
+  return raw.replace(/\s*[-|]\s*MASH\s*ECO\s*$/i, '').trim();
+}
+
 export async function generateMetadata(): Promise<Metadata> {
   const headersList = await headers();
   const host = headersList.get('host') || 'localhost:3000';
@@ -18,9 +23,9 @@ export async function generateMetadata(): Promise<Metadata> {
 
   if (tenantSlug !== 'main') {
     const storeInfo = await getStoreInfo(tenantSlug);
-    title = storeInfo?.name || tenantSlug.toUpperCase();
+    title = cleanStoreName(storeInfo?.name || tenantSlug.toUpperCase());
     description = storeInfo?.description || description;
-    siteName = storeInfo?.name || siteName;
+    siteName = cleanStoreName(storeInfo?.name || siteName);
     logo = storeInfo?.logo || logo;
   }
 
@@ -68,8 +73,8 @@ export default async function Page() {
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
-    name: storeInfo?.name || tenantSlug.toUpperCase(),
-    alternateName: tenantSlug.toUpperCase(),
+    name: cleanStoreName(storeInfo?.name || tenantSlug.toUpperCase()),
+    alternateName: cleanStoreName(storeInfo?.name || tenantSlug.toUpperCase()),
     url: baseUrl,
   };
 
