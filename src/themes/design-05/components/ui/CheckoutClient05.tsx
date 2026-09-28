@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { trackEvent } from '@/utils/tracking';
 import { useCart } from '@/context/CartContext';
 import Link from 'next/link';
 import { Check, ShieldCheck, ChevronRight, Banknote } from 'lucide-react';
@@ -121,6 +122,18 @@ export default function CheckoutClient05({ theme, storeInfo }: { theme?: any; st
         setOrderId(data.data.orderId);
       }
       
+      // Fire purchase event BEFORE clearCart so cart items are still available
+      trackEvent('purchase', {
+        orderId: data?.data?.orderId || data?.data?._id || '',
+        value: total,
+        currency: 'BDT',
+        items: items.map((item: any) => ({
+          id: item.id,
+          title: item.title,
+          price: item.price,
+          quantity: item.quantity,
+        })),
+      });
       setIsProcessing(false);
       setIsSuccess(true);
       clearCart();

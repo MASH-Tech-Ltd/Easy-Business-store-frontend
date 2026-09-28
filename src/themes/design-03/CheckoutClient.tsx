@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { trackEvent } from '@/utils/tracking';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { CheckCircle2, Banknote } from 'lucide-react';
@@ -114,6 +115,18 @@ export default function CheckoutClient03({ storeInfo, theme }: { storeInfo?: any
         setOrderId(data.data.orderId);
       }
       
+      // Fire purchase event BEFORE clearCart so cart items are still available
+      trackEvent('purchase', {
+        orderId: data?.data?.orderId || data?.data?._id || '',
+        value: grandTotal,
+        currency: 'BDT',
+        items: cartItems.map((item: any) => ({
+          id: item.id,
+          title: item.title,
+          price: item.price,
+          quantity: item.quantity,
+        })),
+      });
       setStatus('success');
       clearCart();
     } catch {

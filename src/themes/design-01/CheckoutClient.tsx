@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { trackEvent } from '@/utils/tracking';
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
@@ -198,6 +199,18 @@ export default function CheckoutClient({ storeInfo, theme }: { storeInfo?: any; 
         console.error("Failed to save customer info", err);
       }
 
+      // Fire purchase event BEFORE clearCart so cart items are still available
+      trackEvent('purchase', {
+        orderId: data?.data?.orderId || data?.data?._id || '',
+        value: grandTotal,
+        currency: 'BDT',
+        items: cartItems.map(item => ({
+          id: item.id,
+          title: item.title,
+          price: item.price,
+          quantity: item.quantity,
+        })),
+      });
       setStatus("success");
       clearCart();
     } catch (e: any) {

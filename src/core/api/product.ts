@@ -1,8 +1,9 @@
 import { storefrontFetch } from "../../utils/storefrontFetch";
-export async function getProducts(tenantSlug: string, searchParams?: string) {
+
+export async function getProducts(tenantSlug: string, searchParams?: string, clientIp?: string) {
   try {
     const query = searchParams ? `?${searchParams}` : '?limit=50&sort=random';
-    const res = await storefrontFetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/products${query}`, { next: { revalidate: 60 } });
+    const res = await storefrontFetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/products${query}`, { next: { revalidate: 60 } }, clientIp);
     if (!res.ok) return [];
     const json = await res.json();
     const data = json?.data?.data || json?.data || [];
@@ -12,9 +13,9 @@ export async function getProducts(tenantSlug: string, searchParams?: string) {
   }
 }
 
-export async function getBestsellingProducts(tenantSlug: string, limit: number = 8) {
+export async function getBestsellingProducts(tenantSlug: string, limit: number = 8, clientIp?: string) {
   try {
-    const res = await storefrontFetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/products/bestsellers?limit=${limit}`, { next: { revalidate: 60 } });
+    const res = await storefrontFetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/products/bestsellers?limit=${limit}`, { next: { revalidate: 60 } }, clientIp);
     if (!res.ok) return [];
     const json = await res.json();
     return json?.data?.data || json?.data || [];
@@ -23,9 +24,9 @@ export async function getBestsellingProducts(tenantSlug: string, limit: number =
   }
 }
 
-export async function getJustForYouProducts(tenantSlug: string, limit: number = 8) {
+export async function getJustForYouProducts(tenantSlug: string, limit: number = 8, clientIp?: string) {
   try {
-    const res = await storefrontFetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/products/just-for-you?limit=${limit}`, { next: { revalidate: 60 } });
+    const res = await storefrontFetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/products/just-for-you?limit=${limit}`, { next: { revalidate: 60 } }, clientIp);
     if (!res.ok) return [];
     const json = await res.json();
     return json?.data?.data || json?.data || [];
@@ -34,9 +35,9 @@ export async function getJustForYouProducts(tenantSlug: string, limit: number = 
   }
 }
 
-export async function getProductBySlug(tenantSlug: string, productSlug: string) {
+export async function getProductBySlug(tenantSlug: string, productSlug: string, clientIp?: string) {
   try {
-    const res = await storefrontFetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/products/${productSlug}`, { next: { revalidate: 60 } });
+    const res = await storefrontFetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/products/${productSlug}`, { next: { revalidate: 60 } }, clientIp);
     if (!res.ok) return null;
     const json = await res.json();
     return json.data;
