@@ -18,11 +18,12 @@ const hindSiliguri = Hind_Siliguri({
 
 import { storefrontFetch } from "@/utils/storefrontFetch";
 
-async function getTheme(tenantSlug: string) {
+async function getTheme(tenantSlug: string, clientIp?: string) {
   try {
     const res = await storefrontFetch(
       `${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/theme`,
       { next: { revalidate: 0 } },
+      clientIp,
     );
     if (!res.ok) return null;
     const json = await res.json();
@@ -32,11 +33,12 @@ async function getTheme(tenantSlug: string) {
   }
 }
 
-async function getStoreInfo(tenantSlug: string) {
+async function getStoreInfo(tenantSlug: string, clientIp?: string) {
   try {
     const res = await storefrontFetch(
       `${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/info`,
       { next: { revalidate: 0 } },
+      clientIp,
     );
     if (!res.ok) return null;
     const json = await res.json();
@@ -46,11 +48,12 @@ async function getStoreInfo(tenantSlug: string) {
   }
 }
 
-async function getStoreStatus(tenantSlug: string) {
+async function getStoreStatus(tenantSlug: string, clientIp?: string) {
   try {
     const res = await storefrontFetch(
       `${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/status`,
       { next: { revalidate: 0 } },
+      clientIp,
     );
     if (!res.ok) {
       if (res.status === 404) return { storeDown: true, reason: 'Store not found' };
@@ -63,11 +66,12 @@ async function getStoreStatus(tenantSlug: string) {
   }
 }
 
-async function getTrackingConfig(tenantSlug: string) {
+async function getTrackingConfig(tenantSlug: string, clientIp?: string) {
   try {
     const res = await storefrontFetch(
       `${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/tracking`,
       { next: { revalidate: 60 } },
+      clientIp,
     );
     if (!res.ok) return null;
     const json = await res.json();
@@ -141,10 +145,20 @@ export default async function RootLayout({
   const headersList = await headers();
   const tenantSlug = headersList.get("x-tenant-slug") || "main";
 
-  const theme = await getTheme(tenantSlug);
-  const storeInfo = await getStoreInfo(tenantSlug);
-  const storeStatus = await getStoreStatus(tenantSlug);
-  const trackingConfig = await getTrackingConfig(tenantSlug);
+  // Resolve the real visitor IP to pass through to backend API calls
+  // Priority: Cloudflare > X-Forwarded-For > X-Real-IP
+  const cfIp = headersList.get('cf-connecting-ip');
+  const forwardedFor = headersList.get('x-forwarded-for');
+  const xRealIp = headersList.get('x-real-ip');
+  const clientIp = cfIp ||
+    (forwardedFor ? forwardedFor.split(',')[0]?.trim() : undefined) ||
+    xRealIp ||
+    undefined;
+
+  const theme = await getTheme(tenantSlug, clientIp);
+  const storeInfo = await getStoreInfo(tenantSlug, clientIp);
+  const storeStatus = await getStoreStatus(tenantSlug, clientIp);
+  const trackingConfig = await getTrackingConfig(tenantSlug, clientIp);
 
   if ((!storeInfo || storeStatus?.reason === 'Store not found') && tenantSlug !== "main") {
     return (
