@@ -38,7 +38,9 @@ export async function generateMetadata(
   const imageUrl = product.images?.[0]?.secure_url || fallbackImage;
 
   return {
-    title,
+    title: {
+      absolute: title,
+    },
     description,
     keywords: [
       product.title,

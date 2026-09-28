@@ -221,9 +221,7 @@ export default function Footer04({
       <div className="bg-gray-900 py-4 px-6 text-center text-xs text-gray-400 flex flex-col items-center gap-1">
         <p>{copyrightText}</p>
         <a
-          href="https://mash-tech-ltd.vercel.app"
-          target="_blank"
-          rel="noopener noreferrer"
+          href="https://mash-tech-ltd.vercel.app" target="_blank" rel="noopener noreferrer nofollow"
           className="text-[10px] font-semibold text-gray-400 hover:text-blue-500 tracking-widest uppercase transition-colors"
         >
           A Product Of MASH TECH

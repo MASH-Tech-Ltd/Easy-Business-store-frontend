@@ -252,9 +252,7 @@ export default function Footer05({
           <div className="flex flex-col items-start gap-1">
             <p>{copyrightText}</p>
             <a
-              href="https://mash-tech-ltd.vercel.app"
-              target="_blank"
-              rel="noopener noreferrer"
+              href="https://mash-tech-ltd.vercel.app" target="_blank" rel="noopener noreferrer nofollow"
               className="text-[10px] font-semibold text-gray-400 hover:text-blue-500 tracking-widest uppercase transition-colors"
             >
               A Product Of MASH TECH

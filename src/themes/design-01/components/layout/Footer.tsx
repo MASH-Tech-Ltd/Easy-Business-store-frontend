@@ -262,7 +262,7 @@ export default async function Footer() {
           <a
             href="https://mash-tech-ltd.vercel.app"
             target="_blank"
-            rel="noopener noreferrer"
+            rel="noopener noreferrer nofollow"
             className="text-[10px] font-semibold text-gray-400 hover:text-blue-500 tracking-widest uppercase transition-colors"
           >
             A Product Of MASH TECH

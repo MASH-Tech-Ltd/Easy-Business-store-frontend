@@ -73,7 +73,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const baseUrl = `${protocol}://${host}`;
 
   const title = storeInfo?.name ? storeInfo.name : `${tenantSlug.toUpperCase()} Store`;
-  const description = storeInfo?.description || "Powered by MASH ECO SaaS Platform";
+  const description = storeInfo?.description || `Welcome to ${title}`;
   let faviconUrl = storeInfo?.logo || "/favicon.ico";
   if (faviconUrl.includes("cloudinary.com")) {
     // Force the extension to be .png so Cloudinary natively supports transparency
@@ -85,7 +85,10 @@ export async function generateMetadata(): Promise<Metadata> {
 
   return {
     metadataBase: new URL(baseUrl),
-    title,
+    title: {
+      default: title,
+      template: `%s | ${title}`,
+    },
     description,
     icons: {
       icon: faviconUrl,
@@ -469,11 +472,12 @@ export default async function RootLayout({
             dangerouslySetInnerHTML={{
               __html: JSON.stringify({
                 '@context': 'https://schema.org',
-                '@type': 'Organization',
+                '@type': 'OnlineStore',
                 name: storeInfo.name,
                 url: `${storeInfo.customDomain ? `https://${storeInfo.customDomain}` : `https://${tenantSlug}.masheco.com`}`,
                 logo: storeInfo.logo || undefined,
                 description: storeInfo.description || undefined,
+                telephone: storeInfo.phone || undefined,
                 contactPoint: storeInfo.phone
                   ? [
                       {

@@ -49,7 +49,9 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     null;
 
   return {
-    title,
+    title: {
+      absolute: title,
+    },
     description,
     keywords: [categoryName, storeName, 'buy online', 'ecommerce', 'electronics'].join(', '),
     alternates: {

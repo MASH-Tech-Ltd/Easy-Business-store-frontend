@@ -19,7 +19,9 @@ export async function generateMetadata(): Promise<Metadata> {
   const ogImage = storeInfo?.logo || null;
 
   return {
-    title,
+    title: {
+      absolute: title,
+    },
     description,
     keywords: [storeName, 'electronics', 'buy online', 'shop all products', 'ecommerce'].join(', '),
     alternates: {
