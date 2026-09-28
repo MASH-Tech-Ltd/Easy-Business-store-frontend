@@ -15,16 +15,15 @@ export async function POST(req: Request) {
     // Determine the best real IP to forward
     const clientIp = cfIp || (forwardedFor ? forwardedFor.split(',')[0]?.trim() : null) || realIp || '';
 
-    // Build forwarded headers to pass real IP to the backend
+    // Build forwarded headers to pass real IP to the backend.
+    // Use x-tenant-client-ip (custom header) instead of x-forwarded-for / x-real-ip
+    // because Cloudflare overwrites those standard headers on the outbound hop.
+    // x-tenant-client-ip is unknown to Cloudflare and passes through unmodified.
     const forwardHeaders: Record<string, string> = {
       'Content-Type': 'application/json',
     };
     if (clientIp) {
-      forwardHeaders['x-forwarded-for'] = clientIp;
-      forwardHeaders['x-real-ip'] = clientIp;
-    }
-    if (cfIp) {
-      forwardHeaders['cf-connecting-ip'] = cfIp;
+      forwardHeaders['x-tenant-client-ip'] = clientIp;
     }
 
     // Forward the request to the real backend, keeping the domain hidden from the client
