@@ -2,6 +2,7 @@ import { headers } from 'next/headers';
 import { getTheme, getStoreInfo } from '@/core/api/store';
 import { getProductBySlug } from '@/core/api/product';
 import { themeRegistry } from '@/themes/themeRegistry';
+import TrackViewItem from '@/components/TrackViewItem';
 import type { Metadata, ResolvingMetadata } from 'next';
 
 interface PageProps {
@@ -140,6 +141,7 @@ export default async function ProductPage({ params }: PageProps) {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       )}
+      {product && <TrackViewItem product={product} />}
       <ThemeProduct tenantSlug={tenantSlug} params={params} />
     </>
   );

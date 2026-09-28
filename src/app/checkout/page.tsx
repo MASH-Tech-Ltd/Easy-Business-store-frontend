@@ -2,6 +2,7 @@ import { headers } from 'next/headers';
 import { getTheme } from '@/core/api/store';
 import { themeRegistry } from '@/themes/themeRegistry';
 import type { Metadata } from 'next';
+import TrackBeginCheckout from '@/components/TrackBeginCheckout';
 
 export const metadata: Metadata = {
   title: 'Checkout',
@@ -11,6 +12,7 @@ export const metadata: Metadata = {
     follow: false,
   },
 };
+
 
 
 export default async function CheckoutPage() {
@@ -28,5 +30,10 @@ export default async function CheckoutPage() {
 
   const ThemeCheckout = themeRegistry[themeId]?.Checkout || themeRegistry['design-01'].Checkout;
 
-  return <ThemeCheckout tenantSlug={tenantSlug} />;
+  return (
+    <>
+      <TrackBeginCheckout />
+      <ThemeCheckout tenantSlug={tenantSlug} />
+    </>
+  );
 }

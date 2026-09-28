@@ -2,6 +2,7 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
+import { trackEvent } from '@/utils/tracking';
 
 export type CartItem = {
   id: string;
@@ -56,6 +57,12 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         return prev.map(i => i.id === item.id ? { ...i, quantity: i.quantity + quantity } : i);
       }
       return [...prev, { ...item, quantity }];
+    });
+    trackEvent('add_to_cart', {
+      id: item.id,
+      title: item.title,
+      price: item.price,
+      quantity,
     });
     toast.success('Added to cart!');
   };

@@ -63,6 +63,20 @@ async function getStoreStatus(tenantSlug: string) {
   }
 }
 
+async function getTrackingConfig(tenantSlug: string) {
+  try {
+    const res = await storefrontFetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/tracking`,
+      { next: { revalidate: 60 } },
+    );
+    if (!res.ok) return null;
+    const json = await res.json();
+    return json.data;
+  } catch (error) {
+    return null;
+  }
+}
+
 export async function generateMetadata(): Promise<Metadata> {
   const headersList = await headers();
   const host = headersList.get("host") || "localhost:3000";
@@ -117,6 +131,7 @@ export async function generateMetadata(): Promise<Metadata> {
 import Providers from "../components/Providers";
 import { LanguageProvider } from "../context/LanguageContext";
 import VisitTracker from "../components/VisitTracker";
+import StorefrontTracker from "../components/StorefrontTracker";
 
 export default async function RootLayout({
   children,
@@ -129,6 +144,7 @@ export default async function RootLayout({
   const theme = await getTheme(tenantSlug);
   const storeInfo = await getStoreInfo(tenantSlug);
   const storeStatus = await getStoreStatus(tenantSlug);
+  const trackingConfig = await getTrackingConfig(tenantSlug);
 
   if ((!storeInfo || storeStatus?.reason === 'Store not found') && tenantSlug !== "main") {
     return (
@@ -493,6 +509,7 @@ export default async function RootLayout({
         )}
         <LanguageProvider initialLanguage={language}>
           <Providers>
+            <StorefrontTracker tenantSlug={tenantSlug} initialConfig={trackingConfig} />
             {storeInfo?._id && <VisitTracker tenantId={storeInfo._id} />}
             {children}
           </Providers>
