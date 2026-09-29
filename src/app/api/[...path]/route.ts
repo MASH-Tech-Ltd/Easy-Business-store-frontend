@@ -12,6 +12,16 @@ async function handleProxy(req: NextRequest) {
 
     // 3. Prepare headers
     const headers = new Headers(req.headers);
+    
+    // Add custom client IP header to prevent Cloudflare from overwriting it on the second hop
+    const cfIp = headers.get('cf-connecting-ip');
+    const forwardedFor = headers.get('x-forwarded-for');
+    const realIp = headers.get('x-real-ip');
+    const clientIp = cfIp || (forwardedFor ? forwardedFor.split(',')[0]?.trim() : null) || realIp || '';
+    if (clientIp) {
+      headers.set('x-tenant-client-ip', clientIp);
+    }
+    
     headers.delete('host'); // Let fetch set the correct host header
     
     // Attach the auth tokens from cookies if present

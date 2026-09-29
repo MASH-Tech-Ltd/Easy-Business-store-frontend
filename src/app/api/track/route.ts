@@ -19,13 +19,23 @@ export async function GET(req: NextRequest) {
     const url = new URL(`${process.env.NEXT_PUBLIC_API_URL}/orders/track/${encodeURIComponent(id)}`);
     url.searchParams.append('phone', phone);
     
+    const cfIp = req.headers.get('cf-connecting-ip');
+    const forwardedFor = req.headers.get('x-forwarded-for');
+    const realIp = req.headers.get('x-real-ip');
+    const clientIp = cfIp || (forwardedFor ? forwardedFor.split(',')[0]?.trim() : null) || realIp || '';
+    
     const originalHost = req.headers.get('host') || '';
     
+    const forwardHeaders: Record<string, string> = {
+      'Host': originalHost,
+      'X-Forwarded-Host': originalHost
+    };
+    if (clientIp) {
+      forwardHeaders['x-tenant-client-ip'] = clientIp;
+    }
+    
     const res = await fetch(url.toString(), {
-      headers: {
-        'Host': originalHost,
-        'X-Forwarded-Host': originalHost
-      }
+      headers: forwardHeaders
     });
     const data = await res.json();
     
