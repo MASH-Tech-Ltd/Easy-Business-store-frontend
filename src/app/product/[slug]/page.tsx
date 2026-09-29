@@ -99,13 +99,15 @@ export default async function ProductPage({ params }: PageProps) {
   let storeInfo = null;
 
   if (tenantSlug !== "main") {
-    [product, storeInfo] = await Promise.all([
+    const [productRes, storeInfoRes, themeRes] = await Promise.all([
       getProductBySlug(tenantSlug, resolvedParams.slug),
       getStoreInfo(tenantSlug),
+      getTheme(tenantSlug),
     ]);
-    const theme = await getTheme(tenantSlug);
-    if (theme && theme.themeId && themeRegistry[theme.themeId]) {
-      themeId = theme.themeId;
+    product = productRes;
+    storeInfo = storeInfoRes;
+    if (themeRes && themeRes.themeId && themeRegistry[themeRes.themeId]) {
+      themeId = themeRes.themeId;
     }
   }
 

@@ -61,11 +61,14 @@ export default async function Page() {
   let storeInfo = null;
 
   if (tenantSlug !== 'main') {
-    const theme = await getTheme(tenantSlug);
+    const [theme, info] = await Promise.all([
+      getTheme(tenantSlug),
+      getStoreInfo(tenantSlug),
+    ]);
     if (theme && theme.themeId && themeRegistry[theme.themeId]) {
       themeId = theme.themeId;
     }
-    storeInfo = await getStoreInfo(tenantSlug);
+    storeInfo = info;
   }
 
   const ThemeHome = themeRegistry[themeId]?.Home || themeRegistry['design-01'].Home;
