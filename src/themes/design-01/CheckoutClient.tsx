@@ -19,6 +19,7 @@ import { z } from "zod";
 import { bdLocations } from "@/data/locations";
 import { computeShipping } from "@/utils/shipping";
 import { getTranslation } from '@/utils/translations';
+import { getSavedCustomerInfo, saveCustomerInfo } from '@/utils/customerStorage';
 
 const checkoutSchema = z.object({
   phone: z.string().regex(/^(?:\+88|88)?01[3-9]\d{8}$/, { message: "Please enter a valid BD phone number (e.g. 01712345678)" }),
@@ -68,18 +69,35 @@ export default function CheckoutClient({ storeInfo, theme }: { storeInfo?: any; 
   // Auto-fill customer details from localStorage
   React.useEffect(() => {
     try {
-      const saved = localStorage.getItem("customerInfo");
-      if (saved) {
-        const info = JSON.parse(saved);
-        if (info.phone) setPhone(info.phone);
-        if (info.fullName) setFullName(info.fullName);
-        if (info.address) setAddress(info.address);
-        if (info.division) setDivision(info.division);
-      }
+      const info = getSavedCustomerInfo();
+      if (info.phone) setPhone(info.phone);
+      if (info.fullName) setFullName(info.fullName);
+      if (info.address) setAddress(info.address);
+      if (info.division) setDivision(info.division);
+      if (info.district) setDistrict(info.district);
+      if (info.upazila) setUpazila(info.upazila);
+      if (info.deliveryNote) setDeliveryNote(info.deliveryNote);
     } catch (error) {
       console.error("Failed to load customer info", error);
     }
   }, []);
+
+  // Auto-save customer details to localStorage on change
+  React.useEffect(() => {
+    if (!phone && !fullName && !address) return;
+    const timer = setTimeout(() => {
+      saveCustomerInfo({
+        phone,
+        fullName,
+        address,
+        division,
+        district,
+        upazila,
+        deliveryNote,
+      });
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [phone, fullName, address, division, district, upazila, deliveryNote]);
 
   // Track Checkout Leads (Abandoned Checkout)
   React.useEffect(() => {
@@ -185,19 +203,15 @@ export default function CheckoutClient({ storeInfo, theme }: { storeInfo?: any; 
       }
 
       // Save customer info for future auto-fill
-      try {
-        localStorage.setItem(
-          "customerInfo",
-          JSON.stringify({
-            phone,
-            fullName,
-            address,
-            division,
-          }),
-        );
-      } catch (err) {
-        console.error("Failed to save customer info", err);
-      }
+      saveCustomerInfo({
+        phone,
+        fullName,
+        address,
+        division,
+        district,
+        upazila,
+        deliveryNote,
+      });
 
       // Fire purchase event BEFORE clearCart so cart items are still available
       trackEvent('purchase', {

@@ -30,7 +30,7 @@ export default function GlobalSearch05({ tenantSlug, theme }: { tenantSlug: stri
         if (json.data?.data) setResults(json.data.data);
       } catch { } finally { setIsLoading(false); }
     };
-    const t = setTimeout(searchProducts, 3000);
+    const t = setTimeout(searchProducts, 1000);
     return () => clearTimeout(t);
   }, [query, tenantSlug]);
 

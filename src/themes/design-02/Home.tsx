@@ -9,6 +9,7 @@ import Link from "next/link";
 import Header from "./components/layout/Header";
 import Footer from "./components/layout/Footer";
 import Design02ProductCard from "./components/ui/ProductCard";
+import HeroBannerSlider02 from "./components/ui/HeroBannerSlider";
 
 export default async function Design02Home({
   tenantSlug,
@@ -41,49 +42,7 @@ export default async function Design02Home({
       <Header storeInfo={storeInfo} />
 
       {/* Hero Section */}
-      <section className="w-full bg-white">
-        <div className="max-w-7xl mx-auto w-full relative overflow-hidden flex flex-col justify-center aspect-[21/9] max-h-[400px] sm:max-h-[500px] lg:max-h-[600px] xl:max-h-[650px] sm:mt-4 sm:rounded-2xl shadow-sm">
-          {theme?.banner?.image?.secure_url ? (
-            <div className="absolute inset-0 z-0">
-              <img
-                src={theme.banner.image.secure_url}
-                alt={theme.banner.title || "Banner"}
-                className="w-full h-full object-cover object-center"
-              />
-              {/* Elegant white gradient fading to transparent for text readability */}
-              <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/50 to-transparent"></div>
-            </div>
-          ) : (
-            <div className="absolute inset-0 z-0 bg-gray-50"></div>
-          )}
-  
-          <div className="relative z-10 flex flex-col justify-center pointer-events-none w-full h-full">
-            <div className="w-full px-6 sm:px-12">
-              <div className="max-w-2xl text-left pointer-events-auto py-8 lg:py-16">
-                {theme?.banner?.title && (
-                <h2 className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-2 sm:mb-4 text-white leading-[1.1] whitespace-pre-line">
-                    {theme.banner.title}
-                  </h2>
-                )}
-                {theme?.banner?.description && (
-                <p className="text-sm sm:text-base md:text-lg lg:text-xl text-white mb-4 sm:mb-8 max-w-xl font-medium line-clamp-2 sm:line-clamp-3">
-                    {theme.banner.description}
-                  </p>
-                )}
-                {theme?.banner?.buttonText && theme?.banner?.buttonLink && (
-                  <Link
-                    prefetch={false}
-                    href={theme.banner.buttonLink}
-                  className="inline-block px-6 sm:px-10 py-2.5 sm:py-4 bg-white text-gray-900 rounded-full text-xs sm:text-sm font-bold tracking-wide hover:bg-gray-100 transition-all shadow-xl hover:shadow-2xl  duration-300"
-                  >
-                    {theme.banner.buttonText}
-                  </Link>
-                )}
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      <HeroBannerSlider02 banner={theme?.banner} />
 
       <main className="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-8 py-6 sm:py-12 lg:py-16 space-y-6 sm:space-y-10 lg:space-y-20">
         {/* Category List */}

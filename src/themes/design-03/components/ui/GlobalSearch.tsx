@@ -47,7 +47,7 @@ export default function GlobalSearch03({ tenantSlug, theme }: { tenantSlug: stri
       }
     };
 
-    const debounceTimer = setTimeout(searchProducts, 3000);
+    const debounceTimer = setTimeout(searchProducts, 1000);
     return () => clearTimeout(debounceTimer);
   }, [query, tenantSlug]);
 

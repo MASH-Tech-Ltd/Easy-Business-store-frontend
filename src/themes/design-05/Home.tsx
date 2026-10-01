@@ -5,6 +5,7 @@ import Link from "next/link";
 import Header05 from "./components/layout/Header";
 import Footer05 from "./components/layout/Footer";
 import ProductCard05 from "./components/ui/ProductCard";
+import HeroBannerSlider05 from "./components/ui/HeroBannerSlider";
 
 export default async function Design05Home({
   tenantSlug,
@@ -40,61 +41,7 @@ export default async function Design05Home({
 
       <main className="flex-1">
         {/* Hero Section */}
-        <section className="relative w-full px-4 sm:px-6 lg:px-12 py-4 lg:py-6 max-w-[1400px] mx-auto">
-          <div className="bg-[#F8F9FA] rounded-[1.5rem] sm:rounded-[2rem] overflow-hidden flex flex-col-reverse lg:flex-row items-center justify-between p-4 sm:p-6 lg:p-10 relative">
-            <div className="lg:w-1/2 z-10 relative text-center lg:text-left mt-4 lg:mt-0 w-full">
-              {theme?.banner?.title && (
-                <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold tracking-tighter leading-[1.1] mb-3 sm:mb-5">
-                  {theme.banner.title}
-                </h2>
-              )}
-              {theme?.banner?.description && (
-                <p className="text-gray-500 text-sm sm:text-base lg:text-lg mb-6 sm:mb-8 max-w-md mx-auto lg:mx-0 leading-relaxed">
-                  {theme.banner.description}
-                </p>
-              )}
-              {theme?.banner?.buttonText && theme?.banner?.buttonLink && (
-                <Link prefetch={false}
-                  href={theme.banner.buttonLink}
-                  className="inline-flex items-center justify-center bg-black text-white px-8 py-4 rounded-full font-semibold text-sm hover:bg-gray-800 transition-colors gap-2 group"
-                >
-                  {theme.banner.buttonText}
-                  <svg
-                    className="w-4 h-4 group-hover:translate-x-1 transition-transform"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                  >
-                    <path d="M5 12h14M12 5l7 7-7 7" />
-                  </svg>
-                </Link>
-              )}
-            </div>
-
-            <div className="lg:w-1/2 relative flex justify-center aspect-[21/9] w-full mb-2 lg:mb-0">
-              {theme?.banner?.image ? (
-                <img
-                  src={theme.banner.image?.secure_url || theme.banner.image}
-                  alt="Hero"
-                  className="w-full h-full object-cover rounded-2xl sm:rounded-3xl drop-shadow-2xl z-10 relative"
-                />
-              ) : (
-                <div className="w-full h-full flex items-center justify-center opacity-10">
-                  <svg
-                    className="w-64 h-64"
-                    viewBox="0 0 24 24"
-                    fill="currentColor"
-                  >
-                    <path d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                  </svg>
-                </div>
-              )}
-              {/* Decorative circle */}
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-gradient-to-tr from-gray-200/50 to-transparent rounded-full blur-3xl -z-0"></div>
-            </div>
-          </div>
-        </section>
+        <HeroBannerSlider05 banner={theme?.banner} />
 
         {/* Categories */}
         {displayCategories.length > 0 && (

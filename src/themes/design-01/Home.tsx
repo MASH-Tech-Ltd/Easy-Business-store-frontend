@@ -16,6 +16,7 @@ import {
 import Footer from "./components/layout/Footer";
 import Header from "./components/layout/Header";
 import CategorySlider from "./components/ui/CategorySlider";
+import HeroBannerSlider from "./components/ui/HeroBannerSlider";
 import ProductCard from "./components/ui/ProductCard";
 import { getTranslation, TranslationKeys } from "@/utils/translations";
 import { getStoreInfo, getTheme } from "@/core/api/store";
@@ -79,48 +80,7 @@ export default async function Design01Home({
     <div className="min-h-screen bg-gray-50 font-sans flex flex-col">
       <Header />
       {/* Hero Section */}
-      <section className="max-w-[1400px] w-full mx-auto bg-gradient-to-r from-blue-900 to-indigo-800 text-white relative overflow-hidden flex flex-col justify-center min-h-[230px] sm:min-h-[340px] aspect-[21/9] lg:aspect-[2.5/1] xl:aspect-[3/1]">
-        {theme?.banner?.image?.secure_url && (
-          <div className="absolute inset-0 z-0">
-            <img
-              src={theme.banner.image.secure_url}
-              alt={theme.banner.title || "Banner Background"}
-              className="w-full h-full object-cover"
-            />
-            {/* Dark overlay to ensure white text is readable over the banner */}
-            <div className="absolute inset-0 bg-black/50"></div>
-          </div>
-        )}
-        <div className="max-w-[1400px] w-full mx-auto px-4 sm:px-6 md:px-8 relative z-10 py-4 sm:py-8">
-          <div className="max-w-2xl">
-            {theme?.banner?.subtitle && (
-              <span className="inline-block py-1 px-3 rounded-full bg-blue-800/50 text-blue-200 text-xs sm:text-sm font-semibold mb-3 sm:mb-4 md:mb-6 border border-blue-700/50 backdrop-blur-sm">
-                {theme.banner.subtitle}
-              </span>
-            )}
-            {theme?.banner?.title && (
-              <h1 className="text-[clamp(1.75rem,5vw,4rem)] font-extrabold tracking-tight mb-3 sm:mb-4 md:mb-6 leading-tight whitespace-pre-line">
-                {theme.banner.title}
-              </h1>
-            )}
-            {theme?.banner?.description && (
-              <p className="text-[clamp(0.875rem,2vw,1.25rem)] text-blue-100 mb-5 sm:mb-6 md:mb-8 leading-relaxed">
-                {theme.banner.description}
-              </p>
-            )}
-            {theme?.banner?.buttonText && theme?.banner?.buttonLink && (
-              <Link
-                prefetch={false}
-                href={theme.banner.buttonLink}
-                className="inline-flex items-center gap-1 sm:gap-2 bg-white text-indigo-900 px-3 py-1.5 sm:px-6 sm:py-3 md:px-8 md:py-4 rounded-md sm:rounded-lg font-bold text-[10px] sm:text-sm md:text-lg hover:bg-blue-50 transition-colors shadow-lg hover:shadow-xl"
-              >
-                {theme.banner.buttonText}{" "}
-                <ArrowRight className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5" />
-              </Link>
-            )}
-          </div>
-        </div>
-      </section>
+      <HeroBannerSlider banner={theme?.banner} />
 
       {/* Top Categories */}
       {categories.length > 0 && (

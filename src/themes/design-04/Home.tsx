@@ -5,6 +5,7 @@ import Link from 'next/link';
 import Header04 from './components/layout/Header';
 import Footer04 from './components/layout/Footer';
 import ProductCard04 from './components/ui/ProductCard';
+import HeroBannerSlider04 from './components/ui/HeroBannerSlider';
 import { getTranslation } from '@/utils/translations';
 
 export default async function Design04Home({ tenantSlug }: { tenantSlug: string }) {
@@ -36,75 +37,10 @@ export default async function Design04Home({ tenantSlug }: { tenantSlug: string 
       <Header04 storeInfo={storeInfo} />
 
       {/* ── HERO ──────────────────────────────────── */}
-      <section className="relative overflow-hidden bg-gray-900 lg:bg-gray-100 aspect-[21/9] lg:aspect-auto flex flex-col justify-center">
-        {/* Mobile & Tablet Background Image & Gradient (Visible only < lg) */}
-        <div className="absolute inset-0 z-0 lg:hidden">
-          {theme?.banner?.image?.secure_url ? (
-            <>
-              <img
-                src={theme.banner.image.secure_url}
-                alt={theme.banner.title || 'Banner'}
-                className="w-full h-full object-cover"
-              />
-              <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-black/30"></div>
-            </>
-          ) : (
-            <div className="w-full h-full bg-gray-900"></div>
-          )}
-        </div>
-
-        <div className="relative z-10 max-w-[1400px] mx-auto w-full px-4 sm:px-6 py-2 sm:py-4 lg:py-20 grid lg:grid-cols-2 gap-4 lg:gap-10 items-center">
-          {/* Left: Text */}
-          <div className="text-white lg:text-gray-900 flex flex-col justify-center h-full">
-            {theme?.banner?.subtitle && (
-              <p className="text-[10px] sm:text-xs lg:text-sm font-semibold tracking-widest uppercase mb-1 lg:mb-3 text-gray-300 lg:text-gray-400">
-                {theme.banner.subtitle}
-              </p>
-            )}
-            {theme?.banner?.title && (
-              <h2 className="text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-black tracking-tight leading-[1.1] mb-1 sm:mb-2 lg:mb-5">
-                {theme.banner.title}
-              </h2>
-            )}
-            {theme?.banner?.description && (
-              <p className="text-xs sm:text-sm md:text-lg mb-2 sm:mb-4 lg:mb-8 max-w-md leading-snug lg:leading-relaxed text-gray-200 lg:text-gray-400 line-clamp-1 sm:line-clamp-2 lg:line-clamp-none">
-                {theme.banner.description}
-              </p>
-            )}
-            {theme?.banner?.buttonText && theme?.banner?.buttonLink && (
-              <div>
-                <Link prefetch={false}
-                  href={theme.banner.buttonLink}
-                  className="inline-block font-bold px-6 py-2 sm:px-6 sm:py-2.5 md:px-10 md:py-4 rounded-full transition-colors shadow-xl lg:shadow-none bg-white text-gray-900 hover:bg-gray-100 lg:bg-gray-900 lg:text-white lg:hover:bg-gray-700 text-xs sm:text-sm md:text-base"
-                >
-                  {theme.banner.buttonText}
-                </Link>
-              </div>
-            )}
-          </div>
-
-          {/* Right: Hero Image (Visible only >= lg) */}
-          <div className="hidden lg:flex relative justify-center items-center">
-            <div className="w-full max-h-[480px] aspect-square bg-gray-50 rounded-3xl overflow-hidden flex items-center justify-center">
-              {theme?.banner?.image?.secure_url ? (
-                <img
-                  src={theme.banner.image.secure_url}
-                  alt={theme.banner.title || 'Banner'}
-                  className="w-full h-full object-cover"
-                />
-              ) : products?.[0]?.images?.[0]?.secure_url ? (
-                <img
-                  src={products[0].images[0].secure_url}
-                  alt="Featured product"
-                  className="w-full h-full object-cover p-8"
-                />
-              ) : (
-                <div className="text-gray-200 text-sm">No image</div>
-              )}
-            </div>
-          </div>
-        </div>
-      </section>
+      <HeroBannerSlider04 
+        banner={theme?.banner} 
+        featuredProductImage={products?.[0]?.images?.[0]?.secure_url} 
+      />
 
       {/* ── CATEGORIES ────────────────────────────── */}
       {displayCategories.length > 0 && (

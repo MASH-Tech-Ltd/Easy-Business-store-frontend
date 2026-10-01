@@ -10,6 +10,7 @@ import { bdLocations } from '@/data/locations';
 import { computeShipping } from '@/utils/shipping';
 import { z } from 'zod';
 import { getTranslation } from '@/utils/translations';
+import { getSavedCustomerInfo, saveCustomerInfo } from '@/utils/customerStorage';
 
 const checkoutSchema = z.object({
   phone: z.string().regex(/^(?:\+88|88)?01[3-9]\d{8}$/, { message: "VALID BD PHONE REQUIRED" }),
@@ -39,6 +40,37 @@ export default function CheckoutClient03({ storeInfo, theme }: { storeInfo?: any
   const [division, setDivision] = useState('Dhaka');
   const [district, setDistrict] = useState('');
   const [upazila, setUpazila] = useState('');
+
+  // Auto-fill customer details from localStorage
+  useEffect(() => {
+    try {
+      const info = getSavedCustomerInfo();
+      if (info.phone) setPhone(info.phone);
+      if (info.fullName) setFullName(info.fullName);
+      if (info.address) setAddress(info.address);
+      if (info.division) setDivision(info.division);
+      if (info.district) setDistrict(info.district);
+      if (info.upazila) setUpazila(info.upazila);
+    } catch (error) {
+      console.error("Failed to load customer info", error);
+    }
+  }, []);
+
+  // Auto-save customer details to localStorage on change
+  useEffect(() => {
+    if (!phone && !fullName && !address) return;
+    const timer = setTimeout(() => {
+      saveCustomerInfo({
+        phone,
+        fullName,
+        address,
+        division,
+        district,
+        upazila,
+      });
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [phone, fullName, address, division, district, upazila]);
 
   const divisionsList = bdLocations.map((d) => d.division);
   const districtsList = bdLocations.find((d) => d.division === division)?.districts || [];
@@ -114,6 +146,16 @@ export default function CheckoutClient03({ storeInfo, theme }: { storeInfo?: any
       if (data?.data) {
         setOrderId(data.data.orderId);
       }
+
+      // Save customer info for future auto-fill
+      saveCustomerInfo({
+        phone,
+        fullName,
+        address,
+        division,
+        district,
+        upazila,
+      });
       
       // Fire purchase event BEFORE clearCart so cart items are still available
       trackEvent('purchase', {

@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
@@ -43,7 +43,7 @@ export default function GlobalSearch({ tenantSlug, language = 'en', theme }: { t
         setIsLoading(false);
       }
     };
-    const timer = setTimeout(searchProducts, 3000);
+    const timer = setTimeout(searchProducts, 1000);
     return () => clearTimeout(timer);
   }, [query, tenantSlug]);
 
