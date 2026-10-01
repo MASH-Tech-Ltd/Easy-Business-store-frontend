@@ -138,7 +138,7 @@ export default async function ProductPage04({ params }: { params: Promise<{ slug
 
           {product.specifications && product.specifications.length > 0 && (
             <div>
-              <h3 className="text-xl font-bold text-gray-900 mb-6">{t('specifications')}</h3>
+              <h3 className="text-xl font-bold text-gray-900 mb-6">{t('specifications') || 'Specifications'}</h3>
               <div className="border border-gray-100 rounded-2xl overflow-hidden divide-y divide-gray-100">
                 {product.specifications.map((specGroup: any, i: number) => (
                   <div key={i} className="grid grid-cols-1 md:grid-cols-4">

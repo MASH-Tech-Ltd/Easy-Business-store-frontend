@@ -132,10 +132,10 @@ export default function ProductClient05({ product, theme }: { product: any; them
         </div>
       </div>
 
-      {/* Technical Specifications */}
+      {/* Specifications */}
       {product.specifications && product.specifications.length > 0 && (
         <div className="mt-24 pt-16 border-t border-gray-100">
-          <h2 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-12 tracking-tight text-center">{t('technicalSpecifications') || 'Technical Specifications'}</h2>
+          <h2 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-12 tracking-tight text-center">{t('specifications') || 'Specifications'}</h2>
           <div className="max-w-4xl mx-auto space-y-12">
             {product.specifications.map((group: any, gIdx: number) => (
               <div key={gIdx}>

@@ -167,7 +167,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
         <div className="mt-16">
           <div className="flex space-x-8 border-b border-gray-200 mb-8 px-2">
             <button className="pb-3 font-bold text-[#7c3aed] border-b-2 border-[#7c3aed] text-sm px-2 transition-all">
-              {t('specifications')}
+              {t('specifications') || 'Specifications'}
             </button>
             <button className="pb-3 font-semibold text-gray-500 hover:text-gray-800 transition-colors text-sm px-2">
               {t('reviews')}

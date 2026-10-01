@@ -163,7 +163,7 @@ export default async function Design02ProductPage({ params }: { params: Promise<
               
               {product.specifications && product.specifications.length > 0 && (
                 <div>
-                  <h3 className="text-xl font-medium text-gray-900 mb-6 border-b border-gray-100 pb-4">{t('technicalSpecifications')}</h3>
+                  <h3 className="text-xl font-medium text-gray-900 mb-6 border-b border-gray-100 pb-4">{t('specifications') || 'Specifications'}</h3>
                   <div className="bg-gray-50 rounded-xl p-6 md:p-8">
                     {product.specifications.map((group: any, gIdx: number) => (
                       <div key={gIdx} className={`grid grid-cols-1 md:grid-cols-4 gap-6 md:gap-12 ${gIdx > 0 ? "mt-8 border-t border-gray-200 pt-8" : ""}`}>

@@ -152,7 +152,7 @@ export default async function Design03ProductPage({ params }: { params: Promise<
         {product.specifications && product.specifications.length > 0 && (
           <div className="border-b border-white/10">
             <div className="p-8 md:p-12 border-b border-white/10 bg-[#050505]">
-              <h3 className="text-2xl font-black text-white uppercase tracking-tighter">{t('technicalSpecifications') || 'TECHNICAL DATA'}</h3>
+              <h3 className="text-2xl font-black text-white uppercase tracking-tighter">{t('specifications') || 'SPECIFICATIONS'}</h3>
             </div>
             <div className="bg-black">
               {product.specifications.map((group: any, gIdx: number) => (
