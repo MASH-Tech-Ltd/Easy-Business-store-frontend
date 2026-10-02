@@ -15,6 +15,10 @@ const hindSiliguri = Hind_Siliguri({
   subsets: ["bengali"],
   variable: "--font-hind-siliguri",
 });
+import Providers from "../components/Providers";
+import { LanguageProvider } from "../context/LanguageContext";
+import VisitTracker from "../components/VisitTracker";
+import StorefrontTracker from "../components/StorefrontTracker";
 
 import { storefrontFetch } from "@/utils/storefrontFetch";
 
@@ -116,7 +120,15 @@ export async function generateMetadata(): Promise<Metadata> {
     },
     description,
     icons: {
-      icon: faviconUrl,
+      icon: [
+        { url: faviconUrl, sizes: '48x48', type: 'image/png' },
+        { url: faviconUrl, sizes: '96x96', type: 'image/png' },
+        { url: faviconUrl, sizes: '192x192', type: 'image/png' },
+      ],
+      shortcut: [faviconUrl],
+      apple: [
+        { url: faviconUrl, sizes: '180x180', type: 'image/png' },
+      ],
     },
     alternates: {
       canonical: baseUrl,
@@ -139,10 +151,6 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-import Providers from "../components/Providers";
-import { LanguageProvider } from "../context/LanguageContext";
-import VisitTracker from "../components/VisitTracker";
-import StorefrontTracker from "../components/StorefrontTracker";
 
 export default async function RootLayout({
   children,
@@ -511,28 +519,57 @@ export default async function RootLayout({
         `,
           }}
         />
-        {/* Organization JSON-LD – present on every store page for brand authority */}
+        {/* WebSite & Organization JSON-LD – Required for Google Site Name, Store Logo & Sitelinks */}
         {storeInfo && (
           <script
             type="application/ld+json"
             dangerouslySetInnerHTML={{
               __html: JSON.stringify({
                 '@context': 'https://schema.org',
-                '@type': 'OnlineStore',
-                name: cleanStoreName(storeInfo.name),
-                url: `${storeInfo.customDomain ? `https://${storeInfo.customDomain}` : `https://${tenantSlug}.masheco.com`}`,
-                logo: storeInfo.logo || undefined,
-                description: storeInfo.description || undefined,
-                telephone: storeInfo.phone || undefined,
-                contactPoint: storeInfo.phone
-                  ? [
-                      {
-                        '@type': 'ContactPoint',
-                        telephone: storeInfo.phone,
-                        contactType: 'customer service',
+                '@graph': [
+                  {
+                    '@type': 'WebSite',
+                    '@id': `${storeInfo.customDomain ? `https://${storeInfo.customDomain}` : `https://${tenantSlug}.masheco.com`}/#website`,
+                    url: `${storeInfo.customDomain ? `https://${storeInfo.customDomain}` : `https://${tenantSlug}.masheco.com`}`,
+                    name: cleanStoreName(storeInfo.name),
+                    alternateName: [cleanStoreName(storeInfo.name), tenantSlug.toUpperCase()],
+                    publisher: {
+                      '@id': `${storeInfo.customDomain ? `https://${storeInfo.customDomain}` : `https://${tenantSlug}.masheco.com`}/#organization`,
+                    },
+                    potentialAction: {
+                      '@type': 'SearchAction',
+                      target: {
+                        '@type': 'EntryPoint',
+                        urlTemplate: `${storeInfo.customDomain ? `https://${storeInfo.customDomain}` : `https://${tenantSlug}.masheco.com`}/products?search={search_term_string}`,
                       },
-                    ]
-                  : undefined,
+                      'query-input': 'required name=search_term_string',
+                    },
+                  },
+                  {
+                    '@type': ['Organization', 'OnlineStore'],
+                    '@id': `${storeInfo.customDomain ? `https://${storeInfo.customDomain}` : `https://${tenantSlug}.masheco.com`}/#organization`,
+                    name: cleanStoreName(storeInfo.name),
+                    url: `${storeInfo.customDomain ? `https://${storeInfo.customDomain}` : `https://${tenantSlug}.masheco.com`}`,
+                    logo: storeInfo.logo
+                      ? {
+                          '@type': 'ImageObject',
+                          url: storeInfo.logo,
+                          caption: cleanStoreName(storeInfo.name),
+                        }
+                      : undefined,
+                    description: storeInfo.description || undefined,
+                    telephone: storeInfo.phone || undefined,
+                    contactPoint: storeInfo.phone
+                      ? [
+                          {
+                            '@type': 'ContactPoint',
+                            telephone: storeInfo.phone,
+                            contactType: 'customer service',
+                          },
+                        ]
+                      : undefined,
+                  },
+                ],
               }),
             }}
           />
