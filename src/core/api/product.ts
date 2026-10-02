@@ -2,12 +2,23 @@ import { storefrontFetch } from "../../utils/storefrontFetch";
 
 export async function getProducts(tenantSlug: string, searchParams?: string, clientIp?: string) {
   try {
-    const query = searchParams ? `?${searchParams}` : '?limit=50&sort=random';
+    const query = searchParams ? `?${searchParams}` : '?limit=50&sort=newest&inStock=true';
     const res = await storefrontFetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/products${query}`, { next: { revalidate: 60 } }, clientIp);
     if (!res.ok) return [];
     const json = await res.json();
     const data = json?.data?.data || json?.data || [];
     return Array.isArray(data) ? data : [];
+  } catch (error) {
+    return [];
+  }
+}
+
+export async function getNewArrivalsProducts(tenantSlug: string, limit: number = 8, clientIp?: string) {
+  try {
+    const res = await storefrontFetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/products/new-arrivals?limit=${limit}`, { next: { revalidate: 60 } }, clientIp);
+    if (!res.ok) return [];
+    const json = await res.json();
+    return json?.data?.data || json?.data || [];
   } catch (error) {
     return [];
   }

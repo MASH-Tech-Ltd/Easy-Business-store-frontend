@@ -19,7 +19,7 @@ export default async function Design03Home({ tenantSlug }: { tenantSlug: string 
   }
 
   const [products, bestsellers, featured, categories, storeInfo, theme] = await Promise.all([
-    getProducts(tenantSlug),
+    getProducts(tenantSlug, 'limit=20&sort=random'),
     getBestsellingProducts(tenantSlug, 8),
     getJustForYouProducts(tenantSlug, 8),
     getCategories(tenantSlug),
@@ -88,19 +88,21 @@ export default async function Design03Home({ tenantSlug }: { tenantSlug: string 
         </section>
 
         {/* Bestselling Grid */}
-        <section className="border-b border-white/10 bg-black">
-          <div className="p-8 md:p-12 border-b border-white/10">
-            <h3 className="text-sm text-cyan-400 font-mono mb-2 uppercase tracking-widest">Top Tier</h3>
-            <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tighter">Bestselling</h2>
-          </div>
-          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-0">
-            {bestsellers.map((product: any, index: number) => (
-              <div key={product._id || product.id} className={`border-b sm:border-r border-white/10 ${index % 4 === 3 ? 'lg:border-r-0' : ''}`}>
-                <Design03ProductCard product={product} isBestSelling={true} theme={theme} />
-              </div>
-            ))}
-          </div>
-        </section>
+        {bestsellers && bestsellers.length > 0 && (
+          <section className="border-b border-white/10 bg-black">
+            <div className="p-8 md:p-12 border-b border-white/10">
+              <h3 className="text-sm text-cyan-400 font-mono mb-2 uppercase tracking-widest">Top Tier</h3>
+              <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tighter">Bestselling</h2>
+            </div>
+            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-0">
+              {bestsellers.map((product: any, index: number) => (
+                <div key={product._id || product.id} className={`border-b sm:border-r border-white/10 ${index % 4 === 3 ? 'lg:border-r-0' : ''}`}>
+                  <Design03ProductCard product={product} isBestSelling={true} theme={theme} />
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
 
         <Footer03 storeInfo={storeInfo} theme={theme} />
       </main>

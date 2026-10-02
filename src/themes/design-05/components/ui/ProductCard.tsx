@@ -31,16 +31,30 @@ export default function ProductCard05({ product, isList = false, isBestSelling =
     }, 1);
   };
 
+  const isOutOfStock = 
+    product.isOutOfStock === true ||
+    product.inStock === false ||
+    product.status === 'out_of_stock' ||
+    (typeof product.stock === 'number' && product.stock <= 0) ||
+    (typeof product.quantity === 'number' && product.quantity <= 0);
+
   if (isList) {
     return (
       <Link prefetch={false} href={`/product/${productSlug}`} className="group flex bg-white rounded-2xl overflow-hidden hover:bg-gray-50 transition-all border border-transparent hover:border-gray-200">
-        <div className="w-48 h-48 bg-gray-50 flex items-center justify-center shrink-0 overflow-hidden mix-blend-multiply p-4">
+        <div className="w-48 h-48 bg-gray-50 flex items-center justify-center shrink-0 overflow-hidden mix-blend-multiply p-4 relative">
+          {isOutOfStock && (
+            <div className="absolute inset-0 bg-black/30 backdrop-blur-[1px] flex items-center justify-center z-20 pointer-events-none">
+              <span className="bg-gray-900/90 text-white text-xs font-bold uppercase tracking-wider px-3 py-1.5 rounded-full shadow-lg border border-white/20">
+                Out of Stock
+              </span>
+            </div>
+          )}
           {imageUrl ? (
-            <img src={imageUrl} alt={product.title} className="w-full h-full object-cover mix-blend-multiply group-hover:scale-105 transition-transform duration-500" />
+            <img src={imageUrl} alt={product.title} className={`w-full h-full object-cover mix-blend-multiply group-hover:scale-105 transition-transform duration-500 ${isOutOfStock ? "opacity-70 grayscale-[30%]" : ""}`} />
           ) : (
             <div className="text-gray-300 text-xs font-medium uppercase tracking-widest">No image</div>
           )}
-          {(isBestSelling && product.salesCount && product.salesCount > 30) && (
+          {(isBestSelling && product.salesCount && product.salesCount > 20) && (
             <div className="absolute top-4 right-4 bg-amber-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full z-10 shadow-sm flex items-center gap-1">
               🔥 {product.salesCount}+ Sold
             </div>
@@ -54,9 +68,14 @@ export default function ProductCard05({ product, isList = false, isBestSelling =
             <span className="font-semibold text-gray-900 text-xl">{theme?.currencySymbol || '৳'}{' '}{price.toLocaleString()}</span>
             {hasDiscount && <span className="text-sm text-gray-400 line-through">{theme?.currencySymbol || '৳'}{' '}{product.originalPrice.toLocaleString()}</span>}
           </div>
-          <button onClick={handleAddToCart} 
-            style={theme?.buttonColors?.addToCart ? { backgroundColor: theme.buttonColors.addToCart, borderColor: theme.buttonColors.addToCart, color: '#fff' } : {}}
-            className="self-start px-6 py-2.5 bg-white border border-gray-200 text-gray-900 text-sm font-semibold rounded-full hover:border-gray-900 hover:bg-gray-900 hover:text-white transition-all">{t('addToCart') || 'Add to Cart'}</button>
+          <button 
+            onClick={isOutOfStock ? (e) => { e.preventDefault(); e.stopPropagation(); } : handleAddToCart} 
+            disabled={isOutOfStock}
+            style={!isOutOfStock && theme?.buttonColors?.addToCart ? { backgroundColor: theme.buttonColors.addToCart, borderColor: theme.buttonColors.addToCart, color: '#fff' } : {}}
+            className={`self-start px-6 py-2.5 bg-white border border-gray-200 text-gray-900 text-sm font-semibold rounded-full transition-all ${isOutOfStock ? "opacity-50 cursor-not-allowed bg-gray-100 text-gray-400 border-gray-300" : "hover:border-gray-900 hover:bg-gray-900 hover:text-white"}`}
+          >
+            {t('addToCart') || 'Add to Cart'}
+          </button>
         </div>
       </Link>
     );
@@ -71,23 +90,35 @@ export default function ProductCard05({ product, isList = false, isBestSelling =
               Save {savePercent}%
             </span>
           )}
-          {(isBestSelling && product.salesCount && product.salesCount > 30) && (
+          {(isBestSelling && product.salesCount && product.salesCount > 20) && (
             <span className="bg-amber-500 text-white text-[8px] sm:text-[9px] lg:text-[10px] font-bold uppercase tracking-wider px-1.5 sm:px-2 lg:px-3 py-0.5 sm:py-1 lg:py-1.5 rounded-full shadow-sm pointer-events-auto whitespace-nowrap">
               {product.salesCount}+ Sold
             </span>
           )}
         </div>
+
+        {isOutOfStock && (
+          <div className="absolute inset-0 bg-black/30 backdrop-blur-[1px] flex items-center justify-center z-20 pointer-events-none">
+            <span className="bg-gray-900/90 text-white text-[11px] sm:text-xs font-bold uppercase tracking-wider px-3.5 py-1.5 rounded-full shadow-lg border border-white/20 backdrop-blur-md">
+              Out of Stock
+            </span>
+          </div>
+        )}
+
         {imageUrl ? (
-          <img src={imageUrl} alt={product.title || product.name} className="w-full h-full object-cover mix-blend-multiply group-hover:scale-105 transition-transform duration-700 ease-out" />
+          <img src={imageUrl} alt={product.title || product.name} className={`w-full h-full object-cover mix-blend-multiply group-hover:scale-105 transition-transform duration-700 ease-out ${isOutOfStock ? "opacity-70 grayscale-[30%]" : ""}`} />
         ) : (
           <div className="w-full h-full flex items-center justify-center text-gray-300 text-xs font-medium uppercase tracking-widest">No image</div>
         )}
         
         {/* Hover Add to Cart */}
         <div className="absolute inset-x-4 bottom-4 translate-y-0 opacity-100 md:translate-y-12 md:opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 z-20">
-          <button onClick={handleAddToCart} 
-            style={theme?.buttonColors?.addToCart ? { backgroundColor: theme.buttonColors.addToCart, borderColor: theme.buttonColors.addToCart, color: '#fff' } : {}}
-            className="w-full py-3.5 bg-white/90 backdrop-blur-md text-gray-900 text-sm font-semibold rounded-xl hover:bg-black hover:text-white transition-colors shadow-sm flex items-center justify-center gap-2">
+          <button 
+            onClick={isOutOfStock ? (e) => { e.preventDefault(); e.stopPropagation(); } : handleAddToCart} 
+            disabled={isOutOfStock}
+            style={!isOutOfStock && theme?.buttonColors?.addToCart ? { backgroundColor: theme.buttonColors.addToCart, borderColor: theme.buttonColors.addToCart, color: '#fff' } : {}}
+            className={`w-full py-3.5 text-sm font-semibold rounded-xl transition-colors shadow-sm flex items-center justify-center gap-2 ${isOutOfStock ? "bg-gray-400 text-white cursor-not-allowed opacity-50 pointer-events-none" : "bg-white/90 backdrop-blur-md text-gray-900 hover:bg-black hover:text-white"}`}
+          >
             <ShoppingCart className="w-4 h-4" />{t('addToCart') || 'Add to Cart'}</button>
         </div>
       </Link>

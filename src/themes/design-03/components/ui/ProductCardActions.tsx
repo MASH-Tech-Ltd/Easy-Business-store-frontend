@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import React from 'react';
 import { useCart } from '@/context/CartContext';
@@ -8,9 +8,17 @@ export default function ProductCardActions03({ product, theme }: { product: any;
   const { addToCart } = useCart();
   const router = useRouter();
 
+  const isOutOfStock = 
+    product.isOutOfStock === true ||
+    product.inStock === false ||
+    product.status === 'out_of_stock' ||
+    (typeof product.stock === 'number' && product.stock <= 0) ||
+    (typeof product.quantity === 'number' && product.quantity <= 0);
+
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
+    if (isOutOfStock) return;
     addToCart({
       id: product._id || product.id,
       title: product.title || product.name,
@@ -23,21 +31,30 @@ export default function ProductCardActions03({ product, theme }: { product: any;
   const handleBuyNow = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
+    if (isOutOfStock) return;
     handleAddToCart(e);
     router.push('/checkout');
   };
 
+  const primaryColor = theme?.primaryColor || '#22d3ee';
+  const addToCartColor = theme?.buttonColors?.addToCart || primaryColor;
+  const buyNowColor = theme?.buttonColors?.buyNow || primaryColor;
+
   return (
     <div className="flex flex-col gap-2 w-full bg-black/90 p-4 border border-white/20 backdrop-blur-md shadow-2xl">
       <button
-        onClick={handleAddToCart}
-        className="w-full text-white font-black py-2 px-2 border border-white/20 hover:bg-white hover:text-black transition-colors text-[10px] uppercase tracking-[0.2em] text-center"
+        onClick={isOutOfStock ? (e) => { e.preventDefault(); e.stopPropagation(); } : handleAddToCart}
+        disabled={isOutOfStock}
+        className={`w-full font-black py-2 px-2 border transition-all text-[10px] uppercase tracking-[0.2em] text-center ${isOutOfStock ? 'opacity-50 cursor-not-allowed bg-gray-900 border-gray-700 text-gray-400' : 'text-white hover:opacity-90'}`}
+        style={!isOutOfStock ? { backgroundColor: addToCartColor, borderColor: addToCartColor } : {}}
       >
         [ ADD TO DATABANK ]
       </button>
       <button
-        onClick={handleBuyNow}
-        className="w-full text-black font-black py-2 px-2 bg-cyan-400 border border-cyan-400 hover:bg-white hover:border-white transition-colors text-[10px] uppercase tracking-[0.2em] text-center"
+        onClick={isOutOfStock ? (e) => { e.preventDefault(); e.stopPropagation(); } : handleBuyNow}
+        disabled={isOutOfStock}
+        className={`w-full font-black py-2 px-2 border transition-all text-[10px] uppercase tracking-[0.2em] text-center ${isOutOfStock ? 'opacity-50 cursor-not-allowed bg-gray-900 border-gray-700 text-gray-400' : 'text-white hover:opacity-90'}`}
+        style={!isOutOfStock ? { backgroundColor: buyNowColor, borderColor: buyNowColor } : {}}
       >
         [ INITIATE PURCHASE ]
       </button>

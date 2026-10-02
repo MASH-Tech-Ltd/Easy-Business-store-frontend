@@ -1,11 +1,11 @@
-﻿import { storefrontFetch } from "../../../../utils/storefrontFetch";
+import { storefrontFetch } from "../../../../utils/storefrontFetch";
 import React from 'react';
 import Link from 'next/link';
 import { headers } from 'next/headers';
 import HeaderCartIcon from '../ui/HeaderCartIcon';
 import GlobalSearch from '../ui/GlobalSearch';
 import { getTranslation } from '@/utils/translations';
-
+import AnnouncementBar from '@/components/AnnouncementBar';
 
 async function getTheme(tenantSlug: string) {
   try {
@@ -37,7 +37,9 @@ export default async function Header() {
   const language = theme?.language || "en";
   const t = (key: any) => getTranslation(language, key);
   return (
-    <header id="main-header" className="bg-white border-b border-gray-100 py-4 sm:py-6 sticky top-0 z-50 shadow-sm">
+    <>
+      <AnnouncementBar banner={theme?.banner} currencySymbol={theme?.currencySymbol} />
+      <header id="main-header" className="bg-white border-b border-gray-100 py-4 sm:py-6 sticky top-0 z-50 shadow-sm">
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 flex flex-col md:flex-row gap-4 justify-between items-center">
         
         {/* Top Row on Mobile: Logo + Mobile Nav */}
@@ -70,6 +72,7 @@ export default async function Header() {
 
       </div>
     </header>
+    </>
   );
 }
 

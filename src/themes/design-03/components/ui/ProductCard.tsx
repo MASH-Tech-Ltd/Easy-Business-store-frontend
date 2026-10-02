@@ -14,16 +14,30 @@ export default function Design03ProductCard({ product, isList = false, isBestSel
   const price = product.discountedPrice || product.originalPrice || product.price;
   const hasDiscount = product.originalPrice > (product.discountedPrice || 0);
 
+  const isOutOfStock = 
+    product.isOutOfStock === true ||
+    product.inStock === false ||
+    product.status === 'out_of_stock' ||
+    (typeof product.stock === 'number' && product.stock <= 0) ||
+    (typeof product.quantity === 'number' && product.quantity <= 0);
+
   if (isList) {
     return (
       <Link prefetch={false} href={`/product/${product.slug || product._id || product.id}`} className="group flex bg-[#050505] border border-white/10 hover:border-cyan-400 transition-colors duration-300 w-full rounded-none">
         <div className="w-48 h-48 bg-[#111] border-r border-white/10 flex items-center justify-center shrink-0 relative p-4 group-hover:bg-black transition-colors">
+          {isOutOfStock && (
+            <div className="absolute inset-0 bg-black/40 backdrop-blur-[1px] flex items-center justify-center z-20 pointer-events-none">
+              <span className="bg-black/90 text-white text-[10px] font-black uppercase tracking-[0.2em] px-3 py-1 border border-white/30">
+                [ OUT OF STOCK ]
+              </span>
+            </div>
+          )}
           {imageUrl ? (
-            <img src={imageUrl} alt={product.title || product.name} className="w-full h-full object-contain mix-blend-luminosity group-hover:mix-blend-normal transition-all duration-300" />
+            <img src={imageUrl} alt={product.title || product.name} className={`w-full h-full object-contain mix-blend-luminosity group-hover:mix-blend-normal transition-all duration-300 ${isOutOfStock ? "opacity-60 grayscale" : ""}`} />
           ) : (
             <div className="w-full h-full flex items-center justify-center text-gray-600 text-xs font-mono uppercase tracking-widest">No Signal</div>
           )}
-          {(isBestSelling && product.salesCount && product.salesCount > 30) && (
+          {(isBestSelling && product.salesCount && product.salesCount > 20) && (
             <div className="absolute top-0 right-0 bg-amber-500 text-black px-2 py-1 text-[10px] font-black uppercase tracking-widest z-10">
               🔥 {product.salesCount}+ SOLD
             </div>
@@ -53,8 +67,15 @@ export default function Design03ProductCard({ product, isList = false, isBestSel
     <div className="group block relative h-full bg-[#050505] hover:bg-black transition-colors">
       <Link prefetch={false} href={`/product/${product.slug || product._id || product.id}`} className="block">
         <div className="aspect-square bg-[#111] relative border-b border-white/10 p-6 overflow-hidden">
+          {isOutOfStock && (
+            <div className="absolute inset-0 bg-black/40 backdrop-blur-[1px] flex items-center justify-center z-20 pointer-events-none">
+              <span className="bg-black/90 text-white text-[10px] font-black uppercase tracking-[0.2em] px-3.5 py-1.5 border border-white/30">
+                [ OUT OF STOCK ]
+              </span>
+            </div>
+          )}
           {imageUrl ? (
-            <img src={imageUrl} alt={product.title || product.name} className="w-full h-full object-contain mix-blend-luminosity group-hover:mix-blend-normal transition-all duration-500 scale-95 group-hover:scale-105" />
+            <img src={imageUrl} alt={product.title || product.name} className={`w-full h-full object-contain mix-blend-luminosity group-hover:mix-blend-normal transition-all duration-500 scale-95 group-hover:scale-105 ${isOutOfStock ? "opacity-60 grayscale" : ""}`} />
           ) : (
             <div className="w-full h-full flex items-center justify-center">
               <span className="text-gray-600 text-xs font-mono uppercase tracking-widest">No Signal</span>
@@ -67,7 +88,7 @@ export default function Design03ProductCard({ product, isList = false, isBestSel
             </div>
           )}
           
-          {(isBestSelling && product.salesCount && product.salesCount > 30) && (
+          {(isBestSelling && product.salesCount && product.salesCount > 20) && (
             <div className="absolute top-4 right-0 bg-amber-500 text-black px-3 py-1 text-[10px] font-black uppercase tracking-widest z-10">
               🔥 {product.salesCount}+ SOLD
             </div>

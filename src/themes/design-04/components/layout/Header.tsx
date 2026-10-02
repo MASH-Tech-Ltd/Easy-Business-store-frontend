@@ -5,6 +5,7 @@ import { headers } from 'next/headers';
 import HeaderCartIcon04 from '../ui/HeaderCartIcon';
 import GlobalSearch04 from '../ui/GlobalSearch';
 import { getTranslation } from '@/utils/translations';
+import AnnouncementBar from '@/components/AnnouncementBar';
 
 async function getStoreInfo(tenantSlug: string) {
   try {
@@ -33,10 +34,8 @@ export default async function Header04({ storeInfo, theme: initialTheme }: { sto
 
   return (
     <header className="bg-white border-b border-gray-100 sticky top-0 z-50">
-      {/* Top thin bar */}
-      <div className="bg-gray-900 text-white text-center text-xs py-2 px-4 tracking-widest font-medium">
-        Free shipping on orders over {theme?.currencySymbol || '৳'}{' '}999 &nbsp;|&nbsp; <Link prefetch={false} href="/products" className="hover:underline">{t('allProducts') || 'All Products'}</Link>
-      </div>
+      {/* Top Announcement Bar */}
+      <AnnouncementBar banner={theme?.banner} currencySymbol={theme?.currencySymbol} />
 
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 py-4 flex flex-col gap-4">
         <div className="flex items-center justify-between gap-6">

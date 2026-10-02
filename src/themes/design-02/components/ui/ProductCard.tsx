@@ -20,6 +20,13 @@ export default function Design02ProductCard({
     product.image?.secure_url ||
     product.image;
 
+  const isOutOfStock = 
+    product.isOutOfStock === true ||
+    product.inStock === false ||
+    product.status === 'out_of_stock' ||
+    (typeof product.stock === 'number' && product.stock <= 0) ||
+    (typeof product.quantity === 'number' && product.quantity <= 0);
+
   if (isList) {
     return (
       <Link
@@ -27,19 +34,26 @@ export default function Design02ProductCard({
         href={`/product/${product.slug || product._id || product.id}`}
         className="group flex bg-white rounded-xl shadow-sm hover:shadow-md border border-gray-100 transition-all duration-300 overflow-hidden relative w-full"
       >
-        <div className="w-48 h-48 bg-gray-50 flex items-center justify-center overflow-hidden shrink-0">
+        <div className="w-48 h-48 bg-gray-50 flex items-center justify-center overflow-hidden shrink-0 relative">
+          {isOutOfStock && (
+            <div className="absolute inset-0 bg-black/30 backdrop-blur-[1px] flex items-center justify-center z-20 pointer-events-none">
+              <span className="bg-gray-900/90 text-white text-xs font-bold uppercase tracking-wider px-3 py-1.5 rounded-full shadow-lg border border-white/20">
+                Out of Stock
+              </span>
+            </div>
+          )}
           {imageUrl ? (
             <img
               src={imageUrl}
               alt={product.title || product.name}
-              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+              className={`w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ${isOutOfStock ? "opacity-70 grayscale-[30%]" : ""}`}
             />
           ) : (
             <div className="w-full h-full flex items-center justify-center text-gray-400 text-sm">
               No Image
             </div>
           )}
-          {isBestSelling && product.salesCount && product.salesCount > 30 && (
+          {isBestSelling && product.salesCount && product.salesCount > 20 && (
             <div className="absolute top-2 right-2 bg-amber-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full z-10 shadow-sm flex items-center gap-1">
               🔥 {product.salesCount}+ Sold
             </div>
@@ -79,11 +93,18 @@ export default function Design02ProductCard({
       className="group block"
     >
       <div className="aspect-[4/5] bg-gray-50 rounded-2xl overflow-hidden mb-4 relative">
+        {isOutOfStock && (
+          <div className="absolute inset-0 bg-black/30 backdrop-blur-[1px] flex items-center justify-center z-20 pointer-events-none">
+            <span className="bg-gray-900/90 text-white text-[11px] sm:text-xs font-bold uppercase tracking-wider px-3.5 py-1.5 rounded-full shadow-lg border border-white/20 backdrop-blur-md">
+              Out of Stock
+            </span>
+          </div>
+        )}
         {imageUrl ? (
           <img
             src={imageUrl}
             alt={product.title || product.name}
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+            className={`w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ${isOutOfStock ? "opacity-70 grayscale-[30%]" : ""}`}
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center">
@@ -99,7 +120,7 @@ export default function Design02ProductCard({
             )}
           </div>
           <div className="flex-1 flex justify-end overflow-hidden min-w-0">
-            {isBestSelling && product.salesCount && product.salesCount > 30 && (
+            {isBestSelling && product.salesCount && product.salesCount > 20 && (
               <div className="px-1.5 py-0.5 sm:px-3 sm:py-1 bg-amber-500 text-white text-[9px] sm:text-xs font-bold uppercase tracking-wider rounded-sm shadow-sm truncate pointer-events-auto max-w-full">
                 🔥 {product.salesCount}+ Sold
               </div>

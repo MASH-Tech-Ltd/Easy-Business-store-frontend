@@ -418,8 +418,11 @@ export default async function RootLayout({
     return yiq >= 128 ? "#000000" : "#ffffff";
   };
   const primaryForeground = getContrastColor(primaryColor);
+  const selectedFont = theme?.fontFamily || "Inter";
+  const encodedFont = encodeURIComponent(selectedFont).replace(/%20/g, '+');
+  const googleFontHref = `https://fonts.googleapis.com/css2?family=${encodedFont}&display=swap`;
 
-  const fontChoice = theme?.fontFamily?.toLowerCase() || "inter";
+  const fontChoice = selectedFont.toLowerCase();
   const themeId = theme?.themeId || "light";
 
   let fontClass = inter.variable;
@@ -446,12 +449,17 @@ export default async function RootLayout({
 
   return (
     <html lang={language}>
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link rel="stylesheet" href={googleFontHref} />
+      </head>
       <body
         suppressHydrationWarning
         className={`${fontClass} font-sans antialiased`}
         style={{ "--primary": primaryColor } as React.CSSProperties}
       >
-        {/* Dynamic global styles for the tenant's primary color and theme */}
+        {/* Dynamic global styles for the tenant's primary color, font and theme */}
         <style
           dangerouslySetInnerHTML={{
             __html: `
@@ -460,12 +468,13 @@ export default async function RootLayout({
             --primary-foreground: ${primaryForeground};
             --background: ${bgColor};
             --foreground: ${textColor};
-            --font-sans: var(--font-${fontChoice}), sans-serif;
+            --font-heading: '${selectedFont}', sans-serif;
+            --font-sans: '${selectedFont}', var(--font-${fontChoice}), sans-serif;
           }
           
           /* When language is Bengali, use Hind Siliguri – compact, professional, no layout bloat */
           html[lang="bn"] {
-            --font-sans: var(--font-hind-siliguri), var(--font-${fontChoice}), sans-serif !important;
+            --font-sans: var(--font-hind-siliguri), '${selectedFont}', sans-serif !important;
             font-size: 70% !important;
             line-height: 1.5 !important;
           }
@@ -481,8 +490,8 @@ export default async function RootLayout({
             line-height: 1.35 !important;
           }
           
-          body {
-            font-family: var(--font-sans) !important;
+          body, h1, h2, h3, h4, h5, h6, button, input, select {
+            font-family: '${selectedFont}', var(--font-sans), sans-serif !important;
           }
           
           .bg-primary { background-color: var(--primary-color) !important; color: var(--primary-foreground) !important; }

@@ -1,9 +1,9 @@
-﻿'use client';
+'use client';
 
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useState, FormEvent } from 'react';
 
-export default function FilterSidebar04({ categoryId, availableBrands = [], theme }: { categoryId?: string; availableBrands?: string[]; theme?: any; }) {
+export default function FilterSidebar04({ categoryId, availableBrands = [], theme, onApply }: { categoryId?: string; availableBrands?: string[]; theme?: any; onApply?: () => void; }) {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -23,12 +23,14 @@ export default function FilterSidebar04({ categoryId, availableBrands = [], them
     if (inStock) params.set('inStock', 'true');
     const basePath = categoryId ? `/category/${categoryId}` : '/products';
     router.push(`${basePath}?${params.toString()}`);
+    if (onApply) onApply();
   };
 
   const clearFilters = () => {
     setMinPrice(''); setMaxPrice(''); setSearch(''); setBrand(''); setInStock(false);
     const basePath = categoryId ? `/category/${categoryId}` : '/products';
     router.push(basePath);
+    if (onApply) onApply();
   };
 
   return (

@@ -1,5 +1,5 @@
 import { getStoreInfo, getTheme } from '@/core/api/store';
-import { getProducts, getBestsellingProducts } from '@/core/api/product';
+import { getProducts, getBestsellingProducts, getNewArrivalsProducts } from '@/core/api/product';
 import { getCategories } from '@/core/api/category';
 import Link from 'next/link';
 import Header04 from './components/layout/Header';
@@ -17,9 +17,10 @@ export default async function Design04Home({ tenantSlug }: { tenantSlug: string 
     );
   }
 
-  const [products, bestsellers, categories, storeInfo, theme] = await Promise.all([
-    getProducts(tenantSlug),
+  const [products, bestsellers, newArrivals, categories, storeInfo, theme] = await Promise.all([
+    getProducts(tenantSlug, 'limit=20&sort=random'),
     getBestsellingProducts(tenantSlug, 8),
+    getNewArrivalsProducts(tenantSlug, 8),
     getCategories(tenantSlug),
     getStoreInfo(tenantSlug),
     getTheme(tenantSlug)
@@ -27,7 +28,7 @@ export default async function Design04Home({ tenantSlug }: { tenantSlug: string 
 
   const displayCategories = (categories || []).slice(0, 7);
   const displayBestsellers = (bestsellers || []).slice(0, 8);
-  const displayProducts = (products || []).slice(0, 8);
+  const displayNewArrivals = (newArrivals || []).slice(0, 8);
 
   const language = storeInfo?.language || 'en';
   const t = (key: any) => getTranslation(language, key);
@@ -98,14 +99,14 @@ export default async function Design04Home({ tenantSlug }: { tenantSlug: string 
       )}
 
       {/* ── NEW ARRIVALS ────────────────────────── */}
-      {displayProducts.length > 0 && (
+      {displayNewArrivals.length > 0 && (
         <section className="max-w-[1400px] mx-auto px-6 py-8 sm:py-14 w-full">
           <div className="flex items-center justify-between mb-6 sm:mb-8">
             <h2 className="text-xl sm:text-2xl font-black text-gray-900 tracking-tight">New Arrivals</h2>
             <Link prefetch={false} href="/categories" className="text-xs sm:text-sm font-semibold text-gray-500 hover:text-gray-900 transition-colors">View all →</Link>
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 sm:gap-5">
-            {displayProducts.map((product: any) => (
+            {displayNewArrivals.map((product: any) => (
               <ProductCard04 key={product._id || product.id} product={product} theme={theme} />
             ))}
           </div>

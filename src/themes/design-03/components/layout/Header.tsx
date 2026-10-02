@@ -4,7 +4,7 @@ import { headers } from 'next/headers';
 import { ShoppingCart, Home, Grid, ChevronRight } from 'lucide-react';
 import GlobalSearch03 from '../ui/GlobalSearch';
 import { getTranslation } from '@/utils/translations';
-
+import AnnouncementBar from '@/components/AnnouncementBar';
 
 async function getTheme(tenantSlug: string) {
   try {
@@ -34,6 +34,7 @@ export default async function Header03({ storeInfo }: { storeInfo?: any }) {
 
   return (
     <>
+      <AnnouncementBar banner={theme?.banner} currencySymbol={theme?.currencySymbol} />
       {/* Mobile Top Bar */}
       <header className="lg:hidden flex flex-col p-4 border-b border-white/10 bg-[#050505] sticky top-0 z-50 gap-4">
         <div className="flex items-center justify-between">

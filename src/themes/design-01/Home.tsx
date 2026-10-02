@@ -67,7 +67,7 @@ export default async function Design01Home({
   }
 
   const [products, categories, storeInfo, theme] = await Promise.all([
-    getProducts(tenantSlug),
+    getProducts(tenantSlug, 'limit=20&sort=random'),
     getCategories(tenantSlug),
     getStoreInfo(tenantSlug),
     getTheme(tenantSlug),

@@ -89,6 +89,7 @@ export default function FilterDrawer({
           <FilterSidebar
             categoryId={categoryId}
             availableBrands={availableBrands}
+            onApply={() => setIsOpen(false)}
           />
         </div>
       </div>

@@ -18,7 +18,13 @@ export default function ProductClient05({ product, theme }: { product: any; them
 
   const price = product.discountedPrice || product.originalPrice || product.price || 0;
   const hasDiscount = product.originalPrice && product.originalPrice > price;
-  const inStock = product.stock > 0 || product.inStock;
+  const isOutOfStock = 
+    product.isOutOfStock === true ||
+    product.inStock === false ||
+    product.status === 'out_of_stock' ||
+    (typeof product.stock === 'number' && product.stock <= 0) ||
+    (typeof product.quantity === 'number' && product.quantity <= 0);
+  const inStock = !isOutOfStock;
 
   const handleAddToCart = () => {
     addToCart({
@@ -103,12 +109,12 @@ export default function ProductClient05({ product, theme }: { product: any; them
 
           <div className="mb-10">
             <label className="block text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-4">{t('quantity') || 'Quantity'}</label>
-            <div className="flex items-center border border-gray-200 rounded-full w-fit p-1 bg-white shadow-sm">
-              <button onClick={() => setQuantity(q => Math.max(1, q - 1))} className="w-10 h-10 flex items-center justify-center text-gray-500 hover:text-black hover:bg-gray-50 rounded-full transition-colors">
+            <div className={`flex items-center border border-gray-200 rounded-full w-fit p-1 bg-white shadow-sm ${!inStock ? 'opacity-50 cursor-not-allowed bg-gray-50' : ''}`}>
+              <button onClick={() => setQuantity(q => Math.max(1, q - 1))} disabled={!inStock} className="w-10 h-10 flex items-center justify-center text-gray-500 hover:text-black hover:bg-gray-50 rounded-full transition-colors disabled:cursor-not-allowed">
                 <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="5" y1="12" x2="19" y2="12"></line></svg>
               </button>
               <span className="w-12 text-center font-semibold text-lg text-gray-900">{quantity}</span>
-              <button onClick={() => setQuantity(q => q + 1)} className="w-10 h-10 flex items-center justify-center text-gray-500 hover:text-black hover:bg-gray-50 rounded-full transition-colors">
+              <button onClick={() => setQuantity(q => q + 1)} disabled={!inStock} className="w-10 h-10 flex items-center justify-center text-gray-500 hover:text-black hover:bg-gray-50 rounded-full transition-colors disabled:cursor-not-allowed">
                 <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
               </button>
             </div>
@@ -116,12 +122,12 @@ export default function ProductClient05({ product, theme }: { product: any; them
 
           <div className="flex flex-col sm:flex-row gap-4 mb-12">
             <button onClick={handleAddToCart} disabled={!inStock}
-              style={theme?.buttonColors?.addToCart ? { backgroundColor: theme.buttonColors.addToCart, borderColor: theme.buttonColors.addToCart, color: '#fff' } : {}}
-              className="flex-1 bg-white border border-gray-200 text-gray-900 font-semibold py-4 rounded-full flex items-center justify-center gap-2 hover:border-black hover:bg-gray-50 transition-all disabled:opacity-50 disabled:cursor-not-allowed">
-              <ShoppingCart className="w-5 h-5" />{t('addToCart') || 'Add to Cart'}</button>
+              style={inStock && theme?.buttonColors?.addToCart ? { backgroundColor: theme.buttonColors.addToCart, borderColor: theme.buttonColors.addToCart, color: '#fff' } : {}}
+              className={`flex-1 font-semibold py-4 rounded-full flex items-center justify-center gap-2 transition-all ${!inStock ? 'bg-gray-200 border border-gray-300 text-gray-500 opacity-60 cursor-not-allowed' : 'bg-white border border-gray-200 text-gray-900 hover:border-black hover:bg-gray-50'}`}>
+              <ShoppingCart className="w-5 h-5" />{!inStock ? 'Out of Stock' : (t('addToCart') || 'Add to Cart')}</button>
             <button onClick={handleBuyNow} disabled={!inStock}
-              style={theme?.buttonColors?.buyNow ? { backgroundColor: theme.buttonColors.buyNow } : theme?.primaryColor ? { backgroundColor: theme.primaryColor } : {}}
-              className="flex-1 bg-black text-white font-semibold py-4 rounded-full flex items-center justify-center hover:bg-gray-800 transition-colors shadow-lg disabled:opacity-50 disabled:cursor-not-allowed">{t('buyNow') || 'Buy Now'}</button>
+              style={inStock && theme?.buttonColors?.buyNow ? { backgroundColor: theme.buttonColors.buyNow } : inStock && theme?.primaryColor ? { backgroundColor: theme.primaryColor } : {}}
+              className={`flex-1 font-semibold py-4 rounded-full flex items-center justify-center transition-colors shadow-lg ${!inStock ? 'bg-gray-700 text-gray-300 opacity-60 cursor-not-allowed' : 'bg-black text-white hover:bg-gray-800'}`}>{!inStock ? 'Out of Stock' : (t('buyNow') || 'Buy Now')}</button>
           </div>
 
           {/* Description Section */}

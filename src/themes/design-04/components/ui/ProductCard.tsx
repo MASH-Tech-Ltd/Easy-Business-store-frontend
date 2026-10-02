@@ -40,16 +40,30 @@ export default function ProductCard04({ product, isList = false, isBestSelling =
     router.push('/checkout');
   };
 
+  const isOutOfStock = 
+    product.isOutOfStock === true ||
+    product.inStock === false ||
+    product.status === 'out_of_stock' ||
+    (typeof product.stock === 'number' && product.stock <= 0) ||
+    (typeof product.quantity === 'number' && product.quantity <= 0);
+
   if (isList) {
     return (
       <Link prefetch={false} href={`/product/${productSlug}`} className="group flex bg-white border border-gray-100 hover:border-gray-300 hover:shadow-lg transition-all rounded-2xl overflow-hidden cursor-default">
-        <div className="w-40 h-40 bg-gray-50 flex items-center justify-center shrink-0 p-4">
+        <div className="w-40 h-40 bg-gray-50 flex items-center justify-center shrink-0 p-4 relative">
+          {isOutOfStock && (
+            <div className="absolute inset-0 bg-black/30 backdrop-blur-[1px] flex items-center justify-center z-20 pointer-events-none">
+              <span className="bg-gray-900/90 text-white text-xs font-bold uppercase tracking-wider px-3 py-1.5 rounded-full shadow-lg border border-white/20">
+                Out of Stock
+              </span>
+            </div>
+          )}
           {imageUrl ? (
-            <img src={imageUrl} alt={product.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+            <img src={imageUrl} alt={product.title} className={`w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 ${isOutOfStock ? "opacity-70 grayscale-[30%]" : ""}`} />
           ) : (
             <div className="text-gray-300 text-xs">No image</div>
           )}
-          {(isBestSelling && product.salesCount && product.salesCount > 30) && (
+          {(isBestSelling && product.salesCount && product.salesCount > 20) && (
             <div className="absolute top-2 right-2 bg-amber-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full z-10 shadow-sm flex items-center gap-1">
               🔥 {product.salesCount}+ Sold
             </div>
@@ -77,16 +91,23 @@ export default function ProductCard04({ product, isList = false, isBestSelling =
               -{savePercent}%
             </span>
           )}
+          {isOutOfStock && (
+            <div className="absolute inset-0 bg-black/30 backdrop-blur-[1px] flex items-center justify-center z-20 pointer-events-none">
+              <span className="bg-gray-900/90 text-white text-[11px] sm:text-xs font-bold uppercase tracking-wider px-3.5 py-1.5 rounded-full shadow-lg border border-white/20 backdrop-blur-md">
+                Out of Stock
+              </span>
+            </div>
+          )}
           {imageUrl ? (
             <img
               src={imageUrl}
               alt={product.title || product.name}
-              className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+              className={`w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 ${isOutOfStock ? "opacity-70 grayscale-[30%]" : ""}`}
             />
           ) : (
             <div className="text-gray-200 text-sm">No image</div>
           )}
-          {(isBestSelling && product.salesCount && product.salesCount > 30) && (
+          {(isBestSelling && product.salesCount && product.salesCount > 20) && (
             <div className="absolute top-3 right-3 bg-amber-500 text-white text-[10px] font-bold px-2 py-1 rounded-full z-10 shadow-sm flex items-center gap-1">
               {product.salesCount}+ Sold
             </div>
@@ -110,9 +131,10 @@ export default function ProductCard04({ product, isList = false, isBestSelling =
 
         {/* Add to Cart button - always visible, styled like the screenshot */}
         <button
-          onClick={handleAddToCart}
-          className="mt-auto w-full flex items-center justify-center gap-2 py-2.5 text-sm font-semibold text-white rounded-xl hover:opacity-90 active:scale-95 transition-all cursor-pointer"
-          style={{ backgroundColor: addToCartColor }}
+          onClick={isOutOfStock ? (e) => { e.preventDefault(); e.stopPropagation(); } : handleAddToCart}
+          disabled={isOutOfStock}
+          className={`mt-auto w-full flex items-center justify-center gap-2 py-2.5 text-sm font-semibold rounded-xl transition-all ${isOutOfStock ? 'bg-gray-200 border border-gray-300 text-gray-400 opacity-50 cursor-not-allowed' : 'text-white hover:opacity-90 active:scale-95 cursor-pointer'}`}
+          style={!isOutOfStock ? { backgroundColor: addToCartColor } : {}}
         >
           <ShoppingCart className="w-4 h-4" />{t('addToCart') || 'Add to Cart'}</button>
       </div>

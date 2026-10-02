@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import React, { useState } from 'react';
 import { useCart } from '@/context/CartContext';
@@ -13,10 +13,18 @@ export default function AddToCartClient03({ product, theme }: { product: any; th
   const { addToCart } = useCart();
   const router = useRouter();
 
-  const handleDecrease = () => { if (quantity > 1) setQuantity(quantity - 1); };
-  const handleIncrease = () => setQuantity(quantity + 1);
+  const isOutOfStock = 
+    product.isOutOfStock === true ||
+    product.inStock === false ||
+    product.status === 'out_of_stock' ||
+    (typeof product.stock === 'number' && product.stock <= 0) ||
+    (typeof product.quantity === 'number' && product.quantity <= 0);
+
+  const handleDecrease = () => { if (!isOutOfStock && quantity > 1) setQuantity(quantity - 1); };
+  const handleIncrease = () => { if (!isOutOfStock) setQuantity(quantity + 1); };
 
   const handleAddToCart = () => {
+    if (isOutOfStock) return;
     addToCart({
       id: product._id || product.id,
       title: product.title,
@@ -27,6 +35,7 @@ export default function AddToCartClient03({ product, theme }: { product: any; th
   };
 
   const handleBuyNow = () => {
+    if (isOutOfStock) return;
     handleAddToCart();
     router.push('/checkout');
   };
@@ -37,21 +46,23 @@ export default function AddToCartClient03({ product, theme }: { product: any; th
 
   return (
     <div className="flex flex-wrap items-center gap-4 mb-4">
-      <div className="flex items-center border border-white/20 rounded-xl overflow-hidden h-11 w-32 bg-white/5 text-white">
-        <button onClick={handleDecrease} className="w-9 h-full flex items-center justify-center hover:bg-white/10 transition-colors font-bold text-lg">-</button>
+      <div className={`flex items-center border border-white/20 rounded-xl overflow-hidden h-11 w-32 bg-white/5 text-white ${isOutOfStock ? 'opacity-50 cursor-not-allowed' : ''}`}>
+        <button onClick={isOutOfStock ? undefined : handleDecrease} disabled={isOutOfStock} className="w-9 h-full flex items-center justify-center hover:bg-white/10 transition-colors font-bold text-lg disabled:cursor-not-allowed">-</button>
         <div className="flex-1 text-center text-sm font-semibold border-x border-white/10 py-2">{quantity}</div>
-        <button onClick={handleIncrease} className="w-9 h-full flex items-center justify-center hover:bg-white/10 transition-colors font-bold text-lg">+</button>
+        <button onClick={isOutOfStock ? undefined : handleIncrease} disabled={isOutOfStock} className="w-9 h-full flex items-center justify-center hover:bg-white/10 transition-colors font-bold text-lg disabled:cursor-not-allowed">+</button>
       </div>
       <button
-        onClick={handleAddToCart}
-        className="text-white font-bold py-3 px-8 rounded-xl text-sm shadow-lg hover:opacity-90 transition-all cursor-pointer"
-        style={{ backgroundColor: addToCartColor }}
-      >{t('addToCart') || 'Add to Cart'}</button>
+        onClick={isOutOfStock ? undefined : handleAddToCart}
+        disabled={isOutOfStock}
+        className={`text-white font-bold py-3 px-8 rounded-xl text-sm shadow-lg transition-all ${isOutOfStock ? 'opacity-50 cursor-not-allowed bg-gray-600' : 'hover:opacity-90 cursor-pointer'}`}
+        style={!isOutOfStock ? { backgroundColor: addToCartColor } : { backgroundColor: '#4b5563' }}
+      >{isOutOfStock ? '[ OUT OF STOCK ]' : (t('addToCart') || 'Add to Cart')}</button>
       <button
-        onClick={handleBuyNow}
-        className="text-white font-bold py-3 px-8 rounded-xl text-sm shadow-lg hover:opacity-90 transition-all cursor-pointer"
-        style={{ backgroundColor: buyNowColor }}
-      >{t('buyNow') || 'Buy Now'}</button>
+        onClick={isOutOfStock ? undefined : handleBuyNow}
+        disabled={isOutOfStock}
+        className={`text-white font-bold py-3 px-8 rounded-xl text-sm shadow-lg transition-all ${isOutOfStock ? 'opacity-50 cursor-not-allowed bg-gray-600' : 'hover:opacity-90 cursor-pointer'}`}
+        style={!isOutOfStock ? { backgroundColor: buyNowColor } : { backgroundColor: '#4b5563' }}
+      >{isOutOfStock ? '[ OUT OF STOCK ]' : (t('buyNow') || 'Buy Now')}</button>
     </div>
   );
 }

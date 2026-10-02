@@ -12,9 +12,17 @@ export default function ProductCardActions({ product, theme }: { product: any, t
   const { addToCart } = useCart();
   const router = useRouter();
 
+  const isOutOfStock = 
+    product.isOutOfStock === true ||
+    product.inStock === false ||
+    product.status === 'out_of_stock' ||
+    (typeof product.stock === 'number' && product.stock <= 0) ||
+    (typeof product.quantity === 'number' && product.quantity <= 0);
+
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault(); // prevent the parent Link from navigating
     e.stopPropagation();
+    if (isOutOfStock) return;
     addToCart({
       id: product._id || product.id,
       title: product.title || product.name,
@@ -27,6 +35,7 @@ export default function ProductCardActions({ product, theme }: { product: any, t
   const handleBuyNow = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
+    if (isOutOfStock) return;
     handleAddToCart(e);
     router.push('/checkout');
   };
@@ -38,14 +47,16 @@ export default function ProductCardActions({ product, theme }: { product: any, t
   return (
     <div className="flex flex-col gap-1.5 w-full">
       <button 
-        onClick={handleAddToCart}
-        className="flex-1 text-white font-medium py-1.5 px-1 sm:py-1 rounded-sm shadow hover:opacity-90 transition-colors text-[9px] sm:text-[10px] uppercase tracking-wider text-center leading-tight"
-        style={{ backgroundColor: addToCartColor }}
+        onClick={isOutOfStock ? (e) => { e.preventDefault(); e.stopPropagation(); } : handleAddToCart}
+        disabled={isOutOfStock}
+        className={`flex-1 font-medium py-1.5 px-1 sm:py-1 rounded-sm shadow transition-all text-[9px] sm:text-[10px] uppercase tracking-wider text-center leading-tight ${isOutOfStock ? 'opacity-50 cursor-not-allowed bg-gray-400 text-gray-200' : 'text-white hover:opacity-90'}`}
+        style={!isOutOfStock ? { backgroundColor: addToCartColor } : {}}
       >{t('addToCart') || 'Add to Cart'}</button>
       <button 
-        onClick={handleBuyNow}
-        className="flex-1 text-white font-medium py-1.5 px-1 sm:py-1 rounded-sm shadow hover:opacity-90 transition-colors text-[9px] sm:text-[10px] uppercase tracking-wider text-center leading-tight"
-        style={{ backgroundColor: buyNowColor }}
+        onClick={isOutOfStock ? (e) => { e.preventDefault(); e.stopPropagation(); } : handleBuyNow}
+        disabled={isOutOfStock}
+        className={`flex-1 font-medium py-1.5 px-1 sm:py-1 rounded-sm shadow transition-all text-[9px] sm:text-[10px] uppercase tracking-wider text-center leading-tight ${isOutOfStock ? 'opacity-50 cursor-not-allowed bg-gray-400 text-gray-200' : 'text-white hover:opacity-90'}`}
+        style={!isOutOfStock ? { backgroundColor: buyNowColor } : {}}
       >{t('buyNow') || 'Buy Now'}</button>
     </div>
   );

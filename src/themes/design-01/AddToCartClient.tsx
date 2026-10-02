@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import React, { useState } from 'react';
 import { useCart } from '@/context/CartContext';
@@ -13,17 +13,27 @@ export default function AddToCartClient({ product, theme }: { product: any, them
   const router = useRouter();
   const { t } = useTranslation();
 
+  const isOutOfStock = 
+    product.isOutOfStock === true ||
+    product.inStock === false ||
+    product.status === 'out_of_stock' ||
+    (typeof product.stock === 'number' && product.stock <= 0) ||
+    (typeof product.quantity === 'number' && product.quantity <= 0);
+
   const handleDecrease = () => {
+    if (isOutOfStock) return;
     if (quantity > 1) {
       setQuantity(quantity - 1);
     }
   };
 
   const handleIncrease = () => {
+    if (isOutOfStock) return;
     setQuantity(quantity + 1);
   };
 
   const handleAddToCart = () => {
+    if (isOutOfStock) return;
     addToCart({
       id: product._id || product.id,
       title: product.title,
@@ -34,6 +44,7 @@ export default function AddToCartClient({ product, theme }: { product: any, them
   };
 
   const handleBuyNow = () => {
+    if (isOutOfStock) return;
     handleAddToCart();
     router.push('/checkout');
   };
@@ -45,12 +56,13 @@ export default function AddToCartClient({ product, theme }: { product: any, them
   return (
     <div className="flex flex-wrap items-center gap-4 mb-4">
       <div 
-        className="flex items-center border rounded overflow-hidden h-10 w-28"
+        className={`flex items-center border rounded overflow-hidden h-10 w-28 ${isOutOfStock ? 'opacity-50 cursor-not-allowed bg-gray-100' : ''}`}
         style={{ borderColor: addToCartColor, color: addToCartColor }}
       >
         <button 
-          onClick={handleDecrease}
-          className="w-8 h-full flex items-center justify-center hover:bg-[#f9f5ff] transition-colors font-bold text-lg"
+          onClick={isOutOfStock ? undefined : handleDecrease}
+          disabled={isOutOfStock}
+          className="w-8 h-full flex items-center justify-center hover:bg-[#f9f5ff] transition-colors font-bold text-lg disabled:cursor-not-allowed"
         >
           -
         </button>
@@ -61,25 +73,28 @@ export default function AddToCartClient({ product, theme }: { product: any, them
           {quantity}
         </div>
         <button 
-          onClick={handleIncrease}
-          className="w-8 h-full flex items-center justify-center hover:bg-[#f9f5ff] transition-colors font-bold text-lg"
+          onClick={isOutOfStock ? undefined : handleIncrease}
+          disabled={isOutOfStock}
+          className="w-8 h-full flex items-center justify-center hover:bg-[#f9f5ff] transition-colors font-bold text-lg disabled:cursor-not-allowed"
         >
           +
         </button>
       </div>
       <button 
-        onClick={handleAddToCart}
-        className="text-white font-bold py-2.5 px-8 rounded text-sm shadow-md hover:shadow-lg hover:opacity-90 transition-all cursor-pointer"
-        style={{ backgroundColor: addToCartColor }}
+        onClick={isOutOfStock ? undefined : handleAddToCart}
+        disabled={isOutOfStock}
+        className={`text-white font-bold py-2.5 px-8 rounded text-sm shadow-md transition-all ${isOutOfStock ? 'opacity-50 cursor-not-allowed bg-gray-500' : 'hover:shadow-lg hover:opacity-90 cursor-pointer'}`}
+        style={!isOutOfStock ? { backgroundColor: addToCartColor } : { backgroundColor: '#6b7280' }}
       >
-        {t('addToCart')}
+        {isOutOfStock ? 'Out of Stock' : t('addToCart')}
       </button>
       <button 
-        onClick={handleBuyNow}
-        className="text-white font-bold py-2.5 px-8 rounded text-sm shadow-md hover:shadow-lg hover:opacity-90 transition-all cursor-pointer"
-        style={{ backgroundColor: buyNowColor }}
+        onClick={isOutOfStock ? undefined : handleBuyNow}
+        disabled={isOutOfStock}
+        className={`text-white font-bold py-2.5 px-8 rounded text-sm shadow-md transition-all ${isOutOfStock ? 'opacity-50 cursor-not-allowed bg-gray-500' : 'hover:shadow-lg hover:opacity-90 cursor-pointer'}`}
+        style={!isOutOfStock ? { backgroundColor: buyNowColor } : { backgroundColor: '#6b7280' }}
       >
-        {t('buyNow')}
+        {isOutOfStock ? 'Out of Stock' : t('buyNow')}
       </button>
     </div>
   );

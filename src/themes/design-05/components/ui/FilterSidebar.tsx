@@ -9,10 +9,12 @@ export default function FilterSidebar05({
   categoryId,
   availableBrands = [],
   theme,
+  onApply,
 }: {
   categoryId?: string;
   availableBrands?: string[];
   theme?: any;
+  onApply?: () => void;
 }) {
   const language = theme?.language || "en";
   const t = (key: any) => getTranslation(language || "en", key);
@@ -42,6 +44,7 @@ export default function FilterSidebar05({
 
     const basePath = categoryId ? `/category/${categoryId}` : pathname;
     router.push(`${basePath}?${params.toString()}`);
+    if (onApply) onApply();
   };
 
   const clearFilters = () => {
@@ -51,6 +54,7 @@ export default function FilterSidebar05({
     setInStock(false);
     const basePath = categoryId ? `/category/${categoryId}` : pathname;
     router.push(basePath);
+    if (onApply) onApply();
   };
 
   return (

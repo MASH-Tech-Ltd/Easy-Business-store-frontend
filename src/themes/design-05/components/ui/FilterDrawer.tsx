@@ -34,6 +34,7 @@ export default function FilterDrawer({
   const handleReset = () => {
     const basePath = categoryId ? `/category/${categoryId}` : pathname;
     router.push(basePath);
+    setIsOpen(false);
   };
 
   return (
@@ -116,6 +117,7 @@ export default function FilterDrawer({
             categoryId={categoryId}
             availableBrands={availableBrands}
             theme={theme}
+            onApply={() => setIsOpen(false)}
           />
         </div>
       </div>

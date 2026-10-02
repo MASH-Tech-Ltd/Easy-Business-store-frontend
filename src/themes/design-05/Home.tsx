@@ -1,5 +1,5 @@
 import { getStoreInfo, getTheme } from "@/core/api/store";
-import { getProducts, getBestsellingProducts } from "@/core/api/product";
+import { getProducts, getBestsellingProducts, getNewArrivalsProducts } from "@/core/api/product";
 import { getCategories } from "@/core/api/category";
 import Link from "next/link";
 import Header05 from "./components/layout/Header";
@@ -22,10 +22,11 @@ export default async function Design05Home({
     );
   }
 
-  const [products, bestsellers, categories, storeInfo, theme] =
+  const [products, bestsellers, newArrivals, categories, storeInfo, theme] =
     await Promise.all([
-      getProducts(tenantSlug),
+      getProducts(tenantSlug, 'limit=20&sort=random'),
       getBestsellingProducts(tenantSlug, 8),
+      getNewArrivalsProducts(tenantSlug, 8),
       getCategories(tenantSlug),
       getStoreInfo(tenantSlug),
       getTheme(tenantSlug),
@@ -33,6 +34,7 @@ export default async function Design05Home({
 
   const displayCategories = (categories || []).slice(0, 6);
   const displayBestsellers = (bestsellers || []).slice(0, 8);
+  const displayNewArrivals = (newArrivals || []).slice(0, 8);
   const displayProducts = (products || []).slice(0, 8);
 
   return (
@@ -163,8 +165,8 @@ export default async function Design05Home({
           </div>
         </section>
 
-        {/* All Products */}
-        {displayProducts.length > 0 && (
+        {/* Latest Collection */}
+        {displayNewArrivals.length > 0 && (
           <section className="px-6 lg:px-12 py-20 max-w-[1400px] mx-auto border-t border-gray-100/50">
             <div className="flex items-end justify-between mb-12">
               <div>
@@ -172,6 +174,31 @@ export default async function Design05Home({
                   Latest Collection
                 </h3>
                 <p className="text-gray-500">Fresh arrivals this week</p>
+              </div>
+              <Link prefetch={false}
+                href="/products"
+                className="text-sm font-semibold uppercase tracking-widest text-gray-400 hover:text-black transition-colors hidden sm:block"
+              >
+                View All
+              </Link>
+            </div>
+            <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-8">
+              {displayNewArrivals.map((p: any) => (
+                <ProductCard05 key={p._id} product={p} theme={theme} />
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* Discover More Collection */}
+        {displayProducts.length > 0 && (
+          <section className="px-6 lg:px-12 py-20 max-w-[1400px] mx-auto border-t border-gray-100/50 bg-gray-50/50">
+            <div className="flex items-end justify-between mb-12">
+              <div>
+                <h3 className="text-2xl font-bold tracking-tight mb-2">
+                  Discover More Products
+                </h3>
+                <p className="text-gray-500">Explore items curated for you</p>
               </div>
               <Link prefetch={false}
                 href="/products"
