@@ -12,6 +12,7 @@ import { bdLocations } from "@/data/locations";
 import { computeShipping } from "@/utils/shipping";
 import { getTranslation } from '@/utils/translations';
 import { getSavedCustomerInfo, saveCustomerInfo } from '@/utils/customerStorage';
+import { handleCheckoutError } from '@/utils/checkoutErrorHandler';
 
 const checkoutSchema = z.object({
   phone: z.string().regex(/^(?:\+88|88)?01[3-9]\d{8}$/, { message: "Please enter a valid BD phone number (e.g. 01712345678)" }),
@@ -228,14 +229,7 @@ export default function Design02CheckoutClient({ theme,
     } catch (e: any) {
       console.error(e);
       setStatus("idle");
-      
-      const errorMessage = e.message || "";
-      if (errorMessage.includes("Product not found or does not belong to this tenant")) {
-        alert("Your cart contains products that are no longer available. Your cart will be cleared.");
-        clearCart();
-      } else {
-        alert(errorMessage || "Something went wrong during checkout. Please try again.");
-      }
+      handleCheckoutError(e, cartItems, removeFromCart);
     }
   };
 

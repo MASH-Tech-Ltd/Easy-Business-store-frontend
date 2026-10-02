@@ -14,6 +14,7 @@ import {
   getSavedCustomerInfo,
   saveCustomerInfo,
 } from "@/utils/customerStorage";
+import { handleCheckoutError } from "@/utils/checkoutErrorHandler";
 
 const checkoutSchema = z.object({
   email: z
@@ -50,6 +51,7 @@ export default function CheckoutClient05({
     cartItems: items,
     totalPrice: subtotal,
     clearCart,
+    removeFromCart,
     isInitialized,
   } = useCart();
   const router = useRouter();
@@ -243,7 +245,7 @@ export default function CheckoutClient05({
     } catch (error) {
       console.error(error);
       setIsProcessing(false);
-      alert("Something went wrong during checkout. Please try again.");
+      handleCheckoutError(error, items, removeFromCart);
     }
   };
 

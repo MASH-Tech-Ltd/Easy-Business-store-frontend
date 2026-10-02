@@ -11,6 +11,7 @@ import { computeShipping } from '@/utils/shipping';
 import { z } from 'zod';
 import { getTranslation } from '@/utils/translations';
 import { getSavedCustomerInfo, saveCustomerInfo } from '@/utils/customerStorage';
+import { handleCheckoutError } from '@/utils/checkoutErrorHandler';
 
 const checkoutSchema = z.object({
   phone: z.string().regex(/^(?:\+88|88)?01[3-9]\d{8}$/, { message: "VALID BD PHONE REQUIRED" }),
@@ -26,7 +27,7 @@ export default function CheckoutClient03({ storeInfo, theme }: { storeInfo?: any
   const t = (key: any) => getTranslation(language || 'en', key);
 
 
-  const { cartItems, totalPrice, clearCart, isInitialized } = useCart();
+  const { cartItems, totalPrice, clearCart, removeFromCart, isInitialized } = useCart();
   const [status, setStatus] = useState<'idle' | 'processing' | 'success'>('idle');
   const [orderId, setOrderId] = useState<string | null>(null);
   const router = useRouter();
@@ -171,9 +172,10 @@ export default function CheckoutClient03({ storeInfo, theme }: { storeInfo?: any
       });
       setStatus('success');
       clearCart();
-    } catch {
+    } catch (e: any) {
+      console.error(e);
       setStatus('idle');
-      alert("SYSTEM ERROR. CHECKOUT FAILED.");
+      handleCheckoutError(e, cartItems, removeFromCart);
     }
   };
 

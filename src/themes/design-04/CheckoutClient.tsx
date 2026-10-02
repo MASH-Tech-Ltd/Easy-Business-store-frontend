@@ -11,6 +11,7 @@ import { computeShipping } from '@/utils/shipping';
 import { z } from 'zod';
 import { getTranslation } from '@/utils/translations';
 import { getSavedCustomerInfo, saveCustomerInfo } from '@/utils/customerStorage';
+import { handleCheckoutError } from '@/utils/checkoutErrorHandler';
 
 const checkoutSchema = z.object({
   phone: z.string().regex(/^(?:\+88|88)?01[3-9]\d{8}$/, { message: "Please enter a valid BD phone number (e.g. 01712345678)" }),
@@ -26,7 +27,7 @@ export default function CheckoutClient04({ storeInfo, theme }: { storeInfo?: any
   const t = (key: any) => getTranslation(language || 'en', key);
 
 
-  const { cartItems, totalItems, totalPrice, clearCart } = useCart();
+  const { cartItems, totalItems, totalPrice, clearCart, removeFromCart } = useCart();
   const [status, setStatus] = useState<'idle' | 'processing' | 'success'>('idle');
   const [orderId, setOrderId] = useState<string | null>(null);
   const [mounted, setMounted] = useState(false);
@@ -176,9 +177,10 @@ export default function CheckoutClient04({ storeInfo, theme }: { storeInfo?: any
       });
       setStatus('success');
       clearCart();
-    } catch {
+    } catch (e: any) {
+      console.error(e);
       setStatus('idle');
-      alert("Something went wrong during checkout.");
+      handleCheckoutError(e, cartItems, removeFromCart);
     }
   };
 
