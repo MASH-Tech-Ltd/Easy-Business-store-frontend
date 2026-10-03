@@ -19,6 +19,7 @@ import Providers from "../components/Providers";
 import { LanguageProvider } from "../context/LanguageContext";
 import VisitTracker from "../components/VisitTracker";
 import StorefrontTracker from "../components/StorefrontTracker";
+import AnnouncementBar from "../components/AnnouncementBar";
 
 import { storefrontFetch } from "@/utils/storefrontFetch";
 
@@ -578,6 +579,7 @@ export default async function RootLayout({
           <Providers>
             <StorefrontTracker tenantSlug={tenantSlug} initialConfig={trackingConfig} />
             {storeInfo?._id && <VisitTracker tenantId={storeInfo._id} />}
+            <AnnouncementBar banner={theme?.banner} currencySymbol={theme?.currencySymbol} />
             {children}
           </Providers>
         </LanguageProvider>

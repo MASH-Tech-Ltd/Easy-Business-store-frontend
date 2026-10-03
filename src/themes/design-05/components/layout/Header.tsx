@@ -39,7 +39,6 @@ export default async function Header05({ storeInfo }: { storeInfo?: any }) {
 
   return (
     <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-xl border-b border-gray-100 transition-all duration-300">
-      <AnnouncementBar banner={theme?.banner} currencySymbol={theme?.currencySymbol} />
       <div className="max-w-[1400px] mx-auto px-6 lg:px-12 py-4 flex flex-col gap-4">
         <div className="flex items-center justify-between gap-8 h-12">
           {/* Brand */}

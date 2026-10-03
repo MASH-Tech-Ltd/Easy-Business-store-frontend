@@ -26,7 +26,6 @@ export default async function Header({ storeInfo }: { storeInfo: any }) {
 
   return (
     <>
-      <AnnouncementBar banner={theme?.banner} currencySymbol={theme?.currencySymbol} />
       <header className="py-4 border-b border-gray-100 bg-white/80 backdrop-blur-md sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-8 flex flex-col md:flex-row items-center gap-4 justify-between">
           <div className="flex w-full md:w-auto items-center justify-between">

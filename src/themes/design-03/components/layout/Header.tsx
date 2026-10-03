@@ -34,7 +34,6 @@ export default async function Header03({ storeInfo }: { storeInfo?: any }) {
 
   return (
     <>
-      <AnnouncementBar banner={theme?.banner} currencySymbol={theme?.currencySymbol} />
       {/* Mobile Top Bar */}
       <header className="lg:hidden flex flex-col p-4 border-b border-white/10 bg-[#050505] sticky top-0 z-50 gap-4">
         <div className="flex items-center justify-between">

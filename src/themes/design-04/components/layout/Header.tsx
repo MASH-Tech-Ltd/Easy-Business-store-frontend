@@ -34,8 +34,6 @@ export default async function Header04({ storeInfo, theme: initialTheme }: { sto
 
   return (
     <header className="bg-white border-b border-gray-100 sticky top-0 z-50">
-      {/* Top Announcement Bar */}
-      <AnnouncementBar banner={theme?.banner} currencySymbol={theme?.currencySymbol} />
 
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 py-4 flex flex-col gap-4">
         <div className="flex items-center justify-between gap-6">
