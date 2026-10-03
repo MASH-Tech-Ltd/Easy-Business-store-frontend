@@ -45,10 +45,10 @@ export default async function Header05({ storeInfo }: { storeInfo?: any }) {
           {/* Brand */}
           <Link prefetch={false} href="/" className="flex items-center gap-3 shrink-0 group">
             {info?.logo ? (
-              <img src={info.logo} alt={info?.name || 'Store'} className="w-10 h-10 rounded-xl object-contain border border-gray-100 group-hover:scale-105 transition-transform" />
+              <img src={info.logo} alt={info?.name || 'Store'} className="w-10 h-10 rounded-xl object-cover border border-gray-100 shadow-xs group-hover:scale-105 transition-transform" />
             ) : (
-              <div className="w-10 h-10 bg-gray-50 rounded-xl border border-gray-100 flex items-center justify-center group-hover:scale-105 transition-transform">
-                <span className="font-bold text-gray-400 text-xs">IMG</span>
+              <div className="w-10 h-10 bg-slate-900 text-white rounded-xl flex items-center justify-center font-bold text-sm shadow-xs group-hover:scale-105 transition-transform">
+                {(info?.name || tenantSlug).charAt(0).toUpperCase()}
               </div>
             )}
             <h1 className="text-xl font-bold tracking-tight text-gray-900">
