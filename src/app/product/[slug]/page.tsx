@@ -56,7 +56,7 @@ export async function generateMetadata(
       .filter(Boolean)
       .join(", "),
     alternates: {
-      canonical: `${baseUrl}/product/${resolvedParams.slug}`,
+      canonical: `/product/${resolvedParams.slug}`,
     },
     openGraph: {
       title,

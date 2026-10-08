@@ -60,7 +60,7 @@ function cleanStoreName(raw: string): string {
     description,
     keywords: [categoryName, storeName, 'buy online', 'ecommerce', 'electronics'].join(', '),
     alternates: {
-      canonical: `${baseUrl}/category/${resolvedParams.slug}`,
+      canonical: `/category/${resolvedParams.slug}`,
     },
     openGraph: {
       title,

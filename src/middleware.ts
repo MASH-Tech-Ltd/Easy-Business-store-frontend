@@ -63,6 +63,39 @@ export async function middleware(request: NextRequest) {
   // Ensure lowercase
   tenantSlug = tenantSlug.toLowerCase();
 
+  if (tenantSlug !== 'main') {
+    try {
+      const statusRes = await fetch(`${apiUrl}/storefront/${tenantSlug}/status`, {
+        headers: { 'x-storefront-api-key': storefrontApiKey },
+        next: { revalidate: 60 },
+      } as RequestInit);
+      
+      if (!statusRes.ok && statusRes.status === 404) {
+        const errorUrl = url.clone();
+        errorUrl.pathname = '/404'; // or some other path handled by notFound
+        const response = NextResponse.rewrite(errorUrl, { status: 404 });
+        response.headers.set('x-tenant-slug', tenantSlug);
+        return response;
+      }
+      
+      if (statusRes.ok) {
+        const statusJson = await statusRes.json();
+        if (statusJson?.data?.storeDown) {
+          // If the store is down/offline/expired, return a 503 status
+          // Note: Next.js app router doesn't have a direct way to render a page with 503 from middleware
+          // without rewriting to an error page or passing the request through with a custom header.
+          // Since the layout renders the "store down" UI, we can just return a response with 503 status
+          // while rewriting to the same URL, which makes Next.js render it but with the 503 HTTP status!
+          const response = NextResponse.rewrite(url, { status: 503 });
+          response.headers.set('x-tenant-slug', tenantSlug);
+          return response;
+        }
+      }
+    } catch {
+      // Ignore errors so the site doesn't crash on API failure
+    }
+  }
+
   const response = NextResponse.next();
   response.headers.set('x-tenant-slug', tenantSlug);
   return response;

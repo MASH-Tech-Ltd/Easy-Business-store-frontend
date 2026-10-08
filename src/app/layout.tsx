@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Inter, Outfit, Roboto, Hind_Siliguri } from "next/font/google";
 import { headers } from "next/headers";
+import { cache } from "react";
+import { notFound } from "next/navigation";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
@@ -23,12 +25,11 @@ import AnnouncementBar from "../components/AnnouncementBar";
 
 import { storefrontFetch } from "@/utils/storefrontFetch";
 
-async function getTheme(tenantSlug: string, clientIp?: string) {
+const getTheme = cache(async (tenantSlug: string) => {
   try {
     const res = await storefrontFetch(
       `${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/theme`,
-      { next: { revalidate: 0 } },
-      clientIp,
+      { next: { revalidate: 60 } }
     );
     if (!res.ok) return null;
     const json = await res.json();
@@ -36,14 +37,13 @@ async function getTheme(tenantSlug: string, clientIp?: string) {
   } catch (error) {
     return null;
   }
-}
+});
 
-async function getStoreInfo(tenantSlug: string, clientIp?: string) {
+const getStoreInfo = cache(async (tenantSlug: string) => {
   try {
     const res = await storefrontFetch(
       `${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/info`,
-      { next: { revalidate: 0 } },
-      clientIp,
+      { next: { revalidate: 60 } }
     );
     if (!res.ok) return null;
     const json = await res.json();
@@ -51,14 +51,13 @@ async function getStoreInfo(tenantSlug: string, clientIp?: string) {
   } catch (error) {
     return null;
   }
-}
+});
 
-async function getStoreStatus(tenantSlug: string, clientIp?: string) {
+const getStoreStatus = cache(async (tenantSlug: string) => {
   try {
     const res = await storefrontFetch(
       `${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/status`,
-      { next: { revalidate: 0 } },
-      clientIp,
+      { next: { revalidate: 60 } }
     );
     if (!res.ok) {
       if (res.status === 404) return { storeDown: true, reason: 'Store not found' };
@@ -69,14 +68,13 @@ async function getStoreStatus(tenantSlug: string, clientIp?: string) {
   } catch (error) {
     return null;
   }
-}
+});
 
-async function getTrackingConfig(tenantSlug: string, clientIp?: string) {
+const getTrackingConfig = cache(async (tenantSlug: string) => {
   try {
     const res = await storefrontFetch(
       `${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/tracking`,
-      { next: { revalidate: 60 } },
-      clientIp,
+      { next: { revalidate: 60 } }
     );
     if (!res.ok) return null;
     const json = await res.json();
@@ -84,7 +82,7 @@ async function getTrackingConfig(tenantSlug: string, clientIp?: string) {
   } catch (error) {
     return null;
   }
-}
+});
 
 /** Strip any " - PLATFORM" or " | PLATFORM" suffix that may have been saved in the DB */
 function cleanStoreName(raw: string): string {
@@ -99,18 +97,33 @@ export async function generateMetadata(): Promise<Metadata> {
   const tenantSlug = headersList.get("x-tenant-slug") || "main";
   const storeInfo = await getStoreInfo(tenantSlug);
 
+  const storeStatus = await getStoreStatus(tenantSlug);
+  const theme = await getTheme(tenantSlug);
+  
+  if (tenantSlug !== "main" && (!storeInfo || storeStatus?.storeDown || storeStatus?.reason === 'Store not found')) {
+    return {
+      title: 'Store Offline',
+      robots: { index: false, follow: false },
+    };
+  }
+
   const protocol = host.includes('localhost') ? 'http' : 'https';
   const baseUrl = `${protocol}://${host}`;
 
   const rawName = storeInfo?.name ?? `${tenantSlug.toUpperCase()} Store`;
   const title = cleanStoreName(rawName);
   const description = storeInfo?.description || `Welcome to ${title}`;
+  
   let faviconUrl = storeInfo?.logo || "/favicon.ico";
+  let appleIconUrl = faviconUrl;
+  
   if (faviconUrl.includes("cloudinary.com")) {
     faviconUrl = faviconUrl.replace(/\.[^/.]+$/, ".png");
-    // Google requires favicons to be multiples of 48px (e.g., 48x48, 96x96, 192x192)
+    appleIconUrl = faviconUrl.replace("/upload/", "/upload/w_180,h_180,c_fill,f_png/");
     faviconUrl = faviconUrl.replace("/upload/", "/upload/w_192,h_192,c_fill,f_png/");
   }
+
+  const defaultOgImage = `${baseUrl}/default-og-image.jpg`; // Fallback image
 
   return {
     metadataBase: new URL(baseUrl),
@@ -130,26 +143,23 @@ export async function generateMetadata(): Promise<Metadata> {
       ],
       shortcut: [faviconUrl],
       apple: [
-        { url: faviconUrl, sizes: '180x180', type: 'image/png' },
+        { url: appleIconUrl, sizes: '180x180', type: 'image/png' },
       ],
-    },
-    alternates: {
-      canonical: baseUrl,
     },
     openGraph: {
       title,
       description,
       url: baseUrl,
       siteName: title,
-      images: storeInfo?.logo ? [{ url: storeInfo.logo }] : [],
-      locale: 'en_US',
+      images: [{ url: storeInfo?.logo || defaultOgImage }],
+      locale: theme?.language === 'bn' ? 'bn_BD' : 'en_US',
       type: 'website',
     },
     twitter: {
       card: 'summary_large_image',
       title,
       description,
-      images: storeInfo?.logo ? [storeInfo.logo] : [],
+      images: [storeInfo?.logo || defaultOgImage],
     }
   };
 }
@@ -166,55 +176,13 @@ export default async function RootLayout({
   const baseUrl = `${protocol}://${host}`;
   const tenantSlug = headersList.get("x-tenant-slug") || "main";
 
-  // Resolve the real visitor IP to pass through to backend API calls
-  // Priority: Cloudflare > X-Forwarded-For > X-Real-IP
-  const cfIp = headersList.get('cf-connecting-ip');
-  const forwardedFor = headersList.get('x-forwarded-for');
-  const xRealIp = headersList.get('x-real-ip');
-  const clientIp = cfIp ||
-    (forwardedFor ? forwardedFor.split(',')[0]?.trim() : undefined) ||
-    xRealIp ||
-    undefined;
-
-  const theme = await getTheme(tenantSlug, clientIp);
-  const storeInfo = await getStoreInfo(tenantSlug, clientIp);
-  const storeStatus = await getStoreStatus(tenantSlug, clientIp);
-  const trackingConfig = await getTrackingConfig(tenantSlug, clientIp);
+  const theme = await getTheme(tenantSlug);
+  const storeInfo = await getStoreInfo(tenantSlug);
+  const storeStatus = await getStoreStatus(tenantSlug);
+  const trackingConfig = await getTrackingConfig(tenantSlug);
 
   if ((!storeInfo || storeStatus?.reason === 'Store not found') && tenantSlug !== "main") {
-    return (
-      <html lang="en">
-        <body className={`${inter.variable} font-sans antialiased bg-gray-50`}>
-          <div className="min-h-screen flex flex-col items-center justify-center p-6">
-            <div className="bg-white p-8 rounded-2xl shadow-sm text-center max-w-md w-full border border-gray-100">
-              <div className="w-16 h-16 bg-red-50 text-red-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                <svg
-                  className="w-8 h-8"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
-                  />
-                </svg>
-              </div>
-              <h1 className="text-2xl font-black text-gray-900 mb-2 tracking-tight">
-                Store Not Found
-              </h1>
-              <p className="text-gray-500 font-medium text-sm leading-relaxed">
-                The store you are looking for at{" "}
-                <b className="text-gray-800">{tenantSlug}</b> does not exist or
-                has been disabled.
-              </p>
-            </div>
-          </div>
-        </body>
-      </html>
-    );
+    notFound();
   }
 
   if (storeStatus?.storeDown && tenantSlug !== "main") {
