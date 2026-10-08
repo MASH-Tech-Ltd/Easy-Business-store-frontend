@@ -107,14 +107,18 @@ export async function generateMetadata(): Promise<Metadata> {
   const description = storeInfo?.description || `Welcome to ${title}`;
   let faviconUrl = storeInfo?.logo || "/favicon.ico";
   if (faviconUrl.includes("cloudinary.com")) {
-    // Force the extension to be .png so Cloudinary natively supports transparency
     faviconUrl = faviconUrl.replace(/\.[^/.]+$/, ".png");
-    // Google requires favicons to be multiples of 48px (e.g., 48x48, 96x96)
-    faviconUrl = faviconUrl.replace("/upload/", "/upload/w_96,h_96,c_fill,r_max,f_png/");
+    // Google requires favicons to be multiples of 48px (e.g., 48x48, 96x96, 192x192)
+    faviconUrl = faviconUrl.replace("/upload/", "/upload/w_192,h_192,c_fill,f_png/");
   }
 
   return {
     metadataBase: new URL(baseUrl),
+    applicationName: title,
+    appleWebApp: {
+      title: title,
+      statusBarStyle: 'default',
+    },
     title: {
       default: title,
       template: `%s | ${title}`,
@@ -122,8 +126,6 @@ export async function generateMetadata(): Promise<Metadata> {
     description,
     icons: {
       icon: [
-        { url: faviconUrl, sizes: '48x48', type: 'image/png' },
-        { url: faviconUrl, sizes: '96x96', type: 'image/png' },
         { url: faviconUrl, sizes: '192x192', type: 'image/png' },
       ],
       shortcut: [faviconUrl],
@@ -159,6 +161,9 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const headersList = await headers();
+  const host = headersList.get("host") || "localhost:3000";
+  const protocol = host.includes('localhost') ? 'http' : 'https';
+  const baseUrl = `${protocol}://${host}`;
   const tenantSlug = headersList.get("x-tenant-slug") || "main";
 
   // Resolve the real visitor IP to pass through to backend API calls
@@ -530,27 +535,27 @@ export default async function RootLayout({
                 '@graph': [
                   {
                     '@type': 'WebSite',
-                    '@id': `${storeInfo.customDomain ? `https://${storeInfo.customDomain}` : `https://${tenantSlug}.masheco.com`}/#website`,
-                    url: `${storeInfo.customDomain ? `https://${storeInfo.customDomain}` : `https://${tenantSlug}.masheco.com`}`,
+                    '@id': `${baseUrl}/#website`,
+                    url: `${baseUrl}`,
                     name: cleanStoreName(storeInfo.name),
                     alternateName: [cleanStoreName(storeInfo.name), tenantSlug.toUpperCase()],
                     publisher: {
-                      '@id': `${storeInfo.customDomain ? `https://${storeInfo.customDomain}` : `https://${tenantSlug}.masheco.com`}/#organization`,
+                      '@id': `${baseUrl}/#organization`,
                     },
                     potentialAction: {
                       '@type': 'SearchAction',
                       target: {
                         '@type': 'EntryPoint',
-                        urlTemplate: `${storeInfo.customDomain ? `https://${storeInfo.customDomain}` : `https://${tenantSlug}.masheco.com`}/products?search={search_term_string}`,
+                        urlTemplate: `${baseUrl}/products?search={search_term_string}`,
                       },
                       'query-input': 'required name=search_term_string',
                     },
                   },
                   {
                     '@type': ['Organization', 'OnlineStore'],
-                    '@id': `${storeInfo.customDomain ? `https://${storeInfo.customDomain}` : `https://${tenantSlug}.masheco.com`}/#organization`,
+                    '@id': `${baseUrl}/#organization`,
                     name: cleanStoreName(storeInfo.name),
-                    url: `${storeInfo.customDomain ? `https://${storeInfo.customDomain}` : `https://${tenantSlug}.masheco.com`}`,
+                    url: `${baseUrl}`,
                     logo: storeInfo.logo
                       ? {
                           '@type': 'ImageObject',
