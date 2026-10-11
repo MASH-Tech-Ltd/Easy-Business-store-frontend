@@ -1,19 +1,19 @@
 import type { MetadataRoute } from "next";
-import { headers } from "next/headers";
+import { getRequestContext } from "@/utils/seo";
 
 export default async function robots(): Promise<MetadataRoute.Robots> {
-  const h = await headers();
-  const host = h.get("x-forwarded-host") || h.get("host") || "localhost:3000";
-  const protocol = host.includes("localhost") ? "http" : "https";
+  const { requestOrigin } = await getRequestContext();
 
   return {
     rules: [
       {
         userAgent: "*",
         allow: "/",
-        disallow: ["/cart", "/checkout", "/account", "/api/"],
+        disallow: ["/cart", "/checkout", "/account", "/track-order", "/api/"],
       },
     ],
-    sitemap: `${protocol}://${host}/sitemap.xml`,
+    // Sitemap on the same host that serves this robots.txt (Google requires same-host
+    // unless cross-site ownership is verified). Its URLs point at the canonical origin.
+    sitemap: `${requestOrigin}/sitemap.xml`,
   };
 }

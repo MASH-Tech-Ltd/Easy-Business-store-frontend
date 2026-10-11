@@ -2,6 +2,7 @@ import { headers } from "next/headers";
 import { getTheme, getStoreInfo } from "@/core/api/store";
 import { getProductBySlug } from "@/core/api/product";
 import { themeRegistry } from "@/themes/themeRegistry";
+import { getStoreName, getRequestContext, getSiteOrigin } from "@/utils/seo";
 import type { Metadata, ResolvingMetadata } from "next";
 
 interface PageProps {
@@ -15,12 +16,7 @@ export async function generateMetadata(
   parent: ResolvingMetadata,
 ): Promise<Metadata> {
   const resolvedParams = await params;
-  const headersList = await headers();
-  const host = headersList.get("host") || "localhost:3000";
-  const tenantSlug = headersList.get("x-tenant-slug") || "main";
-
-  const protocol = host.includes("localhost") ? "http" : "https";
-  const baseUrl = `${protocol}://${host}`;
+  const { tenantSlug, requestOrigin } = await getRequestContext();
 
   const [storeInfo, product] = await Promise.all([
     getStoreInfo(tenantSlug),
@@ -31,7 +27,9 @@ export async function generateMetadata(
     return { title: "Product Not Found" };
   }
 
-  const title = `${product.title} | ${storeInfo?.name || tenantSlug.toUpperCase()}`;
+  const baseUrl = getSiteOrigin(requestOrigin, storeInfo);
+  const storeName = getStoreName(storeInfo, tenantSlug);
+  const title = `${product.title} | ${storeName}`;
   const description =
     product.shortDescription ||
     product.description?.substring(0, 160)?.replace(/<[^>]*>?/gm, "") ||
@@ -49,20 +47,20 @@ export async function generateMetadata(
       product.title,
       product.category,
       product.brand,
-      storeInfo?.name,
+      storeName,
       "buy online",
       "ecommerce",
     ]
       .filter(Boolean)
       .join(", "),
     alternates: {
-      canonical: `/product/${resolvedParams.slug}`,
+      canonical: `${baseUrl}/product/${resolvedParams.slug}`,
     },
     openGraph: {
       title,
       description,
       url: `${baseUrl}/product/${resolvedParams.slug}`,
-      siteName: storeInfo?.name || tenantSlug.toUpperCase(),
+      siteName: storeName,
       images: [
         {
           url: imageUrl,

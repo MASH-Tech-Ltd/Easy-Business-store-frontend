@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { Inter, Outfit, Roboto, Hind_Siliguri } from "next/font/google";
-import { headers } from "next/headers";
 import { cache } from "react";
 import { notFound } from "next/navigation";
 import "./globals.css";
@@ -24,6 +23,7 @@ import StorefrontTracker from "../components/StorefrontTracker";
 import AnnouncementBar from "../components/AnnouncementBar";
 
 import { storefrontFetch } from "@/utils/storefrontFetch";
+import { cleanStoreName, getStoreName, getRequestContext, getSiteOrigin } from "@/utils/seo";
 
 const getTheme = cache(async (tenantSlug: string) => {
   try {
@@ -84,17 +84,8 @@ const getTrackingConfig = cache(async (tenantSlug: string) => {
   }
 });
 
-/** Strip any " - PLATFORM" or " | PLATFORM" suffix that may have been saved in the DB */
-function cleanStoreName(raw: string): string {
-  return raw
-    .replace(/\s*[-|]\s*MASH\s*ECO\s*$/i, '')
-    .trim();
-}
-
 export async function generateMetadata(): Promise<Metadata> {
-  const headersList = await headers();
-  const host = headersList.get("host") || "localhost:3000";
-  const tenantSlug = headersList.get("x-tenant-slug") || "main";
+  const { tenantSlug, requestOrigin } = await getRequestContext();
   const storeInfo = await getStoreInfo(tenantSlug);
 
   const storeStatus = await getStoreStatus(tenantSlug);
@@ -107,11 +98,8 @@ export async function generateMetadata(): Promise<Metadata> {
     };
   }
 
-  const protocol = host.includes('localhost') ? 'http' : 'https';
-  const baseUrl = `${protocol}://${host}`;
-
-  const rawName = storeInfo?.name ?? `${tenantSlug.toUpperCase()} Store`;
-  const title = cleanStoreName(rawName);
+  const baseUrl = getSiteOrigin(requestOrigin, storeInfo);
+  const title = getStoreName(storeInfo, tenantSlug);
   const description = storeInfo?.description || `Welcome to ${title}`;
   
   let faviconUrl = storeInfo?.logo || "/favicon.ico";
@@ -119,8 +107,10 @@ export async function generateMetadata(): Promise<Metadata> {
   
   if (faviconUrl.includes("cloudinary.com")) {
     faviconUrl = faviconUrl.replace(/\.[^/.]+$/, ".png");
-    appleIconUrl = faviconUrl.replace("/upload/", "/upload/w_180,h_180,c_fill,f_png/");
-    faviconUrl = faviconUrl.replace("/upload/", "/upload/w_192,h_192,c_fill,f_png/");
+    // c_fill with g_center ensures the image fills the 1:1 square completely (like object-cover),
+    // so when Google renders it in its circular badge, the image fills the entire circle edge-to-edge!
+    appleIconUrl = faviconUrl.replace("/upload/", "/upload/w_180,h_180,c_fill,g_center,f_png/");
+    faviconUrl = faviconUrl.replace("/upload/", "/upload/w_192,h_192,c_fill,g_center,f_png/");
   }
 
   const defaultOgImage = `${baseUrl}/default-og-image.jpg`; // Fallback image
@@ -140,6 +130,7 @@ export async function generateMetadata(): Promise<Metadata> {
     icons: {
       icon: [
         { url: faviconUrl, sizes: '192x192', type: 'image/png' },
+        { url: faviconUrl, sizes: '32x32', type: 'image/png' },
       ],
       shortcut: [faviconUrl],
       apple: [
@@ -170,14 +161,12 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const headersList = await headers();
-  const host = headersList.get("host") || "localhost:3000";
-  const protocol = host.includes('localhost') ? 'http' : 'https';
-  const baseUrl = `${protocol}://${host}`;
-  const tenantSlug = headersList.get("x-tenant-slug") || "main";
+  const { tenantSlug, requestOrigin } = await getRequestContext();
 
   const theme = await getTheme(tenantSlug);
   const storeInfo = await getStoreInfo(tenantSlug);
+  const baseUrl = getSiteOrigin(requestOrigin, storeInfo);
+  const storeName = getStoreName(storeInfo, tenantSlug);
   const storeStatus = await getStoreStatus(tenantSlug);
   const trackingConfig = await getTrackingConfig(tenantSlug);
 
@@ -189,7 +178,6 @@ export default async function RootLayout({
     const isTrialExpired = storeStatus.reason === "Trial expired";
     const isExpired = storeStatus.reason === "Subscription expired";
     const hasNoPlan = storeStatus.reason === "No active subscription";
-    const storeName = storeInfo?.name || tenantSlug;
     const storeLogo = storeInfo?.logo;
 
     // Color scheme: amber for trial expired, red for subscription expired/no plan
@@ -493,57 +481,41 @@ export default async function RootLayout({
         `,
           }}
         />
-        {/* WebSite & Organization JSON-LD – Required for Google Site Name, Store Logo & Sitelinks */}
+        {/* 1. Google Site Name: Standalone WebSite JSON-LD (required by Google) */}
         {storeInfo && (
           <script
             type="application/ld+json"
             dangerouslySetInnerHTML={{
               __html: JSON.stringify({
                 '@context': 'https://schema.org',
-                '@graph': [
-                  {
-                    '@type': 'WebSite',
-                    '@id': `${baseUrl}/#website`,
-                    url: `${baseUrl}`,
-                    name: cleanStoreName(storeInfo.name),
-                    alternateName: [cleanStoreName(storeInfo.name), tenantSlug.toUpperCase()],
-                    publisher: {
-                      '@id': `${baseUrl}/#organization`,
-                    },
-                    potentialAction: {
-                      '@type': 'SearchAction',
-                      target: {
-                        '@type': 'EntryPoint',
-                        urlTemplate: `${baseUrl}/products?search={search_term_string}`,
-                      },
-                      'query-input': 'required name=search_term_string',
-                    },
+                '@type': 'WebSite',
+                name: storeName,
+                url: `${baseUrl}/`,
+                potentialAction: {
+                  '@type': 'SearchAction',
+                  target: {
+                    '@type': 'EntryPoint',
+                    urlTemplate: `${baseUrl}/products?search={search_term_string}`,
                   },
-                  {
-                    '@type': ['Organization', 'OnlineStore'],
-                    '@id': `${baseUrl}/#organization`,
-                    name: cleanStoreName(storeInfo.name),
-                    url: `${baseUrl}`,
-                    logo: storeInfo.logo
-                      ? {
-                          '@type': 'ImageObject',
-                          url: storeInfo.logo,
-                          caption: cleanStoreName(storeInfo.name),
-                        }
-                      : undefined,
-                    description: storeInfo.description || undefined,
-                    telephone: storeInfo.phone || undefined,
-                    contactPoint: storeInfo.phone
-                      ? [
-                          {
-                            '@type': 'ContactPoint',
-                            telephone: storeInfo.phone,
-                            contactType: 'customer service',
-                          },
-                        ]
-                      : undefined,
-                  },
-                ],
+                  'query-input': 'required name=search_term_string',
+                },
+              }),
+            }}
+          />
+        )}
+        {/* 2. Organization / OnlineStore JSON-LD */}
+        {storeInfo && (
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{
+              __html: JSON.stringify({
+                '@context': 'https://schema.org',
+                '@type': 'OnlineStore',
+                name: storeName,
+                url: `${baseUrl}/`,
+                logo: storeInfo.logo || undefined,
+                description: storeInfo.description || undefined,
+                telephone: storeInfo.phone || undefined,
               }),
             }}
           />

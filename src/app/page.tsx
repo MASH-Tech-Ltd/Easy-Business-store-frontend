@@ -1,96 +1,55 @@
-import { headers } from 'next/headers';
 import { getTheme, getStoreInfo } from '@/core/api/store';
 import { themeRegistry } from '@/themes/themeRegistry';
+import { getStoreName, getRequestContext, getSiteOrigin } from '@/utils/seo';
 import type { Metadata } from 'next';
 
-/** Strip any " - PLATFORM" or " | PLATFORM" suffix that may have been saved in the DB */
-function cleanStoreName(raw: string): string {
-  return raw.replace(/\s*[-|]\s*MASH\s*ECO\s*$/i, '').trim();
-}
-
 export async function generateMetadata(): Promise<Metadata> {
-  const headersList = await headers();
-  const host = headersList.get('host') || 'localhost:3000';
-  const tenantSlug = headersList.get('x-tenant-slug') || 'main';
+  const { tenantSlug, requestOrigin } = await getRequestContext();
 
-  const protocol = host.includes('localhost') ? 'http' : 'https';
-  const baseUrl = `${protocol}://${host}`;
-
-  let title = 'Home';
-  let description = 'Welcome to our store';
-  let siteName = 'Store';
-  let logo = '';
-
-  if (tenantSlug !== 'main') {
-    const storeInfo = await getStoreInfo(tenantSlug);
-    title = cleanStoreName(storeInfo?.name || tenantSlug.toUpperCase());
-    description = storeInfo?.description || description;
-    siteName = cleanStoreName(storeInfo?.name || siteName);
-    logo = storeInfo?.logo || logo;
+  if (tenantSlug === 'main') {
+    return { title: { absolute: 'Home' } };
   }
+
+  const storeInfo = await getStoreInfo(tenantSlug);
+  const baseUrl = getSiteOrigin(requestOrigin, storeInfo);
+  const storeName = getStoreName(storeInfo, tenantSlug);
+  const description = storeInfo?.description || `Welcome to ${storeName}`;
+  const logo = storeInfo?.logo || '';
 
   return {
     title: {
-      absolute: title,
+      absolute: storeName,
     },
     description,
     alternates: {
-      canonical: '/',
+      canonical: `${baseUrl}/`,
     },
     openGraph: {
-      title,
+      title: storeName,
       description,
-      url: baseUrl,
-      siteName,
-      images: logo ? [{ url: logo, alt: title }] : [],
-      locale: 'en_US',
+      url: `${baseUrl}/`,
+      siteName: storeName,
+      images: logo ? [{ url: logo, alt: storeName }] : [],
       type: 'website',
     },
   };
 }
 
 export default async function Page() {
-  const headersList = await headers();
-  const host = headersList.get('host') || 'localhost:3000';
-  const tenantSlug = headersList.get('x-tenant-slug') || 'main';
-  
-  const protocol = host.includes('localhost') ? 'http' : 'https';
-  const baseUrl = `${protocol}://${host}`;
+  const { tenantSlug } = await getRequestContext();
 
   let themeId = 'design-01';
-  let storeInfo = null;
 
   if (tenantSlug !== 'main') {
-    const [theme, info] = await Promise.all([
-      getTheme(tenantSlug),
-      getStoreInfo(tenantSlug),
-    ]);
+    const theme = await getTheme(tenantSlug);
     if (theme && theme.themeId && themeRegistry[theme.themeId]) {
       themeId = theme.themeId;
     }
-    storeInfo = info;
   }
 
   const ThemeHome = themeRegistry[themeId]?.Home || themeRegistry['design-01'].Home;
 
-  const jsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'WebSite',
-    name: cleanStoreName(storeInfo?.name || tenantSlug.toUpperCase()),
-    alternateName: cleanStoreName(storeInfo?.name || tenantSlug.toUpperCase()),
-    url: baseUrl,
-  };
-
-  return (
-    <>
-      {storeInfo && (
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-        />
-      )}
-      <ThemeHome tenantSlug={tenantSlug} />
-    </>
-  );
+  // NOTE: WebSite / Organization JSON-LD (used by Google for the site name)
+  // is emitted once in the root layout. Do not duplicate it here.
+  return <ThemeHome tenantSlug={tenantSlug} />;
 }
-

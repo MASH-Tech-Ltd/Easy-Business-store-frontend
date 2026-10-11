@@ -1,38 +1,69 @@
 import type { MetadataRoute } from "next";
-import { headers } from "next/headers";
 import { storefrontFetch } from "@/utils/storefrontFetch";
+import { getStoreInfo } from "@/core/api/store";
+import { getRequestContext, getSiteOrigin } from "@/utils/seo";
 
 async function fetchList(tenantSlug: string, path: string) {
   try {
     const res = await storefrontFetch(
       `${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/${path}`,
-      { next: { revalidate: 3600 } },
+      { next: { revalidate: 3600, tags: [`tenant-${tenantSlug}`] } },
     );
     if (!res.ok) return [];
     const json = await res.json();
-    return json.data ?? [];
+    return Array.isArray(json.data) ? json.data : [];
   } catch {
     return [];
   }
 }
 
+/** Products endpoint is paginated (max 100/page) and returns { data, pagination }. */
+async function fetchAllProducts(tenantSlug: string) {
+  const all: any[] = [];
+  const MAX_PAGES = 50; // up to 5000 products
+  for (let page = 1; page <= MAX_PAGES; page++) {
+    try {
+      const res = await storefrontFetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/products?page=${page}&limit=100`,
+        { next: { revalidate: 3600, tags: [`tenant-${tenantSlug}`] } },
+      );
+      if (!res.ok) break;
+      const json = await res.json();
+      const items = json.data?.data ?? [];
+      all.push(...items);
+      const totalPages = json.data?.pagination?.totalPages ?? 1;
+      if (page >= totalPages || items.length === 0) break;
+    } catch {
+      break;
+    }
+  }
+  return all;
+}
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const h = await headers();
-  const host = h.get("x-forwarded-host") || h.get("host") || "localhost:3000";
-  const protocol = host.includes("localhost") ? "http" : "https";
-  const baseUrl = `${protocol}://${host}`;
-  const tenantSlug = h.get("x-tenant-slug") || "main";
+  const { tenantSlug, requestOrigin } = await getRequestContext();
+
+  // Platform root (no tenant) has no storefront pages.
+  if (tenantSlug === "main") return [];
+
+  const storeInfo = await getStoreInfo(tenantSlug);
+  if (!storeInfo) return [];
+
+  // Always list URLs on the tenant's canonical origin (custom domain if verified).
+  const baseUrl = getSiteOrigin(requestOrigin, storeInfo);
 
   const [products, categories] = await Promise.all([
-    fetchList(tenantSlug, "products"),
+    fetchAllProducts(tenantSlug),
     fetchList(tenantSlug, "categories"),
   ]);
 
   return [
-    { url: baseUrl, changeFrequency: "daily", priority: 1 },
+    { url: `${baseUrl}/`, changeFrequency: "daily", priority: 1 },
     { url: `${baseUrl}/products`, changeFrequency: "daily", priority: 0.8 },
+    { url: `${baseUrl}/categories`, changeFrequency: "weekly", priority: 0.7 },
     ...categories.map((c: any) => ({
-      url: `${baseUrl}/categories/${c.slug || c._id}`,
+      // Route is /category/[slug] (singular)
+      url: `${baseUrl}/category/${c.slug || c._id}`,
       changeFrequency: "weekly" as const,
       priority: 0.7,
     })),

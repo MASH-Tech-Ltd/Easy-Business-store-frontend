@@ -7,11 +7,13 @@ export async function middleware(request: NextRequest) {
   // Get hostname (e.g., 'abcstore.myplatform.com' or 'localhost:3000')
   const hostname = request.headers.get('host') || '';
   
-  // Exclude static files and API routes from proxy
+  // Exclude static files and API routes from proxy.
+  // sitemap.xml / robots.txt are tenant-specific, so they MUST get x-tenant-slug.
+  const isTenantSeoFile = url.pathname === '/sitemap.xml' || url.pathname === '/robots.txt';
   if (
     url.pathname.startsWith('/_next') ||
     url.pathname.startsWith('/api') ||
-    url.pathname.includes('.')
+    (url.pathname.includes('.') && !isTenantSeoFile)
   ) {
     return NextResponse.next();
   }

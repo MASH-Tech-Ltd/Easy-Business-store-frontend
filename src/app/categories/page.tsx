@@ -1,27 +1,24 @@
 import { headers } from 'next/headers';
 import { getTheme, getStoreInfo } from '@/core/api/store';
 import { themeRegistry } from '@/themes/themeRegistry';
+import { getStoreName, getRequestContext, getSiteOrigin } from '@/utils/seo';
 import type { Metadata } from 'next';
 
 export async function generateMetadata(): Promise<Metadata> {
-  const headersList = await headers();
-  const host = headersList.get('host') || 'localhost:3000';
-  const tenantSlug = headersList.get('x-tenant-slug') || 'main';
-
-  const protocol = host.includes('localhost') ? 'http' : 'https';
-  const baseUrl = `${protocol}://${host}`;
+  const { tenantSlug, requestOrigin } = await getRequestContext();
 
   const storeInfo = await getStoreInfo(tenantSlug);
-  const storeName = storeInfo?.name || tenantSlug.toUpperCase();
+  const baseUrl = getSiteOrigin(requestOrigin, storeInfo);
+  const storeName = getStoreName(storeInfo, tenantSlug);
 
-  const title = `All Categories`;
+  const title = `All Categories | ${storeName}`;
   const description = `Browse all categories at ${storeName}. Find the best products in our organized catalog.`;
   const ogImage = storeInfo?.logo || null;
 
   return {
-    title,
+    title: { absolute: title },
     description,
-    keywords: [storeName, 'categories', 'electronics', 'shop by category'].join(', '),
+    keywords: [storeName, 'categories', 'shop by category'].join(', '),
     alternates: {
       canonical: `${baseUrl}/categories`,
     },

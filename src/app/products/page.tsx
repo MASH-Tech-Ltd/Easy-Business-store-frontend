@@ -1,23 +1,15 @@
 import { headers } from 'next/headers';
 import { getTheme, getStoreInfo } from '@/core/api/store';
 import { themeRegistry } from '@/themes/themeRegistry';
+import { getStoreName, getRequestContext, getSiteOrigin } from '@/utils/seo';
 import type { Metadata } from 'next';
 
 export async function generateMetadata(): Promise<Metadata> {
-  const headersList = await headers();
-  const host = headersList.get('host') || 'localhost:3000';
-  const tenantSlug = headersList.get('x-tenant-slug') || 'main';
-
-  const protocol = host.includes('localhost') ? 'http' : 'https';
-  const baseUrl = `${protocol}://${host}`;
-
-/** Strip any " - PLATFORM" or " | PLATFORM" suffix that may have been saved in the DB */
-function cleanStoreName(raw: string): string {
-  return raw.replace(/\s*[-|]\s*MASH\s*ECO\s*$/i, '').trim();
-}
+  const { tenantSlug, requestOrigin } = await getRequestContext();
 
   const storeInfo = await getStoreInfo(tenantSlug);
-  const storeName = cleanStoreName(storeInfo?.name || tenantSlug.toUpperCase());
+  const baseUrl = getSiteOrigin(requestOrigin, storeInfo);
+  const storeName = getStoreName(storeInfo, tenantSlug);
 
   const title = `All Products | ${storeName}`;
   const description = `Browse all products at ${storeName}. Shop online with fast delivery and great prices.`;
@@ -28,7 +20,7 @@ function cleanStoreName(raw: string): string {
       absolute: title,
     },
     description,
-    keywords: [storeName, 'electronics', 'buy online', 'shop all products', 'ecommerce'].join(', '),
+    keywords: [storeName, 'buy online', 'shop all products', 'ecommerce'].join(', '),
     alternates: {
       canonical: `${baseUrl}/products`,
     },

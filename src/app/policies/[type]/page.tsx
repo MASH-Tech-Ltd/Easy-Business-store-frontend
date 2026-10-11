@@ -1,6 +1,7 @@
 import { headers } from 'next/headers';
 import { getTheme, getStoreInfo } from '@/core/api/store';
 import { themeRegistry } from '@/themes/themeRegistry';
+import { getStoreName, getRequestContext, getSiteOrigin } from '@/utils/seo';
 import type { Metadata, ResolvingMetadata } from 'next';
 
 interface PageProps {
@@ -14,15 +15,11 @@ export async function generateMetadata(
   parent: ResolvingMetadata
 ): Promise<Metadata> {
   const resolvedParams = await params;
-  const headersList = await headers();
-  const host = headersList.get('host') || 'localhost:3000';
-  const tenantSlug = headersList.get('x-tenant-slug') || 'main';
-
-  const protocol = host.includes('localhost') ? 'http' : 'https';
-  const baseUrl = `${protocol}://${host}`;
+  const { tenantSlug, requestOrigin } = await getRequestContext();
 
   const storeInfo = await getStoreInfo(tenantSlug);
-  const storeName = storeInfo?.name || tenantSlug.toUpperCase();
+  const baseUrl = getSiteOrigin(requestOrigin, storeInfo);
+  const storeName = getStoreName(storeInfo, tenantSlug);
   const policyTitle = resolvedParams.type
     .split('-')
     .map((w: string) => w.charAt(0).toUpperCase() + w.slice(1))
@@ -33,7 +30,7 @@ export async function generateMetadata(
   const ogImage = storeInfo?.logo || null;
 
   return {
-    title,
+    title: { absolute: title },
     description,
     alternates: {
       canonical: `${baseUrl}/policies/${resolvedParams.type}`,

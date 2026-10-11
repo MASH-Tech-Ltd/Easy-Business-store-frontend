@@ -2,6 +2,7 @@ import React, { Suspense } from 'react';
 import { headers } from 'next/headers';
 import { getTheme, getStoreInfo } from '@/core/api/store';
 import { themeRegistry } from '@/themes/themeRegistry';
+import { getStoreName } from '@/utils/seo';
 import { TrackOrderContent } from './TrackOrderClient';
 import type { Metadata } from 'next';
 
@@ -9,9 +10,9 @@ export async function generateMetadata(): Promise<Metadata> {
   const headersList = await headers();
   const tenantSlug = headersList.get('x-tenant-slug') || 'main';
   const storeInfo = await getStoreInfo(tenantSlug);
-  const storeName = storeInfo?.name || tenantSlug.toUpperCase();
+  const storeName = getStoreName(storeInfo, tenantSlug);
   return {
-    title: `Track Your Order | ${storeName}`,
+    title: { absolute: `Track Your Order | ${storeName}` },
     description: `Track the status of your order at ${storeName}.`,
     robots: {
       index: false,
