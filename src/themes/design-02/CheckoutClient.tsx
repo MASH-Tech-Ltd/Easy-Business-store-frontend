@@ -496,6 +496,14 @@ export default function Design02CheckoutClient({ theme,
                   </div>
                 </div>
               </div>
+
+              {(storeInfo?.settings?.checkoutNote || storeInfo?.checkoutNote) && (
+                <div className="mt-6 p-5 rounded-lg bg-gray-50 border border-gray-200 shadow-xs">
+                  <p className="text-md text-gray-700 whitespace-pre-line leading-relaxed font-medium">
+                    ✨ {storeInfo?.settings?.checkoutNote || storeInfo?.checkoutNote}
+                  </p>
+                </div>
+              )}
             </section>
           </div>
   

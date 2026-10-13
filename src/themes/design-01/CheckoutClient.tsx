@@ -533,13 +533,10 @@ export default function CheckoutClient({ storeInfo, theme }: { storeInfo?: any; 
                 </div>
               </div>
 
-              {storeInfo?.settings?.checkoutNote && (
-                <div className="mt-5 space-y-1">
-                  <p className="text-[11px] font-semibold text-primary whitespace-pre-line">
-                    {storeInfo.settings.checkoutNote}
-                  </p>
-                  <p className="text-[11px] font-bold text-primary uppercase">
-                    {storeInfo.name} ✨
+              {(storeInfo?.settings?.checkoutNote || storeInfo?.checkoutNote) && (
+                <div className="mt-5 p-4 rounded-xl bg-gray-50 border border-gray-200/80 shadow-xs space-y-1">
+                  <p className="text-md font-medium text-gray-700 whitespace-pre-line leading-relaxed">
+                    ✨ {storeInfo?.settings?.checkoutNote || storeInfo?.checkoutNote}
                   </p>
                 </div>
               )}

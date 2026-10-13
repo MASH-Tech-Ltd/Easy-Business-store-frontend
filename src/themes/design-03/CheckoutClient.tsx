@@ -305,6 +305,22 @@ export default function CheckoutClient03({ storeInfo, theme }: { storeInfo?: any
                 )}
               </div>
             </div>
+
+            <div>
+              <h2 className="text-xs font-mono text-cyan-400 uppercase tracking-widest mb-4 border-b border-white/10 pb-2">Payment Protocol</h2>
+              <div className="p-4 bg-[#111] border border-cyan-400/40 flex items-center justify-between">
+                <span className="text-xs font-mono text-white uppercase font-bold tracking-wider">Cash on Delivery</span>
+                <span className="text-xs font-mono text-cyan-400 font-bold">{shippingZoneName ? `${shippingZoneName} ` : ''}+{totalPrice > 0 ? deliveryCharge.toLocaleString() : 0} {theme?.currencySymbol || '৳'}</span>
+              </div>
+
+              {(storeInfo?.settings?.checkoutNote || storeInfo?.checkoutNote) && (
+                <div className="mt-4 p-4 border border-cyan-400/20 bg-cyan-950/10 font-mono text-md">
+                  <p className="text-cyan-300/90 whitespace-pre-line leading-relaxed">
+                    ✨ {storeInfo?.settings?.checkoutNote || storeInfo?.checkoutNote}
+                  </p>
+                </div>
+              )}
+            </div>
           </form>
         </div>
         

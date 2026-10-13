@@ -1,4 +1,4 @@
-﻿import { storefrontFetch } from "../../utils/storefrontFetch";
+import { storefrontFetch } from "../../utils/storefrontFetch";
 import React from 'react';
 import { headers } from 'next/headers';
 import CheckoutClient04 from './CheckoutClient';
@@ -21,9 +21,9 @@ async function getTheme(tenantSlug: string) {
   } catch { return null; }
 }
 
-export default async function CheckoutPage04() {
+export default async function CheckoutPage04({ tenantSlug: propTenantSlug }: { tenantSlug?: string } = {}) {
   const headersList = await headers();
-  const tenantSlug = headersList.get('x-tenant-slug') || 'main';
+  const tenantSlug = propTenantSlug || headersList.get('x-tenant-slug') || 'main';
   
   const [storeInfo, theme] = await Promise.all([
     getStoreInfo(tenantSlug),

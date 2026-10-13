@@ -1,13 +1,13 @@
-﻿import { storefrontFetch } from "../../utils/storefrontFetch";
+import { storefrontFetch } from "../../utils/storefrontFetch";
 import React from 'react';
 import CheckoutClient05 from './components/ui/CheckoutClient05';
 import Header05 from './components/layout/Header';
 import Footer05 from './components/layout/Footer';
 import { headers } from 'next/headers';
 
-export default async function Checkout05() {
+export default async function Checkout05({ tenantSlug: propTenantSlug }: { tenantSlug?: string } = {}) {
   const headersList = await headers();
-  const tenantSlug = headersList.get('x-tenant-slug') || 'main';
+  const tenantSlug = propTenantSlug || headersList.get('x-tenant-slug') || 'main';
 
   const [storeInfoRes, themeRes] = await Promise.all([
     storefrontFetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/info`, { next: { revalidate: 60 } }),

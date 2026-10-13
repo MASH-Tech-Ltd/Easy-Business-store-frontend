@@ -312,6 +312,14 @@ export default function CheckoutClient04({ storeInfo, theme }: { storeInfo?: any
                       <div className="w-6 h-6 bg-gray-900 rounded-full flex items-center justify-center text-white shrink-0"><CheckCircle2 size={14} /></div>
                     </div>
                   </div>
+
+                  {(storeInfo?.settings?.checkoutNote || storeInfo?.checkoutNote) && (
+                    <div className="mt-4 p-4 rounded-xl bg-gray-50 border border-gray-200 shadow-xs space-y-1">
+                      <p className="text-md text-gray-700 whitespace-pre-line leading-relaxed font-medium">
+                        ✨ {storeInfo?.settings?.checkoutNote || storeInfo?.checkoutNote}
+                      </p>
+                    </div>
+                  )}
                 </div>
 
                 {/* Mobile Place Order Button */}

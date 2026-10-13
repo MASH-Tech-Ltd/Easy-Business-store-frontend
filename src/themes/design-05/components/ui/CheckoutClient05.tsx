@@ -594,6 +594,14 @@ export default function CheckoutClient05({
                   </div>
                 </label>
               </div>
+
+              {(storeInfo?.settings?.checkoutNote || storeInfo?.checkoutNote) && (
+                <div className="mt-5 p-4 rounded-2xl bg-[#F8F9FA] border border-gray-100 shadow-xs space-y-1">
+                  <p className="text-md text-gray-700 whitespace-pre-line leading-relaxed font-medium">
+                    ✨ {storeInfo?.settings?.checkoutNote || storeInfo?.checkoutNote}
+                  </p>
+                </div>
+              )}
             </section>
           </form>
         </div>

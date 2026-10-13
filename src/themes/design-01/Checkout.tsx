@@ -21,9 +21,9 @@ async function getTheme(tenantSlug: string) {
   } catch { return null; }
 }
 
-export default async function CheckoutPage() {
+export default async function CheckoutPage({ tenantSlug: propTenantSlug }: { tenantSlug?: string } = {}) {
   const headersList = await headers();
-  const tenantSlug = headersList.get('x-tenant-slug') || 'main';
+  const tenantSlug = propTenantSlug || headersList.get('x-tenant-slug') || 'main';
   const [storeInfo, theme] = await Promise.all([
     getStoreInfo(tenantSlug),
     getTheme(tenantSlug),
