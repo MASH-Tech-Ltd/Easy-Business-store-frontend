@@ -127,17 +127,17 @@ export default function Footer({
             <li>
               <Link prefetch={false} href="/products?sort=newest" className="hover:text-gray-900 transition-colors">{t('newCollection') || 'New Arrivals'}</Link>
             </li>
-          </ul>
-        </div>
-        <div>
-          <h3 className="text-sm font-bold uppercase tracking-wider mb-4">{t('helpAndInfo')}</h3>
-          <ul className="space-y-3 text-sm text-gray-500">
             <li>
               <Link prefetch={false}
                 href="/track-order"
                 className="hover:text-gray-900 transition-colors"
               >{t('trackOrder')}</Link>
             </li>
+          </ul>
+        </div>
+        <div>
+          <h3 className="text-sm font-bold uppercase tracking-wider mb-4">{t('helpAndInfo')}</h3>
+          <ul className="space-y-3 text-sm text-gray-500">
             <li>
               <Link prefetch={false}
                 href="/policies/about-us"

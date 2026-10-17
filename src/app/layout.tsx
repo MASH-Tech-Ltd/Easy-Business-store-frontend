@@ -24,6 +24,7 @@ import AnnouncementBar from "../components/AnnouncementBar";
 
 import { storefrontFetch } from "@/utils/storefrontFetch";
 import { cleanStoreName, getStoreName, getRequestContext, getSiteOrigin } from "@/utils/seo";
+import { getCategories } from "@/core/api/category";
 
 const getTheme = cache(async (tenantSlug: string) => {
   try {
@@ -118,9 +119,12 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     metadataBase: new URL(baseUrl),
     applicationName: title,
+    authors: [{ name: title, url: `${baseUrl}/` }],
+    publisher: title,
     appleWebApp: {
       title: title,
       statusBarStyle: 'default',
+      capable: true,
     },
     title: {
       default: title,
@@ -165,6 +169,7 @@ export default async function RootLayout({
 
   const theme = await getTheme(tenantSlug);
   const storeInfo = await getStoreInfo(tenantSlug);
+  const categories = tenantSlug !== "main" ? await getCategories(tenantSlug) : [];
   const baseUrl = getSiteOrigin(requestOrigin, storeInfo);
   const storeName = getStoreName(storeInfo, tenantSlug);
   const storeStatus = await getStoreStatus(tenantSlug);
@@ -481,7 +486,7 @@ export default async function RootLayout({
         `,
           }}
         />
-        {/* 1. Google Site Name: Standalone WebSite JSON-LD (required by Google) */}
+        {/* 1. Google Site Name: Standalone WebSite JSON-LD (required by Google for Merchant Business Name) */}
         {storeInfo && (
           <script
             type="application/ld+json"
@@ -490,6 +495,18 @@ export default async function RootLayout({
                 '@context': 'https://schema.org',
                 '@type': 'WebSite',
                 name: storeName,
+                alternateName: Array.from(
+                  new Set(
+                    [
+                      storeInfo.domain,
+                      tenantSlug,
+                      storeName.replace(/\s+/g, ''),
+                    ].filter(
+                      (item): item is string =>
+                        Boolean(item && item.trim().toLowerCase() !== storeName.trim().toLowerCase())
+                    )
+                  )
+                ),
                 url: `${baseUrl}/`,
                 potentialAction: {
                   '@type': 'SearchAction',
@@ -516,6 +533,57 @@ export default async function RootLayout({
                 logo: storeInfo.logo || undefined,
                 description: storeInfo.description || undefined,
                 telephone: storeInfo.phone || undefined,
+                currenciesAccepted: storeInfo.currency || 'BDT',
+                priceRange: '৳',
+                address: storeInfo.address
+                  ? {
+                      '@type': 'PostalAddress',
+                      streetAddress: storeInfo.address,
+                      addressCountry: 'BD',
+                    }
+                  : undefined,
+              }),
+            }}
+          />
+        )}
+        {/* 3. Google Sitelinks: SiteNavigationElement / ItemList JSON-LD */}
+        {storeInfo && (
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{
+              __html: JSON.stringify({
+                '@context': 'https://schema.org',
+                '@type': 'ItemList',
+                itemListElement: [
+                  {
+                    '@type': 'SiteNavigationElement',
+                    position: 1,
+                    name: 'All Products',
+                    description: `Browse all products and new arrivals at ${storeName}.`,
+                    url: `${baseUrl}/products`,
+                  },
+                  ...categories.slice(0, 8).map((cat: any, idx: number) => ({
+                    '@type': 'SiteNavigationElement',
+                    position: idx + 2,
+                    name: cat.name,
+                    description: cat.description || `Shop ${cat.name} online at ${storeName}.`,
+                    url: `${baseUrl}/category/${cat.slug || cat._id}`,
+                  })),
+                  {
+                    '@type': 'SiteNavigationElement',
+                    position: Math.min(categories.length, 8) + 2,
+                    name: 'Track Order',
+                    description: `Track your courier shipment and order delivery status at ${storeName}.`,
+                    url: `${baseUrl}/track-order`,
+                  },
+                  {
+                    '@type': 'SiteNavigationElement',
+                    position: Math.min(categories.length, 8) + 3,
+                    name: 'Terms & Policies',
+                    description: `Return, refund, and customer service policies at ${storeName}.`,
+                    url: `${baseUrl}/policies/terms`,
+                  },
+                ],
               }),
             }}
           />

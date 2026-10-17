@@ -85,12 +85,7 @@ import TrackViewItem from "@/components/TrackViewItem";
 
 export default async function ProductPage({ params }: PageProps) {
   const resolvedParams = await params;
-  const headersList = await headers();
-  const host = headersList.get("host") || "localhost:3000";
-  const tenantSlug = headersList.get("x-tenant-slug") || "main";
-
-  const protocol = host.includes("localhost") ? "http" : "https";
-  const baseUrl = `${protocol}://${host}`;
+  const { tenantSlug, requestOrigin } = await getRequestContext();
 
   let themeId = "design-01";
   let product = null;
@@ -108,6 +103,43 @@ export default async function ProductPage({ params }: PageProps) {
       themeId = themeRes.themeId;
     }
   }
+
+  const baseUrl = getSiteOrigin(requestOrigin, storeInfo);
+  const storeName = getStoreName(storeInfo, tenantSlug);
+
+  const categoryName = typeof product?.category === 'object'
+    ? product.category?.name
+    : product?.category || 'All Products';
+  const categorySlug = typeof product?.category === 'object'
+    ? (product.category?.slug || product.category?._id)
+    : product?.category;
+
+  const breadcrumbJsonLd = product
+    ? {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        itemListElement: [
+          {
+            "@type": "ListItem",
+            position: 1,
+            name: "Home",
+            item: `${baseUrl}/`,
+          },
+          {
+            "@type": "ListItem",
+            position: 2,
+            name: categoryName,
+            item: categorySlug ? `${baseUrl}/category/${categorySlug}` : `${baseUrl}/products`,
+          },
+          {
+            "@type": "ListItem",
+            position: 3,
+            name: product.title,
+            item: `${baseUrl}/product/${resolvedParams.slug}`,
+          },
+        ],
+      }
+    : null;
 
   // Build JSON-LD Product structured data for Google rich results
   const jsonLd = product
@@ -140,7 +172,7 @@ export default async function ProductPage({ params }: PageProps) {
               : "https://schema.org/OutOfStock",
           seller: {
             "@type": "Organization",
-            name: storeInfo?.name || tenantSlug.toUpperCase(),
+            name: storeName,
           },
         },
       }
@@ -151,6 +183,12 @@ export default async function ProductPage({ params }: PageProps) {
 
   return (
     <>
+      {breadcrumbJsonLd && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+        />
+      )}
       {jsonLd && (
         <script
           type="application/ld+json"

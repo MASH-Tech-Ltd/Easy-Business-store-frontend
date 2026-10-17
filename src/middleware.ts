@@ -53,7 +53,7 @@ export async function middleware(request: NextRequest) {
       if (infoRes.ok) {
         const json = await infoRes.json();
         // Use the real unique slug from DB — all other API calls use this
-        tenantSlug = json?.data?.slug || currentHost;
+        tenantSlug = json?.data?.slug || json?.data?.domain || currentHost;
       } else {
         tenantSlug = currentHost;
       }
@@ -65,6 +65,11 @@ export async function middleware(request: NextRequest) {
   // Ensure lowercase
   tenantSlug = tenantSlug.toLowerCase();
 
+  // Forward x-tenant-slug and x-tenant-host to Server Components via request headers
+  const requestHeaders = new Headers(request.headers);
+  requestHeaders.set('x-tenant-slug', tenantSlug);
+  requestHeaders.set('x-tenant-host', currentHost);
+
   if (tenantSlug !== 'main') {
     try {
       const statusRes = await fetch(`${apiUrl}/storefront/${tenantSlug}/status`, {
@@ -75,7 +80,10 @@ export async function middleware(request: NextRequest) {
       if (!statusRes.ok && statusRes.status === 404) {
         const errorUrl = url.clone();
         errorUrl.pathname = '/404'; // or some other path handled by notFound
-        const response = NextResponse.rewrite(errorUrl, { status: 404 });
+        const response = NextResponse.rewrite(errorUrl, {
+          request: { headers: requestHeaders },
+          status: 404,
+        });
         response.headers.set('x-tenant-slug', tenantSlug);
         return response;
       }
@@ -83,12 +91,10 @@ export async function middleware(request: NextRequest) {
       if (statusRes.ok) {
         const statusJson = await statusRes.json();
         if (statusJson?.data?.storeDown) {
-          // If the store is down/offline/expired, return a 503 status
-          // Note: Next.js app router doesn't have a direct way to render a page with 503 from middleware
-          // without rewriting to an error page or passing the request through with a custom header.
-          // Since the layout renders the "store down" UI, we can just return a response with 503 status
-          // while rewriting to the same URL, which makes Next.js render it but with the 503 HTTP status!
-          const response = NextResponse.rewrite(url, { status: 503 });
+          const response = NextResponse.rewrite(url, {
+            request: { headers: requestHeaders },
+            status: 503,
+          });
           response.headers.set('x-tenant-slug', tenantSlug);
           return response;
         }
@@ -98,7 +104,11 @@ export async function middleware(request: NextRequest) {
     }
   }
 
-  const response = NextResponse.next();
+  const response = NextResponse.next({
+    request: {
+      headers: requestHeaders,
+    },
+  });
   response.headers.set('x-tenant-slug', tenantSlug);
   return response;
 }

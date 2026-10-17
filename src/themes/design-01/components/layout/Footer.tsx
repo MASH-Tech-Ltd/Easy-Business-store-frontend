@@ -181,6 +181,9 @@ export default async function Footer() {
               <li>
                 <Link prefetch={false} href="/products?sort=newest" className="text-sm text-gray-500 hover:text-primary transition-colors">{t('newCollection') || 'New Arrivals'}</Link>
               </li>
+              <li>
+                <Link prefetch={false} href="/track-order" className="text-sm text-gray-500 hover:text-primary transition-colors">{t('trackOrder')}</Link>
+              </li>
             </ul>
           </div>
 
@@ -188,9 +191,6 @@ export default async function Footer() {
           <div className="col-span-1">
             <h3 className="font-bold text-gray-900 mb-4 text-sm uppercase">{t('helpAndInfo')}</h3>
             <ul className="space-y-3">
-              <li>
-                <Link prefetch={false} href="/track-order" className="text-sm text-gray-500 hover:text-primary transition-colors">{t('trackOrder')}</Link>
-              </li>
               <li>
                 <Link prefetch={false} href="/policies/about-us" className="text-sm text-gray-500 hover:text-primary transition-colors">
                   {t("aboutUs")}

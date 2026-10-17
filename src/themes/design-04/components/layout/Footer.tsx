@@ -138,6 +138,12 @@ export default function Footer04({
                   className="hover:text-gray-900 transition-colors"
                 >{t('newCollection') || 'New Arrivals'}</Link>
               </li>
+              <li>
+                <Link prefetch={false}
+                  href="/track-order"
+                  className="hover:text-gray-900 transition-colors"
+                >{t('trackOrder')}</Link>
+              </li>
             </ul>
           </div>
 
@@ -145,12 +151,6 @@ export default function Footer04({
           <div>
             <h4 className="font-bold text-gray-900 text-sm uppercase tracking-wider mb-4">{t('helpAndInfo')}</h4>
             <ul className="space-y-3 text-sm text-gray-500">
-              <li>
-                <Link prefetch={false}
-                  href="/track-order"
-                  className="hover:text-gray-900 transition-colors"
-                >{t('trackOrder')}</Link>
-              </li>
               <li>
                 <Link prefetch={false}
                   href="/policies/about-us"

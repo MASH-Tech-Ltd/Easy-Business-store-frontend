@@ -155,6 +155,12 @@ export default function Footer05({
                     className="hover:text-black transition-colors"
                   >{t('newCollection') || 'New Arrivals'}</Link>
                 </li>
+                <li>
+                  <Link prefetch={false}
+                    href="/track-order"
+                    className="hover:text-black transition-colors"
+                  >{t('trackOrder')}</Link>
+                </li>
               </ul>
             </div>
 
@@ -162,12 +168,6 @@ export default function Footer05({
             <div>
               <h3 className="font-semibold text-gray-900 mb-4 text-xs tracking-wide uppercase">{t('helpAndInfo')}</h3>
               <ul className="space-y-2 text-xs sm:text-sm text-gray-500">
-                <li>
-                  <Link prefetch={false}
-                    href="/track-order"
-                    className="hover:text-black transition-colors"
-                  >{t('trackOrder')}</Link>
-                </li>
                 <li>
                   <Link prefetch={false}
                     href="/policies/about-us"

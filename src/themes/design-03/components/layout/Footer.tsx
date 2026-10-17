@@ -86,6 +86,9 @@ export default function Footer03({
             <li>
               <Link prefetch={false} href="/products?sort=newest" className="hover:text-white transition-colors">{t('newCollection') || 'New Arrivals'}</Link>
             </li>
+            <li>
+              <Link prefetch={false} href="/track-order" className="hover:text-white transition-colors">{t('trackOrder')}</Link>
+            </li>
           </ul>
         </div>
 
@@ -93,9 +96,6 @@ export default function Footer03({
         <div className="p-8 md:p-12">
           <div className="text-[10px] text-cyan-400 mb-6 uppercase tracking-widest">{t('helpAndInfo')}</div>
           <ul className="space-y-4 text-xs font-bold uppercase tracking-widest text-gray-500">
-            <li>
-              <Link prefetch={false} href="/track-order" className="hover:text-white transition-colors">{t('trackOrder')}</Link>
-            </li>
             <li>
               <Link prefetch={false}
                 href="/policies/about-us"
