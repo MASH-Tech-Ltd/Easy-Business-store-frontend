@@ -90,6 +90,46 @@ export async function middleware(request: NextRequest) {
       
       if (statusRes.ok) {
         const statusJson = await statusRes.json();
+
+        // 301 Permanent Redirect:
+        // If the store has a verified/active custom domain (domainStatus === 'active')
+        // and the visitor is accessing via a platform subdomain (e.g. *.masheco.com),
+        // permanently redirect them (HTTP 301) to the custom domain, preserving path & search params.
+        const customDomainRaw = statusJson?.data?.customDomain;
+        const domainStatus = statusJson?.data?.domainStatus;
+
+        if (domainStatus === 'active' && typeof customDomainRaw === 'string') {
+          const targetCustomDomain = customDomainRaw
+            .trim()
+            .toLowerCase()
+            .replace(/^https?:\/\//, '')
+            .replace(/^www\./, '')
+            .split('/')[0];
+
+          const isLocalhost =
+            bareHost === 'localhost' ||
+            bareHost.endsWith('.localhost') ||
+            currentHost.includes('localhost');
+
+          const isSubdomain =
+            bareHost.endsWith(`.${baseDomain}`) ||
+            bareHost.endsWith('.masheco.com');
+
+          if (
+            !isLocalhost &&
+            isSubdomain &&
+            targetCustomDomain &&
+            bareHost !== targetCustomDomain &&
+            bareHost !== `www.${targetCustomDomain}`
+          ) {
+            const redirectUrl = new URL(
+              `${url.pathname}${url.search}`,
+              `https://${targetCustomDomain}`
+            );
+            return NextResponse.redirect(redirectUrl, 301);
+          }
+        }
+
         if (statusJson?.data?.storeDown) {
           const response = NextResponse.rewrite(url, {
             request: { headers: requestHeaders },
