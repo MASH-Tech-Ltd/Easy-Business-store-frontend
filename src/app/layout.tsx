@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, Outfit, Roboto, Hind_Siliguri } from "next/font/google";
 import { cache } from "react";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
@@ -168,7 +168,7 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const { tenantSlug, requestOrigin } = await getRequestContext();
+  const { tenantSlug, host, requestOrigin } = await getRequestContext();
 
   const theme = await getTheme(tenantSlug);
   const storeInfo = await getStoreInfo(tenantSlug);
@@ -177,6 +177,39 @@ export default async function RootLayout({
   const storeName = getStoreName(storeInfo, tenantSlug);
   const storeStatus = await getStoreStatus(tenantSlug);
   const trackingConfig = await getTrackingConfig(tenantSlug);
+
+  // Auto-redirect from platform subdomain (*.masheco.com) to verified custom domain
+  if (
+    tenantSlug !== "main" &&
+    storeStatus?.domainStatus === "active" &&
+    storeStatus?.customDomain
+  ) {
+    const targetCustomDomain = storeStatus.customDomain
+      .trim()
+      .toLowerCase()
+      .replace(/^https?:\/\//, '')
+      .split('/')[0];
+
+    const currentHost = host.split(':')[0].toLowerCase();
+    const isLocalhost =
+      currentHost.includes('localhost') ||
+      currentHost === 'localhost' ||
+      currentHost.endsWith('.localhost');
+
+    const baseDomain = (process.env.NEXT_PUBLIC_BASE_DOMAIN || 'masheco.com').toLowerCase();
+    const isSubdomain =
+      currentHost.endsWith(`.${baseDomain}`) ||
+      currentHost.endsWith('.masheco.com');
+
+    const isAlreadyOnCustomDomain =
+      currentHost === targetCustomDomain ||
+      currentHost === `www.${targetCustomDomain}` ||
+      targetCustomDomain === `www.${currentHost}`;
+
+    if (!isLocalhost && isSubdomain && targetCustomDomain && !isAlreadyOnCustomDomain) {
+      redirect(`https://${targetCustomDomain}`);
+    }
+  }
 
   if ((!storeInfo || storeStatus?.reason === 'Store not found') && tenantSlug !== "main") {
     notFound();

@@ -71,7 +71,12 @@ export async function getRequestContext() {
  * as a duplicate site in Google. Otherwise the current host is used.
  */
 export function getSiteOrigin(requestOrigin: string, storeInfo: StoreInfoLike): string {
-  const custom = storeInfo?.customDomain?.trim().toLowerCase().replace(/^www\./, '');
+  const custom = storeInfo?.customDomain
+    ?.trim()
+    .toLowerCase()
+    .replace(/^https?:\/\//, '')
+    .split('/')[0];
+
   if (custom && storeInfo?.domainStatus === 'active' && !requestOrigin.includes('localhost')) {
     return `https://${custom}`;
   }
