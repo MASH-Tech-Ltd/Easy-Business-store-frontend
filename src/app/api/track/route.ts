@@ -25,15 +25,21 @@ export async function GET(req: NextRequest) {
     const clientIp = cfIp || (forwardedFor ? forwardedFor.split(',')[0]?.trim() : null) || realIp || '';
     
     const originalHost = req.headers.get('host') || '';
-    
+    const userAgent = req.headers.get('user-agent') || 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36';
+    const apiKey = process.env.STOREFRONT_API_KEY || process.env.NEXT_PUBLIC_STOREFRONT_API_KEY;
+
     const forwardHeaders: Record<string, string> = {
       'Host': originalHost,
-      'X-Forwarded-Host': originalHost
+      'X-Forwarded-Host': originalHost,
+      'User-Agent': userAgent,
     };
+    if (apiKey) {
+      forwardHeaders['x-storefront-api-key'] = apiKey;
+    }
     if (clientIp) {
       forwardHeaders['x-tenant-client-ip'] = clientIp;
     }
-    
+
     const res = await fetch(url.toString(), {
       headers: forwardHeaders
     });

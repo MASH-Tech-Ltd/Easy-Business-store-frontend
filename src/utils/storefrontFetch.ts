@@ -1,33 +1,26 @@
 import { headers } from 'next/headers';
 
 /**
- * Resolves the real browser client IP from Next.js incoming request headers.
+ * Resolves the real browser client IP and User-Agent from Next.js incoming request headers.
  * Called automatically by storefrontFetch when running server-side (SSR).
- *
- * Priority: cf-connecting-ip > x-forwarded-for (first entry) > x-real-ip
  */
-async function resolveClientIp(): Promise<string | undefined> {
+async function resolveClientHeaders(): Promise<{ clientIp?: string; userAgent?: string }> {
   try {
     const headersList = await headers();
     const cfIp = headersList.get('cf-connecting-ip');
-    if (cfIp) return cfIp.trim();
-
     const forwarded = headersList.get('x-forwarded-for');
-    if (forwarded) {
-      const first = forwarded.split(',')[0]?.trim();
-      if (first && first !== '127.0.0.1' && first !== '::1') return first;
-    }
-
     const realIp = headersList.get('x-real-ip');
-    if (realIp) return realIp.trim();
+    const clientIp = cfIp?.trim() || (forwarded ? forwarded.split(',')[0]?.trim() : null) || realIp?.trim() || undefined;
+    const userAgent = headersList.get('user-agent') || undefined;
+    return { clientIp, userAgent };
   } catch {
     // headers() throws when called from client components — ignore silently
+    return {};
   }
-  return undefined;
 }
 
 export async function storefrontFetch(url: string, init?: RequestInit, clientIp?: string) {
-  const apiKey = process.env.STOREFRONT_API_KEY;
+  const apiKey = process.env.STOREFRONT_API_KEY || process.env.NEXT_PUBLIC_STOREFRONT_API_KEY;
 
   if (!apiKey) {
     console.error('STOREFRONT_API_KEY is not defined in environment variables');
@@ -38,20 +31,16 @@ export async function storefrontFetch(url: string, init?: RequestInit, clientIp?
     fetchHeaders.set('x-storefront-api-key', apiKey);
   }
 
-  // Resolve the real visitor IP: use explicit parameter if provided, otherwise auto-detect from headers.
-  // This ensures ALL server-side calls (layout, pages, themes) forward the real IP
-  // without requiring every caller to manually extract and pass it.
-  const ip = clientIp || (await resolveClientIp());
+  const { clientIp: detectedIp, userAgent } = await resolveClientHeaders();
+  const ip = clientIp || detectedIp;
 
-  // Forward using x-tenant-client-ip — a custom header that Cloudflare does NOT overwrite.
-  //
-  // WHY NOT x-forwarded-for or cf-connecting-ip?
-  //   Traffic: Browser → CF → Next.js → CF → Backend
-  //   On the second hop (Next.js → CF → Backend), Cloudflare replaces cf-connecting-ip
-  //   with the Next.js server IP and may also modify x-forwarded-for.
-  //   x-tenant-client-ip is a custom non-standard header that CF passes through unmodified.
-  //
-  // SECURITY: Only trusted by backend on storefront routes protected by x-storefront-api-key.
+  if (userAgent && !fetchHeaders.has('user-agent')) {
+    fetchHeaders.set('user-agent', userAgent);
+  }
+  if (!fetchHeaders.has('user-agent')) {
+    fetchHeaders.set('user-agent', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
+  }
+
   if (ip && ip !== '127.0.0.1' && ip !== '::1') {
     fetchHeaders.set('x-tenant-client-ip', ip);
   }

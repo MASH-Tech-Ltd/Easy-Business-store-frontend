@@ -19,9 +19,16 @@ export async function POST(req: Request) {
     // Use x-tenant-client-ip (custom header) instead of x-forwarded-for / x-real-ip
     // because Cloudflare overwrites those standard headers on the outbound hop.
     // x-tenant-client-ip is unknown to Cloudflare and passes through unmodified.
+    const userAgent = headersList.get('user-agent') || 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36';
+    const apiKey = process.env.STOREFRONT_API_KEY || process.env.NEXT_PUBLIC_STOREFRONT_API_KEY;
+
     const forwardHeaders: Record<string, string> = {
       'Content-Type': 'application/json',
+      'User-Agent': userAgent,
     };
+    if (apiKey) {
+      forwardHeaders['x-storefront-api-key'] = apiKey;
+    }
     if (clientIp) {
       forwardHeaders['x-tenant-client-ip'] = clientIp;
     }
