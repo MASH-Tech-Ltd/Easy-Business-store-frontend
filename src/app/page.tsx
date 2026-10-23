@@ -42,12 +42,17 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function Page() {
-  const { tenantSlug } = await getRequestContext();
+  const { tenantSlug, requestOrigin } = await getRequestContext();
 
   let themeId = 'design-01';
+  let storeInfo = null;
 
   if (tenantSlug !== 'main') {
-    const theme = await getTheme(tenantSlug);
+    const [theme, info] = await Promise.all([
+      getTheme(tenantSlug),
+      getStoreInfo(tenantSlug),
+    ]);
+    storeInfo = info;
     if (theme && theme.themeId && themeRegistry[theme.themeId]) {
       themeId = theme.themeId;
     }
@@ -55,7 +60,49 @@ export default async function Page() {
 
   const ThemeHome = themeRegistry[themeId]?.Home || themeRegistry['design-01'].Home;
 
-  // NOTE: WebSite / Organization JSON-LD (used by Google for the site name)
-  // is emitted once in the root layout. Do not duplicate it here.
-  return <ThemeHome tenantSlug={tenantSlug} />;
+  const baseUrl = getSiteOrigin(requestOrigin, storeInfo);
+  const storeName = getStoreName(storeInfo, tenantSlug);
+
+  return (
+    <>
+      {storeInfo && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "WebSite",
+              "@id": `${baseUrl}/#website`,
+              name: storeName,
+              alternateName: Array.from(
+                new Set(
+                  [
+                    tenantSlug,
+                    storeName.replace(/\s+/g, ""),
+                  ].filter((item): item is string =>
+                    Boolean(
+                      item &&
+                      !item.toLowerCase().includes("masheco") &&
+                      !item.toLowerCase().includes(".com") &&
+                      item.trim().toLowerCase() !== storeName.trim().toLowerCase()
+                    )
+                  )
+                )
+              ),
+              url: `${baseUrl}/`,
+              potentialAction: {
+                "@type": "SearchAction",
+                target: {
+                  "@type": "EntryPoint",
+                  urlTemplate: `${baseUrl}/products?search={search_term_string}`
+                },
+                "query-input": "required name=search_term_string"
+              }
+            })
+          }}
+        />
+      )}
+      <ThemeHome tenantSlug={tenantSlug} />
+    </>
+  );
 }

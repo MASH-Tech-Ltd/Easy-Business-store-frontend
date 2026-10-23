@@ -726,46 +726,7 @@ export default async function RootLayout({
         `,
           }}
         />
-        {/* 1. Google Site Name: Standalone WebSite JSON-LD (required by Google ONLY on the homepage) */}
-        {isHomepage && storeInfo && (
-          <script
-            type="application/ld+json"
-            dangerouslySetInnerHTML={{
-              __html: JSON.stringify({
-                "@context": "https://schema.org",
-                "@type": "WebSite",
-                "@id": `${baseUrl}/#website`,
-                name: storeName,
-                alternateName: Array.from(
-                  new Set(
-                    [
-                      tenantSlug,
-                      storeName.replace(/\s+/g, ""),
-                    ].filter((item): item is string =>
-                      Boolean(
-                        item &&
-                        !item.toLowerCase().includes("masheco") &&
-                        !item.toLowerCase().includes(".com") &&
-                        item.trim().toLowerCase() !==
-                          storeName.trim().toLowerCase(),
-                      ),
-                    ),
-                  ),
-                ),
-                url: `${baseUrl}/`,
-                potentialAction: {
-                  "@type": "SearchAction",
-                  target: {
-                    "@type": "EntryPoint",
-                    urlTemplate: `${baseUrl}/products?search={search_term_string}`,
-                  },
-                  "query-input": "required name=search_term_string",
-                },
-              }),
-            }}
-          />
-        )}
-        {/* 2. Organization / OnlineStore JSON-LD */}
+        {/* 1. Organization / OnlineStore JSON-LD */}
         {storeInfo && (
           <script
             type="application/ld+json"
