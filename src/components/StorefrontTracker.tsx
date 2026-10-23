@@ -15,6 +15,14 @@ export default function StorefrontTracker({ tenantSlug, initialConfig }: Storefr
   const isInitialized = useRef(false);
 
   useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    // Do not run tracking for search engine bots / crawlers
+    const ua = (navigator.userAgent || '').toLowerCase();
+    if (/bot|crawler|spider|googlebot|bingbot|yandex|baiduspider|duckduckbot/i.test(ua)) {
+      return;
+    }
+
     let isMounted = true;
 
     async function setupTracking() {
