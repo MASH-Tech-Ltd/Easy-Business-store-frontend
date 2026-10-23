@@ -122,7 +122,10 @@ export default function CheckoutClient03({ storeInfo, theme }: { storeInfo?: any
         customerPhone: phone,
         shippingAddress: `${address}, ${upazila}, ${district}, ${division}`,
         items: cartItems.map(item => ({
-          productId: item.id || (item as any)._id,
+          productId: item.productId || item.id || (item as any)._id,
+          variantId: item.variantId,
+          color: item.color,
+          size: item.size,
           title: item.title,
           price: item.price,
           quantity: item.quantity,

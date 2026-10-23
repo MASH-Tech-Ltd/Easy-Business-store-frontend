@@ -102,3 +102,109 @@ html[lang="bn"] textarea {
     min-height: 50px !important;
   }
 }
+
+/* ============================================================
+ * HIGH-DEFINITION PRODUCT DESCRIPTION TYPOGRAPHY
+ * ============================================================ */
+.rich-product-description,
+.rich-product-description *,
+html .rich-product-description,
+html .rich-product-description *,
+html[lang="bn"] .rich-product-description,
+html[lang="bn"] .rich-product-description * {
+  line-height: 2.2 !important;
+}
+
+.rich-product-description {
+  font-size: 1rem;
+  color: #1f2937; /* gray-800 */
+  word-break: break-word;
+  white-space: pre-line;
+}
+
+.rich-product-description strong,
+.rich-product-description b {
+  font-weight: 700 !important;
+  color: #111827 !important; /* gray-900 */
+}
+
+.rich-product-description em,
+.rich-product-description i {
+  font-style: italic;
+}
+
+.rich-product-description u {
+  text-decoration: underline;
+}
+
+.rich-product-description p {
+  margin-bottom: 0.85rem !important;
+  line-height: 2.2 !important;
+}
+
+.rich-product-description li {
+  margin-bottom: 0.45rem !important;
+  line-height: 2.2 !important;
+}
+
+.rich-product-description ul {
+  list-style-type: disc !important;
+  padding-left: 1.5rem !important;
+  margin-top: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.rich-product-description ol {
+  list-style-type: decimal !important;
+  padding-left: 1.5rem !important;
+  margin-top: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.rich-product-description li {
+  display: list-item !important;
+  margin-bottom: 0.45rem !important;
+  line-height: 2.2 !important;
+}
+
+.rich-product-description a {
+  color: #4f46e5;
+  text-decoration: underline;
+  font-weight: 500;
+}
+
+.rich-product-description h1,
+.rich-product-description h2,
+.rich-product-description h3,
+.rich-product-description h4 {
+  font-weight: 700 !important;
+  color: #111827 !important;
+  margin-top: 1.25rem;
+  margin-bottom: 0.5rem;
+}
+
+/* Dark mode support */
+.rich-product-description.dark-theme {
+  color: #e5e7eb !important; /* gray-200 */
+}
+
+.rich-product-description.dark-theme strong,
+.rich-product-description.dark-theme b,
+.rich-product-description.dark-theme h1,
+.rich-product-description.dark-theme h2,
+.rich-product-description.dark-theme h3 {
+  color: #ffffff !important;
+}
+
+.rich-product-description.dark-theme a {
+  color: #38bdf8 !important;
+}
+.rich-product-description.dark-theme h1,
+.rich-product-description.dark-theme h2,
+.rich-product-description.dark-theme h3 {
+  color: #ffffff !important;
+}
+
+.rich-product-description.dark-theme a {
+  color: #38bdf8 !important;
+}

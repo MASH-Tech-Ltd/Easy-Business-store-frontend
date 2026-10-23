@@ -172,7 +172,10 @@ export default function Design02CheckoutClient({ theme,
         shippingAddress: `${address}, ${upazila}, ${district}, ${division}`,
         note: deliveryNote,
         items: cartItems.map((item) => ({
-          productId: item.id || (item as any)._id,
+          productId: item.productId || item.id || (item as any)._id,
+          variantId: item.variantId,
+          color: item.color,
+          size: item.size,
           title: item.title,
           price: item.price,
           quantity: item.quantity,
@@ -542,6 +545,13 @@ export default function Design02CheckoutClient({ theme,
                         <h4 className="text-sm font-medium text-gray-900 line-clamp-1">
                           {item.title}
                         </h4>
+                        {(item.color || item.size) && (
+                          <p className="text-[11px] font-medium text-gray-600 mt-0.5">
+                            {item.color ? `Color: ${item.color}` : ''}
+                            {item.color && item.size ? ' • ' : ''}
+                            {item.size ? `Size: ${item.size}` : ''}
+                          </p>
+                        )}
                         <p className="text-xs text-gray-500 mt-1">
                           Qty: {item.quantity}
                         </p>

@@ -23,14 +23,19 @@ import StorefrontTracker from "../components/StorefrontTracker";
 import AnnouncementBar from "../components/AnnouncementBar";
 
 import { storefrontFetch } from "@/utils/storefrontFetch";
-import { cleanStoreName, getStoreName, getRequestContext, getSiteOrigin } from "@/utils/seo";
+import {
+  cleanStoreName,
+  getStoreName,
+  getRequestContext,
+  getSiteOrigin,
+} from "@/utils/seo";
 import { getCategories } from "@/core/api/category";
 
 const getTheme = cache(async (tenantSlug: string) => {
   try {
     const res = await storefrontFetch(
       `${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/theme`,
-      { next: { revalidate: 60, tags: [`tenant-${tenantSlug}`] } }
+      { next: { revalidate: 60, tags: [`tenant-${tenantSlug}`] } },
     );
     if (!res.ok) return null;
     const json = await res.json();
@@ -44,7 +49,7 @@ const getStoreInfo = cache(async (tenantSlug: string) => {
   try {
     const res = await storefrontFetch(
       `${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/info`,
-      { next: { revalidate: 60, tags: [`tenant-${tenantSlug}`] } }
+      { next: { revalidate: 60, tags: [`tenant-${tenantSlug}`] } },
     );
     if (!res.ok) return null;
     const json = await res.json();
@@ -58,10 +63,11 @@ const getStoreStatus = cache(async (tenantSlug: string) => {
   try {
     const res = await storefrontFetch(
       `${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/status`,
-      { next: { revalidate: 60, tags: [`tenant-${tenantSlug}`] } }
+      { next: { revalidate: 60, tags: [`tenant-${tenantSlug}`] } },
     );
     if (!res.ok) {
-      if (res.status === 404) return { storeDown: true, reason: 'Store not found' };
+      if (res.status === 404)
+        return { storeDown: true, reason: "Store not found" };
       return null;
     }
     const json = await res.json();
@@ -75,7 +81,7 @@ const getTrackingConfig = cache(async (tenantSlug: string) => {
   try {
     const res = await storefrontFetch(
       `${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/tracking`,
-      { next: { revalidate: 60, tags: [`tenant-${tenantSlug}`] } }
+      { next: { revalidate: 60, tags: [`tenant-${tenantSlug}`] } },
     );
     if (!res.ok) return null;
     const json = await res.json();
@@ -91,10 +97,15 @@ export async function generateMetadata(): Promise<Metadata> {
 
   const storeStatus = await getStoreStatus(tenantSlug);
   const theme = await getTheme(tenantSlug);
-  
-  if (tenantSlug !== "main" && (!storeInfo || storeStatus?.storeDown || storeStatus?.reason === 'Store not found')) {
+
+  if (
+    tenantSlug !== "main" &&
+    (!storeInfo ||
+      storeStatus?.storeDown ||
+      storeStatus?.reason === "Store not found")
+  ) {
     return {
-      title: 'Store Offline',
+      title: "Store Offline",
       robots: { index: false, follow: false },
     };
   }
@@ -102,16 +113,22 @@ export async function generateMetadata(): Promise<Metadata> {
   const baseUrl = getSiteOrigin(requestOrigin, storeInfo);
   const title = getStoreName(storeInfo, tenantSlug);
   const description = storeInfo?.description || `Welcome to ${title}`;
-  
+
   let faviconUrl = storeInfo?.logo || "/favicon.ico";
   let appleIconUrl = faviconUrl;
-  
+
   if (faviconUrl.includes("cloudinary.com")) {
     faviconUrl = faviconUrl.replace(/\.[^/.]+$/, ".png");
     // c_fill with g_center ensures the image fills the 1:1 square completely (like object-cover),
     // so when Google renders it in its circular badge, the image fills the entire circle edge-to-edge!
-    appleIconUrl = faviconUrl.replace("/upload/", "/upload/w_180,h_180,c_fill,g_center,f_png/");
-    faviconUrl = faviconUrl.replace("/upload/", "/upload/w_192,h_192,c_fill,g_center,f_png/");
+    appleIconUrl = faviconUrl.replace(
+      "/upload/",
+      "/upload/w_180,h_180,c_fill,g_center,f_png/",
+    );
+    faviconUrl = faviconUrl.replace(
+      "/upload/",
+      "/upload/w_192,h_192,c_fill,g_center,f_png/",
+    );
   }
 
   const defaultOgImage = `${baseUrl}/default-og-image.jpg`; // Fallback image
@@ -126,7 +143,7 @@ export async function generateMetadata(): Promise<Metadata> {
     publisher: title,
     appleWebApp: {
       title: title,
-      statusBarStyle: 'default',
+      statusBarStyle: "default",
       capable: true,
     },
     title: {
@@ -136,13 +153,11 @@ export async function generateMetadata(): Promise<Metadata> {
     description,
     icons: {
       icon: [
-        { url: faviconUrl, sizes: '192x192', type: 'image/png' },
-        { url: faviconUrl, sizes: '32x32', type: 'image/png' },
+        { url: faviconUrl, sizes: "192x192", type: "image/png" },
+        { url: faviconUrl, sizes: "32x32", type: "image/png" },
       ],
       shortcut: [faviconUrl],
-      apple: [
-        { url: appleIconUrl, sizes: '180x180', type: 'image/png' },
-      ],
+      apple: [{ url: appleIconUrl, sizes: "180x180", type: "image/png" }],
     },
     openGraph: {
       title,
@@ -150,18 +165,17 @@ export async function generateMetadata(): Promise<Metadata> {
       url: baseUrl,
       siteName: title,
       images: [{ url: storeInfo?.logo || defaultOgImage }],
-      locale: theme?.language === 'bn' ? 'bn_BD' : 'en_US',
-      type: 'website',
+      locale: theme?.language === "bn" ? "bn_BD" : "en_US",
+      type: "website",
     },
     twitter: {
-      card: 'summary_large_image',
+      card: "summary_large_image",
       title,
       description,
       images: [storeInfo?.logo || defaultOgImage],
-    }
+    },
   };
 }
-
 
 export default async function RootLayout({
   children,
@@ -172,7 +186,8 @@ export default async function RootLayout({
 
   const theme = await getTheme(tenantSlug);
   const storeInfo = await getStoreInfo(tenantSlug);
-  const categories = tenantSlug !== "main" ? await getCategories(tenantSlug) : [];
+  const categories =
+    tenantSlug !== "main" ? await getCategories(tenantSlug) : [];
   const baseUrl = getSiteOrigin(requestOrigin, storeInfo);
   const storeName = getStoreName(storeInfo, tenantSlug);
   const storeStatus = await getStoreStatus(tenantSlug);
@@ -187,31 +202,41 @@ export default async function RootLayout({
     const targetCustomDomain = storeStatus.customDomain
       .trim()
       .toLowerCase()
-      .replace(/^https?:\/\//, '')
-      .split('/')[0];
+      .replace(/^https?:\/\//, "")
+      .split("/")[0];
 
-    const currentHost = host.split(':')[0].toLowerCase();
+    const currentHost = host.split(":")[0].toLowerCase();
     const isLocalhost =
-      currentHost.includes('localhost') ||
-      currentHost === 'localhost' ||
-      currentHost.endsWith('.localhost');
+      currentHost.includes("localhost") ||
+      currentHost === "localhost" ||
+      currentHost.endsWith(".localhost");
 
-    const baseDomain = (process.env.NEXT_PUBLIC_BASE_DOMAIN || 'masheco.com').toLowerCase();
+    const baseDomain = (
+      process.env.NEXT_PUBLIC_BASE_DOMAIN || "masheco.com"
+    ).toLowerCase();
     const isSubdomain =
       currentHost.endsWith(`.${baseDomain}`) ||
-      currentHost.endsWith('.masheco.com');
+      currentHost.endsWith(".masheco.com");
 
     const isAlreadyOnCustomDomain =
       currentHost === targetCustomDomain ||
       currentHost === `www.${targetCustomDomain}` ||
       targetCustomDomain === `www.${currentHost}`;
 
-    if (!isLocalhost && isSubdomain && targetCustomDomain && !isAlreadyOnCustomDomain) {
+    if (
+      !isLocalhost &&
+      isSubdomain &&
+      targetCustomDomain &&
+      !isAlreadyOnCustomDomain
+    ) {
       redirect(`https://${targetCustomDomain}`);
     }
   }
 
-  if ((!storeInfo || storeStatus?.reason === 'Store not found') && tenantSlug !== "main") {
+  if (
+    (!storeInfo || storeStatus?.reason === "Store not found") &&
+    tenantSlug !== "main"
+  ) {
     notFound();
   }
 
@@ -222,21 +247,23 @@ export default async function RootLayout({
     const storeLogo = storeInfo?.logo;
 
     // Color scheme: amber for trial expired, red for subscription expired/no plan
-    const accentColor = isTrialExpired ? '#f59e0b' : '#ef4444';
+    const accentColor = isTrialExpired ? "#f59e0b" : "#ef4444";
     const accentBg = isTrialExpired
-      ? 'linear-gradient(135deg, #f59e0b, #d97706)'
-      : 'linear-gradient(135deg, #ef4444, #b91c1c)';
+      ? "linear-gradient(135deg, #f59e0b, #d97706)"
+      : "linear-gradient(135deg, #ef4444, #b91c1c)";
     const accentGlow = isTrialExpired
-      ? 'rgba(245,158,11,0.4)'
-      : 'rgba(239,68,68,0.4)';
+      ? "rgba(245,158,11,0.4)"
+      : "rgba(239,68,68,0.4)";
     const ringColor = isTrialExpired
-      ? 'rgba(245,158,11,0.5)'
-      : 'rgba(239,68,68,0.5)';
+      ? "rgba(245,158,11,0.5)"
+      : "rgba(239,68,68,0.5)";
 
     return (
       <html lang="en">
         <body className={`${inter.variable} font-sans antialiased`}>
-          <style dangerouslySetInnerHTML={{ __html: `
+          <style
+            dangerouslySetInnerHTML={{
+              __html: `
             @keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-10px); } }
             @keyframes pulse-ring { 0% { transform: scale(0.9); opacity: 1; } 100% { transform: scale(1.4); opacity: 0; } }
             @keyframes fade-up { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
@@ -246,69 +273,137 @@ export default async function RootLayout({
             .animate-fade-up-1 { animation: fade-up 0.6s 0.1s ease both; }
             .animate-fade-up-2 { animation: fade-up 0.6s 0.2s ease both; }
             .animate-fade-up-3 { animation: fade-up 0.6s 0.3s ease both; }
-          ` }} />
+          `,
+            }}
+          />
 
           {/* Full-screen gradient background */}
-          <div style={{
-            minHeight: '100vh',
-            background: 'linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%)',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            padding: '24px',
-            position: 'relative',
-            overflow: 'hidden',
-          }}>
+          <div
+            style={{
+              minHeight: "100vh",
+              background:
+                "linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%)",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+              padding: "24px",
+              position: "relative",
+              overflow: "hidden",
+            }}
+          >
             {/* Decorative background blobs */}
-            <div style={{ position: 'absolute', top: '-80px', left: '-80px', width: '320px', height: '320px', borderRadius: '50%', background: 'rgba(120, 60, 255, 0.15)', filter: 'blur(60px)' }} />
-            <div style={{ position: 'absolute', bottom: '-80px', right: '-80px', width: '320px', height: '320px', borderRadius: '50%', background: 'rgba(255, 60, 120, 0.12)', filter: 'blur(60px)' }} />
+            <div
+              style={{
+                position: "absolute",
+                top: "-80px",
+                left: "-80px",
+                width: "320px",
+                height: "320px",
+                borderRadius: "50%",
+                background: "rgba(120, 60, 255, 0.15)",
+                filter: "blur(60px)",
+              }}
+            />
+            <div
+              style={{
+                position: "absolute",
+                bottom: "-80px",
+                right: "-80px",
+                width: "320px",
+                height: "320px",
+                borderRadius: "50%",
+                background: "rgba(255, 60, 120, 0.12)",
+                filter: "blur(60px)",
+              }}
+            />
 
             {/* Card */}
-            <div className="animate-fade-up" style={{
-              background: 'rgba(255,255,255,0.05)',
-              backdropFilter: 'blur(20px)',
-              WebkitBackdropFilter: 'blur(20px)',
-              border: '1px solid rgba(255,255,255,0.12)',
-              borderRadius: '28px',
-              padding: '48px 40px',
-              maxWidth: '480px',
-              width: '100%',
-              textAlign: 'center',
-              boxShadow: '0 25px 60px rgba(0,0,0,0.4)',
-              position: 'relative',
-            }}>
-
+            <div
+              className="animate-fade-up"
+              style={{
+                background: "rgba(255,255,255,0.05)",
+                backdropFilter: "blur(20px)",
+                WebkitBackdropFilter: "blur(20px)",
+                border: "1px solid rgba(255,255,255,0.12)",
+                borderRadius: "28px",
+                padding: "48px 40px",
+                maxWidth: "480px",
+                width: "100%",
+                textAlign: "center",
+                boxShadow: "0 25px 60px rgba(0,0,0,0.4)",
+                position: "relative",
+              }}
+            >
               {/* Icon area */}
-              <div className="animate-float" style={{ marginBottom: '28px', position: 'relative', display: 'inline-block' }}>
+              <div
+                className="animate-float"
+                style={{
+                  marginBottom: "28px",
+                  position: "relative",
+                  display: "inline-block",
+                }}
+              >
                 {/* Pulse ring */}
-                <div className="animate-pulse-ring" style={{
-                  position: 'absolute', inset: '-8px', borderRadius: '50%',
-                  border: `2px solid ${ringColor}`,
-                }} />
+                <div
+                  className="animate-pulse-ring"
+                  style={{
+                    position: "absolute",
+                    inset: "-8px",
+                    borderRadius: "50%",
+                    border: `2px solid ${ringColor}`,
+                  }}
+                />
                 {storeLogo ? (
                   <img
                     src={storeLogo}
                     alt={storeName}
                     style={{
-                      width: '80px', height: '80px', borderRadius: '50%',
-                      objectFit: 'cover', border: '3px solid rgba(255,255,255,0.2)',
+                      width: "80px",
+                      height: "80px",
+                      borderRadius: "50%",
+                      objectFit: "cover",
+                      border: "3px solid rgba(255,255,255,0.2)",
                     }}
                   />
                 ) : (
-                  <div style={{
-                    width: '80px', height: '80px', borderRadius: '50%',
-                    background: accentBg,
-                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    boxShadow: `0 8px 24px ${accentGlow}`,
-                  }}>
+                  <div
+                    style={{
+                      width: "80px",
+                      height: "80px",
+                      borderRadius: "50%",
+                      background: accentBg,
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      boxShadow: `0 8px 24px ${accentGlow}`,
+                    }}
+                  >
                     {isTrialExpired ? (
-                      <svg width="36" height="36" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
+                      <svg
+                        width="36"
+                        height="36"
+                        fill="none"
+                        stroke="white"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        viewBox="0 0 24 24"
+                      >
                         <circle cx="12" cy="12" r="10" />
                         <polyline points="12 6 12 12 16 14" />
                       </svg>
                     ) : (
-                      <svg width="36" height="36" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
+                      <svg
+                        width="36"
+                        height="36"
+                        fill="none"
+                        stroke="white"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        viewBox="0 0 24 24"
+                      >
                         <path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2z" />
                         <path d="M12 8v4M12 16h.01" />
                       </svg>
@@ -316,85 +411,178 @@ export default async function RootLayout({
                   </div>
                 )}
                 {/* Status badge */}
-                <div style={{
-                  position: 'absolute', bottom: '-4px', right: '-4px',
-                  background: accentColor, borderRadius: '50%',
-                  width: '24px', height: '24px',
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  border: '2px solid rgba(15,12,41,1)',
-                }}>
+                <div
+                  style={{
+                    position: "absolute",
+                    bottom: "-4px",
+                    right: "-4px",
+                    background: accentColor,
+                    borderRadius: "50%",
+                    width: "24px",
+                    height: "24px",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    border: "2px solid rgba(15,12,41,1)",
+                  }}
+                >
                   {isTrialExpired ? (
-                    <svg width="11" height="11" fill="white" viewBox="0 0 24 24">
-                      <path d="M12 2a10 10 0 100 20A10 10 0 0012 2zm0 5v5l4 2" stroke="white" strokeWidth="2.5" strokeLinecap="round" fill="none" />
+                    <svg
+                      width="11"
+                      height="11"
+                      fill="white"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        d="M12 2a10 10 0 100 20A10 10 0 0012 2zm0 5v5l4 2"
+                        stroke="white"
+                        strokeWidth="2.5"
+                        strokeLinecap="round"
+                        fill="none"
+                      />
                     </svg>
                   ) : (
-                    <svg width="12" height="12" fill="white" viewBox="0 0 24 24">
-                      <path d="M18 6L6 18M6 6l12 12" stroke="white" strokeWidth="3" strokeLinecap="round" />
+                    <svg
+                      width="12"
+                      height="12"
+                      fill="white"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        d="M18 6L6 18M6 6l12 12"
+                        stroke="white"
+                        strokeWidth="3"
+                        strokeLinecap="round"
+                      />
                     </svg>
                   )}
                 </div>
               </div>
 
               {/* Store name */}
-              <p className="animate-fade-up-1" style={{ fontSize: '13px', fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.45)', marginBottom: '8px' }}>
+              <p
+                className="animate-fade-up-1"
+                style={{
+                  fontSize: "13px",
+                  fontWeight: 600,
+                  letterSpacing: "0.1em",
+                  textTransform: "uppercase",
+                  color: "rgba(255,255,255,0.45)",
+                  marginBottom: "8px",
+                }}
+              >
                 {storeName}
               </p>
 
               {/* Main heading */}
-              <h1 className="animate-fade-up-1" style={{
-                fontSize: '28px', fontWeight: 900, color: '#ffffff',
-                lineHeight: 1.2, marginBottom: '16px', letterSpacing: '-0.5px',
-              }}>
-                {isTrialExpired ? 'Free Trial Ended' : isExpired ? 'Subscription Expired' : hasNoPlan ? 'No Active Plan' : 'Store Offline'}
+              <h1
+                className="animate-fade-up-1"
+                style={{
+                  fontSize: "28px",
+                  fontWeight: 900,
+                  color: "#ffffff",
+                  lineHeight: 1.2,
+                  marginBottom: "16px",
+                  letterSpacing: "-0.5px",
+                }}
+              >
+                {isTrialExpired
+                  ? "Free Trial Ended"
+                  : isExpired
+                    ? "Subscription Expired"
+                    : hasNoPlan
+                      ? "No Active Plan"
+                      : "Store Offline"}
               </h1>
 
               {/* Description */}
-              <p className="animate-fade-up-2" style={{
-                fontSize: '15px', color: 'rgba(255,255,255,0.6)',
-                lineHeight: 1.7, marginBottom: '28px',
-              }}>
+              <p
+                className="animate-fade-up-2"
+                style={{
+                  fontSize: "15px",
+                  color: "rgba(255,255,255,0.6)",
+                  lineHeight: 1.7,
+                  marginBottom: "28px",
+                }}
+              >
                 {isTrialExpired
                   ? `The 5-day free trial for this store has ended. The owner needs to upgrade to a paid plan to bring the store back online.`
                   : isExpired
-                  ? `The subscription for this store has expired. The store is currently offline until the owner renews their plan.`
-                  : hasNoPlan
-                  ? `This store does not have an active subscription plan. Please contact the store owner to activate a plan.`
-                  : `This store is temporarily unavailable. Please check back later.`
-                }
+                    ? `The subscription for this store has expired. The store is currently offline until the owner renews their plan.`
+                    : hasNoPlan
+                      ? `This store does not have an active subscription plan. Please contact the store owner to activate a plan.`
+                      : `This store is temporarily unavailable. Please check back later.`}
               </p>
 
               {/* Info box */}
-              <div className="animate-fade-up-2" style={{
-                background: 'rgba(255,255,255,0.06)',
-                borderRadius: '14px',
-                padding: '16px 20px',
-                marginBottom: '28px',
-                border: '1px solid rgba(255,255,255,0.08)',
-                display: 'flex',
-                alignItems: 'flex-start',
-                gap: '12px',
-                textAlign: 'left',
-              }}>
-                <div style={{ flexShrink: 0, marginTop: '2px' }}>
-                  <svg width="16" height="16" fill="none" stroke="rgba(251,191,36,1)" strokeWidth="2" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              <div
+                className="animate-fade-up-2"
+                style={{
+                  background: "rgba(255,255,255,0.06)",
+                  borderRadius: "14px",
+                  padding: "16px 20px",
+                  marginBottom: "28px",
+                  border: "1px solid rgba(255,255,255,0.08)",
+                  display: "flex",
+                  alignItems: "flex-start",
+                  gap: "12px",
+                  textAlign: "left",
+                }}
+              >
+                <div style={{ flexShrink: 0, marginTop: "2px" }}>
+                  <svg
+                    width="16"
+                    height="16"
+                    fill="none"
+                    stroke="rgba(251,191,36,1)"
+                    strokeWidth="2"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
                   </svg>
                 </div>
-                <p style={{ fontSize: '13px', color: 'rgba(255,255,255,0.5)', lineHeight: 1.6, margin: 0 }}>
+                <p
+                  style={{
+                    fontSize: "13px",
+                    color: "rgba(255,255,255,0.5)",
+                    lineHeight: 1.6,
+                    margin: 0,
+                  }}
+                >
                   {isTrialExpired
                     ? `Are you the store owner? Your free trial has ended. Log in to your merchant dashboard and choose a paid plan to go live again.`
                     : isExpired
-                    ? `Are you the store owner? Log in to your merchant dashboard and renew your subscription to bring your store back online.`
-                    : `Are you the store owner? Visit your merchant dashboard to activate a subscription plan.`
-                  }
+                      ? `Are you the store owner? Log in to your merchant dashboard and renew your subscription to bring your store back online.`
+                      : `Are you the store owner? Visit your merchant dashboard to activate a subscription plan.`}
                 </p>
               </div>
 
               {/* Divider */}
-              <div style={{ borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: '20px' }}>
-                <p style={{ fontSize: '12px', color: 'rgba(255,255,255,0.25)', margin: 0 }}>
-                  Powered by{' '}
-                  <a href="https://www.masheco.com" target="_blank" rel="noopener noreferrer" className="text-[rgba(255,255,255,0.45)] hover:text-[rgba(255,255,255,0.8)] transition-colors duration-200" style={{ fontWeight: 600, textDecoration: 'none' }}>
+              <div
+                style={{
+                  borderTop: "1px solid rgba(255,255,255,0.08)",
+                  paddingTop: "20px",
+                }}
+              >
+                <p
+                  style={{
+                    fontSize: "12px",
+                    color: "rgba(255,255,255,0.25)",
+                    margin: 0,
+                  }}
+                >
+                  Powered by{" "}
+                  <a
+                    href="https://www.masheco.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-[rgba(255,255,255,0.45)] hover:text-[rgba(255,255,255,0.8)] transition-colors duration-200"
+                    style={{ fontWeight: 600, textDecoration: "none" }}
+                  >
                     MASH ECO
                   </a>
                 </p>
@@ -430,7 +618,7 @@ export default async function RootLayout({
   };
   const primaryForeground = getContrastColor(primaryColor);
   const selectedFont = theme?.fontFamily || "Inter";
-  const encodedFont = encodeURIComponent(selectedFont).replace(/%20/g, '+');
+  const encodedFont = encodeURIComponent(selectedFont).replace(/%20/g, "+");
   const googleFontHref = `https://fonts.googleapis.com/css2?family=${encodedFont}&display=swap`;
 
   const fontChoice = selectedFont.toLowerCase();
@@ -462,7 +650,11 @@ export default async function RootLayout({
     <html lang={language}>
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link
+          rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossOrigin="anonymous"
+        />
         <link rel="stylesheet" href={googleFontHref} />
       </head>
       <body
@@ -492,6 +684,17 @@ export default async function RootLayout({
           html[lang="bn"] * {
             line-height: 1.5 !important;
           }
+          
+          /* Product Details section line-height */
+          .rich-product-description,
+          .rich-product-description *,
+          html .rich-product-description,
+          html .rich-product-description *,
+          html[lang="bn"] .rich-product-description,
+          html[lang="bn"] .rich-product-description * {
+            line-height: 2.2 !important;
+          }
+          
           html[lang="bn"] h1,
           html[lang="bn"] h2,
           html[lang="bn"] h3,
@@ -528,29 +731,32 @@ export default async function RootLayout({
             type="application/ld+json"
             dangerouslySetInnerHTML={{
               __html: JSON.stringify({
-                '@context': 'https://schema.org',
-                '@type': 'WebSite',
+                "@context": "https://schema.org",
+                "@type": "WebSite",
                 name: storeName,
                 alternateName: Array.from(
                   new Set(
                     [
                       storeInfo.domain,
                       tenantSlug,
-                      storeName.replace(/\s+/g, ''),
-                    ].filter(
-                      (item): item is string =>
-                        Boolean(item && item.trim().toLowerCase() !== storeName.trim().toLowerCase())
-                    )
-                  )
+                      storeName.replace(/\s+/g, ""),
+                    ].filter((item): item is string =>
+                      Boolean(
+                        item &&
+                        item.trim().toLowerCase() !==
+                          storeName.trim().toLowerCase(),
+                      ),
+                    ),
+                  ),
                 ),
                 url: `${baseUrl}/`,
                 potentialAction: {
-                  '@type': 'SearchAction',
+                  "@type": "SearchAction",
                   target: {
-                    '@type': 'EntryPoint',
+                    "@type": "EntryPoint",
                     urlTemplate: `${baseUrl}/products?search={search_term_string}`,
                   },
-                  'query-input': 'required name=search_term_string',
+                  "query-input": "required name=search_term_string",
                 },
               }),
             }}
@@ -562,20 +768,20 @@ export default async function RootLayout({
             type="application/ld+json"
             dangerouslySetInnerHTML={{
               __html: JSON.stringify({
-                '@context': 'https://schema.org',
-                '@type': 'OnlineStore',
+                "@context": "https://schema.org",
+                "@type": "OnlineStore",
                 name: storeName,
                 url: `${baseUrl}/`,
                 logo: storeInfo.logo || undefined,
                 description: storeInfo.description || undefined,
                 telephone: storeInfo.phone || undefined,
-                currenciesAccepted: storeInfo.currency || 'BDT',
-                priceRange: '৳',
+                currenciesAccepted: storeInfo.currency || "BDT",
+                priceRange: "৳",
                 address: storeInfo.address
                   ? {
-                      '@type': 'PostalAddress',
+                      "@type": "PostalAddress",
                       streetAddress: storeInfo.address,
-                      addressCountry: 'BD',
+                      addressCountry: "BD",
                     }
                   : undefined,
               }),
@@ -588,34 +794,36 @@ export default async function RootLayout({
             type="application/ld+json"
             dangerouslySetInnerHTML={{
               __html: JSON.stringify({
-                '@context': 'https://schema.org',
-                '@type': 'ItemList',
+                "@context": "https://schema.org",
+                "@type": "ItemList",
                 itemListElement: [
                   {
-                    '@type': 'SiteNavigationElement',
+                    "@type": "SiteNavigationElement",
                     position: 1,
-                    name: 'All Products',
+                    name: "All Products",
                     description: `Browse all products and new arrivals at ${storeName}.`,
                     url: `${baseUrl}/products`,
                   },
                   ...categories.slice(0, 8).map((cat: any, idx: number) => ({
-                    '@type': 'SiteNavigationElement',
+                    "@type": "SiteNavigationElement",
                     position: idx + 2,
                     name: cat.name,
-                    description: cat.description || `Shop ${cat.name} online at ${storeName}.`,
+                    description:
+                      cat.description ||
+                      `Shop ${cat.name} online at ${storeName}.`,
                     url: `${baseUrl}/category/${cat.slug || cat._id}`,
                   })),
                   {
-                    '@type': 'SiteNavigationElement',
+                    "@type": "SiteNavigationElement",
                     position: Math.min(categories.length, 8) + 2,
-                    name: 'Track Order',
+                    name: "Track Order",
                     description: `Track your courier shipment and order delivery status at ${storeName}.`,
                     url: `${baseUrl}/track-order`,
                   },
                   {
-                    '@type': 'SiteNavigationElement',
+                    "@type": "SiteNavigationElement",
                     position: Math.min(categories.length, 8) + 3,
-                    name: 'Terms & Policies',
+                    name: "Terms & Policies",
                     description: `Return, refund, and customer service policies at ${storeName}.`,
                     url: `${baseUrl}/policies/terms`,
                   },
@@ -626,9 +834,15 @@ export default async function RootLayout({
         )}
         <LanguageProvider initialLanguage={language}>
           <Providers>
-            <StorefrontTracker tenantSlug={tenantSlug} initialConfig={trackingConfig} />
+            <StorefrontTracker
+              tenantSlug={tenantSlug}
+              initialConfig={trackingConfig}
+            />
             {storeInfo?._id && <VisitTracker tenantId={storeInfo._id} />}
-            <AnnouncementBar banner={theme?.banner} currencySymbol={theme?.currencySymbol} />
+            <AnnouncementBar
+              banner={theme?.banner}
+              currencySymbol={theme?.currencySymbol}
+            />
             {children}
           </Providers>
         </LanguageProvider>

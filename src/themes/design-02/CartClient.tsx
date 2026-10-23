@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import React from 'react';
 import Link from 'next/link';
@@ -49,6 +49,13 @@ export default function Design02CartClient({ theme }: { theme?: any }) {
                     
                     <div className="flex-1 flex flex-col text-left">
                       <h3 className="text-sm sm:text-lg font-medium text-gray-900 mb-1 sm:mb-2 line-clamp-2">{item.title}</h3>
+                      {(item.color || item.size) && (
+                        <p className="text-xs font-medium text-gray-500 mb-1">
+                          {item.color ? `Color: ${item.color}` : ''}
+                          {item.color && item.size ? ' • ' : ''}
+                          {item.size ? `Size: ${item.size}` : ''}
+                        </p>
+                      )}
                       <div className="text-sm sm:text-xl font-light text-gray-900">{theme?.currencySymbol || '৳'}{' '}{item.price.toLocaleString()}</div>
                     </div>
                     

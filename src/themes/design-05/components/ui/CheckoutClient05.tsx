@@ -189,7 +189,10 @@ export default function CheckoutClient05({
         customerPhone: phone,
         shippingAddress: `${address}, ${upazila}, ${district}, ${division}`,
         items: items.map((item) => ({
-          productId: item.id,
+          productId: item.productId || item.id,
+          variantId: item.variantId,
+          color: item.color,
+          size: item.size,
           title: item.title,
           price: item.price,
           quantity: item.quantity,
@@ -638,6 +641,13 @@ export default function CheckoutClient05({
                     <h4 className="text-sm font-semibold text-gray-900 line-clamp-2 leading-tight mb-1">
                       {item.title}
                     </h4>
+                    {(item.color || item.size) && (
+                      <p className="text-[11px] font-medium text-gray-600 mb-1">
+                        {item.color ? `Color: ${item.color}` : ''}
+                        {item.color && item.size ? ' • ' : ''}
+                        {item.size ? `Size: ${item.size}` : ''}
+                      </p>
+                    )}
                     <span className="text-sm font-medium text-gray-500">
                       {item.quantity} × {theme?.currencySymbol || "৳"}{" "}
                       {Math.round(item.price).toLocaleString()}

@@ -174,7 +174,10 @@ export default function CheckoutClient({ storeInfo, theme }: { storeInfo?: any; 
         shippingAddress: `${address}, ${upazila}, ${district}, ${division}`,
         note: deliveryNote,
         items: cartItems.map((item) => ({
-          productId: item.id || (item as any)._id,
+          productId: item.productId || item.id || (item as any)._id,
+          variantId: item.variantId,
+          color: item.color,
+          size: item.size,
           title: item.title,
           price: item.price,
           quantity: item.quantity,
@@ -571,6 +574,13 @@ export default function CheckoutClient({ storeInfo, theme }: { storeInfo?: any; 
                           <h4 className="text-[13px] font-semibold text-gray-900 truncate">
                             {item.title}
                           </h4>
+                          {(item.color || item.size) && (
+                            <p className="text-[11px] font-medium text-gray-600 mt-0.5">
+                              {item.color ? `Color: ${item.color}` : ''}
+                              {item.color && item.size ? ' • ' : ''}
+                              {item.size ? `Size: ${item.size}` : ''}
+                            </p>
+                          )}
                           <div className="text-[13px] font-bold text-gray-900 mt-0.5">
                             {item.price.toLocaleString()} {t("bdt")}
                           </div>

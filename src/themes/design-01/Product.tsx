@@ -1,16 +1,19 @@
 import { storefrontFetch } from "../../utils/storefrontFetch";
-import { headers } from 'next/headers';
-import Link from 'next/link';
-import { ArrowLeft } from 'lucide-react';
-import ProductGallery from '@/components/ProductGallery';
-import Header from './components/layout/Header';
-import AddToCartClient from './AddToCartClient';
-import type { Metadata, ResolvingMetadata } from 'next';
-import { getTranslation, TranslationKeys } from '@/utils/translations';
+import { headers } from "next/headers";
+import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
+import ProductGallery from "@/components/ProductGallery";
+import Header from "./components/layout/Header";
+import AddToCartClient from "./AddToCartClient";
+import type { Metadata, ResolvingMetadata } from "next";
+import { getTranslation, TranslationKeys } from "@/utils/translations";
 
 async function getStoreInfo(tenantSlug: string) {
   try {
-    const res = await storefrontFetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/info`, { next: { revalidate: 60 } });
+    const res = await storefrontFetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/info`,
+      { next: { revalidate: 60 } },
+    );
     if (!res.ok) return null;
     const json = await res.json();
     return json.data;
@@ -21,7 +24,10 @@ async function getStoreInfo(tenantSlug: string) {
 
 async function getTheme(tenantSlug: string) {
   try {
-    const res = await storefrontFetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/theme`, { next: { revalidate: 60 } });
+    const res = await storefrontFetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/theme`,
+      { next: { revalidate: 60 } },
+    );
     if (!res.ok) return null;
     const json = await res.json();
     return json.data;
@@ -32,7 +38,10 @@ async function getTheme(tenantSlug: string) {
 
 async function getProduct(tenantSlug: string, productSlug: string) {
   try {
-    const res = await storefrontFetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/products/${productSlug}`, { next: { revalidate: 60 } });
+    const res = await storefrontFetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/products/${productSlug}`,
+      { next: { revalidate: 60 } },
+    );
     if (!res.ok) return null;
     const json = await res.json();
     return json.data || null;
@@ -43,26 +52,38 @@ async function getProduct(tenantSlug: string, productSlug: string) {
 
 // Removed generateMetadata, now in route segment
 
-export default async function ProductPage({ params }: { params: Promise<{ slug: string }> }) {
+export default async function ProductPage({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
   const resolvedParams = await params;
   const headersList = await headers();
-  const tenantSlug = headersList.get('x-tenant-slug') || 'main';
+  const tenantSlug = headersList.get("x-tenant-slug") || "main";
 
   const [storeInfo, product, theme] = await Promise.all([
     getStoreInfo(tenantSlug),
     getProduct(tenantSlug, resolvedParams.slug),
-    getTheme(tenantSlug)
+    getTheme(tenantSlug),
   ]);
 
-  const language = theme?.language || 'en';
+  const language = theme?.language || "en";
   const t = (key: TranslationKeys) => getTranslation(language, key);
 
   if (!product) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <h1 className="text-2xl font-bold mb-4">{t('productNotFound') || 'Product not found'}</h1>
-          <Link prefetch={false} href="/" className="text-primary hover:underline">Return to Home</Link>
+          <h1 className="text-2xl font-bold mb-4">
+            {t("productNotFound") || "Product not found"}
+          </h1>
+          <Link
+            prefetch={false}
+            href="/"
+            className="text-primary hover:underline"
+          >
+            Return to Home
+          </Link>
         </div>
       </div>
     );
@@ -72,14 +93,25 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
     <div className="min-h-screen bg-white text-gray-900">
       <Header />
       <div className="max-w-[1400px] mx-auto px-6 py-3 border-b border-gray-100 flex items-center text-xs text-gray-500 font-semibold gap-2">
-        <Link prefetch={false} href="/" className="hover:text-gray-900 flex items-center gap-1">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" className="w-4 h-4">
+        <Link
+          prefetch={false}
+          href="/"
+          className="hover:text-gray-900 flex items-center gap-1"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="currentColor"
+            viewBox="0 0 24 24"
+            className="w-4 h-4"
+          >
             <path d="M11.47 3.84a.75.75 0 011.06 0l8.99 9a.75.75 0 11-1.06 1.06l-4.635-4.643V20.25a.75.75 0 01-.75.75h-3.75v-4.5a.75.75 0 00-.75-.75h-3a.75.75 0 00-.75.75v4.5H3.75a.75.75 0 01-.75-.75V11.25l-2.025 2.025a.75.75 0 11-1.06-1.06l8.99-9zM12 5.093l-6.75 6.756v8.401h2.25v-4.5a2.25 2.25 0 012.25-2.25h4.5a2.25 2.25 0 012.25 2.25v4.5h2.25v-8.401L12 5.093z" />
           </svg>
-          {t('home')}
+          {t("home")}
         </Link>
         <span>&rarr;</span>
-        <span className="hover:text-gray-900 cursor-pointer">{product.categoryId?.name || 'Category'}</span>
+        <span className="hover:text-gray-900 cursor-pointer">
+          {product.categoryId?.name || "Category"}
+        </span>
         <span>&rarr;</span>
         <span className="text-gray-900 truncate">{product.title}</span>
       </div>
@@ -93,55 +125,110 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
           <div className="flex flex-col">
             <h1 className="text-2xl text-gray-900 mb-2">{product.title}</h1>
             <div className="text-sm text-gray-600 mb-6 pb-2 flex flex-wrap items-center gap-4">
-              <span>{t('productId')}: {product.sku || product._id.slice(-6)}</span>
+              <span>
+                {t("productId")}: {product.sku || product._id.slice(-6)}
+              </span>
               <span className="text-gray-300">|</span>
               <span className="font-medium text-gray-800 flex items-center gap-1">
-                <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
-                {product.salesCount || 0} {t('sold')}
+                <svg
+                  className="w-4 h-4 text-gray-400"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
+                  ></path>
+                </svg>
+                {product.salesCount || 0} {t("sold")}
               </span>
               <span className="text-gray-300">|</span>
               {product.stock > 0 ? (
                 <span className="font-medium text-green-600 flex items-center gap-1">
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                  {t('inStock')} ({product.stock})
+                  <svg
+                    className="w-4 h-4"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                    ></path>
+                  </svg>
+                  {t("inStock")} ({product.stock})
                 </span>
               ) : (
                 <span className="font-medium text-red-500 flex items-center gap-1">
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                  {t('outOfStock')}
+                  <svg
+                    className="w-4 h-4"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+                    ></path>
+                  </svg>
+                  {t("outOfStock")}
                 </span>
               )}
             </div>
-            
+
             <div className="mb-6 flex items-center gap-4 flex-wrap">
               <div className="text-3xl font-bold text-gray-900 tracking-tight">
-                {product.discountedPrice.toLocaleString()} {t('bdt')}
+                {product.discountedPrice.toLocaleString()} {t("bdt")}
               </div>
-              
+
               {product.originalPrice > product.discountedPrice && (
                 <>
                   <div className="text-lg text-gray-400 line-through font-medium">
-                    {product.originalPrice.toLocaleString()} {t('bdt')}
+                    {product.originalPrice.toLocaleString()} {t("bdt")}
                   </div>
                   <div className="bg-red-500 text-white text-xs font-bold px-3 py-1 rounded-full whitespace-nowrap">
-                    {t('save')} {(product.originalPrice - product.discountedPrice).toLocaleString()} {t('bdt')}
+                    {t("save")}{" "}
+                    {(
+                      product.originalPrice - product.discountedPrice
+                    ).toLocaleString()}{" "}
+                    {t("bdt")}
                   </div>
                 </>
               )}
             </div>
-            
+
             {/* Quick Overview */}
-            {((product.features && product.features.length > 0) || product.isAuthentic) && (
+            {((product.features && product.features.length > 0) ||
+              product.isAuthentic) && (
               <div className="mb-8">
-                <div className="text-sm font-bold text-gray-900 mb-2">{t('quickOverview')}</div>
+                <div className="text-sm font-bold text-gray-900 mb-2">
+                  {t("quickOverview")}
+                </div>
                 <ul className="text-sm text-gray-700 space-y-1 list-disc pl-4">
-                  {product.features && product.features.map((feature: string, i: number) => (
-                    <li key={`feature-${i}`}>{feature}</li>
-                  ))}
+                  {product.features &&
+                    product.features.map((feature: string, i: number) => (
+                      <li key={`feature-${i}`}>{feature}</li>
+                    ))}
                   {product.isAuthentic && (
                     <li className="font-semibold text-green-600 flex items-center gap-1.5 -ml-4 mt-2 list-none">
-                      <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"></path></svg>
-                      {t('authenticProduct')}
+                      <svg
+                        className="w-4 h-4"
+                        fill="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"></path>
+                      </svg>
+                      {t("authenticProduct")}
                     </li>
                   )}
                 </ul>
@@ -149,17 +236,18 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
             )}
 
             <AddToCartClient product={product} theme={theme} />
-            
+
             {/* Short Description */}
             {product.shortDescription && (
               <div className="mt-8 pt-6 border-t border-gray-100">
-                <div className="text-sm font-bold text-gray-900 mb-2">{t('shortDescription')}</div>
+                <div className="text-sm font-bold text-gray-900 mb-2">
+                  {t("shortDescription")}
+                </div>
                 <div className="text-[15px] text-gray-600 leading-relaxed whitespace-pre-wrap">
                   {product.shortDescription}
                 </div>
               </div>
             )}
-
           </div>
         </div>
 
@@ -167,26 +255,35 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
         <div className="mt-16">
           <div className="flex space-x-8 border-b border-gray-200 mb-8 px-2">
             <button className="pb-3 font-bold text-[#7c3aed] border-b-2 border-[#7c3aed] text-sm px-2 transition-all">
-              {t('specifications') || 'Specifications'}
+              {t("specifications") || "Specifications"}
             </button>
             <button className="pb-3 font-semibold text-gray-500 hover:text-gray-800 transition-colors text-sm px-2">
-              {t('reviews')}
+              {t("reviews")}
             </button>
           </div>
-          
+
           <div className="bg-white border-t border-gray-100 overflow-hidden mt-6">
             <div className="flex flex-col gap-8 pt-4">
               {product.specifications && product.specifications.length > 0 ? (
                 product.specifications.map((spec: any, groupIndex: number) => (
                   <div key={groupIndex} className="bg-white">
                     {spec.group && (
-                      <h3 className="text-lg font-bold text-gray-900 mb-4 px-2">{spec.group}</h3>
+                      <h3 className="text-lg font-bold text-gray-900 mb-4 px-2">
+                        {spec.group}
+                      </h3>
                     )}
                     <div className="divide-y divide-gray-100">
                       {spec.entries?.map((entry: any, index: number) => (
-                        <div key={index} className={`grid grid-cols-1 md:grid-cols-4 p-5 text-[14px] ${index % 2 === 0 ? 'bg-white' : 'bg-gray-50/50 hover:bg-gray-50 transition-colors rounded-lg'}`}>
-                          <div className="font-normal text-gray-700 md:col-span-1">{entry.name}</div>
-                          <div className="text-gray-600 md:col-span-3">{entry.value}</div>
+                        <div
+                          key={index}
+                          className={`grid grid-cols-1 md:grid-cols-4 p-5 text-[14px] ${index % 2 === 0 ? "bg-white" : "bg-gray-50/50 hover:bg-gray-50 transition-colors rounded-lg"}`}
+                        >
+                          <div className="font-normal text-gray-700 md:col-span-1">
+                            {entry.name}
+                          </div>
+                          <div className="text-gray-600 md:col-span-3">
+                            {entry.value}
+                          </div>
                         </div>
                       ))}
                     </div>
@@ -204,34 +301,53 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
         {/* Full Description Section */}
         {product.description && (
           <div className="mt-16 max-w-[1400px]">
-            <h2 className="text-xl font-bold text-gray-900 mb-6 border-b border-gray-100 pb-4">{t('productDescription')}</h2>
-            <div 
-              className="text-gray-700 text-[15px] leading-relaxed space-y-4 [&>p]:mb-4 [&>ul]:list-disc [&>ul]:pl-5 [&>ol]:list-decimal [&>ol]:pl-5 [&>h1]:text-2xl [&>h1]:font-bold [&>h2]:text-xl [&>h2]:font-bold [&>h3]:text-lg [&>h3]:font-bold"
-              dangerouslySetInnerHTML={{ __html: product.description }} 
-            />
+            <div className="bg-white rounded-2xl border border-gray-100 p-6 sm:p-10 shadow-xs">
+              <div className="flex items-center gap-3 mb-6 pb-4 border-b border-gray-100">
+                <span className="w-1.5 h-6 rounded-full bg-[#7c3aed]"></span>
+                <h2 className="text-lg sm:text-xl font-bold text-gray-900">
+                  {t("productDescription") || "Product Description"}
+                </h2>
+              </div>
+              <div
+                className="rich-product-description"
+                style={{ lineHeight: '2.2' }}
+                dangerouslySetInnerHTML={{ __html: product.description }}
+              />
+            </div>
           </div>
         )}
 
         {/* External Videos Section */}
         {product.videos && product.videos.length > 0 && (
           <div className="mt-12 max-w-[1400px]">
-            <h2 className="text-xl font-bold text-gray-900 mb-6 border-b border-gray-100 pb-4">{t('productVideos')}</h2>
+            <h2 className="text-xl font-bold text-gray-900 mb-6 border-b border-gray-100 pb-4">
+              {t("productVideos")}
+            </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {product.videos.map((video: string, index: number) => {
                 let embedUrl = video;
                 try {
                   const url = new URL(video);
-                  if (url.hostname.includes('youtube.com') || url.hostname.includes('youtu.be')) {
-                    const videoId = url.hostname.includes('youtu.be') ? url.pathname.slice(1) : url.searchParams.get('v');
-                    if (videoId) embedUrl = `https://www.youtube.com/embed/${videoId}`;
+                  if (
+                    url.hostname.includes("youtube.com") ||
+                    url.hostname.includes("youtu.be")
+                  ) {
+                    const videoId = url.hostname.includes("youtu.be")
+                      ? url.pathname.slice(1)
+                      : url.searchParams.get("v");
+                    if (videoId)
+                      embedUrl = `https://www.youtube.com/embed/${videoId}`;
                   }
                 } catch (e) {
                   // Ignore invalid URLs
                 }
-                
+
                 return (
-                  <div key={index} className="aspect-video bg-gray-100 rounded-xl overflow-hidden shadow-sm">
-                    <iframe 
+                  <div
+                    key={index}
+                    className="aspect-video bg-gray-100 rounded-xl overflow-hidden shadow-sm"
+                  >
+                    <iframe
                       src={embedUrl}
                       title={`Product Video ${index + 1}`}
                       className="w-full h-full"
@@ -249,7 +365,10 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
       {/* Footer */}
       <footer className="border-t border-gray-100 py-12 mt-20 bg-white">
         <div className="max-w-[1400px] mx-auto px-6 text-center text-gray-500 text-sm font-medium">
-          <p>&copy; {new Date().getFullYear()} {storeInfo?.name || tenantSlug.toUpperCase()}. All rights reserved.</p>
+          <p>
+            &copy; {new Date().getFullYear()}{" "}
+            {storeInfo?.name || tenantSlug.toUpperCase()}. All rights reserved.
+          </p>
         </div>
       </footer>
     </div>

@@ -6,11 +6,16 @@ import { trackEvent } from '@/utils/tracking';
 
 export type CartItem = {
   id: string;
+  productId?: string;
+  variantId?: string;
+  color?: string;
+  size?: string;
   title: string;
   price: number;
   image: string;
   quantity: number;
   tenantId: string;
+  maxStock?: number;
 };
 
 interface CartContextType {
@@ -53,6 +58,18 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const addToCart = (item: Omit<CartItem, 'quantity'>, quantity: number = 1) => {
     setCartItems(prev => {
       const existingItem = prev.find(i => i.id === item.id);
+      const currentQty = existingItem ? existingItem.quantity : 0;
+      const maxStock = typeof item.maxStock === 'number' ? item.maxStock : 999999;
+
+      if (currentQty + quantity > maxStock) {
+        toast.error(`Only ${maxStock} item(s) available in stock`);
+        const cappedQty = Math.max(1, maxStock);
+        if (existingItem) {
+          return prev.map(i => i.id === item.id ? { ...i, quantity: cappedQty } : i);
+        }
+        return [...prev, { ...item, quantity: cappedQty }];
+      }
+
       if (existingItem) {
         return prev.map(i => i.id === item.id ? { ...i, quantity: i.quantity + quantity } : i);
       }
@@ -77,7 +94,16 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       removeFromCart(id);
       return;
     }
-    setCartItems(prev => prev.map(item => item.id === id ? { ...item, quantity } : item));
+    setCartItems(prev => prev.map(item => {
+      if (item.id === id) {
+        if (typeof item.maxStock === 'number' && quantity > item.maxStock) {
+          toast.error(`Maximum available stock is ${item.maxStock}`);
+          return { ...item, quantity: item.maxStock };
+        }
+        return { ...item, quantity };
+      }
+      return item;
+    }));
   };
 
   const clearCart = () => {

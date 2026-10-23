@@ -60,9 +60,16 @@ export default function CartClient05({ theme }: { theme?: any }) {
                       )}
                     </div>
                     <div className="flex flex-col justify-center min-w-0 pr-4">
-                      <Link prefetch={false} href={`/product/${item.id}`} className="text-sm font-semibold text-gray-900 mb-1 hover:text-gray-600 transition-colors line-clamp-2 leading-tight">
+                      <Link prefetch={false} href={`/product/${item.productId || item.id}`} className="text-sm font-semibold text-gray-900 mb-1 hover:text-gray-600 transition-colors line-clamp-2 leading-tight">
                         {item.title}
                       </Link>
+                      {(item.color || item.size) && (
+                        <p className="text-xs font-medium text-gray-500 mb-1">
+                          {item.color ? `Color: ${item.color}` : ''}
+                          {item.color && item.size ? ' • ' : ''}
+                          {item.size ? `Size: ${item.size}` : ''}
+                        </p>
+                      )}
                       <span className="text-sm font-medium text-gray-400 mb-3">{theme?.currencySymbol || '৳'} {Math.round(item.price).toLocaleString()}</span>
                       
                       <button onClick={() => removeFromCart(item.id)} className="flex items-center gap-1.5 text-xs font-semibold text-gray-400 hover:text-red-500 transition-colors w-fit">
