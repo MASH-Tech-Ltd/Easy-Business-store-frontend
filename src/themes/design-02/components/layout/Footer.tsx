@@ -1,5 +1,7 @@
 import Link from "next/link";
 import { getTranslation } from '@/utils/translations';
+import { cleanCopyright } from "@/utils/seo";
+import PoweredByBadge from "@/components/PoweredByBadge";
 
 export default function Footer({
   storeInfo,
@@ -15,9 +17,10 @@ export default function Footer({
   const socialLinks = footer.socialLinks || {};
   const contactInfo = footer.contactInfo || {};
   const policies = footer.policies || {};
-  const copyrightText =
+  const copyrightText = cleanCopyright(
     footer.copyrightText ||
-    `© ${year} ${storeInfo?.name || "Minimal Store"}. All rights reserved.`;
+    `© ${year} ${storeInfo?.name || "Minimal Store"}. All rights reserved.`
+  );
 
   return (
     <footer className="py-12 sm:py-16 bg-gray-50 text-gray-900 border-t border-gray-100 mt-auto">
@@ -208,12 +211,7 @@ export default function Footer({
       </div>
       <div className="max-w-7xl mx-auto px-8 mt-16 pt-8 border-t border-gray-200 text-center text-sm text-gray-400 flex flex-col items-center gap-1">
         <p>{copyrightText}</p>
-        <a
-          href="https://mash-tech-ltd.vercel.app" target="_blank" rel="noopener noreferrer nofollow"
-          className="text-[10px] font-semibold text-gray-400 hover:text-blue-500 tracking-widest uppercase transition-colors"
-        >
-          A Product Of MASH TECH
-        </a>
+        <PoweredByBadge />
       </div>
     </footer>
   );

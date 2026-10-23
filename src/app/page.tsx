@@ -17,6 +17,12 @@ export async function generateMetadata(): Promise<Metadata> {
   const logo = storeInfo?.logo || '';
 
   return {
+    applicationName: storeName,
+    appleWebApp: {
+      title: storeName,
+      statusBarStyle: 'default',
+      capable: true,
+    },
     title: {
       absolute: storeName,
     },

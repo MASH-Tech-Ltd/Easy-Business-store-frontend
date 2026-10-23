@@ -15,10 +15,8 @@ type StoreInfoLike = {
   domainStatus?: string | null;
 } | null | undefined;
 
-/** Strip any " - PLATFORM" or " | PLATFORM" suffix that may have been saved in the DB */
-export function cleanStoreName(raw: string): string {
-  return raw.replace(/\s*[-|]\s*MASH\s*ECO\s*$/i, '').trim();
-}
+import { cleanStoreName, cleanCopyright } from './cleanText';
+export { cleanStoreName, cleanCopyright };
 
 /** The single store name used for <title>, og:site_name and WebSite JSON-LD. */
 export function getStoreName(storeInfo: StoreInfoLike, tenantSlug: string): string {
@@ -61,7 +59,8 @@ export async function getRequestContext() {
   }
 
   const proto = h.get('x-forwarded-proto') || (host.includes('localhost') ? 'http' : 'https');
-  return { host, tenantSlug: tenantSlug || 'main', requestOrigin: `${proto}://${host}` };
+  const pathname = h.get('x-pathname') || '';
+  return { host, tenantSlug: tenantSlug || 'main', requestOrigin: `${proto}://${host}`, pathname };
 }
 
 /**

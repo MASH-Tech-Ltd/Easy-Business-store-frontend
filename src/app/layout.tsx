@@ -136,7 +136,7 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     metadataBase: new URL(baseUrl),
     alternates: {
-      canonical: baseUrl,
+      canonical: `${baseUrl}/`,
     },
     applicationName: title,
     authors: [{ name: title, url: `${baseUrl}/` }],
@@ -182,7 +182,8 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const { tenantSlug, host, requestOrigin } = await getRequestContext();
+  const { tenantSlug, host, requestOrigin, pathname } = await getRequestContext();
+  const isHomepage = !pathname || pathname === "/" || pathname === "/index";
 
   const theme = await getTheme(tenantSlug);
   const storeInfo = await getStoreInfo(tenantSlug);
@@ -725,24 +726,26 @@ export default async function RootLayout({
         `,
           }}
         />
-        {/* 1. Google Site Name: Standalone WebSite JSON-LD (required by Google for Merchant Business Name) */}
-        {storeInfo && (
+        {/* 1. Google Site Name: Standalone WebSite JSON-LD (required by Google ONLY on the homepage) */}
+        {isHomepage && storeInfo && (
           <script
             type="application/ld+json"
             dangerouslySetInnerHTML={{
               __html: JSON.stringify({
                 "@context": "https://schema.org",
                 "@type": "WebSite",
+                "@id": `${baseUrl}/#website`,
                 name: storeName,
                 alternateName: Array.from(
                   new Set(
                     [
-                      storeInfo.domain,
                       tenantSlug,
                       storeName.replace(/\s+/g, ""),
                     ].filter((item): item is string =>
                       Boolean(
                         item &&
+                        !item.toLowerCase().includes("masheco") &&
+                        !item.toLowerCase().includes(".com") &&
                         item.trim().toLowerCase() !==
                           storeName.trim().toLowerCase(),
                       ),
@@ -770,6 +773,7 @@ export default async function RootLayout({
               __html: JSON.stringify({
                 "@context": "https://schema.org",
                 "@type": "OnlineStore",
+                "@id": `${baseUrl}/#store`,
                 name: storeName,
                 url: `${baseUrl}/`,
                 logo: storeInfo.logo || undefined,

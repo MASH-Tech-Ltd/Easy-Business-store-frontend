@@ -4,6 +4,8 @@ import Link from "next/link";
 import { Mail, Phone, MapPin } from "lucide-react";
 import { headers } from "next/headers";
 import { getTranslation, TranslationKeys } from "@/utils/translations";
+import { cleanCopyright } from "@/utils/seo";
+import PoweredByBadge from "@/components/PoweredByBadge";
 
 async function getTheme(tenantSlug: string) {
   try {
@@ -64,9 +66,10 @@ export default async function Footer() {
     termsAndConditions: footerSettings.policies?.termsAndConditions || "",
     returnPolicy: footerSettings.policies?.returnPolicy || "",
   };
-  const copyrightText =
+  const copyrightText = cleanCopyright(
     footerSettings.copyrightText ||
-    `© ${new Date().getFullYear()} - Copyright ${storeInfo?.name?.toUpperCase() || tenantSlug.toUpperCase()}`;
+    `© ${new Date().getFullYear()} ${storeInfo?.name || tenantSlug.toUpperCase()}. All rights reserved.`
+  );
 
   const language = theme?.language || "en";
   const t = (key: TranslationKeys) => getTranslation(language, key);
@@ -259,14 +262,7 @@ export default async function Footer() {
 
         <div className="border-t border-gray-100 pt-6 text-center flex flex-col items-center gap-1">
           <p className="text-xs text-gray-400">{copyrightText}</p>
-          <a
-            href="https://mash-tech-ltd.vercel.app"
-            target="_blank"
-            rel="noopener noreferrer nofollow"
-            className="text-[10px] font-semibold text-gray-400 hover:text-blue-500 tracking-widest uppercase transition-colors"
-          >
-            A Product Of MASH TECH
-          </a>
+          <PoweredByBadge />
         </div>
       </div>
     </footer>

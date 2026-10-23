@@ -87,10 +87,11 @@ export async function middleware(request: NextRequest) {
   // Ensure lowercase
   tenantSlug = tenantSlug.toLowerCase();
 
-  // Forward x-tenant-slug and x-tenant-host to Server Components via request headers
+  // Forward x-tenant-slug, x-tenant-host, and x-pathname to Server Components via request headers
   const requestHeaders = new Headers(request.headers);
   requestHeaders.set('x-tenant-slug', tenantSlug);
   requestHeaders.set('x-tenant-host', currentHost);
+  requestHeaders.set('x-pathname', url.pathname);
 
   if (tenantSlug !== 'main') {
     try {

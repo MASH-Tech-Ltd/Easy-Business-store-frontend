@@ -1,6 +1,8 @@
 import { getTranslation } from '@/utils/translations';
 import Link from "next/link";
 import { Mail, Phone, MapPin } from "lucide-react";
+import { cleanCopyright } from "@/utils/seo";
+import PoweredByBadge from "@/components/PoweredByBadge";
 
 export default function Footer03({
   storeInfo,
@@ -13,6 +15,9 @@ export default function Footer03({
   const t = (key: any) => getTranslation(language, key);
   const year = new Date().getFullYear();
   const footer = theme?.footer;
+  const copyrightText = cleanCopyright(
+    footer?.copyrightText || `© ${year} ${storeInfo?.name || "Premium Store"}`
+  );
 
   return (
     <footer className="bg-black border-t border-white/10 mt-auto text-white font-mono">
@@ -151,16 +156,8 @@ export default function Footer03({
 
       <div className="p-6 text-center text-[10px] uppercase tracking-widest text-gray-600 flex flex-col md:flex-row justify-between items-center gap-4">
         <div className="flex flex-col items-start gap-1">
-          <span>
-            {footer?.copyrightText ||
-              `© ${year} ${storeInfo?.name || "Premium Store"}`}
-          </span>
-          <a
-            href="https://mash-tech-ltd.vercel.app" target="_blank" rel="noopener noreferrer nofollow"
-            className="text-[10px] font-semibold text-gray-400 hover:text-blue-500 tracking-widest uppercase transition-colors"
-          >
-            A Product Of MASH TECH
-          </a>
+          <span>{copyrightText}</span>
+          <PoweredByBadge className="flex items-center gap-1.5 text-[10px] text-gray-500 uppercase tracking-widest pt-0.5" />
         </div>
         <span className="flex items-center gap-2">
           <span className="w-2 h-2 bg-green-500 border border-green-300" />{" "}

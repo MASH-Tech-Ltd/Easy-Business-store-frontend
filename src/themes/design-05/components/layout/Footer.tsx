@@ -38,6 +38,8 @@ const Tiktok = (props: React.SVGProps<SVGSVGElement>) => (
 
 import Link from "next/link";
 import { getTranslation } from '@/utils/translations';
+import { cleanCopyright } from '@/utils/cleanText';
+import PoweredByBadge from '@/components/PoweredByBadge';
 
 export default function Footer05({
   storeInfo,
@@ -55,9 +57,10 @@ export default function Footer05({
   const socialLinks = footer.socialLinks || {};
   const contactInfo = footer.contactInfo || {};
   const policies = footer.policies || {};
-  const copyrightText =
+  const copyrightText = cleanCopyright(
     footer.copyrightText ||
-    `© ${year} ${storeInfo?.name || "Minimal Store"}. All rights reserved.`;
+    `© ${year} ${storeInfo?.name || "Minimal Store"}. All rights reserved.`
+  );
   return (
     <footer className="bg-white border-t border-gray-100 mt-auto pt-20 pb-10">
       <div className="max-w-[1400px] mx-auto px-6 lg:px-12">
@@ -251,12 +254,7 @@ export default function Footer05({
         <div className="pt-8 border-t border-gray-100 flex flex-col md:flex-row items-center justify-between gap-4 text-[13px] text-gray-400">
           <div className="flex flex-col items-start gap-1">
             <p>{copyrightText}</p>
-            <a
-              href="https://mash-tech-ltd.vercel.app" target="_blank" rel="noopener noreferrer nofollow"
-              className="text-[10px] font-semibold text-gray-400 hover:text-blue-500 tracking-widest uppercase transition-colors"
-            >
-              A Product Of MASH TECH
-            </a>
+            <PoweredByBadge className="flex items-center gap-1.5 text-[11px] text-gray-400 select-none pt-0.5" />
           </div>
           <div className="flex gap-4">
             <span className="hover:text-gray-600 transition-colors cursor-pointer">

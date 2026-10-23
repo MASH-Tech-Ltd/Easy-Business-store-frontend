@@ -4,6 +4,8 @@ import React from "react";
 import { Mail, Phone, MapPin } from "lucide-react";
 import Link from "next/link";
 import { getTranslation } from "@/utils/translations";
+import { cleanCopyright } from "@/utils/cleanText";
+import PoweredByBadge from "@/components/PoweredByBadge";
 
 export default function Footer04({
   storeInfo,
@@ -19,9 +21,10 @@ export default function Footer04({
   const socialLinks = footer.socialLinks || {};
   const contactInfo = footer.contactInfo || {};
   const policies = footer.policies || {};
-  const copyrightText =
+  const copyrightText = cleanCopyright(
     footer.copyrightText ||
-    `© ${year} ${storeInfo?.name || "Store"}. All rights reserved.`;
+    `© ${year} ${storeInfo?.name || "Store"}. All rights reserved.`
+  );
 
   return (
     <footer className="bg-white border-t border-gray-100 mt-auto">
@@ -220,12 +223,7 @@ export default function Footer04({
       {/* Copyright Bar */}
       <div className="bg-gray-900 py-4 px-6 text-center text-xs text-gray-400 flex flex-col items-center gap-1">
         <p>{copyrightText}</p>
-        <a
-          href="https://mash-tech-ltd.vercel.app" target="_blank" rel="noopener noreferrer nofollow"
-          className="text-[10px] font-semibold text-gray-400 hover:text-blue-500 tracking-widest uppercase transition-colors"
-        >
-          A Product Of MASH TECH
-        </a>
+        <PoweredByBadge className="flex items-center justify-center gap-1.5 text-[11px] text-gray-500 select-none pt-0.5" />
       </div>
     </footer>
   );
