@@ -1,6 +1,9 @@
 import type { MetadataRoute } from "next";
 import { getRequestContext } from "@/utils/seo";
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 86400;
+
 export default async function robots(): Promise<MetadataRoute.Robots> {
   const { requestOrigin } = await getRequestContext();
 

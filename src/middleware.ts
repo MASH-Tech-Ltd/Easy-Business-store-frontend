@@ -8,12 +8,12 @@ export async function middleware(request: NextRequest) {
   const hostname = request.headers.get('host') || '';
   
   // Exclude static files and API routes from proxy.
-  // sitemap.xml / robots.txt are tenant-specific, so they MUST get x-tenant-slug.
-  const isTenantSeoFile = url.pathname === '/sitemap.xml' || url.pathname === '/robots.txt';
+  // sitemap.xml is tenant-specific, so it MUST get x-tenant-slug.
+  const isTenantSeoFile = url.pathname === '/sitemap.xml';
   if (
     url.pathname.startsWith('/_next') ||
     url.pathname.startsWith('/api') ||
-    (url.pathname.includes('.') && !isTenantSeoFile)
+    (url.pathname.includes('.') && !isTenantSeoFile && url.pathname !== '/robots.txt')
   ) {
     return NextResponse.next();
   }
@@ -22,6 +22,21 @@ export async function middleware(request: NextRequest) {
   let currentHost = hostname;
   if (currentHost.includes(':')) {
     currentHost = currentHost.split(':')[0];
+  }
+  currentHost = currentHost.toLowerCase();
+
+  // Instant zero-latency response for /robots.txt — guaranteed HTTP 200 OK.
+  // Never blocks, never times out, never 503s, never redirects, ensuring Google Search Console inspection always succeeds.
+  if (url.pathname === '/robots.txt') {
+    const proto = request.headers.get('x-forwarded-proto') || (currentHost.includes('localhost') ? 'http' : 'https');
+    const robotsTxt = `User-agent: *\nAllow: /\nDisallow: /cart\nDisallow: /checkout\nDisallow: /account\nDisallow: /track-order\nDisallow: /api/\n\nSitemap: ${proto}://${currentHost}/sitemap.xml\n`;
+    return new NextResponse(robotsTxt, {
+      status: 200,
+      headers: {
+        'Content-Type': 'text/plain; charset=utf-8',
+        'Cache-Control': 'public, max-age=86400, s-maxage=86400',
+      },
+    });
   }
 
   const baseDomain = (process.env.NEXT_PUBLIC_BASE_DOMAIN || 'masheco.com').toLowerCase();
