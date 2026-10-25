@@ -43,6 +43,8 @@ export default function ProductGallery({ images, title }: ProductGalleryProps) {
               <img 
                 src={img.secure_url} 
                 alt={`${title} thumbnail ${idx + 1}`} 
+                loading="lazy"
+                decoding="async"
                 className="w-full h-full object-cover" 
               />
             </button>
@@ -60,6 +62,9 @@ export default function ProductGallery({ images, title }: ProductGalleryProps) {
         <img 
           src={images[activeIndex].secure_url} 
           alt={title} 
+          decoding="async"
+          // @ts-ignore
+          fetchpriority="high"
           style={{ transformOrigin: isZoomed ? transformOrigin : 'center' }}
           className={`w-full h-full object-cover transition-transform duration-300 ease-out ${isZoomed ? 'scale-[2.5]' : 'scale-100'}`} 
         />

@@ -30,7 +30,7 @@ export default function Design02ProductCard({
   if (isList) {
     return (
       <Link
-        prefetch={false}
+        prefetch={true}
         href={`/product/${product.slug || product._id || product.id}`}
         className="group flex bg-white rounded-xl shadow-sm hover:shadow-md border border-gray-100 transition-all duration-300 overflow-hidden relative w-full"
       >
@@ -46,6 +46,8 @@ export default function Design02ProductCard({
             <img
               src={imageUrl}
               alt={product.title || product.name}
+              loading="lazy"
+              decoding="async"
               className={`w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ${isOutOfStock ? "opacity-70 grayscale-[30%]" : ""}`}
             />
           ) : (
@@ -88,7 +90,7 @@ export default function Design02ProductCard({
 
   return (
     <Link
-      prefetch={false}
+      prefetch={true}
       href={`/product/${product.slug || product._id || product.id}`}
       className="group block"
     >
@@ -104,6 +106,8 @@ export default function Design02ProductCard({
           <img
             src={imageUrl}
             alt={product.title || product.name}
+            loading="lazy"
+            decoding="async"
             className={`w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ${isOutOfStock ? "opacity-70 grayscale-[30%]" : ""}`}
           />
         ) : (

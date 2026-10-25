@@ -1,20 +1,6 @@
 import Link from "next/link";
 import { headers } from "next/headers";
-import { storefrontFetch } from "@/utils/storefrontFetch";
-
-async function getStoreInfo(tenantSlug: string) {
-  try {
-    const res = await storefrontFetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/info`,
-      { next: { revalidate: 0 } },
-    );
-    if (!res.ok) return null;
-    const json = await res.json();
-    return json.data;
-  } catch (error) {
-    return null;
-  }
-}
+import { getStoreInfo } from "@/core/api/store";
 
 export default async function NotFound() {
   const headersList = await headers();

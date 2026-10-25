@@ -4,13 +4,13 @@ import React, { useState } from "react";
 import FilterSidebar from "./FilterSidebar";
 
 interface FilterDrawerProps {
-  categoryId: string;
+  categoryId?: string;
   availableBrands?: string[];
   theme?: any;
 }
 
 export default function FilterDrawer({
-  categoryId,
+  categoryId = "",
   availableBrands = [],
   theme,
 }: FilterDrawerProps) {

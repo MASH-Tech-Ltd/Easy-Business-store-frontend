@@ -1,4 +1,3 @@
-import { storefrontFetch } from "../../../../utils/storefrontFetch";
 import React from "react";
 import Link from "next/link";
 import { Mail, Phone, MapPin } from "lucide-react";
@@ -6,34 +5,7 @@ import { headers } from "next/headers";
 import { getTranslation, TranslationKeys } from "@/utils/translations";
 import { cleanCopyright } from "@/utils/seo";
 import PoweredByBadge from "@/components/PoweredByBadge";
-
-async function getTheme(tenantSlug: string) {
-  try {
-    const res = await storefrontFetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/theme`,
-      { next: { revalidate: 0 } },
-    );
-    if (!res.ok) return null;
-    const json = await res.json();
-    return json.data;
-  } catch (error) {
-    return null;
-  }
-}
-
-async function getStoreInfo(tenantSlug: string) {
-  try {
-    const res = await storefrontFetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/info`,
-      { next: { revalidate: 0 } },
-    );
-    if (!res.ok) return null;
-    const json = await res.json();
-    return json.data;
-  } catch (error) {
-    return null;
-  }
-}
+import { getTheme, getStoreInfo } from "@/core/api/store";
 
 export default async function Footer() {
   const headersList = await headers();

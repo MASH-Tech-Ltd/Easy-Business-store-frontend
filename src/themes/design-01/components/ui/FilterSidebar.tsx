@@ -23,7 +23,8 @@ export default function FilterSidebar({ categoryId, availableBrands = [], theme,
     if (brand) params.set('brand', brand);
     if (inStock) params.set('inStock', 'true');
     
-    router.push(`/category/${categoryId}?${params.toString()}`);
+    const basePath = categoryId ? `/category/${categoryId}` : '/products';
+    router.push(`${basePath}${params.toString() ? `?${params.toString()}` : ''}`);
     if (onApply) onApply();
   };
 
@@ -33,7 +34,8 @@ export default function FilterSidebar({ categoryId, availableBrands = [], theme,
     setSearch('');
     setBrand('');
     setInStock(false);
-    router.push(`/category/${categoryId}`);
+    const basePath = categoryId ? `/category/${categoryId}` : '/products';
+    router.push(basePath);
     if (onApply) onApply();
   };
 

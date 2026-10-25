@@ -1,6 +1,29 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
+// In-memory cache for middleware (short TTL to keep fast and fresh)
+interface CacheItem<T> {
+  val: T;
+  exp: number;
+}
+const middlewareSlugCache = new Map<string, CacheItem<string>>();
+const middlewareStatusCache = new Map<string, CacheItem<any>>();
+
+function getMiddlewareCached<T>(cache: Map<string, CacheItem<T>>, key: string): T | null {
+  const item = cache.get(key);
+  if (item && item.exp > Date.now()) return item.val;
+  cache.delete(key);
+  return null;
+}
+
+function setMiddlewareCached<T>(cache: Map<string, CacheItem<T>>, key: string, val: T, ttlMs = 45000): void {
+  if (cache.size > 2000) {
+    const firstKey = cache.keys().next().value;
+    if (firstKey) cache.delete(firstKey);
+  }
+  cache.set(key, { val, exp: Date.now() + ttlMs });
+}
+
 export async function middleware(request: NextRequest) {
   const url = request.nextUrl.clone();
   
@@ -65,22 +88,24 @@ export async function middleware(request: NextRequest) {
     tenantSlug = bareHost.replace('.masheco.com', '');
   } else {
     // It's a custom domain (e.g. www.masheco.tech or masheco.tech).
-    // Pass the ORIGINAL host (with www if present) to the backend —
-    // the backend normalizeTenantQuery checks both 'domain.com' and 'www.domain.com'.
-    // The /info endpoint returns the canonical slug, which we use for all subsequent calls.
-    try {
-      const infoRes = await fetch(`${apiUrl}/storefront/${currentHost}/info`, {
-        headers: { 'x-storefront-api-key': storefrontApiKey },
-      });
-      if (infoRes.ok) {
-        const json = await infoRes.json();
-        // Use the real unique slug from DB — all other API calls use this
-        tenantSlug = json?.data?.slug || json?.data?.domain || currentHost;
-      } else {
+    const cachedSlug = getMiddlewareCached(middlewareSlugCache, currentHost);
+    if (cachedSlug) {
+      tenantSlug = cachedSlug;
+    } else {
+      try {
+        const infoRes = await fetch(`${apiUrl}/storefront/${currentHost}/info`, {
+          headers: { 'x-storefront-api-key': storefrontApiKey },
+        });
+        if (infoRes.ok) {
+          const json = await infoRes.json();
+          tenantSlug = json?.data?.slug || json?.data?.domain || currentHost;
+        } else {
+          tenantSlug = currentHost;
+        }
+      } catch {
         tenantSlug = currentHost;
       }
-    } catch {
-      tenantSlug = currentHost;
+      setMiddlewareCached(middlewareSlugCache, currentHost, tenantSlug, 60000);
     }
   }
 
@@ -95,11 +120,25 @@ export async function middleware(request: NextRequest) {
 
   if (tenantSlug !== 'main') {
     try {
-      const statusRes = await fetch(`${apiUrl}/storefront/${tenantSlug}/status`, {
-        headers: { 'x-storefront-api-key': storefrontApiKey },
-      });
+      let statusJson = getMiddlewareCached(middlewareStatusCache, tenantSlug);
+      let statusOk = Boolean(statusJson);
+      let is404 = false;
+
+      if (!statusJson) {
+        const statusRes = await fetch(`${apiUrl}/storefront/${tenantSlug}/status`, {
+          headers: { 'x-storefront-api-key': storefrontApiKey },
+        });
+        
+        if (!statusRes.ok && statusRes.status === 404) {
+          is404 = true;
+        } else if (statusRes.ok) {
+          statusJson = await statusRes.json();
+          statusOk = true;
+          setMiddlewareCached(middlewareStatusCache, tenantSlug, statusJson, 45000);
+        }
+      }
       
-      if (!statusRes.ok && statusRes.status === 404) {
+      if (is404) {
         const errorUrl = url.clone();
         errorUrl.pathname = '/404'; // or some other path handled by notFound
         const response = NextResponse.rewrite(errorUrl, {
@@ -110,8 +149,7 @@ export async function middleware(request: NextRequest) {
         return response;
       }
       
-      if (statusRes.ok) {
-        const statusJson = await statusRes.json();
+      if (statusOk && statusJson) {
 
         // 301 Permanent Redirect:
         // If the store has a verified/active custom domain (domainStatus === 'active')

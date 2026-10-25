@@ -1,4 +1,3 @@
-import { storefrontFetch } from "../../../../utils/storefrontFetch";
 import React from 'react';
 import Link from 'next/link';
 import { headers } from 'next/headers';
@@ -6,22 +5,7 @@ import HeaderCartIcon04 from '../ui/HeaderCartIcon';
 import GlobalSearch04 from '../ui/GlobalSearch';
 import { getTranslation } from '@/utils/translations';
 import AnnouncementBar from '@/components/AnnouncementBar';
-
-async function getStoreInfo(tenantSlug: string) {
-  try {
-    const res = await storefrontFetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/info`, { next: { revalidate: 60 } });
-    if (!res.ok) return null;
-    return (await res.json()).data;
-  } catch { return null; }
-}
-
-async function getTheme(tenantSlug: string) {
-  try {
-    const res = await storefrontFetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/theme`, { next: { revalidate: 60 } });
-    if (!res.ok) return null;
-    return (await res.json()).data;
-  } catch { return null; }
-}
+import { getStoreInfo, getTheme } from '@/core/api/store';
 
 export default async function Header04({ storeInfo, theme: initialTheme }: { storeInfo?: any; theme?: any }) {
   const headersList = await headers();

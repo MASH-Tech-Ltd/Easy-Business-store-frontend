@@ -49,7 +49,7 @@ export default function ProductCard04({ product, isList = false, isBestSelling =
 
   if (isList) {
     return (
-      <Link prefetch={false} href={`/product/${productSlug}`} className="group flex bg-white border border-gray-100 hover:border-gray-300 hover:shadow-lg transition-all rounded-2xl overflow-hidden cursor-default">
+      <Link prefetch={true} href={`/product/${productSlug}`} className="group flex bg-white border border-gray-100 hover:border-gray-300 hover:shadow-lg transition-all rounded-2xl overflow-hidden cursor-default">
         <div className="w-40 h-40 bg-gray-50 flex items-center justify-center shrink-0 p-4 relative">
           {isOutOfStock && (
             <div className="absolute inset-0 bg-black/30 backdrop-blur-[1px] flex items-center justify-center z-20 pointer-events-none">
@@ -59,7 +59,7 @@ export default function ProductCard04({ product, isList = false, isBestSelling =
             </div>
           )}
           {imageUrl ? (
-            <img src={imageUrl} alt={product.title} className={`w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 ${isOutOfStock ? "opacity-70 grayscale-[30%]" : ""}`} />
+            <img src={imageUrl} alt={product.title} loading="lazy" decoding="async" className={`w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 ${isOutOfStock ? "opacity-70 grayscale-[30%]" : ""}`} />
           ) : (
             <div className="text-gray-300 text-xs">No image</div>
           )}
@@ -83,7 +83,7 @@ export default function ProductCard04({ product, isList = false, isBestSelling =
 
   return (
     <div className="group flex flex-col bg-white border border-gray-100 rounded-2xl overflow-hidden hover:shadow-xl hover:border-gray-200 transition-all duration-300">
-      <Link prefetch={false} href={`/product/${productSlug}`} className="block cursor-default">
+      <Link prefetch={true} href={`/product/${productSlug}`} className="block cursor-default">
         {/* Image */}
         <div className="relative bg-gray-50 aspect-square flex items-center justify-center overflow-hidden">
           {savePercent > 0 && (
@@ -102,6 +102,8 @@ export default function ProductCard04({ product, isList = false, isBestSelling =
             <img
               src={imageUrl}
               alt={product.title || product.name}
+              loading="lazy"
+              decoding="async"
               className={`w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 ${isOutOfStock ? "opacity-70 grayscale-[30%]" : ""}`}
             />
           ) : (

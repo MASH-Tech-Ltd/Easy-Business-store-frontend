@@ -4,12 +4,12 @@ import React, { useState } from 'react';
 import Design02FilterSidebar from './FilterSidebar';
 
 interface FilterDrawerProps {
-  categoryId: string;
+  categoryId?: string;
   availableBrands?: string[];
   theme?: any;
 }
 
-export default function Design02FilterDrawer({ categoryId, availableBrands = [], theme }: FilterDrawerProps) {
+export default function Design02FilterDrawer({ categoryId = '', availableBrands = [], theme }: FilterDrawerProps) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (

@@ -41,7 +41,10 @@ export async function storefrontFetch(url: string, init?: RequestInit, clientIp?
     fetchHeaders.set('user-agent', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
   }
 
-  if (ip && ip !== '127.0.0.1' && ip !== '::1') {
+  // For GET catalog requests (store info, themes, products, categories), do NOT attach dynamic client IP
+  // unless explicitly passed (e.g. checkout, fraud verification), so Next.js Data Cache can share cached data across all visitors.
+  const isMutationOrExplicit = Boolean(clientIp) || (Boolean(init?.method) && init?.method !== 'GET');
+  if (isMutationOrExplicit && ip && ip !== '127.0.0.1' && ip !== '::1') {
     fetchHeaders.set('x-tenant-client-ip', ip);
   }
 

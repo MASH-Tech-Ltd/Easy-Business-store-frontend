@@ -1,29 +1,10 @@
-import { storefrontFetch } from "../../../../utils/storefrontFetch";
 import Link from 'next/link';
 import { headers } from 'next/headers';
 import { ShoppingCart, Home, Grid, ChevronRight } from 'lucide-react';
 import GlobalSearch03 from '../ui/GlobalSearch';
 import { getTranslation } from '@/utils/translations';
 import AnnouncementBar from '@/components/AnnouncementBar';
-
-async function getTheme(tenantSlug: string) {
-  try {
-    const res = await storefrontFetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/theme`, { next: { revalidate: 0 } });
-    if (!res.ok) return null;
-    const json = await res.json();
-    return json.data;
-  } catch (error) {
-    return null;
-  }
-}
-
-async function getStoreInfo(tenantSlug: string) {
-  try {
-    const res = await storefrontFetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/info`, { next: { revalidate: 60 } });
-    if (!res.ok) return null;
-    return (await res.json()).data;
-  } catch { return null; }
-}
+import { getTheme, getStoreInfo } from '@/core/api/store';
 
 export default async function Header03({ storeInfo }: { storeInfo?: any }) {
   const headersList = await headers();

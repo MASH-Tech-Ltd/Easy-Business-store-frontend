@@ -1,4 +1,3 @@
-import { storefrontFetch } from "../../utils/storefrontFetch";
 import { headers } from "next/headers";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
@@ -7,50 +6,8 @@ import Header from "./components/layout/Header";
 import AddToCartClient from "./AddToCartClient";
 import type { Metadata, ResolvingMetadata } from "next";
 import { getTranslation, TranslationKeys } from "@/utils/translations";
-
-async function getStoreInfo(tenantSlug: string) {
-  try {
-    const res = await storefrontFetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/info`,
-      { next: { revalidate: 60 } },
-    );
-    if (!res.ok) return null;
-    const json = await res.json();
-    return json.data;
-  } catch (error) {
-    return null;
-  }
-}
-
-async function getTheme(tenantSlug: string) {
-  try {
-    const res = await storefrontFetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/theme`,
-      { next: { revalidate: 60 } },
-    );
-    if (!res.ok) return null;
-    const json = await res.json();
-    return json.data;
-  } catch (error) {
-    return null;
-  }
-}
-
-async function getProduct(tenantSlug: string, productSlug: string) {
-  try {
-    const res = await storefrontFetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/products/${productSlug}`,
-      { next: { revalidate: 60 } },
-    );
-    if (!res.ok) return null;
-    const json = await res.json();
-    return json.data || null;
-  } catch (error) {
-    return null;
-  }
-}
-
-// Removed generateMetadata, now in route segment
+import { getStoreInfo, getTheme } from "@/core/api/store";
+import { getProductBySlug } from "@/core/api/product";
 
 export default async function ProductPage({
   params,
@@ -63,7 +20,7 @@ export default async function ProductPage({
 
   const [storeInfo, product, theme] = await Promise.all([
     getStoreInfo(tenantSlug),
-    getProduct(tenantSlug, resolvedParams.slug),
+    getProductBySlug(tenantSlug, resolvedParams.slug),
     getTheme(tenantSlug),
   ]);
 

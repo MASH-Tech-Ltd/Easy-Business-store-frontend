@@ -1,38 +1,12 @@
 import { getTranslation } from "../../utils/translations";
-import { storefrontFetch } from "../../utils/storefrontFetch";
 import { headers } from "next/headers";
 import Link from "next/link";
 import ProductGallery from "@/components/ProductGallery";
 import AddToCartClient03 from "./AddToCartClient";
-import { getTheme } from "@/core/api/store";
+import { getTheme, getStoreInfo } from "@/core/api/store";
+import { getProductBySlug } from "@/core/api/product";
 import Header03 from "./components/layout/Header";
 import Footer03 from "./components/layout/Footer";
-
-async function getStoreInfo(tenantSlug: string) {
-  try {
-    const res = await storefrontFetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/info`,
-      { next: { revalidate: 60 } },
-    );
-    if (!res.ok) return null;
-    return (await res.json()).data;
-  } catch {
-    return null;
-  }
-}
-
-async function getProduct(tenantSlug: string, productSlug: string) {
-  try {
-    const res = await storefrontFetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/products/${productSlug}`,
-      { next: { revalidate: 60 } },
-    );
-    if (!res.ok) return null;
-    return (await res.json()).data || null;
-  } catch {
-    return null;
-  }
-}
 
 export default async function Design03ProductPage({
   params,
@@ -45,7 +19,7 @@ export default async function Design03ProductPage({
 
   const [storeInfo, product, theme] = await Promise.all([
     getStoreInfo(tenantSlug),
-    getProduct(tenantSlug, resolvedParams.slug),
+    getProductBySlug(tenantSlug, resolvedParams.slug),
     getTheme(tenantSlug),
   ]);
 

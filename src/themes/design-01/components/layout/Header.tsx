@@ -1,4 +1,3 @@
-import { storefrontFetch } from "../../../../utils/storefrontFetch";
 import React from 'react';
 import Link from 'next/link';
 import { headers } from 'next/headers';
@@ -6,28 +5,7 @@ import HeaderCartIcon from '../ui/HeaderCartIcon';
 import GlobalSearch from '../ui/GlobalSearch';
 import { getTranslation } from '@/utils/translations';
 import AnnouncementBar from '@/components/AnnouncementBar';
-
-async function getTheme(tenantSlug: string) {
-  try {
-    const res = await storefrontFetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/theme`, { next: { revalidate: 0 } });
-    if (!res.ok) return null;
-    const json = await res.json();
-    return json.data;
-  } catch (error) {
-    return null;
-  }
-}
-
-async function getStoreInfo(tenantSlug: string) {
-  try {
-    const res = await storefrontFetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/info`, { next: { revalidate: 0 } });
-    if (!res.ok) return null;
-    const json = await res.json();
-    return json.data;
-  } catch (error) {
-    return null;
-  }
-}
+import { getTheme, getStoreInfo } from '@/core/api/store';
 
 export default async function Header() {
   const headersList = await headers();
@@ -43,7 +21,7 @@ export default async function Header() {
         
         {/* Top Row on Mobile: Logo + Mobile Nav */}
         <div className="flex justify-between items-center w-full md:w-auto">
-          <Link prefetch={false} href="/" className="flex items-center gap-3">
+          <Link prefetch={true} href="/" className="flex items-center gap-3">
             {storeInfo?.logo && (
               <img src={storeInfo.logo} alt={storeInfo?.name || tenantSlug} className="w-10 h-10 sm:w-12 sm:h-12 rounded-full object-cover shadow-sm border border-gray-100" />
             )}
@@ -53,7 +31,7 @@ export default async function Header() {
           </Link>
           
           <nav className="flex md:hidden items-center gap-4 font-semibold text-sm text-gray-600">
-            <Link prefetch={false} href="/" className="hover:text-gray-900 transition-colors">{t('home') || 'Home'}</Link>
+            <Link prefetch={true} href="/" className="hover:text-gray-900 transition-colors">{t('home') || 'Home'}</Link>
             <HeaderCartIcon />
           </nav>
         </div>
@@ -65,7 +43,7 @@ export default async function Header() {
         
         {/* Desktop Nav */}
         <nav className="hidden md:flex items-center gap-6 font-semibold text-sm text-gray-600">
-          <Link prefetch={false} href="/" className="hover:text-gray-900 transition-colors">{t('home') || 'Home'}</Link>
+          <Link prefetch={true} href="/" className="hover:text-gray-900 transition-colors">{t('home') || 'Home'}</Link>
           <HeaderCartIcon />
         </nav>
 

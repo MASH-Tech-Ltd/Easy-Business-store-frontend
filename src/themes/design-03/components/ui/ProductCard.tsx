@@ -23,7 +23,7 @@ export default function Design03ProductCard({ product, isList = false, isBestSel
 
   if (isList) {
     return (
-      <Link prefetch={false} href={`/product/${product.slug || product._id || product.id}`} className="group flex bg-[#050505] border border-white/10 hover:border-cyan-400 transition-colors duration-300 w-full rounded-none">
+      <Link prefetch={true} href={`/product/${product.slug || product._id || product.id}`} className="group flex bg-[#050505] border border-white/10 hover:border-cyan-400 transition-colors duration-300 w-full rounded-none">
         <div className="w-48 h-48 bg-[#111] border-r border-white/10 flex items-center justify-center shrink-0 relative p-4 group-hover:bg-black transition-colors">
           {isOutOfStock && (
             <div className="absolute inset-0 bg-black/40 backdrop-blur-[1px] flex items-center justify-center z-20 pointer-events-none">
@@ -33,7 +33,7 @@ export default function Design03ProductCard({ product, isList = false, isBestSel
             </div>
           )}
           {imageUrl ? (
-            <img src={imageUrl} alt={product.title || product.name} className={`w-full h-full object-contain mix-blend-luminosity group-hover:mix-blend-normal transition-all duration-300 ${isOutOfStock ? "opacity-60 grayscale" : ""}`} />
+            <img src={imageUrl} alt={product.title || product.name} loading="lazy" decoding="async" className={`w-full h-full object-contain mix-blend-luminosity group-hover:mix-blend-normal transition-all duration-300 ${isOutOfStock ? "opacity-60 grayscale" : ""}`} />
           ) : (
             <div className="w-full h-full flex items-center justify-center text-gray-600 text-xs font-mono uppercase tracking-widest">No Signal</div>
           )}
@@ -65,7 +65,7 @@ export default function Design03ProductCard({ product, isList = false, isBestSel
 
   return (
     <div className="group block relative h-full bg-[#050505] hover:bg-black transition-colors">
-      <Link prefetch={false} href={`/product/${product.slug || product._id || product.id}`} className="block">
+      <Link prefetch={true} href={`/product/${product.slug || product._id || product.id}`} className="block">
         <div className="aspect-square bg-[#111] relative border-b border-white/10 p-6 overflow-hidden">
           {isOutOfStock && (
             <div className="absolute inset-0 bg-black/40 backdrop-blur-[1px] flex items-center justify-center z-20 pointer-events-none">
@@ -75,7 +75,7 @@ export default function Design03ProductCard({ product, isList = false, isBestSel
             </div>
           )}
           {imageUrl ? (
-            <img src={imageUrl} alt={product.title || product.name} className={`w-full h-full object-contain mix-blend-luminosity group-hover:mix-blend-normal transition-all duration-500 scale-95 group-hover:scale-105 ${isOutOfStock ? "opacity-60 grayscale" : ""}`} />
+            <img src={imageUrl} alt={product.title || product.name} loading="lazy" decoding="async" className={`w-full h-full object-contain mix-blend-luminosity group-hover:mix-blend-normal transition-all duration-500 scale-95 group-hover:scale-105 ${isOutOfStock ? "opacity-60 grayscale" : ""}`} />
           ) : (
             <div className="w-full h-full flex items-center justify-center">
               <span className="text-gray-600 text-xs font-mono uppercase tracking-widest">No Signal</span>

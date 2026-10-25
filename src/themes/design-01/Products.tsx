@@ -1,0 +1,205 @@
+import { storefrontFetch } from "../../utils/storefrontFetch";
+import { headers } from "next/headers";
+import Link from "next/link";
+import FilterSidebar from "./components/ui/FilterSidebar";
+import SortSelect from "./components/ui/SortSelect";
+import ViewToggle from "./components/ui/ViewToggle";
+import Pagination from "./components/ui/Pagination";
+import ProductCard from "./components/ui/ProductCard";
+import FilterDrawer from "./components/ui/FilterDrawer";
+import Header from "./components/layout/Header";
+import Footer from "./components/layout/Footer";
+import { getTranslation } from "@/utils/translations";
+import { getStoreInfo, getTheme } from "@/core/api/store";
+
+async function getAllProducts(tenantSlug: string, searchParams: any) {
+  try {
+    const query = new URLSearchParams();
+    if (searchParams.minPrice) query.set("minPrice", searchParams.minPrice);
+    if (searchParams.maxPrice) query.set("maxPrice", searchParams.maxPrice);
+    if (searchParams.search) query.set("search", searchParams.search);
+    if (searchParams.page) query.set("page", searchParams.page);
+    if (searchParams.limit) query.set("limit", searchParams.limit || "20");
+    if (searchParams.sort) query.set("sort", searchParams.sort);
+    if (searchParams.brand) query.set("brand", searchParams.brand);
+    if (searchParams.inStock) query.set("inStock", searchParams.inStock);
+
+    const res = await storefrontFetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/products?${query.toString()}`,
+      { next: { revalidate: 60 } }
+    );
+    if (!res.ok) return { data: [], pagination: { total: 0, page: 1, totalPages: 1 } };
+    const json = await res.json();
+    return json.data || { data: [], pagination: { total: 0, page: 1, totalPages: 1 } };
+  } catch (error) {
+    return { data: [], pagination: { total: 0, page: 1, totalPages: 1 } };
+  }
+}
+
+export default async function Design01ProductsPage({ searchParams }: any) {
+  const resolvedSearchParams = await (searchParams || {});
+  const headersList = await headers();
+  const tenantSlug = headersList.get("x-tenant-slug") || "main";
+
+  const [storeInfo, themeData, productResponse, brandsRes, categoriesRes] = await Promise.all([
+    getStoreInfo(tenantSlug),
+    getTheme(tenantSlug),
+    getAllProducts(tenantSlug, resolvedSearchParams),
+    storefrontFetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/brands`, { next: { revalidate: 60 } })
+      .then((res) => res.json())
+      .catch(() => ({ data: [] })),
+    storefrontFetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/categories`, { next: { revalidate: 60 } })
+      .then((res) => res.json())
+      .catch(() => ({ data: [] })),
+  ]);
+
+  const categories = categoriesRes?.data || [];
+  const language = storeInfo?.language || "en";
+  const t = (key: any) => getTranslation(language, key);
+  const theme = themeData || {};
+
+  const products = productResponse.data || [];
+  const availableBrands = brandsRes?.data || [];
+  const pagination = productResponse.pagination || {
+    total: 0,
+    page: 1,
+    totalPages: 1,
+  };
+
+  const currentPage = pagination.page || 1;
+  const totalPages = pagination.totalPages || 1;
+  const isListView = resolvedSearchParams.view === "list";
+
+  return (
+    <div className="min-h-screen bg-white text-gray-900 flex flex-col">
+      <Header />
+
+      {/* Breadcrumb */}
+      <div className="border-b border-gray-100 bg-gray-50">
+        <div className="max-w-[1400px] mx-auto px-6 py-4 flex items-center text-xs text-gray-500 font-semibold gap-2">
+          <Link
+            prefetch={true}
+            href="/"
+            className="hover:text-gray-900 flex items-center gap-1"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="currentColor"
+              viewBox="0 0 24 24"
+              className="w-4 h-4"
+            >
+              <path d="M11.47 3.84a.75.75 0 011.06 0l8.99 9a.75.75 0 11-1.06 1.06l-4.635-4.643V20.25a.75.75 0 01-.75.75h-3.75v-4.5a.75.75 0 00-.75-.75h-3a.75.75 0 00-.75.75v4.5H3.75a.75.75 0 01-.75-.75V11.25l-2.025 2.025a.75.75 0 11-1.06-1.06l8.99-9zM12 5.093l-6.75 6.756v8.401h2.25v-4.5a2.25 2.25 0 012.25-2.25h4.5a2.25 2.25 0 012.25 2.25v4.5h2.25v-8.401L12 5.093z" />
+            </svg>
+            {t("home") || "Home"}
+          </Link>
+          <span>&rarr;</span>
+          <span className="text-gray-900 font-bold">{t("allProducts") || "All Products"}</span>
+        </div>
+      </div>
+
+      {/* Category Pills */}
+      {categories.length > 0 && (
+        <div className="hidden lg:block border-b border-gray-100 bg-white">
+          <div className="max-w-[1400px] mx-auto px-6 py-4 flex flex-wrap gap-2 justify-center items-center">
+            <Link
+              prefetch={true}
+              href="/products"
+              className="px-3 py-1.5 text-sm rounded border transition-colors border-primary text-primary bg-primary/5 font-semibold"
+            >
+              All
+            </Link>
+            {categories.map((c: any) => (
+              <Link
+                prefetch={true}
+                key={c._id}
+                href={`/category/${c.slug || c._id}`}
+                className="px-3 py-1.5 text-sm rounded border transition-colors border-gray-200 text-gray-600 hover:border-gray-300 hover:bg-gray-50"
+              >
+                {c.name}
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
+
+      <main className="max-w-[1400px] mx-auto px-4 sm:px-6 py-4 sm:py-12 flex-1 w-full grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-4 sm:gap-8">
+        {/* Sidebar */}
+        <aside className="hidden lg:block">
+          <FilterSidebar
+            categoryId=""
+            availableBrands={availableBrands}
+            theme={theme}
+          />
+        </aside>
+
+        {/* Product Grid */}
+        <section className="flex flex-col h-full">
+          <div className="mb-4 sm:mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4 border-b border-gray-100 pb-4">
+            <h2 className="text-xl sm:text-2xl font-black text-gray-900 tracking-tight">
+              {t("allProducts") || "All Products"}
+            </h2>
+            <div className="flex flex-wrap items-center gap-2 sm:gap-4 border border-gray-200 rounded-md py-1.5 px-2 sm:px-3 bg-gray-50 w-full sm:w-auto">
+              <div className="text-xs sm:text-sm font-semibold text-gray-500 whitespace-nowrap">
+                {pagination.total}{" "}
+                <span className="hidden min-[400px]:inline">Products</span>{" "}
+                Found
+              </div>
+              <div className="h-4 w-px bg-gray-300"></div>
+              <div className="flex-1 sm:flex-none min-w-[120px]">
+                <SortSelect />
+              </div>
+              <div className="h-4 w-px bg-gray-300"></div>
+              <ViewToggle />
+
+              <div className="lg:hidden ml-auto flex items-center">
+                <div className="h-4 w-px bg-gray-300 mr-2 sm:mr-4"></div>
+                <FilterDrawer
+                  categoryId=""
+                  availableBrands={availableBrands}
+                  theme={theme}
+                />
+              </div>
+            </div>
+          </div>
+
+          {products.length === 0 ? (
+            <div className="text-center py-32 bg-gray-50 rounded-xl border border-gray-100 text-gray-500 font-medium">
+              No products match your filters.
+            </div>
+          ) : (
+            <div className="flex flex-col flex-1">
+              <div
+                className={
+                  isListView
+                    ? "flex flex-col gap-4 mb-8"
+                    : "grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-6 mb-8"
+                }
+              >
+                {products.map((product: any) => (
+                  <ProductCard
+                    key={product._id || product.id}
+                    product={product}
+                    isList={isListView}
+                    theme={theme}
+                  />
+                ))}
+              </div>
+
+              {/* Pagination */}
+              {totalPages > 0 && (
+                <div className="mt-auto border-t border-gray-100 pt-6">
+                  <Pagination
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                  />
+                </div>
+              )}
+            </div>
+          )}
+        </section>
+      </main>
+
+      <Footer />
+    </div>
+  );
+}

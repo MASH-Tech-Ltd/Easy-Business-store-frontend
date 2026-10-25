@@ -12,30 +12,7 @@ import Header from "./components/layout/Header";
 import Footer from "./components/layout/Footer";
 import { getTranslation } from "@/utils/translations";
 
-async function getStoreInfo(tenantSlug: string) {
-  try {
-    const res = await storefrontFetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/info`,
-      { next: { revalidate: 10 } },
-    );
-    if (!res.ok) return null;
-    const json = await res.json();
-    return json.data;
-  } catch (error) {
-    return null;
-  }
-}
-
-async function getTheme(tenantSlug: string) {
-  try {
-    const res = await storefrontFetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/theme`, { next: { revalidate: 60 } });
-    if (!res.ok) return null;
-    const json = await res.json();
-    return json.data;
-  } catch (error) {
-    return null;
-  }
-}
+import { getStoreInfo, getTheme } from "@/core/api/store";
 
 async function getCategory(tenantSlug: string, categoryId: string) {
   try {

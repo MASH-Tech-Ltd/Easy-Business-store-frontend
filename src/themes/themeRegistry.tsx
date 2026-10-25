@@ -1,4 +1,4 @@
-﻿import dynamic from 'next/dynamic';
+import dynamic from 'next/dynamic';
 
 export const themeRegistry: Record<string, any> = {
   'design-01': {
@@ -6,7 +6,7 @@ export const themeRegistry: Record<string, any> = {
     Product: dynamic(() => import('./design-01/Product')),
     Category: dynamic(() => import('./design-01/Category')),
     Categories: dynamic(() => import('./design-01/Categories')),
-    Products: dynamic(() => import('./design-01/Categories')), // Fallback to Categories if no Products
+    Products: dynamic(() => import('./design-01/Products')),
     Cart: dynamic(() => import('./design-01/Cart')),
     Checkout: dynamic(() => import('./design-01/Checkout')),
     Header: dynamic(() => import('./design-01/components/layout/Header')),
@@ -17,7 +17,7 @@ export const themeRegistry: Record<string, any> = {
     Product: dynamic(() => import('./design-02/Product')),
     Category: dynamic(() => import('./design-02/Category')),
     Categories: dynamic(() => import('./design-02/Categories')),
-    Products: dynamic(() => import('./design-02/Categories')), // Fallback
+    Products: dynamic(() => import('./design-02/Products')),
     Cart: dynamic(() => import('./design-02/Cart')),
     Checkout: dynamic(() => import('./design-02/Checkout')),
     Header: dynamic(() => import('./design-02/components/layout/Header')),
@@ -28,7 +28,7 @@ export const themeRegistry: Record<string, any> = {
     Product: dynamic(() => import('./design-03/Product')),
     Category: dynamic(() => import('./design-03/Category')),
     Categories: dynamic(() => import('./design-03/Categories')),
-    Products: dynamic(() => import('./design-03/Categories')), // Fallback
+    Products: dynamic(() => import('./design-03/Products')),
     Cart: dynamic(() => import('./design-03/Cart')),
     Checkout: dynamic(() => import('./design-03/Checkout')),
     Header: dynamic(() => import('./design-03/components/layout/Header')),

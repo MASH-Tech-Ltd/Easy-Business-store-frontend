@@ -101,8 +101,11 @@ export default function ProductCard({
 
   return (
     <Link
-      prefetch={false}
+      prefetch={true}
       href={`/product/${productSlug}`}
+      onMouseEnter={() => {
+        try { router.prefetch(`/product/${productSlug}`); } catch {}
+      }}
       className={`group flex bg-white rounded-2xl shadow-sm hover:shadow-xl border border-gray-100 hover:border-indigo-100 transition-all duration-300 overflow-hidden relative ${isList ? "flex-row" : "flex-col"}`}
     >
       {/* Image Container */}
@@ -136,6 +139,8 @@ export default function ProductCard({
           <img
             src={imageUrl}
             alt={product.title}
+            loading="lazy"
+            decoding="async"
             className={`w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 ${isOutOfStock ? "opacity-70 grayscale-[30%]" : ""}`}
           />
         ) : (
