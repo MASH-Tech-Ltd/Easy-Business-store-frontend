@@ -36,8 +36,8 @@ export default async function Header({ storeInfo }: { storeInfo: any }) {
             <GlobalSearch tenantSlug={tenantSlug} />
           </div>
           <nav className="flex items-center space-x-8 text-sm font-medium hidden md:flex">
-            <Link prefetch={true} href="/" className="hover:text-gray-500 transition-colors">{t('home') || 'Home'}</Link>
-            <Link prefetch={true} href="/products" className="hover:text-gray-500 transition-colors">{t('shop') || 'Shop'}</Link>
+            <Link prefetch={false} href="/" className="hover:text-gray-500 transition-colors">{t('home') || 'Home'}</Link>
+            <Link prefetch={false} href="/products" className="hover:text-gray-500 transition-colors">{t('shop') || 'Shop'}</Link>
             <HeaderCartIcon02 />
           </nav>
         </div>

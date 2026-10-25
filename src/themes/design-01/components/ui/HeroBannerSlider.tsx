@@ -93,7 +93,7 @@ export default function HeroBannerSlider({ banner }: HeroBannerSliderProps) {
           )}
           {banner?.buttonText && banner?.buttonLink && (
             <Link
-              prefetch={true}
+              prefetch={false}
               href={banner.buttonLink}
               className="inline-flex items-center gap-1 sm:gap-2 bg-white text-indigo-900 px-3 py-1.5 sm:px-6 sm:py-3 md:px-8 md:py-4 rounded-md sm:rounded-lg font-bold text-[10px] sm:text-sm md:text-lg hover:bg-blue-50 transition-colors shadow-lg hover:shadow-xl"
             >

@@ -78,7 +78,7 @@ export default async function Design01ProductsPage({ searchParams }: any) {
       <div className="border-b border-gray-100 bg-gray-50">
         <div className="max-w-[1400px] mx-auto px-6 py-4 flex items-center text-xs text-gray-500 font-semibold gap-2">
           <Link
-            prefetch={true}
+            prefetch={false}
             href="/"
             className="hover:text-gray-900 flex items-center gap-1"
           >
@@ -102,7 +102,7 @@ export default async function Design01ProductsPage({ searchParams }: any) {
         <div className="hidden lg:block border-b border-gray-100 bg-white">
           <div className="max-w-[1400px] mx-auto px-6 py-4 flex flex-wrap gap-2 justify-center items-center">
             <Link
-              prefetch={true}
+              prefetch={false}
               href="/products"
               className="px-3 py-1.5 text-sm rounded border transition-colors border-primary text-primary bg-primary/5 font-semibold"
             >
@@ -110,7 +110,7 @@ export default async function Design01ProductsPage({ searchParams }: any) {
             </Link>
             {categories.map((c: any) => (
               <Link
-                prefetch={true}
+                prefetch={false}
                 key={c._id}
                 href={`/category/${c.slug || c._id}`}
                 className="px-3 py-1.5 text-sm rounded border transition-colors border-gray-200 text-gray-600 hover:border-gray-300 hover:bg-gray-50"

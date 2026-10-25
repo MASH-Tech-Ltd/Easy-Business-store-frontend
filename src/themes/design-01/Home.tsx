@@ -91,7 +91,7 @@ export default async function Design01Home({
                 {t("topCategories")}
               </h2>
               <Link
-                prefetch={true}
+                prefetch={false}
                 href="/categories"
                 className="text-xs sm:text-sm font-bold text-indigo-600 hover:text-indigo-800 transition-colors flex items-center gap-1"
               >
@@ -103,7 +103,7 @@ export default async function Design01Home({
             <CategorySlider>
               {categories.map((cat: any) => (
                 <Link
-                  prefetch={true}
+                  prefetch={false}
                   href={`/category/${cat.slug || cat._id}`}
                   key={cat._id}
                   className="flex flex-col items-center justify-start gap-2 sm:gap-3 min-w-[70px] sm:min-w-[100px] md:min-w-[120px] lg:min-w-[140px] snap-start cursor-pointer group"

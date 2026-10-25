@@ -127,7 +127,7 @@ export default async function Design02Home({
               Just For You
             </h3>
             <Link
-              prefetch={true}
+              prefetch={false}
               href="/products"
               className="text-sm font-medium text-gray-500 hover:text-gray-900"
             >

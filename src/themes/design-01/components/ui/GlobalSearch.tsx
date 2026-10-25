@@ -94,7 +94,7 @@ export default function GlobalSearch({ tenantSlug }: { tenantSlug: string }) {
             ) : results.length > 0 ? (
               <div className="flex flex-col">
                 {results.map((product) => (
-                  <Link prefetch={true}
+                  <Link prefetch={false}
                     key={product._id}
                     href={`/product/${product.slug}`}
                     onClick={() => {

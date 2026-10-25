@@ -66,7 +66,7 @@ export default async function Design03ProductsPage({ searchParams }: any) {
       <main className="lg:ml-64 flex flex-col min-h-screen border-l border-white/10 bg-[#050505]">
         {/* Breadcrumbs - Brutalist */}
         <div className="w-full px-8 py-4 flex items-center text-xs font-mono uppercase tracking-widest text-gray-500 gap-3 border-b border-white/10 bg-black">
-          <Link prefetch={true} href="/" className="hover:text-cyan-400 transition-colors">ROOT</Link>
+          <Link prefetch={false} href="/" className="hover:text-cyan-400 transition-colors">ROOT</Link>
           <span className="text-white/20">/</span>
           <span className="text-white">ALL_PRODUCTS</span>
         </div>
@@ -75,7 +75,7 @@ export default async function Design03ProductsPage({ searchParams }: any) {
         {categories.length > 0 && (
           <div className="border-b border-white/10 bg-[#080808] px-8 py-3 flex items-center gap-2 overflow-x-auto">
             <Link
-              prefetch={true}
+              prefetch={false}
               href="/products"
               className="px-3 py-1 text-xs font-mono uppercase tracking-widest bg-cyan-400 text-black font-bold whitespace-nowrap"
             >
@@ -83,7 +83,7 @@ export default async function Design03ProductsPage({ searchParams }: any) {
             </Link>
             {categories.map((c: any) => (
               <Link
-                prefetch={true}
+                prefetch={false}
                 key={c._id}
                 href={`/category/${c.slug || c._id}`}
                 className="px-3 py-1 text-xs font-mono uppercase tracking-widest text-gray-400 hover:text-white border border-white/10 hover:border-cyan-400 transition-colors whitespace-nowrap"

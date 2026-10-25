@@ -7,6 +7,8 @@ import { useRouter } from "next/navigation";
 import { useCart } from "@/context/CartContext";
 import { useTranslation } from "@/context/LanguageContext";
 import { getTranslation } from "@/utils/translations";
+import { prefetchProduct } from "@/utils/prefetchProduct";
+import { getOptimizedImageUrl } from "@/utils/imageOptimizer";
 
 interface ProductProps {
   product: {
@@ -43,18 +45,19 @@ export default function ProductCard({
   const { addToCart } = useCart();
   const { t } = useTranslation();
   const productId = product._id || product.id;
-  const productSlug = product.slug || productId;
+  const productSlug = String(product.slug || productId || "");
 
   // Handle both single image and images array structures
-  let imageUrl = "";
+  let rawImageUrl = "";
   if (product.images && product.images.length > 0) {
-    imageUrl = product.images[0].secure_url;
+    rawImageUrl = product.images[0].secure_url;
   } else if (product.image) {
-    imageUrl =
+    rawImageUrl =
       typeof product.image === "string"
         ? product.image
         : product.image.secure_url;
   }
+  const imageUrl = getOptimizedImageUrl(rawImageUrl, 600);
 
   const savePercent =
     product.originalPrice > 0
@@ -99,13 +102,19 @@ export default function ProductCard({
     (typeof product.stock === 'number' && product.stock <= 0) ||
     (typeof product.quantity === 'number' && product.quantity <= 0);
 
+  const handleMouseEnter = () => {
+    try {
+      router.prefetch(`/product/${productSlug}`);
+    } catch {}
+    prefetchProduct(productSlug, product.tenantId);
+  };
+
   return (
     <Link
       prefetch={false}
       href={`/product/${productSlug}`}
-      onMouseEnter={() => {
-        try { router.prefetch(`/product/${productSlug}`); } catch {}
-      }}
+      onMouseEnter={handleMouseEnter}
+      onTouchStart={handleMouseEnter}
       className={`group flex bg-white rounded-2xl shadow-sm hover:shadow-xl border border-gray-100 hover:border-indigo-100 transition-all duration-300 overflow-hidden relative ${isList ? "flex-row" : "flex-col"}`}
     >
       {/* Image Container */}

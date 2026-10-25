@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, MouseEvent } from 'react';
+import { getOptimizedImageUrl } from '@/utils/imageOptimizer';
 
 interface ProductGalleryProps {
   images: { public_id: string; secure_url: string }[];
@@ -41,7 +42,7 @@ export default function ProductGallery({ images, title }: ProductGalleryProps) {
               } bg-white p-0`}
             >
               <img 
-                src={img.secure_url} 
+                src={getOptimizedImageUrl(img.secure_url, 160)} 
                 alt={`${title} thumbnail ${idx + 1}`} 
                 loading="lazy"
                 decoding="async"
@@ -60,7 +61,7 @@ export default function ProductGallery({ images, title }: ProductGalleryProps) {
         onMouseMove={handleMouseMove}
       >
         <img 
-          src={images[activeIndex].secure_url} 
+          src={getOptimizedImageUrl(images[activeIndex].secure_url, 1200)} 
           alt={title} 
           decoding="async"
           // @ts-ignore

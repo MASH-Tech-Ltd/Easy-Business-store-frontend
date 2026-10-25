@@ -3,6 +3,8 @@
 import React from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { prefetchProduct } from '@/utils/prefetchProduct';
+import { getOptimizedImageUrl } from '@/utils/imageOptimizer';
 import ProductCardActions03 from './ProductCardActions';
 
 interface ProductProps {
@@ -15,7 +17,8 @@ interface ProductProps {
 export default function Design03ProductCard({ product, isList = false, isBestSelling = false, theme }: ProductProps) {
   const router = useRouter();
   const productSlug = product.slug || product._id || product.id;
-  const imageUrl = product.images?.[0]?.secure_url || product.image?.secure_url || product.image;
+  const rawImageUrl = product.images?.[0]?.secure_url || product.image?.secure_url || product.image;
+  const imageUrl = getOptimizedImageUrl(rawImageUrl, 600);
   const price = product.discountedPrice || product.originalPrice || product.price;
   const hasDiscount = product.originalPrice > (product.discountedPrice || 0);
 
@@ -26,14 +29,20 @@ export default function Design03ProductCard({ product, isList = false, isBestSel
     (typeof product.stock === 'number' && product.stock <= 0) ||
     (typeof product.quantity === 'number' && product.quantity <= 0);
 
+  const handleMouseEnter = () => {
+    try {
+      router.prefetch(`/product/${productSlug}`);
+    } catch {}
+    prefetchProduct(productSlug, product.tenantId);
+  };
+
   if (isList) {
     return (
       <Link
         prefetch={false}
         href={`/product/${productSlug}`}
-        onMouseEnter={() => {
-          try { router.prefetch(`/product/${productSlug}`); } catch {}
-        }}
+        onMouseEnter={handleMouseEnter}
+        onTouchStart={handleMouseEnter}
         className="group flex bg-[#050505] border border-white/10 hover:border-cyan-400 transition-colors duration-300 w-full rounded-none"
       >
         <div className="w-48 h-48 bg-[#111] border-r border-white/10 flex items-center justify-center shrink-0 relative p-4 group-hover:bg-black transition-colors">
@@ -80,9 +89,8 @@ export default function Design03ProductCard({ product, isList = false, isBestSel
       <Link
         prefetch={false}
         href={`/product/${productSlug}`}
-        onMouseEnter={() => {
-          try { router.prefetch(`/product/${productSlug}`); } catch {}
-        }}
+        onMouseEnter={handleMouseEnter}
+        onTouchStart={handleMouseEnter}
         className="block"
       >
         <div className="aspect-square bg-[#111] relative border-b border-white/10 p-6 overflow-hidden">

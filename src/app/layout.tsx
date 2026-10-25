@@ -4,17 +4,19 @@ import { cache } from "react";
 import { notFound, redirect } from "next/navigation";
 import "./globals.css";
 
-const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
-const outfit = Outfit({ subsets: ["latin"], variable: "--font-outfit" });
+const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: "swap" });
+const outfit = Outfit({ subsets: ["latin"], variable: "--font-outfit", display: "swap" });
 const roboto = Roboto({
   weight: ["400", "500", "700"],
   subsets: ["latin"],
   variable: "--font-roboto",
+  display: "swap",
 });
 const hindSiliguri = Hind_Siliguri({
   weight: ["400", "500", "600", "700"],
   subsets: ["bengali"],
   variable: "--font-hind-siliguri",
+  display: "swap",
 });
 import Providers from "../components/Providers";
 import { LanguageProvider } from "../context/LanguageContext";

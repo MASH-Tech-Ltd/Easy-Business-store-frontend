@@ -71,7 +71,7 @@ export default async function Design02ProductsPage({ searchParams }: any) {
       {/* Breadcrumb & Title Area */}
       <div className="max-w-7xl mx-auto px-4 sm:px-8 py-8 sm:py-14 text-center border-b border-gray-50">
         <div className="text-xs font-medium text-gray-400 mb-4 sm:mb-6 uppercase tracking-widest">
-          <Link prefetch={true} href="/" className="hover:text-gray-900 transition-colors">
+          <Link prefetch={false} href="/" className="hover:text-gray-900 transition-colors">
             {t('home') || 'Home'}
           </Link>
           <span className="mx-3">/</span>
@@ -88,7 +88,7 @@ export default async function Design02ProductsPage({ searchParams }: any) {
         {categories.length > 0 && (
           <div className="mt-8 flex flex-wrap justify-center gap-2 max-w-3xl mx-auto">
             <Link
-              prefetch={true}
+              prefetch={false}
               href="/products"
               className="px-4 py-2 text-xs uppercase tracking-wider rounded-full border transition-all bg-gray-900 border-gray-900 text-white shadow-sm font-medium"
             >
@@ -96,7 +96,7 @@ export default async function Design02ProductsPage({ searchParams }: any) {
             </Link>
             {categories.map((c: any) => (
               <Link
-                prefetch={true}
+                prefetch={false}
                 key={c._id}
                 href={`/category/${c.slug || c._id}`}
                 className="px-4 py-2 text-xs uppercase tracking-wider rounded-full border transition-all border-gray-200 text-gray-600 hover:border-gray-900 hover:text-gray-900 bg-white shadow-sm font-medium"

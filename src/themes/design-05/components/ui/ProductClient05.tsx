@@ -149,7 +149,7 @@ export default function ProductClient05({
       {/* Breadcrumb */}
       <div className="flex flex-wrap items-center text-[11px] sm:text-[13px] font-semibold text-gray-400 uppercase tracking-widest gap-2 mb-6 lg:mb-10 w-full overflow-hidden">
         <Link
-          prefetch={true}
+          prefetch={false}
           href="/"
           className="hover:text-black transition-colors shrink-0"
         >
@@ -157,7 +157,7 @@ export default function ProductClient05({
         </Link>
         <span className="text-gray-300 shrink-0">/</span>
         <Link
-          prefetch={true}
+          prefetch={false}
           href="/products"
           className="hover:text-black transition-colors shrink-0"
         >
