@@ -11,7 +11,8 @@ export const getStoreInfo = cache(async (tenantSlug: string, clientIp?: string) 
     if (!res.ok) return null;
     const json = await res.json();
     return json.data;
-  } catch {
+  } catch (err) {
+    console.error(`[Storefront API Error] info for ${tenantSlug}:`, err);
     return null;
   }
 });
@@ -26,7 +27,8 @@ export const getTheme = cache(async (tenantSlug: string, clientIp?: string) => {
     if (!res.ok) return null;
     const json = await res.json();
     return json.data;
-  } catch {
+  } catch (err) {
+    console.error(`[Storefront API Error] theme for ${tenantSlug}:`, err);
     return null;
   }
 });
@@ -44,7 +46,8 @@ export const getStoreStatus = cache(async (tenantSlug: string, clientIp?: string
     }
     const json = await res.json();
     return json.data;
-  } catch {
+  } catch (err) {
+    console.error(`[Storefront API Error] status for ${tenantSlug}:`, err);
     return null;
   }
 });
@@ -58,7 +61,8 @@ export const getTrackingConfig = cache(async (tenantSlug: string) => {
     if (!res.ok) return null;
     const json = await res.json();
     return json.data;
-  } catch {
+  } catch (err) {
+    console.error(`[Storefront API Error] tracking for ${tenantSlug}:`, err);
     return null;
   }
 });

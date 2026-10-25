@@ -12,7 +12,8 @@ export const getCategories = cache(async (tenantSlug: string, clientIp?: string)
     const json = await res.json();
     const data = json?.data?.data || json?.data || [];
     return Array.isArray(data) ? data : [];
-  } catch {
+  } catch (err) {
+    console.error(`[Storefront API Error] getCategories for ${tenantSlug}:`, err);
     return [];
   }
 });

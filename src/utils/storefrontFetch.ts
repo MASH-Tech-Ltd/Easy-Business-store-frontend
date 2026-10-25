@@ -19,13 +19,13 @@ async function resolveClientHeaders(): Promise<{ clientIp?: string; userAgent?: 
   }
 }
 
-export const DEFAULT_API_URL = 'https://backapi.masheco.com/api/v1';
+export const DEFAULT_API_URL = 'http://localhost:8000/api/v1';
 export const DEFAULT_STOREFRONT_API_KEY = '954073a93e924516a98d0fe2ef0a7ed1600f45a02a72054c16f5629f3715aca9';
 
 export function getStorefrontApiUrl(): string {
   return (
-    process.env.NEXT_PUBLIC_API_URL ||
     process.env.API_URL ||
+    process.env.NEXT_PUBLIC_API_URL ||
     DEFAULT_API_URL
   );
 }
@@ -43,10 +43,9 @@ export async function storefrontFetch(url: string, init?: RequestInit, clientIp?
   const baseApiUrl = getStorefrontApiUrl();
 
   let resolvedUrl = (url || '').trim();
-  if (!resolvedUrl.startsWith('http://') && !resolvedUrl.startsWith('https://')) {
-    if (resolvedUrl.startsWith('undefined')) {
-      resolvedUrl = resolvedUrl.replace(/^undefined\/?/, '');
-    }
+  if (resolvedUrl.startsWith('undefined')) {
+    resolvedUrl = resolvedUrl.replace(/^undefined\/?/, `${baseApiUrl}/`);
+  } else if (!resolvedUrl.startsWith('http://') && !resolvedUrl.startsWith('https://')) {
     resolvedUrl = resolvedUrl.replace(/^\/+/, '');
     resolvedUrl = `${baseApiUrl}/${resolvedUrl}`;
   }
@@ -66,11 +65,11 @@ export async function storefrontFetch(url: string, init?: RequestInit, clientIp?
     fetchHeaders.set('user-agent', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
   }
 
-  // For GET catalog requests (store info, themes, products, categories), do NOT attach dynamic client IP
-  // unless explicitly passed (e.g. checkout, fraud verification), so Next.js Data Cache can share cached data across all visitors.
-  const isMutationOrExplicit = Boolean(clientIp) || (Boolean(init?.method) && init?.method !== 'GET');
-  if (isMutationOrExplicit && ip && ip !== '127.0.0.1' && ip !== '::1') {
+  // Pass x-tenant-client-ip so backend directClientBlockMiddleware permits the SSR call
+  if (ip && ip !== '127.0.0.1' && ip !== '::1') {
     fetchHeaders.set('x-tenant-client-ip', ip);
+  } else if (!fetchHeaders.has('x-tenant-client-ip')) {
+    fetchHeaders.set('x-tenant-client-ip', '127.0.0.1');
   }
 
   return fetch(resolvedUrl, {

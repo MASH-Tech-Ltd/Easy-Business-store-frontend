@@ -13,7 +13,8 @@ export const getProducts = cache(async (tenantSlug: string, searchParams?: strin
     const json = await res.json();
     const data = json?.data?.data || json?.data || [];
     return Array.isArray(data) ? data : [];
-  } catch {
+  } catch (err) {
+    console.error(`[Storefront API Error] getProducts for ${tenantSlug}:`, err);
     return [];
   }
 });
@@ -28,7 +29,8 @@ export const getNewArrivalsProducts = cache(async (tenantSlug: string, limit: nu
     if (!res.ok) return [];
     const json = await res.json();
     return json?.data?.data || json?.data || [];
-  } catch {
+  } catch (err) {
+    console.error(`[Storefront API Error] getNewArrivals for ${tenantSlug}:`, err);
     return [];
   }
 });
@@ -43,7 +45,8 @@ export const getBestsellingProducts = cache(async (tenantSlug: string, limit: nu
     if (!res.ok) return [];
     const json = await res.json();
     return json?.data?.data || json?.data || [];
-  } catch {
+  } catch (err) {
+    console.error(`[Storefront API Error] getBestsellers for ${tenantSlug}:`, err);
     return [];
   }
 });
@@ -58,7 +61,8 @@ export const getJustForYouProducts = cache(async (tenantSlug: string, limit: num
     if (!res.ok) return [];
     const json = await res.json();
     return json?.data?.data || json?.data || [];
-  } catch {
+  } catch (err) {
+    console.error(`[Storefront API Error] getJustForYou for ${tenantSlug}:`, err);
     return [];
   }
 });
@@ -73,7 +77,8 @@ export const getProductBySlug = cache(async (tenantSlug: string, productSlug: st
     if (!res.ok) return null;
     const json = await res.json();
     return json.data;
-  } catch {
+  } catch (err) {
+    console.error(`[Storefront API Error] getProductBySlug ${productSlug} for ${tenantSlug}:`, err);
     return null;
   }
 });

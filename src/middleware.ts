@@ -64,9 +64,9 @@ export async function middleware(request: NextRequest) {
 
   const baseDomain = (process.env.NEXT_PUBLIC_BASE_DOMAIN || 'masheco.com').toLowerCase();
   const apiUrl =
-    process.env.NEXT_PUBLIC_API_URL ||
     process.env.API_URL ||
-    'https://backapi.masheco.com/api/v1';
+    process.env.NEXT_PUBLIC_API_URL ||
+    'http://localhost:8000/api/v1';
   const storefrontApiKey =
     process.env.STOREFRONT_API_KEY ||
     process.env.NEXT_PUBLIC_STOREFRONT_API_KEY ||
