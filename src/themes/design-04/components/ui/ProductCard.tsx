@@ -7,15 +7,13 @@ import { useCart } from '@/context/CartContext';
 import { useRouter } from 'next/navigation';
 import { getTranslation } from '@/utils/translations';
 import { prefetchProduct } from '@/utils/prefetchProduct';
-import { getOptimizedImageUrl } from '@/utils/imageOptimizer';
 
 export default function ProductCard04({ product, isList = false, isBestSelling = false, theme, language = 'en' }: { product: any; isList?: boolean; isBestSelling?: boolean; theme?: any, language?: string }) {
   const t = (key: any) => getTranslation(language, key);
   const { addToCart } = useCart();
   const router = useRouter();
 
-  const rawImageUrl = product.images?.[0]?.secure_url || product.image?.secure_url || product.image || '';
-  const imageUrl = getOptimizedImageUrl(rawImageUrl, 600);
+  const imageUrl = product.images?.[0]?.secure_url || product.image?.secure_url || product.image || '';
   const price = product.discountedPrice || product.originalPrice || product.price || 0;
   const hasDiscount = product.originalPrice && product.originalPrice > price;
   const savePercent = hasDiscount

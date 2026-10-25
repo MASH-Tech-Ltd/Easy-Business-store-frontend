@@ -4,7 +4,6 @@ import React from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { prefetchProduct } from '@/utils/prefetchProduct';
-import { getOptimizedImageUrl } from '@/utils/imageOptimizer';
 import ProductCardActions03 from './ProductCardActions';
 
 interface ProductProps {
@@ -17,8 +16,7 @@ interface ProductProps {
 export default function Design03ProductCard({ product, isList = false, isBestSelling = false, theme }: ProductProps) {
   const router = useRouter();
   const productSlug = product.slug || product._id || product.id;
-  const rawImageUrl = product.images?.[0]?.secure_url || product.image?.secure_url || product.image;
-  const imageUrl = getOptimizedImageUrl(rawImageUrl, 600);
+  const imageUrl = product.images?.[0]?.secure_url || product.image?.secure_url || product.image;
   const price = product.discountedPrice || product.originalPrice || product.price;
   const hasDiscount = product.originalPrice > (product.discountedPrice || 0);
 

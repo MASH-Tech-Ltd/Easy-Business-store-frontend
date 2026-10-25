@@ -69,8 +69,24 @@ export default function ProductClient05({
 
   const { addToCart } = useCart();
   const router = useRouter();
+
+  const allImages = React.useMemo(() => {
+    const list: string[] = [];
+    if (Array.isArray(product?.images) && product.images.length > 0) {
+      product.images.forEach((img: any) => {
+        const u = typeof img === 'string' ? img : img?.secure_url || img?.url || '';
+        if (u) list.push(u);
+      });
+    }
+    if (list.length === 0 && product?.image) {
+      const u = typeof product.image === 'string' ? product.image : product.image?.secure_url || product.image?.url || '';
+      if (u) list.push(u);
+    }
+    return list;
+  }, [product?.images, product?.image]);
+
   const [activeImage, setActiveImage] = useState(
-    product.images?.[0]?.secure_url || product.image || "",
+    () => allImages[0] || (typeof product?.image === 'string' ? product.image : product?.image?.secure_url) || ""
   );
   const [quantity, setQuantity] = useState(1);
 
@@ -187,20 +203,20 @@ export default function ProductClient05({
               </div>
             )}
           </div>
-          {product.images && product.images.length > 1 && (
+          {allImages.length > 1 && (
             <div className="flex gap-4 overflow-x-auto pb-2 custom-scrollbar">
-              {product.images.map((img: any, idx: number) => (
+              {allImages.map((imgUrl: string, idx: number) => (
                 <button
                   key={idx}
-                  onClick={() => setActiveImage(img.secure_url)}
+                  onClick={() => setActiveImage(imgUrl)}
                   className={`w-24 h-24 shrink-0 rounded-2xl bg-[#F8F9FA] border p-2 flex items-center justify-center transition-all ${
-                    activeImage === img.secure_url
+                    activeImage === imgUrl
                       ? "border-black shadow-sm"
                       : "border-transparent hover:border-gray-200"
                   }`}
                 >
                   <img
-                    src={img.secure_url}
+                    src={imgUrl}
                     alt=""
                     className="w-full h-full object-cover mix-blend-multiply"
                   />

@@ -68,7 +68,7 @@ export default async function Design02ProductPage({
       <main className="max-w-7xl mx-auto px-8 py-8 flex-1 w-full">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 mb-8 lg:mb-24">
           <div className="lg:col-span-7">
-            <ProductGallery images={product.images} title={product.title} />
+            <ProductGallery images={product.images} image={product.image} title={product.title} />
           </div>
 
           <div className="lg:col-span-5 flex flex-col justify-center">

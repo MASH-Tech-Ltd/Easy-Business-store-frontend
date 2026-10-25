@@ -4,7 +4,6 @@ import React from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { prefetchProduct } from "@/utils/prefetchProduct";
-import { getOptimizedImageUrl } from "@/utils/imageOptimizer";
 import ProductCardActions from "./ProductCardActions";
 
 interface ProductProps {
@@ -22,11 +21,10 @@ export default function Design02ProductCard({
 }: ProductProps) {
   const router = useRouter();
   const productSlug = product.slug || product._id || product.id;
-  const rawImageUrl =
+  const imageUrl =
     product.images?.[0]?.secure_url ||
     product.image?.secure_url ||
     product.image;
-  const imageUrl = getOptimizedImageUrl(rawImageUrl, 600);
 
   const isOutOfStock = 
     product.isOutOfStock === true ||

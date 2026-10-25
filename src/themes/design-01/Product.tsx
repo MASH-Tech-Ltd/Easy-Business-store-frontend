@@ -76,7 +76,7 @@ export default async function ProductPage({
       <main className="max-w-[1400px] mx-auto px-6 py-8">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mb-16">
           {/* Image Gallery */}
-          <ProductGallery images={product.images} title={product.title} />
+          <ProductGallery images={product.images} image={product.image} title={product.title} />
 
           {/* Product Info */}
           <div className="flex flex-col">

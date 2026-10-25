@@ -8,7 +8,6 @@ import { useCart } from "@/context/CartContext";
 import { useTranslation } from "@/context/LanguageContext";
 import { getTranslation } from "@/utils/translations";
 import { prefetchProduct } from "@/utils/prefetchProduct";
-import { getOptimizedImageUrl } from "@/utils/imageOptimizer";
 
 interface ProductProps {
   product: {
@@ -48,16 +47,15 @@ export default function ProductCard({
   const productSlug = String(product.slug || productId || "");
 
   // Handle both single image and images array structures
-  let rawImageUrl = "";
+  let imageUrl = "";
   if (product.images && product.images.length > 0) {
-    rawImageUrl = product.images[0].secure_url;
+    imageUrl = product.images[0].secure_url;
   } else if (product.image) {
-    rawImageUrl =
+    imageUrl =
       typeof product.image === "string"
         ? product.image
         : product.image.secure_url;
   }
-  const imageUrl = getOptimizedImageUrl(rawImageUrl, 600);
 
   const savePercent =
     product.originalPrice > 0

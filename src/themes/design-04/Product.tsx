@@ -73,7 +73,7 @@ export default async function ProductPage04({
           <div className="grid grid-cols-1 md:grid-cols-2 gap-16">
             {/* Gallery */}
             <div>
-              <ProductGallery images={product.images} title={product.title} />
+              <ProductGallery images={product.images} image={product.image} title={product.title} />
             </div>
 
             {/* Details */}

@@ -1,14 +1,14 @@
 'use client';
 
 import { useState, MouseEvent } from 'react';
-import { getOptimizedImageUrl } from '@/utils/imageOptimizer';
 
 interface ProductGalleryProps {
-  images: { public_id: string; secure_url: string }[];
+  images?: any[];
+  image?: any;
   title: string;
 }
 
-export default function ProductGallery({ images, title }: ProductGalleryProps) {
+export default function ProductGallery({ images, image, title }: ProductGalleryProps) {
   const [activeIndex, setActiveIndex] = useState(0);
   const [transformOrigin, setTransformOrigin] = useState('center');
   const [isZoomed, setIsZoomed] = useState(false);
@@ -20,7 +20,21 @@ export default function ProductGallery({ images, title }: ProductGalleryProps) {
     setTransformOrigin(`${x}% ${y}%`);
   };
 
-  if (!images || images.length === 0) {
+  // Extract all valid image URLs directly without URL modifications
+  const imageList: string[] = [];
+  if (Array.isArray(images) && images.length > 0) {
+    images.forEach((img) => {
+      const u = typeof img === 'string' ? img : img?.secure_url || img?.url || '';
+      if (u) imageList.push(u);
+    });
+  }
+
+  if (imageList.length === 0 && image) {
+    const u = typeof image === 'string' ? image : image?.secure_url || image?.url || '';
+    if (u) imageList.push(u);
+  }
+
+  if (imageList.length === 0) {
     return (
       <div className="bg-gray-100 rounded-3xl aspect-square flex items-center justify-center overflow-hidden">
         <div className="text-gray-400">No image available</div>
@@ -28,12 +42,14 @@ export default function ProductGallery({ images, title }: ProductGalleryProps) {
     );
   }
 
+  const currentImage = imageList[activeIndex] || imageList[0];
+
   return (
     <div className="flex flex-col-reverse md:flex-row gap-6 h-full items-start">
       {/* Thumbnails (Left on Desktop, Bottom on Mobile) */}
-      {images.length > 1 && (
+      {imageList.length > 1 && (
         <div className="flex md:flex-col gap-4 flex-wrap md:flex-nowrap w-full md:w-24 pb-2 md:pb-0 md:pr-2">
-          {images.map((img, idx) => (
+          {imageList.map((imgUrl, idx) => (
             <button
               key={idx}
               onClick={() => setActiveIndex(idx)}
@@ -42,7 +58,7 @@ export default function ProductGallery({ images, title }: ProductGalleryProps) {
               } bg-white p-0`}
             >
               <img 
-                src={getOptimizedImageUrl(img.secure_url, 160)} 
+                src={imgUrl} 
                 alt={`${title} thumbnail ${idx + 1}`} 
                 loading="lazy"
                 decoding="async"
@@ -61,7 +77,7 @@ export default function ProductGallery({ images, title }: ProductGalleryProps) {
         onMouseMove={handleMouseMove}
       >
         <img 
-          src={getOptimizedImageUrl(images[activeIndex].secure_url, 1200)} 
+          src={currentImage} 
           alt={title} 
           decoding="async"
           // @ts-ignore

@@ -84,7 +84,7 @@ export default async function Design03ProductPage({
             <div className="absolute bottom-8 right-8 w-4 h-4 border-b-2 border-r-2 border-cyan-400/50" />
 
             <div className="w-full max-w-lg aspect-square relative mix-blend-luminosity hover:mix-blend-normal transition-all duration-700">
-              <ProductGallery images={product.images} title={product.title} />
+              <ProductGallery images={product.images} image={product.image} title={product.title} />
             </div>
           </div>
 
