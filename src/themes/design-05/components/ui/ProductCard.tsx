@@ -40,7 +40,7 @@ export default function ProductCard05({ product, isList = false, isBestSelling =
 
   if (isList) {
     return (
-      <Link prefetch={true} href={`/product/${productSlug}`} className="group flex bg-white rounded-2xl overflow-hidden hover:bg-gray-50 transition-all border border-transparent hover:border-gray-200">
+      <Link prefetch={false} href={`/product/${productSlug}`} className="group flex bg-white rounded-2xl overflow-hidden hover:bg-gray-50 transition-all border border-transparent hover:border-gray-200">
         <div className="w-48 h-48 bg-gray-50 flex items-center justify-center shrink-0 overflow-hidden mix-blend-multiply p-4 relative">
           {isOutOfStock && (
             <div className="absolute inset-0 bg-black/30 backdrop-blur-[1px] flex items-center justify-center z-20 pointer-events-none">
@@ -83,7 +83,7 @@ export default function ProductCard05({ product, isList = false, isBestSelling =
 
   return (
     <div className="group flex flex-col bg-white overflow-hidden transition-all duration-500">
-      <Link prefetch={true} href={`/product/${productSlug}`} className="block relative aspect-[4/5] bg-[#F8F9FA] rounded-2xl overflow-hidden mb-5">
+      <Link prefetch={false} href={`/product/${productSlug}`} className="block relative aspect-[4/5] bg-[#F8F9FA] rounded-2xl overflow-hidden mb-5">
         <div className="absolute top-2 sm:top-3 left-2 sm:left-3 right-2 sm:right-3 flex justify-between items-start flex-nowrap gap-1 sm:gap-2 z-10 pointer-events-none overflow-hidden">
           {savePercent > 0 && (
             <span className="bg-black text-white text-[8px] sm:text-[9px] lg:text-[10px] font-bold uppercase tracking-wider px-1.5 sm:px-2 lg:px-3 py-0.5 sm:py-1 lg:py-1.5 rounded-full shadow-sm pointer-events-auto whitespace-nowrap">
@@ -125,7 +125,7 @@ export default function ProductCard05({ product, isList = false, isBestSelling =
 
       <div className="flex flex-col px-1">
         <div className="text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-1.5">{product.brand || 'Minimal'}</div>
-        <Link prefetch={true} href={`/product/${productSlug}`}>
+        <Link prefetch={false} href={`/product/${productSlug}`}>
           <h4 className="text-[15px] font-medium text-gray-900 line-clamp-1 mb-2 hover:text-gray-600 transition-colors">
             {product.title || product.name}
           </h4>

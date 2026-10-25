@@ -101,7 +101,7 @@ export default function ProductCard({
 
   return (
     <Link
-      prefetch={true}
+      prefetch={false}
       href={`/product/${productSlug}`}
       onMouseEnter={() => {
         try { router.prefetch(`/product/${productSlug}`); } catch {}

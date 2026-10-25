@@ -1,5 +1,8 @@
+'use client';
+
 import React from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import ProductCardActions from "./ProductCardActions";
 
 interface ProductProps {
@@ -15,6 +18,8 @@ export default function Design02ProductCard({
   isBestSelling = false,
   theme,
 }: ProductProps) {
+  const router = useRouter();
+  const productSlug = product.slug || product._id || product.id;
   const imageUrl =
     product.images?.[0]?.secure_url ||
     product.image?.secure_url ||
@@ -30,8 +35,11 @@ export default function Design02ProductCard({
   if (isList) {
     return (
       <Link
-        prefetch={true}
-        href={`/product/${product.slug || product._id || product.id}`}
+        prefetch={false}
+        href={`/product/${productSlug}`}
+        onMouseEnter={() => {
+          try { router.prefetch(`/product/${productSlug}`); } catch {}
+        }}
         className="group flex bg-white rounded-xl shadow-sm hover:shadow-md border border-gray-100 transition-all duration-300 overflow-hidden relative w-full"
       >
         <div className="w-48 h-48 bg-gray-50 flex items-center justify-center overflow-hidden shrink-0 relative">
@@ -90,8 +98,11 @@ export default function Design02ProductCard({
 
   return (
     <Link
-      prefetch={true}
-      href={`/product/${product.slug || product._id || product.id}`}
+      prefetch={false}
+      href={`/product/${productSlug}`}
+      onMouseEnter={() => {
+        try { router.prefetch(`/product/${productSlug}`); } catch {}
+      }}
       className="group block"
     >
       <div className="aspect-[4/5] bg-gray-50 rounded-2xl overflow-hidden mb-4 relative">
