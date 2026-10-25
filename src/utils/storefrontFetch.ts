@@ -42,11 +42,13 @@ export async function storefrontFetch(url: string, init?: RequestInit, clientIp?
   const apiKey = getStorefrontApiKey();
   const baseApiUrl = getStorefrontApiUrl();
 
-  let resolvedUrl = url;
-  if (!resolvedUrl || resolvedUrl.startsWith('undefined')) {
-    resolvedUrl = resolvedUrl ? resolvedUrl.replace(/^undefined/, baseApiUrl) : baseApiUrl;
-  } else if (resolvedUrl.startsWith('/')) {
-    resolvedUrl = `${baseApiUrl}${resolvedUrl}`;
+  let resolvedUrl = (url || '').trim();
+  if (!resolvedUrl.startsWith('http://') && !resolvedUrl.startsWith('https://')) {
+    if (resolvedUrl.startsWith('undefined')) {
+      resolvedUrl = resolvedUrl.replace(/^undefined\/?/, '');
+    }
+    resolvedUrl = resolvedUrl.replace(/^\/+/, '');
+    resolvedUrl = `${baseApiUrl}/${resolvedUrl}`;
   }
 
   const fetchHeaders = new Headers(init?.headers);
@@ -71,7 +73,7 @@ export async function storefrontFetch(url: string, init?: RequestInit, clientIp?
     fetchHeaders.set('x-tenant-client-ip', ip);
   }
 
-  return fetch(url, {
+  return fetch(resolvedUrl, {
     ...init,
     headers: fetchHeaders,
   });
