@@ -3,7 +3,6 @@
 import React from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { prefetchProduct } from "@/utils/prefetchProduct";
 import ProductCardActions from "./ProductCardActions";
 
 interface ProductProps {
@@ -37,7 +36,6 @@ export default function Design02ProductCard({
     try {
       router.prefetch(`/product/${productSlug}`);
     } catch {}
-    prefetchProduct(productSlug, product.tenantId);
   };
 
   if (isList) {

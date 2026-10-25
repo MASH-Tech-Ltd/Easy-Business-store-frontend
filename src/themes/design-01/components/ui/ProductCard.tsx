@@ -7,7 +7,6 @@ import { useRouter } from "next/navigation";
 import { useCart } from "@/context/CartContext";
 import { useTranslation } from "@/context/LanguageContext";
 import { getTranslation } from "@/utils/translations";
-import { prefetchProduct } from "@/utils/prefetchProduct";
 
 interface ProductProps {
   product: {
@@ -104,7 +103,6 @@ export default function ProductCard({
     try {
       router.prefetch(`/product/${productSlug}`);
     } catch {}
-    prefetchProduct(productSlug, product.tenantId);
   };
 
   return (

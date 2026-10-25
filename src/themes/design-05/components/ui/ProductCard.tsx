@@ -6,7 +6,6 @@ import { ShoppingCart } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
 import { useRouter } from 'next/navigation';
 import { getTranslation } from '@/utils/translations';
-import { prefetchProduct } from '@/utils/prefetchProduct';
 
 export default function ProductCard05({ product, isList = false, isBestSelling = false, theme }: { product: any; isList?: boolean; isBestSelling?: boolean; theme?: any }) {
   const language = theme?.language || "en";
@@ -25,7 +24,6 @@ export default function ProductCard05({ product, isList = false, isBestSelling =
     try {
       router.prefetch(`/product/${productSlug}`);
     } catch {}
-    prefetchProduct(productSlug, product.tenantId);
   };
 
   const handleAddToCart = (e: React.MouseEvent) => {

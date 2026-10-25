@@ -90,6 +90,7 @@ export default async function ProductPage({ params }: PageProps) {
   let themeId = "design-01";
   let product = null;
   let storeInfo = null;
+  let themeInfo = null;
 
   if (tenantSlug !== "main") {
     const [productRes, storeInfoRes, themeRes] = await Promise.all([
@@ -99,6 +100,7 @@ export default async function ProductPage({ params }: PageProps) {
     ]);
     product = productRes;
     storeInfo = storeInfoRes;
+    themeInfo = themeRes;
     if (themeRes && themeRes.themeId && themeRegistry[themeRes.themeId]) {
       themeId = themeRes.themeId;
     }
@@ -195,7 +197,13 @@ export default async function ProductPage({ params }: PageProps) {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       )}
-      <ThemeProduct tenantSlug={tenantSlug} params={params} />
+      <ThemeProduct
+        tenantSlug={tenantSlug}
+        params={params}
+        initialProduct={product}
+        initialStoreInfo={storeInfo}
+        initialTheme={themeInfo}
+      />
     </>
   );
 }

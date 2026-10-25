@@ -7,14 +7,26 @@ import { getTranslation } from '@/utils/translations';
 import { getStoreInfo, getTheme } from "@/core/api/store";
 import { getProductBySlug } from "@/core/api/product";
 
-export default async function ProductPage05({ tenantSlug, params }: { tenantSlug: string, params: Promise<{ slug: string }> | { slug: string } }) {
+export default async function ProductPage05({
+  tenantSlug,
+  params,
+  initialProduct,
+  initialStoreInfo,
+  initialTheme,
+}: {
+  tenantSlug: string;
+  params: Promise<{ slug: string }> | { slug: string };
+  initialProduct?: any;
+  initialStoreInfo?: any;
+  initialTheme?: any;
+}) {
 
   const resolvedParams = await params;
 
   const [storeInfo, product, theme] = await Promise.all([
-    getStoreInfo(tenantSlug),
-    getProductBySlug(tenantSlug, resolvedParams.slug),
-    getTheme(tenantSlug)
+    initialStoreInfo !== undefined ? initialStoreInfo : getStoreInfo(tenantSlug),
+    initialProduct !== undefined ? initialProduct : getProductBySlug(tenantSlug, resolvedParams.slug),
+    initialTheme !== undefined ? initialTheme : getTheme(tenantSlug),
   ]);
   const language = theme?.language || "en";
   const t = (key: any) => getTranslation(language || 'en', key);

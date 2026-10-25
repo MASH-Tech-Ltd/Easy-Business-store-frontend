@@ -10,17 +10,28 @@ import { getProductBySlug } from "@/core/api/product";
 
 export default async function Design02ProductPage({
   params,
+  tenantSlug: propTenantSlug,
+  initialProduct,
+  initialStoreInfo,
+  initialTheme,
 }: {
-  params: Promise<{ slug: string }>;
+  params: Promise<{ slug: string }> | { slug: string };
+  tenantSlug?: string;
+  initialProduct?: any;
+  initialStoreInfo?: any;
+  initialTheme?: any;
 }) {
   const resolvedParams = await params;
-  const headersList = await headers();
-  const tenantSlug = headersList.get("x-tenant-slug") || "main";
+  let tenantSlug = propTenantSlug;
+  if (!tenantSlug) {
+    const headersList = await headers();
+    tenantSlug = headersList.get("x-tenant-slug") || "main";
+  }
 
   const [storeInfo, product, theme] = await Promise.all([
-    getStoreInfo(tenantSlug),
-    getProductBySlug(tenantSlug, resolvedParams.slug),
-    getTheme(tenantSlug),
+    initialStoreInfo !== undefined ? initialStoreInfo : getStoreInfo(tenantSlug),
+    initialProduct !== undefined ? initialProduct : getProductBySlug(tenantSlug, resolvedParams.slug),
+    initialTheme !== undefined ? initialTheme : getTheme(tenantSlug),
   ]);
 
   const language = theme?.language || "en";
