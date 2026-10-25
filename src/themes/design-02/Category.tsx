@@ -1,6 +1,6 @@
 import { storefrontFetch } from "../../utils/storefrontFetch";
 import { headers } from 'next/headers';
-import type { Metadata, ResolvingMetadata } from 'next';
+
 import Link from 'next/link';
 import Design02FilterDrawer from './components/ui/FilterDrawer';
 import SortSelect from './components/ui/SortSelect';
@@ -55,35 +55,6 @@ async function getFilteredProducts(tenantSlug: string, categoryId: string, searc
   }
 }
 
-export async function generateMetadata(
-  { params }: { params: Promise<{ slug: string }> },
-  parent: ResolvingMetadata
-): Promise<Metadata> {
-  const resolvedParams = await params;
-  const headersList = await headers();
-  const tenantSlug = headersList.get('x-tenant-slug') || 'main';
-  
-  const [storeInfo, categoriesRes] = await Promise.all([
-    getStoreInfo(tenantSlug),
-    storefrontFetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/categories`, { next: { revalidate: 60 } }).then(res => res.json().catch(() => null)).catch(() => null)
-  ]);
-  const language = storeInfo?.language || "en";
-  const t = (key: any) => getTranslation(language || 'en', key);
-
-
-  const categories = categoriesRes?.data || [];
-  const decodedSlug = decodeURIComponent(resolvedParams.slug);
-  const category = categories.find((c: any) => c.slug === decodedSlug || c._id === decodedSlug);
-
-  if (!category) {
-    return { title: 'Category Not Found' };
-  }
-  
-  return {
-    title: `${category.name} | ${storeInfo?.name || tenantSlug.toUpperCase()}`,
-    description: category.description || `Browse our collection of ${category.name} at ${storeInfo?.name || tenantSlug.toUpperCase()}`,
-  };
-}
 
 export default async function Design02CategoryPage({ params, searchParams }: any) {
 

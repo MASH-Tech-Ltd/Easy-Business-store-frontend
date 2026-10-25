@@ -43,8 +43,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function ProductsPage({ searchParams }: { searchParams: Promise<any> }) {
-  const headersList = await headers();
-  const tenantSlug = headersList.get('x-tenant-slug') || 'main';
+  const { tenantSlug } = await getRequestContext();
 
   let themeId = 'design-01';
 

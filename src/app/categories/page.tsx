@@ -41,8 +41,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function CategoriesPage() {
-  const headersList = await headers();
-  const tenantSlug = headersList.get('x-tenant-slug') || 'main';
+  const { tenantSlug } = await getRequestContext();
 
   let themeId = 'design-01';
 

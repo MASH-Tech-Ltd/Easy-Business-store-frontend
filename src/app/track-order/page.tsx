@@ -2,13 +2,12 @@ import React, { Suspense } from 'react';
 import { headers } from 'next/headers';
 import { getTheme, getStoreInfo } from '@/core/api/store';
 import { themeRegistry } from '@/themes/themeRegistry';
-import { getStoreName } from '@/utils/seo';
+import { getStoreName, getRequestContext } from '@/utils/seo';
 import { TrackOrderContent } from './TrackOrderClient';
 import type { Metadata } from 'next';
 
 export async function generateMetadata(): Promise<Metadata> {
-  const headersList = await headers();
-  const tenantSlug = headersList.get('x-tenant-slug') || 'main';
+  const { tenantSlug } = await getRequestContext();
   const storeInfo = await getStoreInfo(tenantSlug);
   const storeName = getStoreName(storeInfo, tenantSlug);
   return {
@@ -23,8 +22,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
 
 export default async function TrackOrderPage() {
-  const headersList = await headers();
-  const tenantSlug = headersList.get('x-tenant-slug') || 'main';
+  const { tenantSlug } = await getRequestContext();
   
   let storeInfo = null;
   let themeInfo = null;

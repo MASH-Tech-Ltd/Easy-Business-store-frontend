@@ -7,7 +7,10 @@ export async function generateMetadata(): Promise<Metadata> {
   const { tenantSlug, requestOrigin } = await getRequestContext();
 
   if (tenantSlug === 'main') {
-    return { title: { absolute: 'Home' } };
+    return {
+      title: { absolute: 'MASH ECO' },
+      openGraph: { siteName: 'MASH ECO', title: 'MASH ECO' },
+    };
   }
 
   const storeInfo = await getStoreInfo(tenantSlug);
@@ -63,6 +66,39 @@ export default async function Page() {
   const baseUrl = getSiteOrigin(requestOrigin, storeInfo);
   const storeName = getStoreName(storeInfo, tenantSlug);
 
+  // Platform root: emit a WebSite JSON-LD for masheco.com itself.
+  // This is the primary signal Google uses for "MASH ECO" site name on masheco.com.
+  if (tenantSlug === 'main') {
+    const platformOrigin = requestOrigin.includes('localhost')
+      ? requestOrigin
+      : 'https://masheco.com';
+    return (
+      <>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              '@context': 'https://schema.org',
+              '@type': 'WebSite',
+              '@id': `${platformOrigin}/#website`,
+              name: 'MASH ECO',
+              url: `${platformOrigin}/`,
+              potentialAction: {
+                '@type': 'SearchAction',
+                target: {
+                  '@type': 'EntryPoint',
+                  urlTemplate: `${platformOrigin}/search?q={search_term_string}`,
+                },
+                'query-input': 'required name=search_term_string',
+              },
+            }),
+          }}
+        />
+        <ThemeHome tenantSlug={tenantSlug} />
+      </>
+    );
+  }
+
   return (
     <>
       {storeInfo && (
@@ -106,3 +142,4 @@ export default async function Page() {
     </>
   );
 }
+

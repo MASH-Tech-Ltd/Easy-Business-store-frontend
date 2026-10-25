@@ -1,6 +1,6 @@
-﻿import { storefrontFetch } from "../../utils/storefrontFetch";
+import { storefrontFetch } from "../../utils/storefrontFetch";
 import { headers } from 'next/headers';
-import type { Metadata, ResolvingMetadata } from 'next';
+
 import Link from 'next/link';
 import FilterSidebar03 from './components/ui/FilterSidebar';
 import SortSelect03 from './components/ui/SortSelect';
@@ -37,26 +37,6 @@ async function getFilteredProducts(tenantSlug: string, categoryId: string, searc
   } catch { return { data: [], pagination: { total: 0, page: 1, totalPages: 1 } }; }
 }
 
-export async function generateMetadata(
-  { params }: { params: Promise<{ slug: string }> },
-  parent: ResolvingMetadata
-): Promise<Metadata> {
-  const resolvedParams = await params;
-  const headersList = await headers();
-  const tenantSlug = headersList.get('x-tenant-slug') || 'main';
-  const [storeInfo, categoriesRes] = await Promise.all([
-    getStoreInfo(tenantSlug),
-    storefrontFetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/categories`, { next: { revalidate: 60 } }).then(res => res.json().catch(() => null)).catch(() => null)
-  ]);
-  const categories = categoriesRes?.data || [];
-  const decodedSlug = decodeURIComponent(resolvedParams.slug);
-  const category = categories.find((c: any) => c.slug === decodedSlug || c._id === decodedSlug);
-  if (!category) return { title: 'Category Not Found' };
-  return {
-    title: `${category.name} | ${storeInfo?.name || tenantSlug.toUpperCase()}`,
-    description: category.description || `Browse our collection of ${category.name}`,
-  };
-}
 
 export default async function Design03CategoryPage({ params, searchParams }: any) {
   const resolvedParams = await params;

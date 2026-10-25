@@ -47,6 +47,40 @@ export async function generateMetadata(): Promise<Metadata> {
   const storeStatus = await getStoreStatus(tenantSlug);
   const theme = await getTheme(tenantSlug);
 
+  // Platform root (masheco.com itself) — not a storefront.
+  // Emit correct MASH ECO platform branding so Google never indexes the
+  // platform domain as "MAIN" or shows a blank/wrong site name for it.
+  if (tenantSlug === 'main') {
+    const platformOrigin = requestOrigin.includes('localhost')
+      ? requestOrigin
+      : 'https://masheco.com';
+    return {
+      metadataBase: new URL(platformOrigin),
+      applicationName: 'MASH ECO',
+      authors: [{ name: 'MASH ECO', url: `${platformOrigin}/` }],
+      publisher: 'MASH ECO',
+      title: {
+        default: 'MASH ECO',
+        template: '%s | MASH ECO',
+      },
+      description: 'MASH ECO — Create your own online store in minutes. Multi-tenant e-commerce platform.',
+      alternates: { canonical: `${platformOrigin}/` },
+      openGraph: {
+        title: 'MASH ECO',
+        description: 'MASH ECO — Create your own online store in minutes. Multi-tenant e-commerce platform.',
+        url: `${platformOrigin}/`,
+        siteName: 'MASH ECO',
+        locale: 'en_US',
+        type: 'website',
+      },
+      twitter: {
+        card: 'summary_large_image',
+        title: 'MASH ECO',
+        description: 'MASH ECO — Create your own online store in minutes.',
+      },
+    };
+  }
+
   if (
     tenantSlug !== "main" &&
     (storeStatus?.storeDown ||
@@ -124,6 +158,7 @@ export async function generateMetadata(): Promise<Metadata> {
     },
   };
 }
+
 
 export default async function RootLayout({
   children,

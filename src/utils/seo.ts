@@ -18,8 +18,25 @@ type StoreInfoLike = {
 import { cleanStoreName, cleanCopyright } from './cleanText';
 export { cleanStoreName, cleanCopyright };
 
-/** The single store name used for <title>, og:site_name and WebSite JSON-LD. */
+/**
+ * The canonical platform name used for og:site_name, applicationName,
+ * and WebSite JSON-LD whenever tenantSlug === 'main' (i.e. masheco.com itself).
+ * This prevents the platform root from emitting the nonsensical title 'MAIN'.
+ */
+export const PLATFORM_NAME = 'MASH ECO';
+
+/**
+ * The single store name used for <title>, og:site_name and WebSite JSON-LD.
+ *
+ * For the platform root (tenantSlug === 'main'), always returns PLATFORM_NAME
+ * regardless of what storeInfo contains (it will be null for 'main').
+ * For real tenant storefronts, returns the cleaned store name from the API,
+ * falling back to the uppercased slug if the API returned no name.
+ */
 export function getStoreName(storeInfo: StoreInfoLike, tenantSlug: string): string {
+  // Guard: platform root must never produce 'MAIN'
+  if (tenantSlug === 'main') return PLATFORM_NAME;
+
   const raw = storeInfo?.name?.trim() || tenantSlug.toUpperCase();
   return cleanStoreName(raw) || tenantSlug.toUpperCase();
 }
@@ -55,6 +72,8 @@ export async function getRequestContext() {
       tenantSlug = bareHost.replace(`.${baseDomain}`, '');
     } else if (bareHost.endsWith('.masheco.com')) {
       tenantSlug = bareHost.replace('.masheco.com', '');
+    } else {
+      tenantSlug = bareHost;
     }
   }
 
@@ -81,3 +100,4 @@ export function getSiteOrigin(requestOrigin: string, storeInfo: StoreInfoLike): 
   }
   return requestOrigin;
 }
+

@@ -2,7 +2,7 @@ import { storefrontFetch } from "../../utils/storefrontFetch";
 import { headers } from 'next/headers';
 import Link from 'next/link';
 import { getTranslation } from '@/utils/translations';
-import type { Metadata, ResolvingMetadata } from 'next';
+
 import FilterSidebar04 from './components/ui/FilterSidebar';
 import FilterDrawer from './components/ui/FilterDrawer';
 import SortSelect04 from './components/ui/SortSelect';
@@ -36,20 +36,6 @@ async function getFilteredProducts(tenantSlug: string, categoryId: string, searc
   } catch { return { data: [], pagination: { total: 0, page: 1, totalPages: 1 } }; }
 }
 
-export async function generateMetadata(
-  { params }: { params: Promise<{ slug: string }> },
-  parent: ResolvingMetadata
-): Promise<Metadata> {
-  const resolvedParams = await params;
-  const headersList = await headers();
-  const tenantSlug = headersList.get('x-tenant-slug') || 'main';
-  const storeInfo = await getStoreInfo(tenantSlug);
-  const categoriesRes = await storefrontFetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/categories`).then(r => r.json()).catch(() => null);
-  const category = (categoriesRes?.data || []).find((c: any) => c.slug === resolvedParams.slug || c._id === resolvedParams.slug);
-
-  if (!category) return { title: 'Category Not Found' };
-  return { title: `${category.name} | ${storeInfo?.name || tenantSlug}` };
-}
 
 export default async function CategoryPage04({ params, searchParams }: any) {
   const resolvedParams = await params;
