@@ -47,8 +47,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
   if (
     tenantSlug !== "main" &&
-    (!storeInfo ||
-      storeStatus?.storeDown ||
+    (storeStatus?.storeDown ||
       storeStatus?.reason === "Store not found")
   ) {
     return {
@@ -182,10 +181,30 @@ export default async function RootLayout({
   }
 
   if (
-    (!storeInfo || storeStatus?.reason === "Store not found") &&
+    storeStatus?.reason === "Store not found" &&
     tenantSlug !== "main"
   ) {
-    notFound();
+    return (
+      <html lang="en">
+        <body className={`${inter.variable} font-sans antialiased bg-gray-50 flex items-center justify-center min-h-screen p-6`}>
+          <div className="max-w-md w-full bg-white rounded-2xl shadow-xl border border-gray-100 p-8 text-center">
+            <div className="w-16 h-16 bg-red-50 text-red-500 rounded-full flex items-center justify-center mx-auto mb-4 font-bold text-2xl">
+              404
+            </div>
+            <h1 className="text-2xl font-black text-gray-900 mb-2">Store Not Found</h1>
+            <p className="text-gray-500 text-sm mb-6">
+              The store <strong className="text-gray-900">{tenantSlug}</strong> does not exist or may have been removed.
+            </p>
+            <a
+              href="https://masheco.com"
+              className="inline-block px-6 py-3 bg-gray-900 text-white rounded-xl font-semibold text-sm hover:bg-gray-800 transition-colors"
+            >
+              Back to Masheco
+            </a>
+          </div>
+        </body>
+      </html>
+    );
   }
 
   if (storeStatus?.storeDown && tenantSlug !== "main") {

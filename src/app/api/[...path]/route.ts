@@ -1,6 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-const BACKEND_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/v1';
+const BACKEND_URL =
+  process.env.API_URL ||
+  process.env.NEXT_PUBLIC_API_URL ;
+
+const STOREFRONT_API_KEY =
+  process.env.STOREFRONT_API_KEY ||
+  process.env.NEXT_PUBLIC_STOREFRONT_API_KEY ||
+  '954073a93e924516a98d0fe2ef0a7ed1600f45a02a72054c16f5629f3715aca9';
 
 async function handleProxy(req: NextRequest) {
   try {
@@ -12,6 +19,9 @@ async function handleProxy(req: NextRequest) {
 
     // 3. Prepare headers
     const headers = new Headers(req.headers);
+    if (!headers.has('x-storefront-api-key')) {
+      headers.set('x-storefront-api-key', STOREFRONT_API_KEY);
+    }
     
     // Add custom client IP header to prevent Cloudflare from overwriting it on the second hop
     const cfIp = headers.get('cf-connecting-ip');

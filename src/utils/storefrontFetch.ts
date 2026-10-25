@@ -19,11 +19,34 @@ async function resolveClientHeaders(): Promise<{ clientIp?: string; userAgent?: 
   }
 }
 
-export async function storefrontFetch(url: string, init?: RequestInit, clientIp?: string) {
-  const apiKey = process.env.STOREFRONT_API_KEY || process.env.NEXT_PUBLIC_STOREFRONT_API_KEY;
+export const DEFAULT_API_URL = 'https://backapi.masheco.com/api/v1';
+export const DEFAULT_STOREFRONT_API_KEY = '954073a93e924516a98d0fe2ef0a7ed1600f45a02a72054c16f5629f3715aca9';
 
-  if (!apiKey) {
-    console.error('STOREFRONT_API_KEY is not defined in environment variables');
+export function getStorefrontApiUrl(): string {
+  return (
+    process.env.NEXT_PUBLIC_API_URL ||
+    process.env.API_URL ||
+    DEFAULT_API_URL
+  );
+}
+
+export function getStorefrontApiKey(): string {
+  return (
+    process.env.STOREFRONT_API_KEY ||
+    process.env.NEXT_PUBLIC_STOREFRONT_API_KEY ||
+    DEFAULT_STOREFRONT_API_KEY
+  );
+}
+
+export async function storefrontFetch(url: string, init?: RequestInit, clientIp?: string) {
+  const apiKey = getStorefrontApiKey();
+  const baseApiUrl = getStorefrontApiUrl();
+
+  let resolvedUrl = url;
+  if (!resolvedUrl || resolvedUrl.startsWith('undefined')) {
+    resolvedUrl = resolvedUrl ? resolvedUrl.replace(/^undefined/, baseApiUrl) : baseApiUrl;
+  } else if (resolvedUrl.startsWith('/')) {
+    resolvedUrl = `${baseApiUrl}${resolvedUrl}`;
   }
 
   const fetchHeaders = new Headers(init?.headers);

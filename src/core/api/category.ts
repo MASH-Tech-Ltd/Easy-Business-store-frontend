@@ -1,10 +1,10 @@
-import { storefrontFetch } from "../../utils/storefrontFetch";
+import { storefrontFetch, getStorefrontApiUrl } from "../../utils/storefrontFetch";
 import { cache } from "react";
 
 export const getCategories = cache(async (tenantSlug: string, clientIp?: string) => {
   try {
     const res = await storefrontFetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/categories`,
+      `${getStorefrontApiUrl()}/storefront/${tenantSlug}/categories`,
       { next: { revalidate: 60, tags: [`tenant-${tenantSlug}-categories`] } },
       clientIp
     );

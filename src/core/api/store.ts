@@ -1,10 +1,10 @@
-import { storefrontFetch } from "../../utils/storefrontFetch";
+import { storefrontFetch, getStorefrontApiUrl } from "../../utils/storefrontFetch";
 import { cache } from "react";
 
 export const getStoreInfo = cache(async (tenantSlug: string, clientIp?: string) => {
   try {
     const res = await storefrontFetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/info`,
+      `${getStorefrontApiUrl()}/storefront/${tenantSlug}/info`,
       { next: { revalidate: 60, tags: [`tenant-${tenantSlug}`] } },
       clientIp,
     );
@@ -19,7 +19,7 @@ export const getStoreInfo = cache(async (tenantSlug: string, clientIp?: string) 
 export const getTheme = cache(async (tenantSlug: string, clientIp?: string) => {
   try {
     const res = await storefrontFetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/theme`,
+      `${getStorefrontApiUrl()}/storefront/${tenantSlug}/theme`,
       { next: { revalidate: 60, tags: [`tenant-${tenantSlug}`] } },
       clientIp,
     );
@@ -34,7 +34,7 @@ export const getTheme = cache(async (tenantSlug: string, clientIp?: string) => {
 export const getStoreStatus = cache(async (tenantSlug: string, clientIp?: string) => {
   try {
     const res = await storefrontFetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/status`,
+      `${getStorefrontApiUrl()}/storefront/${tenantSlug}/status`,
       { next: { revalidate: 60, tags: [`tenant-${tenantSlug}`] } },
       clientIp,
     );
@@ -52,7 +52,7 @@ export const getStoreStatus = cache(async (tenantSlug: string, clientIp?: string
 export const getTrackingConfig = cache(async (tenantSlug: string) => {
   try {
     const res = await storefrontFetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/tracking`,
+      `${getStorefrontApiUrl()}/storefront/${tenantSlug}/tracking`,
       { next: { revalidate: 60, tags: [`tenant-${tenantSlug}`] } },
     );
     if (!res.ok) return null;

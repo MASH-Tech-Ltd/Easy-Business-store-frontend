@@ -122,7 +122,6 @@ export async function middleware(request: NextRequest) {
     try {
       let statusJson = getMiddlewareCached(middlewareStatusCache, tenantSlug);
       let statusOk = Boolean(statusJson);
-      let is404 = false;
 
       if (!statusJson) {
         const statusRes = await fetch(`${apiUrl}/storefront/${tenantSlug}/status`, {
@@ -130,23 +129,14 @@ export async function middleware(request: NextRequest) {
         });
         
         if (!statusRes.ok && statusRes.status === 404) {
-          is404 = true;
+          statusJson = { data: { storeDown: true, reason: 'Store not found' } };
+          statusOk = true;
+          setMiddlewareCached(middlewareStatusCache, tenantSlug, statusJson, 30000);
         } else if (statusRes.ok) {
           statusJson = await statusRes.json();
           statusOk = true;
           setMiddlewareCached(middlewareStatusCache, tenantSlug, statusJson, 45000);
         }
-      }
-      
-      if (is404) {
-        const errorUrl = url.clone();
-        errorUrl.pathname = '/404'; // or some other path handled by notFound
-        const response = NextResponse.rewrite(errorUrl, {
-          request: { headers: requestHeaders },
-          status: 404,
-        });
-        response.headers.set('x-tenant-slug', tenantSlug);
-        return response;
       }
       
       if (statusOk && statusJson) {

@@ -30,11 +30,7 @@ export default function StorefrontTracker({ tenantSlug, initialConfig }: Storefr
         let config = initialConfig;
 
         if (!config) {
-          const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/tracking`, {
-            headers: {
-              'x-storefront-api-key': process.env.NEXT_PUBLIC_STOREFRONT_API_KEY || '',
-            },
-          });
+          const res = await fetch(`/api/storefront/${tenantSlug}/tracking`);
           if (res.ok) {
             const json = await res.json();
             config = json.data;
