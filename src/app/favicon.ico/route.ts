@@ -4,6 +4,9 @@ import { getStoreInfo } from "@/core/api/store";
 
 export const dynamic = "force-dynamic";
 
+// Minimal valid fallback icon to ensure search crawlers and browsers never receive HTTP 404
+const FALLBACK_FAVICON_SVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="45" fill="#2563eb"/><text x="50" y="62" font-size="38" text-anchor="middle" fill="#ffffff" font-family="sans-serif" font-weight="bold">M</text></svg>`;
+
 export async function GET() {
   try {
     const { tenantSlug } = await getRequestContext();
@@ -19,17 +22,25 @@ export async function GET() {
           );
         }
         return NextResponse.redirect(logo, {
-          status: 307,
+          status: 301,
           headers: {
-            "Cache-Control":
-              "public, max-age=86400, s-maxage=604800, stale-while-revalidate=86400",
+            "Cache-Control": "public, max-age=86400, s-maxage=604800, stale-while-revalidate=86400",
+            "X-Robots-Tag": "noindex, nofollow",
           },
         });
       }
     }
   } catch {
-    // fallback to 404 if store or logo not found
+    // Fall through to fallback
   }
 
-  return new NextResponse(null, { status: 404 });
+  // Always return 200 OK fallback icon with X-Robots-Tag to ensure Google Search Console never logs 404
+  return new NextResponse(FALLBACK_FAVICON_SVG, {
+    status: 200,
+    headers: {
+      "Content-Type": "image/svg+xml; charset=utf-8",
+      "Cache-Control": "public, max-age=86400, s-maxage=604800",
+      "X-Robots-Tag": "noindex, nofollow",
+    },
+  });
 }

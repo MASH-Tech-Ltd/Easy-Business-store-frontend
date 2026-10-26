@@ -1,4 +1,5 @@
 import { headers } from "next/headers";
+import { notFound } from "next/navigation";
 import { getTheme, getStoreInfo } from "@/core/api/store";
 import { getProductBySlug } from "@/core/api/product";
 import { themeRegistry } from "@/themes/themeRegistry";
@@ -24,7 +25,10 @@ export async function generateMetadata(
   ]);
 
   if (!product) {
-    return { title: "Product Not Found" };
+    return {
+      title: "Product Not Found",
+      robots: { index: false, follow: false },
+    };
   }
 
   const baseUrl = getSiteOrigin(requestOrigin, storeInfo);
@@ -104,6 +108,10 @@ export default async function ProductPage({ params }: PageProps) {
     if (themeRes && themeRes.themeId && themeRegistry[themeRes.themeId]) {
       themeId = themeRes.themeId;
     }
+  }
+
+  if (!product && tenantSlug !== "main") {
+    notFound();
   }
 
   const baseUrl = getSiteOrigin(requestOrigin, storeInfo);

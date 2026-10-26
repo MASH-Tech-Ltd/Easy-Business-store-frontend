@@ -30,9 +30,22 @@ export async function middleware(request: NextRequest) {
   // Get hostname (e.g., 'abcstore.myplatform.com' or 'localhost:3000')
   const hostname = request.headers.get('host') || '';
   
-  // Exclude static files and API routes from proxy.
-  // sitemap.xml is tenant-specific, so it MUST get x-tenant-slug.
-  const isTenantSeoFile = url.pathname === '/sitemap.xml';
+  // 301 Redirect malformed bot / scraped URLs (e.g. /$, /&, /null) to prevent 404 errors in GSC
+  if (
+    url.pathname === '/$' ||
+    url.pathname === '/&' ||
+    url.pathname === '/null' ||
+    url.pathname === '/undefined' ||
+    url.pathname === '/[object%20Object]'
+  ) {
+    return NextResponse.redirect(new URL('/', request.url), 301);
+  }
+
+  // sitemap.xml, sitemap-main.xml and favicon.ico are tenant-specific, so they MUST get x-tenant-slug.
+  const isTenantSeoFile =
+    url.pathname === '/sitemap.xml' ||
+    url.pathname === '/sitemap-main.xml' ||
+    url.pathname === '/favicon.ico';
   if (
     url.pathname.startsWith('/_next') ||
     url.pathname.startsWith('/api') ||

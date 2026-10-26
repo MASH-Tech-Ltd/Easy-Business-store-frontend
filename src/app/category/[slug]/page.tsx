@@ -1,4 +1,5 @@
 import { headers } from 'next/headers';
+import { notFound } from 'next/navigation';
 import { getTheme, getStoreInfo } from '@/core/api/store';
 import { getCategories } from '@/core/api/category';
 import { getProducts } from '@/core/api/product';
@@ -25,6 +26,13 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const category = categories?.find(
     (c: any) => c.slug === resolvedParams.slug || c._id === resolvedParams.slug
   );
+
+  if (!category && tenantSlug !== 'main') {
+    return {
+      title: 'Category Not Found',
+      robots: { index: false, follow: false },
+    };
+  }
 
   const categoryName = category?.name
     ? category.name
@@ -128,6 +136,10 @@ export default async function CategoryPage({ params, searchParams }: PageProps) 
         `category=${category?._id || resolvedParams.slug}&limit=20`
       );
     }
+  }
+
+  if (!category && tenantSlug !== 'main') {
+    notFound();
   }
 
   const baseUrl = getSiteOrigin(requestOrigin, storeInfo);
