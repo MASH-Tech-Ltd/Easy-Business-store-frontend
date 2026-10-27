@@ -16,6 +16,7 @@ interface PageProps {
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const resolvedParams = await params;
+  const decodedSlug = decodeURIComponent(resolvedParams.slug || '');
   const { tenantSlug, requestOrigin } = await getRequestContext();
 
   const [storeInfo, categories] = await Promise.all([
@@ -24,7 +25,11 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   ]);
 
   const category = categories?.find(
-    (c: any) => c.slug === resolvedParams.slug || c._id === resolvedParams.slug
+    (c: any) =>
+      c.slug === decodedSlug ||
+      c.slug === resolvedParams.slug ||
+      c._id === decodedSlug ||
+      c._id === resolvedParams.slug
   );
 
   if (!category && tenantSlug !== 'main') {
@@ -36,7 +41,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   const categoryName = category?.name
     ? category.name
-    : resolvedParams.slug
+    : decodedSlug
         .split('-')
         .map((w: string) => w.charAt(0).toUpperCase() + w.slice(1))
         .join(' ');
@@ -108,6 +113,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function CategoryPage({ params, searchParams }: PageProps) {
   const resolvedParams = await params;
+  const decodedSlug = decodeURIComponent(resolvedParams.slug || '');
   const { tenantSlug, requestOrigin } = await getRequestContext();
 
   let themeId = 'design-01';
@@ -128,12 +134,16 @@ export default async function CategoryPage({ params, searchParams }: PageProps) 
     storeInfo = storeInfoRes;
     categories = catRes || [];
     category = categories.find(
-      (c: any) => c.slug === resolvedParams.slug || c._id === resolvedParams.slug
+      (c: any) =>
+        c.slug === decodedSlug ||
+        c.slug === resolvedParams.slug ||
+        c._id === decodedSlug ||
+        c._id === resolvedParams.slug
     );
-    if (category?._id || resolvedParams.slug) {
+    if (category?._id || decodedSlug) {
       products = await getProducts(
         tenantSlug,
-        `category=${category?._id || resolvedParams.slug}&limit=20`
+        `category=${category?._id || decodedSlug}&limit=20`
       );
     }
   }
@@ -146,7 +156,7 @@ export default async function CategoryPage({ params, searchParams }: PageProps) 
   const storeName = getStoreName(storeInfo, tenantSlug);
   const categoryName = category?.name
     ? category.name
-    : resolvedParams.slug
+    : decodedSlug
         .split('-')
         .map((w: string) => w.charAt(0).toUpperCase() + w.slice(1))
         .join(' ');

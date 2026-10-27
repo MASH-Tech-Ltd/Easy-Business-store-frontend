@@ -17,11 +17,12 @@ export async function generateMetadata(
   parent: ResolvingMetadata,
 ): Promise<Metadata> {
   const resolvedParams = await params;
+  const decodedSlug = decodeURIComponent(resolvedParams.slug || '');
   const { tenantSlug, requestOrigin } = await getRequestContext();
 
   const [storeInfo, product] = await Promise.all([
     getStoreInfo(tenantSlug),
-    getProductBySlug(tenantSlug, resolvedParams.slug),
+    getProductBySlug(tenantSlug, decodedSlug || resolvedParams.slug),
   ]);
 
   if (!product) {
@@ -89,6 +90,7 @@ import TrackViewItem from "@/components/TrackViewItem";
 
 export default async function ProductPage({ params }: PageProps) {
   const resolvedParams = await params;
+  const decodedSlug = decodeURIComponent(resolvedParams.slug || '');
   const { tenantSlug, requestOrigin } = await getRequestContext();
 
   let themeId = "design-01";
@@ -98,7 +100,7 @@ export default async function ProductPage({ params }: PageProps) {
 
   if (tenantSlug !== "main") {
     const [productRes, storeInfoRes, themeRes] = await Promise.all([
-      getProductBySlug(tenantSlug, resolvedParams.slug),
+      getProductBySlug(tenantSlug, decodedSlug || resolvedParams.slug),
       getStoreInfo(tenantSlug),
       getTheme(tenantSlug),
     ]);
