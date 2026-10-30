@@ -42,8 +42,39 @@ export async function POST(req: Request) {
 
     const data = await response.json();
     
-    return NextResponse.json(data, { status: response.status });
+    return NextResponse.json(data, {
+      status: response.status,
+      headers: {
+        'X-Robots-Tag': 'noindex, nofollow, noarchive',
+      },
+    });
   } catch (error) {
-    return NextResponse.json({ success: false, message: 'Server error' }, { status: 500 });
+    return NextResponse.json(
+      { success: false, message: 'Server error' },
+      {
+        status: 500,
+        headers: {
+          'X-Robots-Tag': 'noindex, nofollow, noarchive',
+        },
+      }
+    );
   }
+}
+
+export async function GET() {
+  return new NextResponse(null, {
+    status: 404,
+    headers: {
+      'X-Robots-Tag': 'noindex, nofollow, noarchive',
+    },
+  });
+}
+
+export async function HEAD() {
+  return new NextResponse(null, {
+    status: 404,
+    headers: {
+      'X-Robots-Tag': 'noindex, nofollow, noarchive',
+    },
+  });
 }

@@ -12,7 +12,15 @@ export default async function robots(): Promise<MetadataRoute.Robots> {
       {
         userAgent: "*",
         allow: "/",
-        disallow: ["/cart", "/checkout", "/account", "/track-order", "/api/"],
+        disallow: [
+          "/cart",
+          "/checkout",
+          "/account",
+          "/track-order",
+          "/api/",
+          "/api/visit",
+          "/visit",
+        ],
       },
     ],
     // Sitemap on the same host that serves this robots.txt (Google requires same-host

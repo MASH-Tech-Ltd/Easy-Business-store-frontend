@@ -21,26 +21,42 @@ export async function GET() {
             "/upload/w_192,h_192,c_fill,g_center,f_png/"
           );
         }
-        return NextResponse.redirect(logo, {
-          status: 301,
-          headers: {
-            "Cache-Control": "public, max-age=86400, s-maxage=604800, stale-while-revalidate=86400",
-            "X-Robots-Tag": "noindex, nofollow",
-          },
-        });
+        
+        try {
+          const imgRes = await fetch(logo, { next: { revalidate: 86400 } });
+          if (imgRes.ok) {
+            const buffer = await imgRes.arrayBuffer();
+            const contentType = imgRes.headers.get("content-type") || "image/png";
+            return new NextResponse(buffer, {
+              status: 200,
+              headers: {
+                "Content-Type": contentType,
+                "Cache-Control": "public, max-age=86400, s-maxage=604800, stale-while-revalidate=86400",
+              },
+            });
+          }
+        } catch {
+          // If direct proxy fails, fallback to 302 redirect WITHOUT noindex
+          return NextResponse.redirect(logo, {
+            status: 302,
+            headers: {
+              "Cache-Control": "public, max-age=86400, s-maxage=604800",
+            },
+          });
+        }
       }
     }
   } catch {
     // Fall through to fallback
   }
 
-  // Always return 200 OK fallback icon with X-Robots-Tag to ensure Google Search Console never logs 404
+  // Fallback icon for crawlers and browsers (NO noindex header, so Googlebot can freely index)
   return new NextResponse(FALLBACK_FAVICON_SVG, {
     status: 200,
     headers: {
       "Content-Type": "image/svg+xml; charset=utf-8",
       "Cache-Control": "public, max-age=86400, s-maxage=604800",
-      "X-Robots-Tag": "noindex, nofollow",
     },
   });
 }
+

@@ -650,6 +650,21 @@ export default async function RootLayout({
     textColor = "#78350f";
   }
 
+  let faviconUrl = storeInfo?.logo || "/favicon.ico";
+  let appleIconUrl = faviconUrl;
+
+  if (faviconUrl.includes("cloudinary.com")) {
+    faviconUrl = faviconUrl.replace(/\.[^/.]+$/, ".png");
+    appleIconUrl = faviconUrl.replace(
+      "/upload/",
+      "/upload/w_180,h_180,c_fill,g_center,f_png/",
+    );
+    faviconUrl = faviconUrl.replace(
+      "/upload/",
+      "/upload/w_192,h_192,c_fill,g_center,f_png/",
+    );
+  }
+
   return (
     <html lang={language}>
       <head>
@@ -660,6 +675,87 @@ export default async function RootLayout({
           crossOrigin="anonymous"
         />
         <link rel="stylesheet" href={googleFontHref} />
+
+        {/* Site Name & Mobile Web App Meta Signals for Google Search */}
+        <meta name="application-name" content={storeName} />
+        <meta name="apple-mobile-web-app-title" content={storeName} />
+        <meta property="og:site_name" content={storeName} />
+
+        {/* Explicit Favicons for Googlebot-Image, Search Results, & all browsers */}
+        <link rel="icon" href="/favicon.ico" sizes="any" />
+        <link rel="icon" type="image/png" sizes="192x192" href={faviconUrl} />
+        <link rel="icon" type="image/png" sizes="32x32" href={faviconUrl} />
+        <link rel="apple-touch-icon" sizes="180x180" href={appleIconUrl} />
+
+        {/* Google Search Site Name & Organization Schema (JSON-LD) for all store subdomains and custom domains */}
+        {tenantSlug !== "main" && (
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{
+              __html: JSON.stringify({
+                "@context": "https://schema.org",
+                "@graph": [
+                  {
+                    "@type": "WebSite",
+                    "@id": `${baseUrl}/#website`,
+                    "url": `${baseUrl}/`,
+                    "name": storeName,
+                    "alternateName": Array.from(
+                      new Set(
+                        [
+                          tenantSlug,
+                          host,
+                          storeName.replace(/\s+/g, ""),
+                        ].filter(
+                          (item) =>
+                            Boolean(
+                              item &&
+                                !item.toLowerCase().includes("masheco.com") &&
+                                item.trim().toLowerCase() !== storeName.trim().toLowerCase()
+                            )
+                        )
+                      )
+                    ),
+                    "publisher": {
+                      "@id": `${baseUrl}/#organization`,
+                    },
+                    "potentialAction": {
+                      "@type": "SearchAction",
+                      "target": {
+                        "@type": "EntryPoint",
+                        "urlTemplate": `${baseUrl}/products?search={search_term_string}`,
+                      },
+                      "query-input": "required name=search_term_string",
+                    },
+                  },
+                  {
+                    "@type": "OnlineStore",
+                    "@id": `${baseUrl}/#organization`,
+                    "name": storeName,
+                    "url": `${baseUrl}/`,
+                    ...(storeInfo?.logo
+                      ? {
+                          "logo": {
+                            "@type": "ImageObject",
+                            "@id": `${baseUrl}/#logo`,
+                            "url": faviconUrl,
+                            "contentUrl": faviconUrl,
+                            "caption": storeName,
+                          },
+                          "image": {
+                            "@id": `${baseUrl}/#logo`,
+                          },
+                        }
+                      : {}),
+                    ...(storeInfo?.description
+                      ? { "description": storeInfo.description }
+                      : {}),
+                  },
+                ],
+              }),
+            }}
+          />
+        )}
       </head>
       <body
         suppressHydrationWarning
