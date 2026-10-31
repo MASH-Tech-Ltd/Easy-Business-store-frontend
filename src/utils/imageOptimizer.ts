@@ -13,7 +13,14 @@
  *   - Product Details Gallery: 600px
  *   - Store Logo: 150px
  *   - Homepage Banner: 1200px
+ *
+ * CDN Proxy:
+ *   All Cloudinary URLs are rewritten to go through cdn.masheco.com
+ *   so that res.cloudinary.com is never exposed in the browser.
  */
+
+/** Proxy host — swap this if the subdomain changes */
+const CDN_HOST = 'https://cdn.masheco.com';
 
 export type ImagePreset =
   | 'search'          // 50px
@@ -68,7 +75,9 @@ export function getOptimizedImageUrl(
     rest = rest.replace(transformSegmentRegex, '');
   }
 
-  return `${baseUrl}f_auto,q_auto:good,w_${width},c_limit/${rest}`;
+  const optimized = `${baseUrl}f_auto,q_auto:good,w_${width},c_limit/${rest}`;
+  // Rewrite res.cloudinary.com → cdn.masheco.com so the CDN worker is used
+  return optimized.replace('https://res.cloudinary.com', CDN_HOST);
 }
 
 // Semantic helper functions matching the Global Optimization Standard
