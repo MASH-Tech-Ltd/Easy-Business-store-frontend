@@ -18,8 +18,6 @@ export default async function robots(): Promise<MetadataRoute.Robots> {
           "/account",
           "/track-order",
           "/api/",
-          "/api/visit",
-          "/visit",
         ],
       },
     ],

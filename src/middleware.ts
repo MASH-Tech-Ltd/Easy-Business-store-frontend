@@ -75,7 +75,7 @@ export async function middleware(request: NextRequest) {
   // Never blocks, never times out, never 503s, never redirects, ensuring Google Search Console inspection always succeeds.
   if (url.pathname === '/robots.txt') {
     const proto = request.headers.get('x-forwarded-proto') || (currentHost.includes('localhost') ? 'http' : 'https');
-    const robotsTxt = `User-agent: *\nAllow: /\nDisallow: /cart\nDisallow: /checkout\nDisallow: /account\nDisallow: /track-order\nDisallow: /api/\nDisallow: /visit\nDisallow: /api/visit\n\nSitemap: ${proto}://${currentHost}/sitemap.xml\n`;
+    const robotsTxt = `User-agent: *\nAllow: /\nDisallow: /cart\nDisallow: /checkout\nDisallow: /account\nDisallow: /track-order\nDisallow: /api/\n\nSitemap: ${proto}://${currentHost}/sitemap.xml\n`;
     return new NextResponse(robotsTxt, {
       status: 200,
       headers: {

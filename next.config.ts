@@ -62,6 +62,16 @@ const nextConfig: NextConfig = {
           },
         ],
       },
+      // Block search engines from indexing API routes
+      {
+        source: "/api/:path*",
+        headers: [
+          {
+            key: "X-Robots-Tag",
+            value: "noindex, nofollow, noarchive",
+          },
+        ],
+      },
       {
         source: "/(.*)",
         headers: [
