@@ -1,4 +1,5 @@
 import { storefrontFetch } from "../../utils/storefrontFetch";
+import { getStorefrontApiUrl } from '@/utils/storefrontFetch';
 import React from 'react';
 import { headers } from 'next/headers';
 import CheckoutClient from './CheckoutClient';
@@ -7,7 +8,7 @@ import Header from './components/layout/Header';
 
 async function getStoreInfo(tenantSlug: string) {
   try {
-    const res = await storefrontFetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/info`, { next: { revalidate: 60 } });
+    const res = await storefrontFetch(`${getStorefrontApiUrl()}/storefront/${tenantSlug}/info`, { next: { revalidate: 60 } });
     if (!res.ok) return null;
     return (await res.json()).data;
   } catch { return null; }
@@ -15,7 +16,7 @@ async function getStoreInfo(tenantSlug: string) {
 
 async function getTheme(tenantSlug: string) {
   try {
-    const res = await storefrontFetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/theme`, { next: { revalidate: 60 } });
+    const res = await storefrontFetch(`${getStorefrontApiUrl()}/storefront/${tenantSlug}/theme`, { next: { revalidate: 60 } });
     if (!res.ok) return null;
     return (await res.json()).data;
   } catch { return null; }

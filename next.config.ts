@@ -79,14 +79,17 @@ const nextConfig: NextConfig = {
   },
 
   async rewrites() {
+    // Use private API_URL so the backend domain is never baked into the client bundle.
+    // Falls back to NEXT_PUBLIC_API_URL only for local dev convenience.
+    const apiBase = (process.env.API_URL || process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api/v1").replace("/api/v1", "");
     return [
       {
         source: "/.well-known/acme-challenge/:token",
-        destination: `${process.env.NEXT_PUBLIC_API_URL?.replace("/api/v1", "") || "http://localhost:8000"}/.well-known/acme-challenge/:token`,
+        destination: `${apiBase}/.well-known/acme-challenge/:token`,
       },
       {
         source: "/.well-known/cf-custom-hostname-challenge/:uuid",
-        destination: `${process.env.NEXT_PUBLIC_API_URL?.replace("/api/v1", "") || "http://localhost:8000"}/.well-known/cf-custom-hostname-challenge/:uuid`,
+        destination: `${apiBase}/.well-known/cf-custom-hostname-challenge/:uuid`,
       },
     ];
   },

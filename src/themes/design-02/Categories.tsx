@@ -1,4 +1,5 @@
 import { getCategoryCardImageUrl } from '@/utils/imageOptimizer';
+import { getStorefrontApiUrl } from '@/utils/storefrontFetch';
 ﻿import { storefrontFetch } from "../../utils/storefrontFetch";
 import Link from 'next/link';
 import Header from './components/layout/Header';
@@ -8,7 +9,7 @@ import { getTranslation } from '@/utils/translations';
 
 async function getCategories(tenantSlug: string) {
   try {
-    const res = await storefrontFetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/categories`, { next: { revalidate: 60 } });
+    const res = await storefrontFetch(`${getStorefrontApiUrl()}/storefront/${tenantSlug}/categories`, { next: { revalidate: 60 } });
     if (!res.ok) return [];
     const json = await res.json();
     const data = json?.data?.data || json?.data || [];
@@ -20,7 +21,7 @@ async function getCategories(tenantSlug: string) {
 
 async function getStoreInfo(tenantSlug: string) {
   try {
-    const res = await storefrontFetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/info`, { next: { revalidate: 60 } });
+    const res = await storefrontFetch(`${getStorefrontApiUrl()}/storefront/${tenantSlug}/info`, { next: { revalidate: 60 } });
     if (!res.ok) return null;
     const json = await res.json();
     return json.data;

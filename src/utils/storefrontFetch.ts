@@ -23,6 +23,9 @@ export const DEFAULT_API_URL = 'http://localhost:8000/api/v1';
 export const DEFAULT_STOREFRONT_API_KEY = '954073a93e924516a98d0fe2ef0a7ed1600f45a02a72054c16f5629f3715aca9';
 
 export function getStorefrontApiUrl(): string {
+  // Use private API_URL first (never exposed to browser).
+  // NEXT_PUBLIC_API_URL is kept as a dev fallback but should NOT be set
+  // in production — set API_URL instead so the backend domain stays hidden.
   return (
     process.env.API_URL ||
     process.env.NEXT_PUBLIC_API_URL ||

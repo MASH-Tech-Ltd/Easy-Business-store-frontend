@@ -1,4 +1,5 @@
 import { storefrontFetch } from "../../utils/storefrontFetch";
+import { getStorefrontApiUrl } from '@/utils/storefrontFetch';
 import { headers } from 'next/headers';
 
 import Link from 'next/link';
@@ -14,7 +15,7 @@ import { getTranslation } from '@/utils/translations';
 
 async function getStoreInfo(tenantSlug: string) {
   try {
-    const res = await storefrontFetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/info`, { next: { revalidate: 60 } });
+    const res = await storefrontFetch(`${getStorefrontApiUrl()}/storefront/${tenantSlug}/info`, { next: { revalidate: 60 } });
     if (!res.ok) return null;
     const json = await res.json();
     return json.data;
@@ -25,7 +26,7 @@ async function getStoreInfo(tenantSlug: string) {
 
 async function getCategory(tenantSlug: string, categoryId: string) {
   try {
-    const res = await storefrontFetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/categories`, { next: { revalidate: 60 } });
+    const res = await storefrontFetch(`${getStorefrontApiUrl()}/storefront/${tenantSlug}/categories`, { next: { revalidate: 60 } });
     if (!res.ok) return null;
     const json = await res.json();
     return json.data.find((c: any) => c._id === categoryId);
@@ -46,7 +47,7 @@ async function getFilteredProducts(tenantSlug: string, categoryId: string, searc
     if (searchParams.brand) query.set('brand', searchParams.brand);
     if (searchParams.inStock) query.set('inStock', searchParams.inStock);
 
-    const res = await storefrontFetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/products?${query.toString()}`, { next: { revalidate: 60 } });
+    const res = await storefrontFetch(`${getStorefrontApiUrl()}/storefront/${tenantSlug}/products?${query.toString()}`, { next: { revalidate: 60 } });
     if (!res.ok) return { data: [], pagination: { total: 0, page: 1, totalPages: 1 } };
     const json = await res.json();
     return json.data || { data: [], pagination: { total: 0, page: 1, totalPages: 1 } };
@@ -67,7 +68,7 @@ export default async function Design02CategoryPage({ params, searchParams }: any
 
   const [storeInfo, categoriesRes, theme] = await Promise.all([
     getStoreInfo(tenantSlug),
-    storefrontFetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/categories`, { next: { revalidate: 60 } }).then(res => res.json()),
+    storefrontFetch(`${getStorefrontApiUrl()}/storefront/${tenantSlug}/categories`, { next: { revalidate: 60 } }).then(res => res.json()),
     getTheme(tenantSlug)
   ]);
 
@@ -80,7 +81,7 @@ export default async function Design02CategoryPage({ params, searchParams }: any
   const [productResponse, brandsRes] = categoryId 
     ? await Promise.all([
         getFilteredProducts(tenantSlug, categoryId, resolvedSearchParams),
-        storefrontFetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/brands?categoryId=${categoryId}`, { next: { revalidate: 60 } }).then(res => res.json())
+        storefrontFetch(`${getStorefrontApiUrl()}/storefront/${tenantSlug}/brands?categoryId=${categoryId}`, { next: { revalidate: 60 } }).then(res => res.json())
       ])
     : [
         { data: [], pagination: { total: 0, page: 1, totalPages: 1 } },

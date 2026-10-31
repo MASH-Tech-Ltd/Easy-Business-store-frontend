@@ -1,9 +1,10 @@
-﻿import React from 'react';
+import React from 'react';
 import { getTranslation } from '@/utils/translations';
+import { getStorefrontApiUrl } from '@/utils/storefrontFetch';
 
 async function getCategories() {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/categories/get-all-category`, { next: { revalidate: 60 } });
+    const res = await fetch(`${getStorefrontApiUrl()}/categories/get-all-category`, { next: { revalidate: 60 } });
     if (!res.ok) return [];
     const json = await res.json();
     return json.data || [];

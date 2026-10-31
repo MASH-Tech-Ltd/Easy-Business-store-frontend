@@ -1,4 +1,5 @@
 import { storefrontFetch } from "../../utils/storefrontFetch";
+import { getStorefrontApiUrl } from '@/utils/storefrontFetch';
 import { headers } from 'next/headers';
 import Link from 'next/link';
 import FilterSidebar03 from './components/ui/FilterSidebar';
@@ -24,7 +25,7 @@ async function getAllProducts(tenantSlug: string, searchParams: any) {
     if (searchParams.inStock) query.set('inStock', searchParams.inStock);
 
     const res = await storefrontFetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/products?${query.toString()}`,
+      `${getStorefrontApiUrl()}/storefront/${tenantSlug}/products?${query.toString()}`,
       { next: { revalidate: 60 } }
     );
     if (!res.ok) return { data: [], pagination: { total: 0, page: 1, totalPages: 1 } };
@@ -43,10 +44,10 @@ export default async function Design03ProductsPage({ searchParams }: any) {
     getStoreInfo(tenantSlug),
     getTheme(tenantSlug),
     getAllProducts(tenantSlug, resolvedSearchParams),
-    storefrontFetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/brands`, { next: { revalidate: 60 } })
+    storefrontFetch(`${getStorefrontApiUrl()}/storefront/${tenantSlug}/brands`, { next: { revalidate: 60 } })
       .then(res => res.json())
       .catch(() => ({ data: [] })),
-    storefrontFetch(`${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/categories`, { next: { revalidate: 60 } })
+    storefrontFetch(`${getStorefrontApiUrl()}/storefront/${tenantSlug}/categories`, { next: { revalidate: 60 } })
       .then(res => res.json())
       .catch(() => ({ data: [] }))
   ]);

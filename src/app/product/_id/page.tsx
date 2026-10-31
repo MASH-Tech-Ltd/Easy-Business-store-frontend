@@ -1,4 +1,5 @@
 import React from 'react';
+import { getStorefrontApiUrl } from '@/utils/storefrontFetch';
 import Header from '@/themes/design-01/components/layout/Header';
 import Footer from '@/themes/design-01/components/layout/Footer';
 import Sidebar from '@/components/Sidebar';
@@ -9,7 +10,7 @@ import { getProductMainImageUrl } from '@/utils/imageOptimizer';
 
 async function getProduct(id: string) {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/products/get-product/${id}`, { next: { revalidate: 60 } });
+    const res = await fetch(`${getStorefrontApiUrl()}/products/get-product/${id}`, { next: { revalidate: 60 } });
     if (!res.ok) return null;
     const json = await res.json();
     return json.data;

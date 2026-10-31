@@ -1,4 +1,5 @@
 import { storefrontFetch } from "../../utils/storefrontFetch";
+import { getStorefrontApiUrl } from '@/utils/storefrontFetch';
 import { headers } from "next/headers";
 
 import Link from "next/link";
@@ -17,7 +18,7 @@ import { getStoreInfo, getTheme } from "@/core/api/store";
 async function getCategory(tenantSlug: string, categoryId: string) {
   try {
     const res = await storefrontFetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/categories`,
+      `${getStorefrontApiUrl()}/storefront/${tenantSlug}/categories`,
       { next: { revalidate: 60 } },
     );
     if (!res.ok) return null;
@@ -45,7 +46,7 @@ async function getFilteredProducts(
     if (searchParams.inStock) query.set("inStock", searchParams.inStock);
 
     const res = await storefrontFetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/products?${query.toString()}`,
+      `${getStorefrontApiUrl()}/storefront/${tenantSlug}/products?${query.toString()}`,
       { next: { revalidate: 60 } },
     );
     if (!res.ok)
@@ -75,7 +76,7 @@ export default async function CategoryPage({ params, searchParams }: any) {
   const [storeInfo, categoriesRes, themeData] = await Promise.all([
     getStoreInfo(tenantSlug),
     storefrontFetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/categories`,
+      `${getStorefrontApiUrl()}/storefront/${tenantSlug}/categories`,
       { next: { revalidate: 60 } },
     ).then((res) => res.json()),
     getTheme(tenantSlug)
@@ -104,7 +105,7 @@ export default async function CategoryPage({ params, searchParams }: any) {
     ? await Promise.all([
         getFilteredProducts(tenantSlug, categoryId, resolvedSearchParams),
         storefrontFetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/brands?categoryId=${categoryId}`,
+          `${getStorefrontApiUrl()}/storefront/${tenantSlug}/brands?categoryId=${categoryId}`,
           { next: { revalidate: 60 } },
         ).then((res) => res.json()),
       ])
