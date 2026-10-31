@@ -11,6 +11,7 @@ import { z } from "zod";
 import { bdLocations } from "@/data/locations";
 import { computeShipping } from "@/utils/shipping";
 import { getTranslation } from '@/utils/translations';
+import { getCheckoutThumbnailUrl } from '@/utils/imageOptimizer';
 import { getSavedCustomerInfo, saveCustomerInfo } from '@/utils/customerStorage';
 import { handleCheckoutError } from '@/utils/checkoutErrorHandler';
 
@@ -528,7 +529,7 @@ export default function Design02CheckoutClient({ theme,
                       <div className="w-16 h-16 bg-white rounded overflow-hidden shrink-0">
                         {item.image ? (
                           <img
-                            src={item.image}
+                            src={getCheckoutThumbnailUrl(item.image)}
                             alt={item.title}
                             className="w-full h-full object-cover mix-blend-multiply"
                           />

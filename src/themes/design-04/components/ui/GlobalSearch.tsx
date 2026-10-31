@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { getTranslation } from '@/utils/translations';
+import { getSearchThumbnailUrl } from '@/utils/imageOptimizer';
 
 export default function GlobalSearch({ tenantSlug, language = 'en', theme }: { tenantSlug: string, language?: string, theme?: any }) {
   const t = (key: any) => getTranslation(language, key);
@@ -62,7 +63,7 @@ export default function GlobalSearch({ tenantSlug, language = 'en', theme }: { t
                   <Link prefetch={false} key={product._id} href={`/product/${product.slug}`} onClick={() => { setIsOpen(false); setQuery(''); }}
                     className="flex items-center gap-3 p-3 hover:bg-gray-50 transition-colors">
                     <div className="w-12 h-12 rounded-lg bg-gray-50 flex items-center justify-center shrink-0 overflow-hidden border border-gray-100">
-                      <img src={product.images?.[0]?.secure_url || 'https://placehold.co/100'} alt={product.title} className="w-full h-full object-cover" />
+                      <img src={getSearchThumbnailUrl(product.images?.[0]?.secure_url) || 'https://placehold.co/100'} alt={product.title} className="w-full h-full object-cover" />
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="text-sm font-semibold text-gray-900 truncate">{product.title}</div>

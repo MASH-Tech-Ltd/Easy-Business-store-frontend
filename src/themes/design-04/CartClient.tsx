@@ -6,6 +6,7 @@ import { useCart } from '@/context/CartContext';
 import { Minus, Plus, Trash2 } from 'lucide-react';
 
 import { getTranslation } from '@/utils/translations';
+import { getCartThumbnailUrl } from '@/utils/imageOptimizer';
 
 export default function CartClient04({ theme, storeInfo }: { theme?: any; storeInfo?: any }) {
   const { cartItems, updateQuantity, removeFromCart, totalItems, totalPrice } = useCart();
@@ -34,7 +35,7 @@ export default function CartClient04({ theme, storeInfo }: { theme?: any; storeI
               {cartItems.map((item) => (
                 <div key={item.id} className="p-4 sm:p-6 flex flex-row items-center gap-4 sm:gap-6">
                   <div className="w-16 h-16 sm:w-24 sm:h-24 bg-gray-50 rounded-xl border border-gray-100 shrink-0 flex items-center justify-center p-1 sm:p-2">
-                    <img src={item.image} alt={item.title} className="w-full h-full object-cover mix-blend-multiply" />
+                    <img src={getCartThumbnailUrl(item.image)} alt={item.title} className="w-full h-full object-cover mix-blend-multiply" />
                   </div>
                   <div className="flex-1 text-left">
                     <h3 className="text-sm sm:text-base font-semibold text-gray-900 mb-1 line-clamp-2">{item.title}</h3>

@@ -1,4 +1,5 @@
 "use client";
+import { getStoreLogoUrl } from '@/utils/imageOptimizer';
 
 import React from "react";
 import { Mail, Phone, MapPin } from "lucide-react";
@@ -69,7 +70,7 @@ export default function Footer05({
           <div className="md:col-span-4 lg:col-span-5 pr-4">
             <Link prefetch={false} href="/" className="inline-flex items-center gap-2 mb-6">
               {storeInfo?.logo && (
-                <img src={storeInfo.logo} alt={storeInfo.name} className="w-8 h-8 rounded-full object-cover" />
+                <img src={getStoreLogoUrl(storeInfo.logo)} alt={storeInfo.name} className="w-8 h-8 rounded-full object-cover" />
               )}
               <span className="font-bold text-xl tracking-tight text-gray-900">
                 {storeInfo?.name || "Minimal"}

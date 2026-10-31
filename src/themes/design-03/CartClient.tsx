@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { Minus, Plus, Trash2 } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
 import { getTranslation } from '@/utils/translations';
+import { getCartThumbnailUrl } from '@/utils/imageOptimizer';
 
 export default function CartClient03({ theme }: { theme?: any }) {
   const language = "en";
@@ -52,7 +53,7 @@ export default function CartClient03({ theme }: { theme?: any }) {
             <div key={item.id} className="flex flex-row items-center border-b border-white/10 last:border-b-0 p-4 md:p-8 hover:bg-[#0a0a0a] transition-colors group gap-4 sm:gap-8">
               <div className="w-20 h-20 sm:w-32 sm:h-32 bg-[#111] overflow-hidden shrink-0 border border-white/10 p-2 sm:p-4 relative flex items-center justify-center">
                 {item.image ? (
-                  <img src={item.image} alt={item.title} className="w-full h-full object-contain mix-blend-luminosity group-hover:mix-blend-normal transition-all" />
+                  <img src={getCartThumbnailUrl(item.image)} alt={item.title} className="w-full h-full object-contain mix-blend-luminosity group-hover:mix-blend-normal transition-all" />
                 ) : (
                   <div className="text-[8px] sm:text-[10px] text-gray-600 font-mono">NO IMG</div>
                 )}

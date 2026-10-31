@@ -1,4 +1,5 @@
 "use client";
+import { getStoreLogoUrl } from '@/utils/imageOptimizer';
 
 import React from "react";
 import { Mail, Phone, MapPin } from "lucide-react";
@@ -36,7 +37,7 @@ export default function Footer04({
             <div className="flex items-center gap-2 mb-4">
               {storeInfo?.logo && (
                 <img
-                  src={storeInfo.logo}
+                  src={getStoreLogoUrl(storeInfo.logo)}
                   alt={storeInfo.name}
                   className="w-8 h-8 rounded-full object-contain"
                 />

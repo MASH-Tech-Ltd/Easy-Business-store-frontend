@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Search } from 'lucide-react';
+import { getSearchThumbnailUrl } from '@/utils/imageOptimizer';
 
 export default function GlobalSearch03({ tenantSlug, theme }: { tenantSlug: string; theme?: any }) {
   const [query, setQuery] = useState('');
@@ -86,7 +87,7 @@ export default function GlobalSearch03({ tenantSlug, theme }: { tenantSlug: stri
                   >
                     <div className="w-10 h-10 bg-[#111] border border-white/10 flex-shrink-0 flex items-center justify-center p-1 group-hover:border-cyan-400 transition-colors">
                       <img 
-                        src={product.images?.[0]?.secure_url || 'https://placehold.co/100'} 
+                        src={getSearchThumbnailUrl(product.images?.[0]?.secure_url) || 'https://placehold.co/100'} 
                         alt={product.title}
                         className="w-full h-full object-contain mix-blend-luminosity group-hover:mix-blend-normal"
                       />

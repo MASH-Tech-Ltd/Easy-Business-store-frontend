@@ -1,3 +1,4 @@
+import { getCategoryCardImageUrl } from '@/utils/imageOptimizer';
 import { headers } from "next/headers";
 import Link from "next/link";
 import {
@@ -111,7 +112,7 @@ export default async function Design01Home({
                   <div className="text-gray-600 group-hover:text-indigo-600 group-hover:-translate-y-1 sm:group-hover:-translate-y-2 group-hover:shadow-lg transition-all duration-300 w-14 h-14 sm:w-16 sm:h-16 md:w-20 md:h-20 lg:w-24 lg:h-24 flex items-center justify-center shrink-0 bg-gray-50 rounded-xl sm:rounded-2xl overflow-hidden border border-gray-100">
                     {cat.image?.secure_url ? (
                       <img
-                        src={cat.image.secure_url}
+                        src={getCategoryCardImageUrl(cat.image?.secure_url)}
                         alt={cat.name}
                         className="w-full h-full object-cover"
                       />

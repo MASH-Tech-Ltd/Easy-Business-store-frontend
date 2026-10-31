@@ -1,3 +1,4 @@
+import { getCategoryCardImageUrl } from '@/utils/imageOptimizer';
 import { storefrontFetch } from "../../utils/storefrontFetch";
 import Link from 'next/link';
 import Footer04 from './components/layout/Footer';
@@ -65,7 +66,7 @@ export default async function Design04Categories({ tenantSlug }: { tenantSlug: s
               >
                 <div className="w-16 h-16 md:w-24 md:h-24 bg-gray-50 rounded-full flex items-center justify-center overflow-hidden mb-1 md:mb-2 group-hover:scale-110 transition-transform duration-300">
                   {cat.image?.secure_url ? (
-                    <img src={cat.image.secure_url} alt={cat.name} className="w-full h-full object-cover" />
+                    <img src={getCategoryCardImageUrl(cat.image?.secure_url)} alt={cat.name} className="w-full h-full object-cover" />
                   ) : (
                     <span className="text-[10px] md:text-xs text-gray-300">No Image</span>
                   )}

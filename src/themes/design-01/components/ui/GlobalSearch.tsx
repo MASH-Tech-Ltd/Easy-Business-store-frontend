@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { getTranslation } from '@/utils/translations';
 import { useTranslation } from '@/context/LanguageContext';
+import { getSearchThumbnailUrl } from '@/utils/imageOptimizer';
 
 export default function GlobalSearch({ tenantSlug }: { tenantSlug: string }) {
   const { t } = useTranslation();
@@ -105,7 +106,7 @@ export default function GlobalSearch({ tenantSlug }: { tenantSlug: string }) {
                   >
                     <div className="w-12 h-12 bg-white border border-gray-100 rounded flex-shrink-0 overflow-hidden">
                       <img 
-                        src={product.images?.[0]?.secure_url || 'https://placehold.co/100'} 
+                        src={getSearchThumbnailUrl(product.images?.[0]?.secure_url) || 'https://placehold.co/100'} 
                         alt={product.title}
                         className="w-full h-full object-cover"
                       />

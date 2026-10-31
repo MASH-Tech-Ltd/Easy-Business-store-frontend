@@ -4,6 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import { useCart } from '@/context/CartContext';
 import { useTranslation } from '@/context/LanguageContext';
+import { getCartThumbnailUrl } from '@/utils/imageOptimizer';
 import { Minus, Plus, Trash2 } from 'lucide-react';
 import { getTranslation } from '@/utils/translations';
 
@@ -41,7 +42,7 @@ export default function Design02CartClient({ theme }: { theme?: any }) {
                   <div key={item.id} className="py-6 flex flex-row items-center gap-4 sm:gap-8 group">
                     <div className="w-16 h-16 sm:w-32 sm:h-32 bg-gray-50 rounded-lg flex items-center justify-center overflow-hidden shrink-0">
                       {item.image ? (
-                        <img src={item.image} alt={item.title} className="w-full h-full object-cover mix-blend-multiply" />
+                        <img src={getCartThumbnailUrl(item.image)} alt={item.title} className="w-full h-full object-cover mix-blend-multiply" />
                       ) : (
                         <span className="text-gray-400 text-xs sm:text-sm">No Image</span>
                       )}

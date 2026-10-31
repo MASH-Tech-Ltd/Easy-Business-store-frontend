@@ -1,3 +1,4 @@
+import { getStoreLogoUrl } from '@/utils/imageOptimizer';
 import Link from "next/link";
 import { getTranslation } from '@/utils/translations';
 import { cleanCopyright } from "@/utils/seo";
@@ -29,7 +30,7 @@ export default function Footer({
           <h2 className="text-2xl font-semibold tracking-tight mb-4 flex items-center gap-2">
             {storeInfo?.logo ? (
               <img
-                src={storeInfo.logo}
+                src={getStoreLogoUrl(storeInfo.logo)}
                 alt={storeInfo?.name || "Minimal Store"}
                 className="w-10 h-10 rounded-full object-cover"
               />

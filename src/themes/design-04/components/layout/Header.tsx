@@ -1,3 +1,4 @@
+import { getStoreLogoUrl } from '@/utils/imageOptimizer';
 import React from 'react';
 import Link from 'next/link';
 import { headers } from 'next/headers';
@@ -24,7 +25,7 @@ export default async function Header04({ storeInfo, theme: initialTheme }: { sto
           {/* Logo */}
           <Link prefetch={false} href="/" className="flex items-center gap-3 shrink-0">
             {info?.logo ? (
-              <img src={info.logo} alt={info?.name || 'Store'} className="w-10 h-10 rounded-full object-contain border border-gray-100" />
+              <img src={getStoreLogoUrl(info.logo)} alt={info?.name || 'Store'} className="w-10 h-10 rounded-full object-contain border border-gray-100" />
             ) : null}
             <h1 className="text-xl font-black tracking-tight text-gray-900 uppercase">
               {info?.name || tenantSlug}

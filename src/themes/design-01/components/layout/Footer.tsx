@@ -1,3 +1,4 @@
+import { getStoreLogoUrl } from '@/utils/imageOptimizer';
 import React from "react";
 import Link from "next/link";
 import { Mail, Phone, MapPin } from "lucide-react";
@@ -55,7 +56,7 @@ export default async function Footer() {
             <div className="h-12 flex items-center justify-start shrink-0 gap-3">
               {storeInfo?.logo && (
                 <img
-                  src={storeInfo.logo}
+                  src={getStoreLogoUrl(storeInfo.logo)}
                   alt={storeInfo.name}
                   className="w-12 h-12 rounded-full object-cover shadow-sm border border-gray-100"
                 />

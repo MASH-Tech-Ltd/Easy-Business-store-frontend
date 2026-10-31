@@ -1,3 +1,4 @@
+import { getStoreLogoUrl } from '@/utils/imageOptimizer';
 import Link from 'next/link';
 import { headers } from 'next/headers';
 import GlobalSearch from '../ui/GlobalSearch';
@@ -21,7 +22,7 @@ export default async function Header({ storeInfo }: { storeInfo: any }) {
             <h1 className="text-2xl font-bold tracking-tight">
               <Link prefetch={false} href="/" className="flex items-center gap-3">
                 {storeInfo?.logo && (
-                  <img src={storeInfo.logo} alt={storeInfo?.name || 'Minimal Store'} className="w-8 h-8 rounded-full object-cover" />
+                  <img src={getStoreLogoUrl(storeInfo.logo)} alt={storeInfo?.name || 'Minimal Store'} className="w-8 h-8 rounded-full object-cover" />
                 )}
                 <span>{storeInfo?.name || 'Minimal Store'}</span>
               </Link>

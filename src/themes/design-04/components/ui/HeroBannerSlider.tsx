@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
+import { getBannerImageUrl } from '@/utils/imageOptimizer';
 
 interface HeroBannerSliderProps {
   banner?: {
@@ -64,7 +65,7 @@ export default function HeroBannerSlider04({ banner, featuredProductImage }: Her
                 }`}
               >
                 <img
-                  src={imgUrl}
+                  src={getBannerImageUrl(imgUrl)}
                   alt={banner?.title || `Banner ${index + 1}`}
                   className="w-full h-full object-cover"
                 />
@@ -120,7 +121,7 @@ export default function HeroBannerSlider04({ banner, featuredProductImage }: Her
                   }`}
                 >
                   <img
-                    src={imgUrl}
+                    src={getBannerImageUrl(imgUrl)}
                     alt={banner?.title || `Banner ${index + 1}`}
                     className="w-full h-full object-cover"
                   />

@@ -1,3 +1,4 @@
+import { getCategoryCardImageUrl } from '@/utils/imageOptimizer';
 import { storefrontFetch } from "../../utils/storefrontFetch";
 import { headers } from 'next/headers';
 import Link from 'next/link';
@@ -60,7 +61,7 @@ export default async function CategoriesPage05() {
 
                 <div className="flex-1 w-full mt-1 relative rounded-xl sm:rounded-[1.5rem] overflow-hidden">
                   {c.image ? (
-                    <img src={c.image?.secure_url || c.image} alt={c.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out" />
+                    <img src={getCategoryCardImageUrl(c.image?.secure_url || c.image)} alt={c.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out" />
                   ) : (
                     <div className="w-full h-full bg-gray-100 flex items-center justify-center text-[10px] text-gray-400 font-bold uppercase tracking-widest">No Image</div>
                   )}

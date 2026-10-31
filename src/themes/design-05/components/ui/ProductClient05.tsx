@@ -6,6 +6,7 @@ import { ShoppingCart, Star, Check } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import { useRouter } from "next/navigation";
 import { getTranslation } from "@/utils/translations";
+import { getProductMainImageUrl, getOptimizedImageUrl } from "@/utils/imageOptimizer";
 
 export default function ProductClient05({
   product,
@@ -192,7 +193,7 @@ export default function ProductClient05({
             {activeImage ? (
               <div className="w-full h-full rounded-2xl overflow-hidden">
                 <img
-                  src={activeImage}
+                  src={getProductMainImageUrl(activeImage)}
                   alt={product.title}
                   className="w-full h-full object-cover mix-blend-multiply transition-transform duration-700 ease-out group-hover:scale-110 rounded-2xl"
                 />
@@ -216,7 +217,7 @@ export default function ProductClient05({
                   }`}
                 >
                   <img
-                    src={imgUrl}
+                    src={getOptimizedImageUrl(imgUrl, 100)}
                     alt=""
                     className="w-full h-full object-cover mix-blend-multiply"
                   />

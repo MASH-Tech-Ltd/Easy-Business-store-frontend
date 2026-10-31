@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCart } from "@/context/CartContext";
 import { useTranslation } from "@/context/LanguageContext";
+import { getProductCardImageUrl } from "@/utils/imageOptimizer";
 import { getTranslation } from "@/utils/translations";
 
 interface ProductProps {
@@ -142,7 +143,7 @@ export default function ProductCard({
         )}
         {imageUrl ? (
           <img
-            src={imageUrl}
+            src={getProductCardImageUrl(imageUrl)}
             alt={product.title}
             loading="lazy"
             decoding="async"

@@ -1,3 +1,4 @@
+import { getCategoryCardImageUrl } from '@/utils/imageOptimizer';
 import Link from 'next/link';
 import Footer from './components/layout/Footer';
 import Header from './components/layout/Header';
@@ -57,7 +58,7 @@ export default async function Design01Categories({ tenantSlug }: { tenantSlug: s
               >
                 <div className="text-gray-600 group-hover:text-green-600 group-hover:-translate-y-2 transition-all duration-300 w-16 h-16 flex items-center justify-center bg-gray-50 rounded-full group-hover:bg-green-50 overflow-hidden">
                   {cat.image?.secure_url ? (
-                    <img src={cat.image.secure_url} alt={cat.name} className="w-full h-full object-cover" />
+                    <img src={getCategoryCardImageUrl(cat.image?.secure_url)} alt={cat.name} className="w-full h-full object-cover" />
                   ) : (
                     getCategoryIcon(cat.name)
                   )}

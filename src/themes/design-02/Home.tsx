@@ -1,3 +1,4 @@
+import { getCategoryCardImageUrl } from '@/utils/imageOptimizer';
 import { getStoreInfo, getTheme } from "@/core/api/store";
 import {
   getProducts,
@@ -70,7 +71,7 @@ export default async function Design02Home({
                 <div className="w-10 h-10 sm:w-12 sm:h-12 md:w-16 md:h-16 rounded-full bg-white shadow-sm flex items-center justify-center mb-2 sm:mb-3 md:mb-4 group-hover:scale-105 transition-transform overflow-hidden">
                   {category.image?.secure_url ? (
                     <img
-                      src={category.image.secure_url}
+                      src={getCategoryCardImageUrl(category.image?.secure_url)}
                       alt={category.name}
                       className="w-full h-full object-cover rounded-full"
                     />

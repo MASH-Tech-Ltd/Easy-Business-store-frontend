@@ -6,6 +6,7 @@ import { useCart } from '@/context/CartContext';
 import { useTranslation } from '@/context/LanguageContext';
 import { Minus, Plus, Trash2, ArrowLeft } from 'lucide-react';
 import { getTranslation } from '@/utils/translations';
+import { getCartThumbnailUrl } from '@/utils/imageOptimizer';
 
 export default function CartClient() {
 
@@ -41,7 +42,7 @@ export default function CartClient() {
                 {cartItems.map((item) => (
                   <div key={item.id} className="p-4 sm:p-6 flex flex-row items-center gap-4 sm:gap-6 group hover:bg-gray-50 transition-colors">
                     <div className="w-16 h-16 sm:w-24 sm:h-24 bg-[#F8F9FA] rounded-md border border-gray-200 shrink-0 flex items-center justify-center overflow-hidden">
-                      <img src={item.image} alt={item.title} className="w-full h-full object-cover mix-blend-multiply" />
+                      <img src={getCartThumbnailUrl(item.image)} alt={item.title} className="w-full h-full object-cover mix-blend-multiply" />
                     </div>
                     
                     <div className="flex-1 flex flex-col w-full text-left">

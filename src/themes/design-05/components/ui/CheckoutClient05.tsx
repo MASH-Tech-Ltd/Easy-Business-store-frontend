@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 import { bdLocations } from "@/data/locations";
 import { z } from "zod";
 import { getTranslation } from "@/utils/translations";
+import { getCheckoutThumbnailUrl } from "@/utils/imageOptimizer";
 import { computeShipping } from "@/utils/shipping";
 import {
   getSavedCustomerInfo,
@@ -623,7 +624,7 @@ export default function CheckoutClient05({
                     <div className="w-16 h-16 bg-[#F8F9FA] rounded-xl flex items-center justify-center border border-gray-100 p-2 overflow-hidden">
                       {item.image ? (
                         <img
-                          src={item.image}
+                          src={getCheckoutThumbnailUrl(item.image)}
                           alt={item.title}
                           className="w-full h-full object-cover mix-blend-multiply"
                         />

@@ -1,3 +1,4 @@
+import { getStoreLogoUrl } from '@/utils/imageOptimizer';
 import React from 'react';
 import Link from 'next/link';
 import { headers } from 'next/headers';
@@ -24,7 +25,7 @@ export default async function Header05({ storeInfo }: { storeInfo?: any }) {
           {/* Brand */}
           <Link prefetch={false} href="/" className="flex items-center gap-3 shrink-0 group">
             {info?.logo ? (
-              <img src={info.logo} alt={info?.name || 'Store'} className="w-10 h-10 rounded-xl object-cover border border-gray-100 shadow-xs group-hover:scale-105 transition-transform" />
+              <img src={getStoreLogoUrl(info.logo)} alt={info?.name || 'Store'} className="w-10 h-10 rounded-xl object-cover border border-gray-100 shadow-xs group-hover:scale-105 transition-transform" />
             ) : (
               <div className="w-10 h-10 bg-slate-900 text-white rounded-xl flex items-center justify-center font-bold text-sm shadow-xs group-hover:scale-105 transition-transform">
                 {(info?.name || tenantSlug).charAt(0).toUpperCase()}

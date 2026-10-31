@@ -10,6 +10,7 @@ import { bdLocations } from '@/data/locations';
 import { computeShipping } from '@/utils/shipping';
 import { z } from 'zod';
 import { getTranslation } from '@/utils/translations';
+import { getCheckoutThumbnailUrl } from '@/utils/imageOptimizer';
 import { getSavedCustomerInfo, saveCustomerInfo } from '@/utils/customerStorage';
 import { handleCheckoutError } from '@/utils/checkoutErrorHandler';
 
@@ -339,7 +340,7 @@ export default function CheckoutClient04({ storeInfo, theme }: { storeInfo?: any
               <div className="divide-y divide-gray-800 mb-8 max-h-[300px] overflow-y-auto">
                 {cartItems.map((item) => (
                   <div key={item.id} className="py-4 flex gap-4 first:pt-0 items-center">
-                    <img src={item.image} alt={item.title} className="w-12 h-12 rounded bg-white object-cover p-1" />
+                    <img src={getCheckoutThumbnailUrl(item.image)} alt={item.title} className="w-12 h-12 rounded bg-white object-cover p-1" />
                     <div className="flex-1">
                       <div className="text-sm font-medium text-white line-clamp-1">{item.title}</div>
                       <div className="text-xs text-gray-400">Qty: {item.quantity}</div>

@@ -4,6 +4,7 @@ import React from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import ProductCardActions from "./ProductCardActions";
+import { getProductCardImageUrl } from "@/utils/imageOptimizer";
 
 interface ProductProps {
   product: any;
@@ -57,7 +58,7 @@ export default function Design02ProductCard({
           )}
           {imageUrl ? (
             <img
-              src={imageUrl}
+              src={getProductCardImageUrl(imageUrl)}
               alt={product.title || product.name}
               loading="lazy"
               decoding="async"
@@ -119,7 +120,7 @@ export default function Design02ProductCard({
         )}
         {imageUrl ? (
           <img
-            src={imageUrl}
+            src={getProductCardImageUrl(imageUrl)}
             alt={product.title || product.name}
             loading="lazy"
             decoding="async"

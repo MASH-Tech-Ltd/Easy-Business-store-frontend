@@ -1,3 +1,4 @@
+import { getStoreLogoUrl } from '@/utils/imageOptimizer';
 import type { Metadata } from "next";
 import { Inter, Outfit, Roboto, Hind_Siliguri } from "next/font/google";
 import { cache } from "react";
@@ -360,7 +361,7 @@ export default async function RootLayout({
                 />
                 {storeLogo ? (
                   <img
-                    src={storeLogo}
+                    src={getStoreLogoUrl(storeLogo)}
                     alt={storeName}
                     style={{
                       width: "80px",

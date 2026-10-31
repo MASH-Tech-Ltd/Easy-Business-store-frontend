@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { getTranslation } from '@/utils/translations';
+import { getSearchThumbnailUrl } from '@/utils/imageOptimizer';
 
 export default function GlobalSearch({ tenantSlug, language = 'en', theme }: { tenantSlug: string, language?: string, theme?: any }) {
   const t = (key: any) => getTranslation(language, key);
@@ -77,7 +78,7 @@ export default function GlobalSearch({ tenantSlug, language = 'en', theme }: { t
                     className="flex items-center gap-4 p-3 hover:bg-gray-50 border-b border-gray-50 last:border-0 transition-colors"
                   >
                     <div className="w-12 h-12 bg-white border border-gray-100 rounded flex-shrink-0 overflow-hidden">
-                      <img src={product.images?.[0]?.secure_url || 'https://placehold.co/100'} alt={product.title} className="w-full h-full object-cover" />
+                      <img src={getSearchThumbnailUrl(product.images?.[0]?.secure_url) || 'https://placehold.co/100'} alt={product.title} className="w-full h-full object-cover" />
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="text-sm font-semibold text-gray-900 truncate">{product.title}</div>

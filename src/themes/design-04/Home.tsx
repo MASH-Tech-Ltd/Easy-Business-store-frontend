@@ -1,3 +1,4 @@
+import { getCategoryCardImageUrl } from '@/utils/imageOptimizer';
 import { getStoreInfo, getTheme } from '@/core/api/store';
 import { getProducts, getBestsellingProducts, getNewArrivalsProducts } from '@/core/api/product';
 import { getCategories } from '@/core/api/category';
@@ -62,7 +63,7 @@ export default async function Design04Home({ tenantSlug }: { tenantSlug: string 
               >
                 {cat.image?.secure_url ? (
                   <img
-                    src={cat.image.secure_url}
+                    src={getCategoryCardImageUrl(cat.image?.secure_url)}
                     alt={cat.name}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 absolute inset-0"
                   />

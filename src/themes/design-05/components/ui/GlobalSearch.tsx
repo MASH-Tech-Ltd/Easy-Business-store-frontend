@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
+import { getSearchThumbnailUrl } from '@/utils/imageOptimizer';
 
 export default function GlobalSearch05({ tenantSlug, theme }: { tenantSlug: string; theme?: any }) {
   const [query, setQuery] = useState('');
@@ -60,7 +61,7 @@ export default function GlobalSearch05({ tenantSlug, theme }: { tenantSlug: stri
                   <Link prefetch={false} key={product._id} href={`/product/${product.slug}`} onClick={() => { setIsOpen(false); setQuery(''); }}
                     className="flex items-center gap-4 p-3 mx-2 my-1 rounded-xl hover:bg-gray-50 transition-colors group">
                     <div className="w-12 h-12 rounded-lg bg-gray-50 flex items-center justify-center shrink-0 overflow-hidden border border-gray-100/50 group-hover:border-gray-200 transition-colors">
-                      <img src={product.images?.[0]?.secure_url || 'https://placehold.co/100'} alt={product.title} className="w-full h-full object-cover mix-blend-multiply" />
+                      <img src={getSearchThumbnailUrl(product.images?.[0]?.secure_url) || 'https://placehold.co/100'} alt={product.title} className="w-full h-full object-cover mix-blend-multiply" />
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="text-sm font-semibold text-gray-900 truncate">{product.title}</div>

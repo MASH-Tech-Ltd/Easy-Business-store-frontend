@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, MouseEvent } from 'react';
+import { getProductMainImageUrl, getProductGalleryImageUrl, getOptimizedImageUrl } from '@/utils/imageOptimizer';
 
 interface ProductGalleryProps {
   images?: any[];
@@ -58,7 +59,7 @@ export default function ProductGallery({ images, image, title }: ProductGalleryP
               } bg-white p-0`}
             >
               <img 
-                src={imgUrl} 
+                src={getOptimizedImageUrl(imgUrl, 100)} 
                 alt={`${title} thumbnail ${idx + 1}`} 
                 loading="lazy"
                 decoding="async"
@@ -77,13 +78,12 @@ export default function ProductGallery({ images, image, title }: ProductGalleryP
         onMouseMove={handleMouseMove}
       >
         <img 
-          src={currentImage} 
+          src={isZoomed ? getProductGalleryImageUrl(currentImage) : getProductMainImageUrl(currentImage)} 
           alt={title} 
           decoding="async"
-          // @ts-ignore
-          fetchpriority="high"
+          fetchPriority="high"
           style={{ transformOrigin: isZoomed ? transformOrigin : 'center' }}
-          className={`w-full h-full object-cover transition-transform duration-300 ease-out ${isZoomed ? 'scale-[2.5]' : 'scale-100'}`} 
+          className={`w-full h-full object-cover transition-transform duration-300 ease-out ${isZoomed ? 'scale-[1.5]' : 'scale-100'}`} 
         />
       </div>
     </div>

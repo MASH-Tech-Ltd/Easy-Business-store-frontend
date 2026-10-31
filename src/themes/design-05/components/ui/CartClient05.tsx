@@ -5,6 +5,7 @@ import { useCart } from '@/context/CartContext';
 import Link from 'next/link';
 import { Trash2, ArrowRight, Minus, Plus, ShoppingBag } from 'lucide-react';
 import { getTranslation } from '@/utils/translations';
+import { getCartThumbnailUrl } from '@/utils/imageOptimizer';
 
 export default function CartClient05({ theme }: { theme?: any }) {
   const language = theme?.language || "en";
@@ -54,7 +55,7 @@ export default function CartClient05({ theme }: { theme?: any }) {
                   <div className="col-span-1 md:col-span-6 flex gap-6 w-full">
                     <div className="w-24 h-24 bg-[#F8F9FA] rounded-2xl flex items-center justify-center shrink-0 border border-gray-100 p-2">
                       {item.image ? (
-                        <img src={item.image} alt={item.title} className="w-full h-full object-cover mix-blend-multiply" />
+                        <img src={getCartThumbnailUrl(item.image)} alt={item.title} className="w-full h-full object-cover mix-blend-multiply" />
                       ) : (
                         <span className="text-[10px] text-gray-300 uppercase font-bold tracking-widest">Image</span>
                       )}

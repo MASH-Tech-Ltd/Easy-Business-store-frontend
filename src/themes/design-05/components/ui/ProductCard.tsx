@@ -6,6 +6,7 @@ import { ShoppingCart } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
 import { useRouter } from 'next/navigation';
 import { getTranslation } from '@/utils/translations';
+import { getProductCardImageUrl } from '@/utils/imageOptimizer';
 
 export default function ProductCard05({ product, isList = false, isBestSelling = false, theme }: { product: any; isList?: boolean; isBestSelling?: boolean; theme?: any }) {
   const language = theme?.language || "en";
@@ -56,7 +57,7 @@ export default function ProductCard05({ product, isList = false, isBestSelling =
             </div>
           )}
           {imageUrl ? (
-            <img src={imageUrl} alt={product.title} loading="lazy" decoding="async" className={`w-full h-full object-cover mix-blend-multiply group-hover:scale-105 transition-transform duration-500 ${isOutOfStock ? "opacity-70 grayscale-[30%]" : ""}`} />
+            <img src={getProductCardImageUrl(imageUrl)} alt={product.title} loading="lazy" decoding="async" className={`w-full h-full object-cover mix-blend-multiply group-hover:scale-105 transition-transform duration-500 ${isOutOfStock ? "opacity-70 grayscale-[30%]" : ""}`} />
           ) : (
             <div className="text-gray-300 text-xs font-medium uppercase tracking-widest">No image</div>
           )}
@@ -112,7 +113,7 @@ export default function ProductCard05({ product, isList = false, isBestSelling =
         )}
 
         {imageUrl ? (
-          <img src={imageUrl} alt={product.title || product.name} loading="lazy" decoding="async" className={`w-full h-full object-cover mix-blend-multiply group-hover:scale-105 transition-transform duration-700 ease-out ${isOutOfStock ? "opacity-70 grayscale-[30%]" : ""}`} />
+          <img src={getProductCardImageUrl(imageUrl)} alt={product.title || product.name} loading="lazy" decoding="async" className={`w-full h-full object-cover mix-blend-multiply group-hover:scale-105 transition-transform duration-700 ease-out ${isOutOfStock ? "opacity-70 grayscale-[30%]" : ""}`} />
         ) : (
           <div className="w-full h-full flex items-center justify-center text-gray-300 text-xs font-medium uppercase tracking-widest">No image</div>
         )}

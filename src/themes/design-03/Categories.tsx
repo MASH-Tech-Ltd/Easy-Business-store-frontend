@@ -1,3 +1,4 @@
+import { getCategoryCardImageUrl } from '@/utils/imageOptimizer';
 ﻿import { storefrontFetch } from "../../utils/storefrontFetch";
 import Link from 'next/link';
 import { getStoreInfo, getTheme } from '@/core/api/store';
@@ -62,7 +63,7 @@ export default async function Design03Categories({ tenantSlug }: { tenantSlug: s
                   className={`group relative h-64 border-b sm:border-r border-white/10 ${index % 4 === 3 ? 'xl:border-r-0' : ''} bg-[#0a0a0a] overflow-hidden`}
                 >
                   {cat.image?.secure_url ? (
-                    <img src={cat.image.secure_url} alt={cat.name} className="w-full h-full object-cover mix-blend-luminosity opacity-40 group-hover:mix-blend-normal group-hover:opacity-80 transition-all duration-500 group-hover:scale-105" />
+                    <img src={getCategoryCardImageUrl(cat.image?.secure_url)} alt={cat.name} className="w-full h-full object-cover mix-blend-luminosity opacity-40 group-hover:mix-blend-normal group-hover:opacity-80 transition-all duration-500 group-hover:scale-105" />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center bg-[#111]">
                        <span className="text-gray-600 font-mono text-xs uppercase">No Signal</span>

@@ -1,3 +1,4 @@
+import { getStoreLogoUrl } from '@/utils/imageOptimizer';
 import Link from 'next/link';
 import { headers } from 'next/headers';
 import { ShoppingCart, Home, Grid, ChevronRight } from 'lucide-react';
@@ -19,7 +20,7 @@ export default async function Header03({ storeInfo }: { storeInfo?: any }) {
       <header className="lg:hidden flex flex-col p-4 border-b border-white/10 bg-[#050505] sticky top-0 z-50 gap-4">
         <div className="flex items-center justify-between">
           <Link prefetch={false} href="/" className="flex items-center gap-2">
-            {storeInfo?.logo && <img src={storeInfo.logo} alt="Logo" className="w-8 h-8 rounded-none border border-white/20" />}
+            {storeInfo?.logo && <img src={getStoreLogoUrl(storeInfo.logo)} alt="Logo" className="w-8 h-8 rounded-none border border-white/20" />}
             <span className="font-bold tracking-widest uppercase text-sm">{storeInfo?.name || 'Store'}</span>
           </Link>
           <Link prefetch={false} href="/cart" className="text-white hover:text-cyan-400 transition-colors">
@@ -34,7 +35,7 @@ export default async function Header03({ storeInfo }: { storeInfo?: any }) {
         <div className="mb-8">
           <Link prefetch={false} href="/" className="flex flex-col gap-4 group">
             {storeInfo?.logo ? (
-              <img src={storeInfo.logo} alt="Logo" className="w-16 h-16 rounded-none border border-white/20 p-1 bg-white/5 group-hover:border-cyan-400 transition-colors" />
+              <img src={getStoreLogoUrl(storeInfo.logo)} alt="Logo" className="w-16 h-16 rounded-none border border-white/20 p-1 bg-white/5 group-hover:border-cyan-400 transition-colors" />
             ) : (
               <div className="w-12 h-12 border border-white/20 bg-white/5 flex items-center justify-center font-bold text-xl group-hover:border-cyan-400 transition-colors">03</div>
             )}

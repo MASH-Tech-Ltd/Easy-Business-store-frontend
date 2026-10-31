@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { Search, Package, CheckCircle, Truck, Clock } from 'lucide-react';
 import Link from 'next/link';
+import { getCartThumbnailUrl } from '@/utils/imageOptimizer';
 
 export function TrackOrderContent({ tenantId }: { tenantId?: string }) {
   const searchParams = useSearchParams();
@@ -166,7 +167,7 @@ export function TrackOrderContent({ tenantId }: { tenantId?: string }) {
                         <li key={idx} className="pl-3 pr-4 py-3 flex items-center justify-between text-sm">
                           <div className="flex items-center">
                             {item.image && (
-                              <img src={item.image} alt={item.title} className="w-10 h-10 object-cover rounded mr-3" />
+                              <img src={getCartThumbnailUrl(item.image)} alt={item.title} className="w-10 h-10 object-cover rounded mr-3" />
                             )}
                             <span className="truncate flex-1">{item.title}</span>
                           </div>

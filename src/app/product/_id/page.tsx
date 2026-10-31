@@ -5,6 +5,7 @@ import Sidebar from '@/components/Sidebar';
 import ProductActions from '@/themes/design-01/components/ui/ProductActions';
 import Link from 'next/link';
 import FloatingButtons from '@/themes/design-01/components/ui/FloatingButtons';
+import { getProductMainImageUrl } from '@/utils/imageOptimizer';
 
 async function getProduct(id: string) {
   try {
@@ -54,7 +55,7 @@ export default async function ProductDetails({ params }: { params: Promise<{ id:
                </div>
             )}
             <img 
-              src={typeof product.image === 'string' ? product.image : product.image?.secure_url} 
+              src={getProductMainImageUrl(typeof product.image === 'string' ? product.image : product.image?.secure_url)} 
               alt={product.title} 
               className="w-full h-auto object-cover max-h-[500px] border border-gray-100 rounded-lg" 
             />

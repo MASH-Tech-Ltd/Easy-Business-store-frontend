@@ -1,3 +1,4 @@
+import { getCategoryCardImageUrl } from '@/utils/imageOptimizer';
 import { getStoreInfo, getTheme } from '@/core/api/store';
 import { getProducts, getBestsellingProducts, getJustForYouProducts } from '@/core/api/product';
 import { getCategories } from '@/core/api/category';
@@ -70,7 +71,7 @@ export default async function Design03Home({ tenantSlug }: { tenantSlug: string 
               >
                 {category.image?.secure_url ? (
                   <img 
-                    src={category.image.secure_url} 
+                    src={getCategoryCardImageUrl(category.image?.secure_url)} 
                     alt={category.name} 
                     className="w-full h-full object-cover opacity-40 mix-blend-luminosity group-hover:mix-blend-normal group-hover:opacity-80 group-hover:scale-105 transition-all duration-500" 
                   />

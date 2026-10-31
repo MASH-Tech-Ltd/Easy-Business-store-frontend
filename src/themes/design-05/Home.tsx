@@ -1,3 +1,4 @@
+import { getCategoryCardImageUrl } from '@/utils/imageOptimizer';
 import { getStoreInfo, getTheme } from "@/core/api/store";
 import { getProducts, getBestsellingProducts, getNewArrivalsProducts } from "@/core/api/product";
 import { getCategories } from "@/core/api/category";
@@ -77,7 +78,7 @@ export default async function Design05Home({
                   <div className="absolute inset-0 bg-[#F8F9FA]">
                     {c.image && (
                       <img
-                        src={c.image?.secure_url || c.image}
+                        src={getCategoryCardImageUrl(c.image?.secure_url || c.image)}
                         alt={c.name}
                         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
                       />

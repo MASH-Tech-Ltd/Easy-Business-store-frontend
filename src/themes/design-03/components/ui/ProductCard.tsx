@@ -4,6 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import ProductCardActions03 from './ProductCardActions';
+import { getProductCardImageUrl } from '@/utils/imageOptimizer';
 
 interface ProductProps {
   product: any;
@@ -50,7 +51,7 @@ export default function Design03ProductCard({ product, isList = false, isBestSel
             </div>
           )}
           {imageUrl ? (
-            <img src={imageUrl} alt={product.title || product.name} loading="lazy" decoding="async" className={`w-full h-full object-contain mix-blend-luminosity group-hover:mix-blend-normal transition-all duration-300 ${isOutOfStock ? "opacity-60 grayscale" : ""}`} />
+            <img src={getProductCardImageUrl(imageUrl)} alt={product.title || product.name} loading="lazy" decoding="async" className={`w-full h-full object-contain mix-blend-luminosity group-hover:mix-blend-normal transition-all duration-300 ${isOutOfStock ? "opacity-60 grayscale" : ""}`} />
           ) : (
             <div className="w-full h-full flex items-center justify-center text-gray-600 text-xs font-mono uppercase tracking-widest">No Signal</div>
           )}
@@ -98,7 +99,7 @@ export default function Design03ProductCard({ product, isList = false, isBestSel
             </div>
           )}
           {imageUrl ? (
-            <img src={imageUrl} alt={product.title || product.name} loading="lazy" decoding="async" className={`w-full h-full object-contain mix-blend-luminosity group-hover:mix-blend-normal transition-all duration-500 scale-95 group-hover:scale-105 ${isOutOfStock ? "opacity-60 grayscale" : ""}`} />
+            <img src={getProductCardImageUrl(imageUrl)} alt={product.title || product.name} loading="lazy" decoding="async" className={`w-full h-full object-contain mix-blend-luminosity group-hover:mix-blend-normal transition-all duration-500 scale-95 group-hover:scale-105 ${isOutOfStock ? "opacity-60 grayscale" : ""}`} />
           ) : (
             <div className="w-full h-full flex items-center justify-center">
               <span className="text-gray-600 text-xs font-mono uppercase tracking-widest">No Signal</span>
