@@ -192,10 +192,22 @@ export default function ProductClient05({
           <div className="aspect-[4/4] bg-[#F8F9FA] rounded-[2rem] p-6 sm:p-10 flex items-center justify-center overflow-hidden border border-gray-100 group cursor-zoom-in">
             {activeImage ? (
               <div className="w-full h-full rounded-2xl overflow-hidden">
+                {/* Instant blurred micro-thumbnail */}
+                <img
+                  src={getOptimizedImageUrl(activeImage, 50)}
+                  alt=""
+                  aria-hidden="true"
+                  loading="eager"
+                  decoding="sync"
+                  className="absolute inset-0 w-full h-full object-cover blur-lg scale-110 opacity-60 pointer-events-none mix-blend-multiply"
+                />
                 <img
                   src={getProductMainImageUrl(activeImage)}
                   alt={product.title}
-                  className="w-full h-full object-cover mix-blend-multiply transition-transform duration-700 ease-out group-hover:scale-110 rounded-2xl"
+                  loading="eager"
+                  decoding="async"
+                  fetchPriority="high"
+                  className="w-full h-full object-cover mix-blend-multiply transition-transform duration-700 ease-out group-hover:scale-110 rounded-2xl relative z-10"
                 />
               </div>
             ) : (

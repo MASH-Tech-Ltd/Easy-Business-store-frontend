@@ -4,6 +4,7 @@ import { getTheme, getStoreInfo } from "@/core/api/store";
 import { getProductBySlug } from "@/core/api/product";
 import { themeRegistry } from "@/themes/themeRegistry";
 import { getStoreName, getRequestContext, getSiteOrigin } from "@/utils/seo";
+import { getProductMainImageUrl } from "@/utils/imageOptimizer";
 import type { Metadata, ResolvingMetadata } from "next";
 
 interface PageProps {
@@ -190,11 +191,22 @@ export default async function ProductPage({ params }: PageProps) {
       }
     : null;
 
+  const primaryImageUrl = product?.images?.[0]?.secure_url || product?.image?.secure_url || (typeof product?.image === "string" ? product.image : null);
+
   const ThemeProduct =
     themeRegistry[themeId]?.Product || themeRegistry["design-01"].Product;
 
   return (
     <>
+      {primaryImageUrl && (
+        <link
+          rel="preload"
+          as="image"
+          href={getProductMainImageUrl(primaryImageUrl)}
+          fetchPriority="high"
+        />
+      )}
+
       {breadcrumbJsonLd && (
         <script
           type="application/ld+json"
