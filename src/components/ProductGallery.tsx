@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, MouseEvent } from 'react';
+import { useState, useEffect, MouseEvent } from 'react';
 import { getProductMainImageUrl, getProductGalleryImageUrl, getOptimizedImageUrl } from '@/utils/imageOptimizer';
 
 interface ProductGalleryProps {
@@ -14,6 +14,10 @@ export default function ProductGallery({ images, image, title }: ProductGalleryP
   const [transformOrigin, setTransformOrigin] = useState('center');
   const [isZoomed, setIsZoomed] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+  }, []);
 
   const handleMouseMove = (e: MouseEvent<HTMLDivElement>) => {
     const { left, top, width, height } = e.currentTarget.getBoundingClientRect();
