@@ -14,14 +14,21 @@
  *   - Store Logo: 150px
  *   - Homepage Banner: 1200px
  *
- * CDN Proxy:
- *   All Cloudinary URLs are rewritten to go through cdn.masheco.com
- *   so that res.cloudinary.com is never exposed in the browser.
+ * Smart Dual-Environment Routing:
+ *   - In Production (VPS / Live Stores): Routes 100% through cdn.masheco.com/img/...
+ *     so that res.cloudinary.com is never exposed anywhere in the browser.
+ *   - In Development (Local Device): Routes directly to Cloudinary so local development
+ *     is never blocked by local ISP DNS propagation or local CORS issues.
  */
 
-/** CDN proxy — maps /img/... → Cloudinary /dapjiys4/image/upload/... */
-const CDN_IMG_BASE = 'https://cdn.masheco.com/img';
-const CLOUDINARY_UPLOAD_PREFIX = 'https://res.cloudinary.com/dapjiys4/image/upload/';
+const IS_DEV = process.env.NODE_ENV === 'development';
+const FORCE_CDN = process.env.NEXT_PUBLIC_FORCE_CDN === 'true';
+const USE_CDN = !IS_DEV || FORCE_CDN;
+
+/** CDN proxy in prod; direct Cloudinary in dev */
+export const CDN_IMG_BASE = USE_CDN
+  ? 'https://cdn.masheco.com/img'
+  : 'https://res.cloudinary.com/dapjiys4/image/upload';
 
 export type ImagePreset =
   | 'search'          // 50px
@@ -46,6 +53,15 @@ export const IMAGE_WIDTHS: Record<ImagePreset, number> = {
   'banner': 1200,
 };
 
+function stripCloudinaryTransforms(rawRest: string): string {
+  let rest = rawRest;
+  const transformSegmentRegex = /^((?:(?:[a-z]{1,4}_[^,/]+|f_auto|q_auto[^,/]*)[,;]?)+\/)/i;
+  while (transformSegmentRegex.test(rest)) {
+    rest = rest.replace(transformSegmentRegex, '');
+  }
+  return rest;
+}
+
 export function getOptimizedImageUrl(
   url?: string | null,
   presetOrWidth: ImagePreset | number = 'product-card'
@@ -59,29 +75,80 @@ export function getOptimizedImageUrl(
       ? presetOrWidth
       : IMAGE_WIDTHS[presetOrWidth] || 300;
 
-  // Non-Cloudinary or already optimized internal assets
-  if (!trimmed.includes('res.cloudinary.com') || !trimmed.includes('/image/upload/')) {
-    return trimmed;
+  // Cloudinary upload URL (http or https, any cloud name)
+  if (trimmed.includes('res.cloudinary.com') && trimmed.includes('/image/upload/')) {
+    const parts = trimmed.split('/image/upload/');
+    if (parts.length === 2) {
+      const rest = stripCloudinaryTransforms(parts[1]);
+      return `${CDN_IMG_BASE}/f_auto,q_auto:good,w_${width},c_limit/${rest}`;
+    }
   }
 
-  const parts = trimmed.split('/image/upload/');
-  if (parts.length !== 2) return trimmed;
-
-  // baseUrl = https://res.cloudinary.com/dapjiys4/image/upload/
-  const baseUrl = parts[0] + '/image/upload/';
-  let rest = parts[1];
-
-  // Remove any existing transformation segments (prevents double transformation)
-  const transformSegmentRegex = /^((?:(?:[a-z]{1,4}_[^,/]+|f_auto|q_auto[^,/]*)[,;]?)+\/)/i;
-  while (transformSegmentRegex.test(rest)) {
-    rest = rest.replace(transformSegmentRegex, '');
+  // Already routed through CDN
+  if (trimmed.includes('cdn.masheco.com/img/')) {
+    const parts = trimmed.split('/img/');
+    if (parts.length === 2) {
+      const rest = stripCloudinaryTransforms(parts[1]);
+      return `${CDN_IMG_BASE}/f_auto,q_auto:good,w_${width},c_limit/${rest}`;
+    }
   }
 
-  // Build the Cloudinary optimized URL then rewrite to CDN:
-  // https://res.cloudinary.com/dapjiys4/image/upload/TRANSFORMS/photo.jpg
-  //   → https://cdn.masheco.com/img/TRANSFORMS/photo.jpg
-  const fullCloudinaryUrl = `${baseUrl}f_auto,q_auto:good,w_${width},c_limit/${rest}`;
-  return fullCloudinaryUrl.replace(CLOUDINARY_UPLOAD_PREFIX, `${CDN_IMG_BASE}/`);
+  return trimmed;
+}
+
+/**
+ * Generates square PNG favicons for browser tab & search engines
+ */
+export function getFaviconUrl(url?: string | null, size: number = 192): string {
+  if (!url || typeof url !== 'string') return '/favicon.ico';
+  const trimmed = url.trim();
+  if (!trimmed) return '/favicon.ico';
+
+  if (trimmed.includes('res.cloudinary.com') && trimmed.includes('/image/upload/')) {
+    const parts = trimmed.split('/image/upload/');
+    if (parts.length === 2) {
+      let rest = stripCloudinaryTransforms(parts[1]);
+      rest = rest.replace(/\.[^/.]+$/, '.png');
+      return `${CDN_IMG_BASE}/w_${size},h_${size},c_fill,g_center,f_png/${rest}`;
+    }
+  }
+
+  if (trimmed.includes('cdn.masheco.com/img/')) {
+    const parts = trimmed.split('/img/');
+    if (parts.length === 2) {
+      let rest = stripCloudinaryTransforms(parts[1]);
+      rest = rest.replace(/\.[^/.]+$/, '.png');
+      return `${CDN_IMG_BASE}/w_${size},h_${size},c_fill,g_center,f_png/${rest}`;
+    }
+  }
+
+  return trimmed;
+}
+
+/**
+ * Generates 180x180 square PNG apple touch icon
+ */
+export function getAppleTouchIconUrl(url?: string | null): string {
+  return getFaviconUrl(url, 180);
+}
+
+/**
+ * Converts any Cloudinary URL without resizing (preserves original format)
+ */
+export function toCdnUrl(url?: string | null): string {
+  if (!url || typeof url !== 'string') return '';
+  const trimmed = url.trim();
+  if (!trimmed) return '';
+
+  if (trimmed.includes('res.cloudinary.com') && trimmed.includes('/image/upload/')) {
+    const parts = trimmed.split('/image/upload/');
+    if (parts.length === 2) {
+      const rest = stripCloudinaryTransforms(parts[1]);
+      return `${CDN_IMG_BASE}/${rest}`;
+    }
+  }
+
+  return trimmed;
 }
 
 // Semantic helper functions matching the Global Optimization Standard

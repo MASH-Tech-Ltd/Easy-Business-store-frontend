@@ -1,5 +1,6 @@
 import { headers } from 'next/headers';
 import { notFound } from 'next/navigation';
+import { getStoreLogoUrl, getCategoryCardImageUrl, getProductCardImageUrl } from '@/utils/imageOptimizer';
 import { getTheme, getStoreInfo } from '@/core/api/store';
 import { getCategories } from '@/core/api/category';
 import { getProducts } from '@/core/api/product';
@@ -81,10 +82,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       : `Shop the latest collection of ${categoryName} online at ${storeName}.${priceText} genuine products with fast delivery across Bangladesh.`);
 
   const ogImage =
-    category?.image?.secure_url ||
-    category?.image ||
-    storeInfo?.logo ||
-    null;
+    getCategoryCardImageUrl(category?.image?.secure_url || category?.image) ||
+    (storeInfo?.logo ? getStoreLogoUrl(storeInfo.logo) : null);
 
   const canonicalPath = `/category/${encodeURIComponent(category?.slug || decodedSlug)}`;
   const canonicalUrl = `${baseUrl}${canonicalPath}`;
@@ -276,7 +275,7 @@ export default async function CategoryPage({ params, searchParams }: PageProps) 
       numberOfItems: products.length,
       itemListElement: products.slice(0, 15).map((prod: any, idx: number) => {
         const prodPrice = Number(prod.salePrice ?? prod.discountedPrice ?? prod.price ?? 0);
-        const prodImg = prod.images?.[0]?.secure_url || prod.images?.[0] || storeInfo?.logo;
+        const prodImg = getProductCardImageUrl(prod.images?.[0]?.secure_url || prod.images?.[0]) || (storeInfo?.logo ? getStoreLogoUrl(storeInfo.logo) : undefined);
         const prodUrl = `${baseUrl}/product/${encodeURIComponent(prod.slug || prod._id)}`;
 
         return {
@@ -325,7 +324,7 @@ export default async function CategoryPage({ params, searchParams }: PageProps) 
     '@type': 'OnlineStore',
     name: storeName,
     url: baseUrl,
-    logo: storeInfo?.logo || undefined,
+    logo: storeInfo?.logo ? getStoreLogoUrl(storeInfo.logo) : undefined,
     description: storeInfo?.description || `${storeName} official online store`,
     currenciesAccepted: currencyCode,
     paymentAccepted: 'Cash on Delivery, Digital Payment, bKash, Nagad',

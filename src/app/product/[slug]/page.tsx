@@ -4,7 +4,7 @@ import { getTheme, getStoreInfo } from "@/core/api/store";
 import { getProductBySlug } from "@/core/api/product";
 import { themeRegistry } from "@/themes/themeRegistry";
 import { getStoreName, getRequestContext, getSiteOrigin } from "@/utils/seo";
-import { getProductMainImageUrl } from "@/utils/imageOptimizer";
+import { getProductMainImageUrl, getStoreLogoUrl } from "@/utils/imageOptimizer";
 import type { Metadata, ResolvingMetadata } from "next";
 
 interface PageProps {
@@ -41,8 +41,8 @@ export async function generateMetadata(
     product.description?.substring(0, 160)?.replace(/<[^>]*>?/gm, "") ||
     `Buy ${product.title}`;
 
-  const fallbackImage = storeInfo?.logo || "/favicon.ico";
-  const imageUrl = product.images?.[0]?.secure_url || fallbackImage;
+  const fallbackImage = storeInfo?.logo ? getStoreLogoUrl(storeInfo.logo) : "/favicon.ico";
+  const imageUrl = product.images?.[0]?.secure_url ? getProductMainImageUrl(product.images[0].secure_url) : fallbackImage;
 
   return {
     title: {
@@ -165,7 +165,7 @@ export default async function ProductPage({ params }: PageProps) {
           product.description?.replace(/<[^>]*>?/gm, "") ||
           product.title,
         image:
-          product.images?.map((img: any) => img.secure_url).filter(Boolean) ||
+          product.images?.map((img: any) => getProductMainImageUrl(img.secure_url)).filter(Boolean) ||
           [],
         sku: product.sku || product._id,
         brand: product.brand

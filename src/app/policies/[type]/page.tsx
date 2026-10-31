@@ -1,3 +1,4 @@
+import { getStoreLogoUrl } from '@/utils/imageOptimizer';
 import Link from 'next/link';
 import { headers } from 'next/headers';
 import { notFound } from 'next/navigation';
@@ -53,7 +54,7 @@ export async function generateMetadata(
 
   const title = `${policyInfo.title} | ${storeName}`;
   const description = `Read the official ${policyInfo.title} of ${storeName}. Verified retail guidelines, buyer protection, customer service, and terms.`;
-  const ogImage = storeInfo?.logo || null;
+  const ogImage = storeInfo?.logo ? getStoreLogoUrl(storeInfo.logo) : null;
 
   return {
     title: { absolute: title },

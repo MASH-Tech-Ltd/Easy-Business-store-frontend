@@ -29,6 +29,10 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: "https",
+        hostname: "cdn.masheco.com",
+      },
+      {
+        protocol: "https",
         hostname: "res.cloudinary.com",
       },
       {

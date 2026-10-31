@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getRequestContext } from "@/utils/seo";
 import { getStoreInfo } from "@/core/api/store";
+import { getFaviconUrl } from "@/utils/imageOptimizer";
 
 export const dynamic = "force-dynamic";
 
@@ -12,18 +13,12 @@ export async function GET() {
     const { tenantSlug } = await getRequestContext();
     if (tenantSlug && tenantSlug !== "main") {
       const storeInfo = await getStoreInfo(tenantSlug);
-      let logo = storeInfo?.logo;
+      const logo = storeInfo?.logo;
       if (logo) {
-        if (logo.includes("cloudinary.com")) {
-          logo = logo.replace(/\.[^/.]+$/, ".png");
-          logo = logo.replace(
-            "/upload/",
-            "/upload/w_192,h_192,c_fill,g_center,f_png/"
-          );
-        }
+        const cdnFavicon = getFaviconUrl(logo, 192);
         
         try {
-          const imgRes = await fetch(logo, { next: { revalidate: 86400 } });
+          const imgRes = await fetch(cdnFavicon, { next: { revalidate: 86400 } });
           if (imgRes.ok) {
             const buffer = await imgRes.arrayBuffer();
             const contentType = imgRes.headers.get("content-type") || "image/png";
@@ -37,7 +32,7 @@ export async function GET() {
           }
         } catch {
           // If direct proxy fails, fallback to 302 redirect WITHOUT noindex
-          return NextResponse.redirect(logo, {
+          return NextResponse.redirect(cdnFavicon, {
             status: 302,
             headers: {
               "Cache-Control": "public, max-age=86400, s-maxage=604800",
@@ -59,4 +54,3 @@ export async function GET() {
     },
   });
 }
-

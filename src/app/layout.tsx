@@ -1,4 +1,8 @@
-import { getStoreLogoUrl } from '@/utils/imageOptimizer';
+import {
+  getStoreLogoUrl,
+  getFaviconUrl,
+  getAppleTouchIconUrl,
+} from '@/utils/imageOptimizer';
 import type { Metadata } from "next";
 import { Inter, Outfit, Roboto, Hind_Siliguri } from "next/font/google";
 import { cache } from "react";
@@ -97,22 +101,9 @@ export async function generateMetadata(): Promise<Metadata> {
   const title = getStoreName(storeInfo, tenantSlug);
   const description = storeInfo?.description || `Welcome to ${title}`;
 
-  let faviconUrl = storeInfo?.logo || "/favicon.ico";
-  let appleIconUrl = faviconUrl;
-
-  if (faviconUrl.includes("cloudinary.com")) {
-    faviconUrl = faviconUrl.replace(/\.[^/.]+$/, ".png");
-    // c_fill with g_center ensures the image fills the 1:1 square completely (like object-cover),
-    // so when Google renders it in its circular badge, the image fills the entire circle edge-to-edge!
-    appleIconUrl = faviconUrl.replace(
-      "/upload/",
-      "/upload/w_180,h_180,c_fill,g_center,f_png/",
-    );
-    faviconUrl = faviconUrl.replace(
-      "/upload/",
-      "/upload/w_192,h_192,c_fill,g_center,f_png/",
-    );
-  }
+  const faviconUrl192 = getFaviconUrl(storeInfo?.logo, 192);
+  const faviconUrl32 = getFaviconUrl(storeInfo?.logo, 32);
+  const appleIconUrl = getAppleTouchIconUrl(storeInfo?.logo);
 
   const defaultOgImage = `${baseUrl}/default-og-image.jpg`; // Fallback image
 
@@ -136,10 +127,10 @@ export async function generateMetadata(): Promise<Metadata> {
     description,
     icons: {
       icon: [
-        { url: faviconUrl, sizes: "192x192", type: "image/png" },
-        { url: faviconUrl, sizes: "32x32", type: "image/png" },
+        { url: faviconUrl192, sizes: "192x192", type: "image/png" },
+        { url: faviconUrl32, sizes: "32x32", type: "image/png" },
       ],
-      shortcut: [faviconUrl],
+      shortcut: [faviconUrl32],
       apple: [{ url: appleIconUrl, sizes: "180x180", type: "image/png" }],
     },
     openGraph: {
@@ -147,7 +138,7 @@ export async function generateMetadata(): Promise<Metadata> {
       description,
       url: baseUrl,
       siteName: title,
-      images: [{ url: storeInfo?.logo || defaultOgImage }],
+      images: [{ url: storeInfo?.logo ? getStoreLogoUrl(storeInfo.logo) : defaultOgImage }],
       locale: theme?.language === "bn" ? "bn_BD" : "en_US",
       type: "website",
     },
@@ -155,7 +146,7 @@ export async function generateMetadata(): Promise<Metadata> {
       card: "summary_large_image",
       title,
       description,
-      images: [storeInfo?.logo || defaultOgImage],
+      images: [storeInfo?.logo ? getStoreLogoUrl(storeInfo.logo) : defaultOgImage],
     },
   };
 }
@@ -651,20 +642,9 @@ export default async function RootLayout({
     textColor = "#78350f";
   }
 
-  let faviconUrl = storeInfo?.logo || "/favicon.ico";
-  let appleIconUrl = faviconUrl;
-
-  if (faviconUrl.includes("cloudinary.com")) {
-    faviconUrl = faviconUrl.replace(/\.[^/.]+$/, ".png");
-    appleIconUrl = faviconUrl.replace(
-      "/upload/",
-      "/upload/w_180,h_180,c_fill,g_center,f_png/",
-    );
-    faviconUrl = faviconUrl.replace(
-      "/upload/",
-      "/upload/w_192,h_192,c_fill,g_center,f_png/",
-    );
-  }
+  const faviconUrl192 = getFaviconUrl(storeInfo?.logo, 192);
+  const faviconUrl32 = getFaviconUrl(storeInfo?.logo, 32);
+  const appleIconUrl = getAppleTouchIconUrl(storeInfo?.logo);
 
   return (
     <html lang={language}>
@@ -683,9 +663,8 @@ export default async function RootLayout({
         <meta property="og:site_name" content={storeName} />
 
         {/* Explicit Favicons for Googlebot-Image, Search Results, & all browsers */}
-        <link rel="icon" href="/favicon.ico" sizes="any" />
-        <link rel="icon" type="image/png" sizes="192x192" href={faviconUrl} />
-        <link rel="icon" type="image/png" sizes="32x32" href={faviconUrl} />
+        <link rel="icon" type="image/png" sizes="192x192" href={faviconUrl192} />
+        <link rel="icon" type="image/png" sizes="32x32" href={faviconUrl32} />
         <link rel="apple-touch-icon" sizes="180x180" href={appleIconUrl} />
 
         {/* Google Search Site Name & Organization Schema (JSON-LD) for all store subdomains and custom domains */}
@@ -739,8 +718,8 @@ export default async function RootLayout({
                           "logo": {
                             "@type": "ImageObject",
                             "@id": `${baseUrl}/#logo`,
-                            "url": faviconUrl,
-                            "contentUrl": faviconUrl,
+                            "url": faviconUrl192,
+                            "contentUrl": faviconUrl192,
                             "caption": storeName,
                           },
                           "image": {
@@ -837,7 +816,7 @@ export default async function RootLayout({
                 "@id": `${baseUrl}/#store`,
                 name: storeName,
                 url: `${baseUrl}/`,
-                logo: storeInfo.logo || undefined,
+                logo: storeInfo.logo ? getStoreLogoUrl(storeInfo.logo) : undefined,
                 description: storeInfo.description || undefined,
                 telephone: storeInfo.phone || undefined,
                 currenciesAccepted: storeInfo.currency || "BDT",

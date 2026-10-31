@@ -1,3 +1,4 @@
+import { getStoreLogoUrl } from '@/utils/imageOptimizer';
 import { getTheme, getStoreInfo } from '@/core/api/store';
 import { themeRegistry } from '@/themes/themeRegistry';
 import { getStoreName, getRequestContext, getSiteOrigin } from '@/utils/seo';
@@ -38,7 +39,7 @@ export async function generateMetadata(): Promise<Metadata> {
       description,
       url: `${baseUrl}/`,
       siteName: storeName,
-      images: logo ? [{ url: logo, alt: storeName }] : [],
+      images: logo ? [{ url: getStoreLogoUrl(logo), alt: storeName }] : [],
       type: 'website',
     },
   };

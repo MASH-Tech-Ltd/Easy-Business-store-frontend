@@ -1,4 +1,5 @@
 import { headers } from 'next/headers';
+import { getStoreLogoUrl } from '@/utils/imageOptimizer';
 import { getTheme, getStoreInfo } from '@/core/api/store';
 import { themeRegistry } from '@/themes/themeRegistry';
 import { getStoreName, getRequestContext, getSiteOrigin } from '@/utils/seo';
@@ -13,7 +14,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
   const title = `All Products | ${storeName}`;
   const description = `Browse all products at ${storeName}. Shop online with fast delivery and great prices.`;
-  const ogImage = storeInfo?.logo || null;
+  const ogImage = storeInfo?.logo ? getStoreLogoUrl(storeInfo.logo) : null;
 
   return {
     title: {
