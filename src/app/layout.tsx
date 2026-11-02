@@ -657,6 +657,9 @@ export default async function RootLayout({
         />
         <link rel="stylesheet" href={googleFontHref} />
 
+        {/* Referrer Policy: Prevents CDN hotlinking blocks on custom domains */}
+        <meta name="referrer" content="same-origin" />
+
         {/* Site Name & Mobile Web App Meta Signals for Google Search */}
         <meta name="application-name" content={storeName} />
         <meta name="apple-mobile-web-app-title" content={storeName} />
