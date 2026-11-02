@@ -63,11 +63,13 @@ function stripCloudinaryTransforms(rawRest: string): string {
 }
 
 export function getOptimizedImageUrl(
-  url?: string | null,
+  url?: any,
   presetOrWidth: ImagePreset | number = 'product-card'
 ): string {
-  if (!url || typeof url !== 'string') return '';
-  const trimmed = url.trim();
+  if (!url) return '';
+  const actualUrl = typeof url === 'string' ? url : url?.secure_url || url?.url || '';
+  if (!actualUrl || typeof actualUrl !== 'string') return '';
+  const trimmed = actualUrl.trim();
   if (!trimmed) return '';
 
   const width =
@@ -99,9 +101,11 @@ export function getOptimizedImageUrl(
 /**
  * Generates square PNG favicons for browser tab & search engines
  */
-export function getFaviconUrl(url?: string | null, size: number = 192): string {
-  if (!url || typeof url !== 'string') return '/favicon.ico';
-  const trimmed = url.trim();
+export function getFaviconUrl(url?: any, size: number = 192): string {
+  if (!url) return '/favicon.ico';
+  const actualUrl = typeof url === 'string' ? url : url?.secure_url || url?.url || '';
+  if (!actualUrl || typeof actualUrl !== 'string') return '/favicon.ico';
+  const trimmed = actualUrl.trim();
   if (!trimmed) return '/favicon.ico';
 
   if (trimmed.includes('res.cloudinary.com') && trimmed.includes('/image/upload/')) {
@@ -135,9 +139,11 @@ export function getAppleTouchIconUrl(url?: string | null): string {
 /**
  * Converts any Cloudinary URL without resizing (preserves original format)
  */
-export function toCdnUrl(url?: string | null): string {
-  if (!url || typeof url !== 'string') return '';
-  const trimmed = url.trim();
+export function toCdnUrl(url?: any): string {
+  if (!url) return '';
+  const actualUrl = typeof url === 'string' ? url : url?.secure_url || url?.url || '';
+  if (!actualUrl || typeof actualUrl !== 'string') return '';
+  const trimmed = actualUrl.trim();
   if (!trimmed) return '';
 
   if (trimmed.includes('res.cloudinary.com') && trimmed.includes('/image/upload/')) {

@@ -19,9 +19,12 @@ interface HeroBannerSliderProps {
 export default function HeroBannerSlider05({ banner }: HeroBannerSliderProps) {
   const images: string[] = React.useMemo(() => {
     if (banner?.images && Array.isArray(banner.images) && banner.images.length > 0) {
-      return banner.images.map((img: any) => (typeof img === 'string' ? img : img?.secure_url)).filter(Boolean);
+      return banner.images
+        .map((img: any) => (typeof img === 'string' ? img : img?.secure_url || img?.url))
+        .filter(Boolean);
     }
     if (banner?.image?.secure_url) return [banner.image.secure_url];
+    if (banner?.image?.url) return [banner.image.url];
     if (typeof banner?.image === 'string') return [banner.image];
     return [];
   }, [banner]);

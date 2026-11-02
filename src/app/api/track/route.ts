@@ -16,7 +16,8 @@ export async function GET(req: NextRequest) {
   }
 
   try {
-    const url = new URL(`${process.env.NEXT_PUBLIC_API_URL}/orders/track/${encodeURIComponent(id)}`);
+    const apiBase = process.env.API_URL || process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api/v1';
+    const url = new URL(`${apiBase}/orders/track/${encodeURIComponent(id)}`);
     url.searchParams.append('phone', phone);
     
     const cfIp = req.headers.get('cf-connecting-ip');

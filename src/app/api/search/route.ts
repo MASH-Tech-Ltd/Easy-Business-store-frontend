@@ -27,7 +27,8 @@ export async function GET(req: NextRequest) {
   }
 
   try {
-    const url = `${process.env.NEXT_PUBLIC_API_URL}/storefront/${encodeURIComponent(tenantSlug)}/products?search=${encodeURIComponent(query)}&limit=${limit}`;
+    const apiBase = process.env.API_URL || process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api/v1';
+    const url = `${apiBase}/storefront/${encodeURIComponent(tenantSlug)}/products?search=${encodeURIComponent(query)}&limit=${limit}`;
     const res = await storefrontFetch(url);
     const data = await res.json();
     return NextResponse.json(data, { status: res.ok ? 200 : res.status });

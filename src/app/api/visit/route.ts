@@ -34,7 +34,8 @@ export async function POST(req: Request) {
     }
 
     // Forward the request to the real backend, keeping the domain hidden from the client
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/analytics/visit`, {
+    const apiBase = process.env.API_URL || process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api/v1';
+    const response = await fetch(`${apiBase}/analytics/visit`, {
       method: 'POST',
       headers: forwardHeaders,
       body: JSON.stringify(body),

@@ -9,7 +9,8 @@ export async function POST(req: NextRequest) {
     const realIp = req.headers.get('x-real-ip');
     const clientIp = cfIp || (forwardedFor ? forwardedFor.split(',')[0]?.trim() : null) || realIp || '';
     
-    const url = new URL(`${process.env.NEXT_PUBLIC_API_URL}/checkout-leads/track`);
+    const apiBase = process.env.API_URL || process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api/v1';
+    const url = new URL(`${apiBase}/checkout-leads/track`);
     
     // Pass the original host header so the backend tenant middleware can resolve the tenant automatically
     const originalHost = req.headers.get('host') || '';

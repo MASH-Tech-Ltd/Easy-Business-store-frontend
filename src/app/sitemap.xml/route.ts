@@ -42,7 +42,7 @@ async function fetchAllActiveStores() {
 async function fetchList(tenantSlug: string, path: string) {
   try {
     const res = await storefrontFetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/${path}`,
+      `/storefront/${tenantSlug}/${path}`,
       { next: { revalidate: 3600, tags: [`tenant-${tenantSlug}`] } },
     );
     if (!res.ok) return [];
@@ -60,7 +60,7 @@ async function fetchAllProducts(tenantSlug: string) {
   for (let page = 1; page <= MAX_PAGES; page++) {
     try {
       const res = await storefrontFetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/storefront/${tenantSlug}/products?page=${page}&limit=100`,
+        `/storefront/${tenantSlug}/products?page=${page}&limit=100`,
         { next: { revalidate: 3600, tags: [`tenant-${tenantSlug}`] } },
       );
       if (!res.ok) break;
