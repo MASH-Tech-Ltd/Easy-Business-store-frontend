@@ -100,6 +100,46 @@ export default async function Page() {
     );
   }
 
-  return <ThemeHome tenantSlug={tenantSlug} />;
+  return (
+    <>
+      {/* Dedicated WebSite Schema on the Homepage for Google Search Site Name */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'WebSite',
+            '@id': `${baseUrl}/#website`,
+            name: storeName,
+            alternateName: Array.from(
+              new Set(
+                [
+                  tenantSlug,
+                  storeName.replace(/\s+/g, ''),
+                ].filter(
+                  (item) =>
+                    Boolean(
+                      item &&
+                        !item.toLowerCase().includes('masheco.com') &&
+                        item.trim().toLowerCase() !== storeName.trim().toLowerCase()
+                    )
+                )
+              )
+            ),
+            url: `${baseUrl}/`,
+            potentialAction: {
+              '@type': 'SearchAction',
+              target: {
+                '@type': 'EntryPoint',
+                urlTemplate: `${baseUrl}/products?search={search_term_string}`,
+              },
+              'query-input': 'required name=search_term_string',
+            },
+          }),
+        }}
+      />
+      <ThemeHome tenantSlug={tenantSlug} />
+    </>
+  );
 }
 
