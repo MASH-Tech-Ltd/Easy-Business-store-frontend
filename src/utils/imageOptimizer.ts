@@ -9,8 +9,8 @@
  *   - Cart: 50px
  *   - Checkout: 50px
  *   - Homepage Products & Category Listing: 300px
- *   - Product Details Main Image: 500px
- *   - Product Details Gallery: 600px
+ *   - Product Details Main Image: 800px
+ *   - Product Details Gallery: 800px
  *   - Store Logo: 150px
  *   - Homepage Banner: 1200px
  *
@@ -36,8 +36,8 @@ export type ImagePreset =
   | 'checkout'        // 50px
   | 'product-card'    // 300px
   | 'category-card'   // 300px
-  | 'product-main'    // 500px
-  | 'product-gallery' // 600px
+  | 'product-main'    // 800px
+  | 'product-gallery' // 800px
   | 'logo'            // 150px
   | 'banner';         // 1200px
 
@@ -47,8 +47,8 @@ export const IMAGE_WIDTHS: Record<ImagePreset, number> = {
   'checkout': 50,
   'product-card': 300,
   'category-card': 300,
-  'product-main': 500,
-  'product-gallery': 600,
+  'product-main': 800,
+  'product-gallery': 800,
   'logo': 150,
   'banner': 1200,
 };
@@ -163,7 +163,7 @@ export const getCartThumbnailUrl = (url?: string | null) => getOptimizedImageUrl
 export const getCheckoutThumbnailUrl = (url?: string | null) => getOptimizedImageUrl(url, 50);
 export const getProductCardImageUrl = (url?: string | null) => getOptimizedImageUrl(url, 300);
 export const getCategoryCardImageUrl = (url?: string | null) => getOptimizedImageUrl(url, 300);
-export const getProductMainImageUrl = (url?: string | null) => getOptimizedImageUrl(url, 500);
-export const getProductGalleryImageUrl = (url?: string | null) => getOptimizedImageUrl(url, 600);
+export const getProductMainImageUrl = (url?: any) => getOptimizedImageUrl(url, 800);
+export const getProductGalleryImageUrl = (url?: any) => getOptimizedImageUrl(url, 800);
 export const getStoreLogoUrl = (url?: string | null) => getOptimizedImageUrl(url, 150);
 export const getBannerImageUrl = (url?: string | null) => getOptimizedImageUrl(url, 1200);
