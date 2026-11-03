@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import ProductCardActions from "./ProductCardActions";
 import { getProductCardImageUrl } from "@/utils/imageOptimizer";
+import { useProductTracker } from "@/hooks/useProductTracker";
 
 interface ProductProps {
   product: any;
@@ -20,11 +21,18 @@ export default function Design02ProductCard({
   theme,
 }: ProductProps) {
   const router = useRouter();
-  const productSlug = product.slug || product._id || product.id;
+  const productId = product._id || product.id;
+  const productSlug = product.slug || productId;
   const imageUrl =
     product.images?.[0]?.secure_url ||
     product.image?.secure_url ||
     product.image;
+
+  const { trackRef, handleProductClick } = useProductTracker({
+    productId,
+    tenantId: product.tenantId,
+    sourceSection: isBestSelling ? "bestselling" : isList ? "listing" : "catalog",
+  });
 
   const isOutOfStock = 
     product.isOutOfStock === true ||
@@ -42,6 +50,8 @@ export default function Design02ProductCard({
   if (isList) {
     return (
       <Link
+        ref={trackRef}
+        onClick={handleProductClick}
         prefetch={false}
         href={`/product/${productSlug}`}
         onMouseEnter={handleMouseEnter}
@@ -104,6 +114,8 @@ export default function Design02ProductCard({
 
   return (
     <Link
+      ref={trackRef}
+      onClick={handleProductClick}
       prefetch={false}
       href={`/product/${productSlug}`}
       onMouseEnter={handleMouseEnter}

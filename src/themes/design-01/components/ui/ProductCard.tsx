@@ -8,6 +8,7 @@ import { useCart } from "@/context/CartContext";
 import { useTranslation } from "@/context/LanguageContext";
 import { getProductCardImageUrl } from "@/utils/imageOptimizer";
 import { getTranslation } from "@/utils/translations";
+import { useProductTracker } from "@/hooks/useProductTracker";
 
 interface ProductProps {
   product: {
@@ -45,6 +46,12 @@ export default function ProductCard({
   const { t } = useTranslation();
   const productId = product._id || product.id;
   const productSlug = String(product.slug || productId || "");
+
+  const { trackRef, handleProductClick } = useProductTracker({
+    productId,
+    tenantId: product.tenantId,
+    sourceSection: isBestSelling ? "bestselling" : isList ? "listing" : "catalog",
+  });
 
   // Handle both single image and images array structures
   let imageUrl = "";
@@ -108,6 +115,8 @@ export default function ProductCard({
 
   return (
     <Link
+      ref={trackRef}
+      onClick={handleProductClick}
       prefetch={false}
       href={`/product/${productSlug}`}
       onMouseEnter={handleMouseEnter}

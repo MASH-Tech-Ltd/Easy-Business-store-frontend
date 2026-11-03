@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import ProductCardActions03 from './ProductCardActions';
 import { getProductCardImageUrl } from '@/utils/imageOptimizer';
+import { useProductTracker } from '@/hooks/useProductTracker';
 
 interface ProductProps {
   product: any;
@@ -15,10 +16,17 @@ interface ProductProps {
 
 export default function Design03ProductCard({ product, isList = false, isBestSelling = false, theme }: ProductProps) {
   const router = useRouter();
-  const productSlug = product.slug || product._id || product.id;
+  const productId = product._id || product.id;
+  const productSlug = product.slug || productId;
   const imageUrl = product.images?.[0]?.secure_url || product.image?.secure_url || product.image;
   const price = product.discountedPrice || product.originalPrice || product.price;
   const hasDiscount = product.originalPrice > (product.discountedPrice || 0);
+
+  const { trackRef, handleProductClick } = useProductTracker({
+    productId,
+    tenantId: product.tenantId,
+    sourceSection: isBestSelling ? "bestselling" : isList ? "listing" : "catalog",
+  });
 
   const isOutOfStock = 
     product.isOutOfStock === true ||
@@ -36,6 +44,8 @@ export default function Design03ProductCard({ product, isList = false, isBestSel
   if (isList) {
     return (
       <Link
+        ref={trackRef}
+        onClick={handleProductClick}
         prefetch={false}
         href={`/product/${productSlug}`}
         onMouseEnter={handleMouseEnter}
@@ -82,8 +92,9 @@ export default function Design03ProductCard({ product, isList = false, isBestSel
   }
 
   return (
-    <div className="group block relative h-full bg-[#050505] hover:bg-black transition-colors">
+    <div ref={trackRef} className="group block relative h-full bg-[#050505] hover:bg-black transition-colors">
       <Link
+        onClick={handleProductClick}
         prefetch={false}
         href={`/product/${productSlug}`}
         onMouseEnter={handleMouseEnter}

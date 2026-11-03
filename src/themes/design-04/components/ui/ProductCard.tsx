@@ -7,6 +7,7 @@ import { useCart } from '@/context/CartContext';
 import { useRouter } from 'next/navigation';
 import { getTranslation } from '@/utils/translations';
 import { getProductCardImageUrl } from '@/utils/imageOptimizer';
+import { useProductTracker } from '@/hooks/useProductTracker';
 
 export default function ProductCard04({ product, isList = false, isBestSelling = false, theme, language = 'en' }: { product: any; isList?: boolean; isBestSelling?: boolean; theme?: any, language?: string }) {
   const t = (key: any) => getTranslation(language, key);
@@ -20,7 +21,14 @@ export default function ProductCard04({ product, isList = false, isBestSelling =
     ? Math.round(((product.originalPrice - price) / product.originalPrice) * 100)
     : 0;
   const productSlug = product.slug || product._id || product.id;
+  const productId = product._id || product.id;
   const addToCartColor = theme?.buttonColors?.addToCart || theme?.primaryColor || '#111827';
+
+  const { trackRef, handleProductClick } = useProductTracker({
+    productId,
+    tenantId: product.tenantId,
+    sourceSection: isBestSelling ? "bestselling" : isList ? "listing" : "catalog",
+  });
 
   const handleMouseEnter = () => {
     try {
@@ -56,7 +64,7 @@ export default function ProductCard04({ product, isList = false, isBestSelling =
 
   if (isList) {
     return (
-      <Link prefetch={false} href={`/product/${productSlug}`} onMouseEnter={handleMouseEnter} onTouchStart={handleMouseEnter} className="group flex bg-white border border-gray-100 hover:border-gray-300 hover:shadow-lg transition-all rounded-2xl overflow-hidden cursor-default">
+      <Link ref={trackRef} onClick={handleProductClick} prefetch={false} href={`/product/${productSlug}`} onMouseEnter={handleMouseEnter} onTouchStart={handleMouseEnter} className="group flex bg-white border border-gray-100 hover:border-gray-300 hover:shadow-lg transition-all rounded-2xl overflow-hidden cursor-default">
         <div className="w-40 h-40 bg-gray-50 flex items-center justify-center shrink-0 p-4 relative">
           {isOutOfStock && (
             <div className="absolute inset-0 bg-black/30 backdrop-blur-[1px] flex items-center justify-center z-20 pointer-events-none">
@@ -89,8 +97,8 @@ export default function ProductCard04({ product, isList = false, isBestSelling =
   }
 
   return (
-    <div className="group flex flex-col bg-white border border-gray-100 rounded-2xl overflow-hidden hover:shadow-xl hover:border-gray-200 transition-all duration-300">
-      <Link prefetch={false} href={`/product/${productSlug}`} onMouseEnter={handleMouseEnter} onTouchStart={handleMouseEnter} className="block cursor-default">
+    <div ref={trackRef} className="group flex flex-col bg-white border border-gray-100 rounded-2xl overflow-hidden hover:shadow-xl hover:border-gray-200 transition-all duration-300">
+      <Link onClick={handleProductClick} prefetch={false} href={`/product/${productSlug}`} onMouseEnter={handleMouseEnter} onTouchStart={handleMouseEnter} className="block cursor-default">
         {/* Image */}
         <div className="relative bg-gray-50 aspect-square flex items-center justify-center overflow-hidden">
           {savePercent > 0 && (
@@ -126,7 +134,7 @@ export default function ProductCard04({ product, isList = false, isBestSelling =
 
       {/* Details */}
       <div className="flex flex-col flex-1 p-4">
-        <Link prefetch={false} href={`/product/${productSlug}`} onMouseEnter={handleMouseEnter} onTouchStart={handleMouseEnter} className="cursor-default">
+        <Link onClick={handleProductClick} prefetch={false} href={`/product/${productSlug}`} onMouseEnter={handleMouseEnter} onTouchStart={handleMouseEnter} className="cursor-default">
           <h4 className="text-sm font-semibold text-gray-900 line-clamp-2 mb-2 min-h-[40px] hover:text-gray-600 transition-colors">
             {product.title || product.name}
           </h4>
