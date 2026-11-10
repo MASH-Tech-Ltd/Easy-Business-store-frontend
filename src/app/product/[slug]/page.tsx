@@ -26,15 +26,13 @@ export async function generateMetadata(
     getProductBySlug(tenantSlug, decodedSlug || resolvedParams.slug),
   ]);
 
-  if (!product) {
-    return {
-      title: "Product Not Found",
-      robots: { index: false, follow: false },
-    };
-  }
-
   const baseUrl = getSiteOrigin(requestOrigin, storeInfo);
   const storeName = getStoreName(storeInfo, tenantSlug);
+
+  if (!product) {
+    notFound();
+  }
+
   const title = `${product.title} | ${storeName}`;
   const description =
     product.shortDescription ||

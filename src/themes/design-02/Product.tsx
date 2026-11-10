@@ -1,4 +1,5 @@
 import { headers } from "next/headers";
+import { notFound } from "next/navigation";
 import Link from "next/link";
 import ProductGallery from "@/components/ProductGallery";
 import AddToCartClient from "./AddToCartClient";
@@ -38,18 +39,7 @@ export default async function Design02ProductPage({
   const t = (key: TranslationKeys) => getTranslation(language, key);
 
   if (!product) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center font-light">
-          <h1 className="text-2xl mb-4">
-            {t("productNotFound") || "Product not found"}
-          </h1>
-          <Link prefetch={false} href="/" className="text-gray-900 underline">
-            Return to Home
-          </Link>
-        </div>
-      </div>
-    );
+    notFound();
   }
 
   return (

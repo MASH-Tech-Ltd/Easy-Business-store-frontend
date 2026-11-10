@@ -1,4 +1,5 @@
 import { headers } from "next/headers";
+import { notFound } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import ProductGallery from "@/components/ProductGallery";
@@ -39,22 +40,7 @@ export default async function ProductPage({
   const t = (key: TranslationKeys) => getTranslation(language, key);
 
   if (!product) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold mb-4">
-            {t("productNotFound") || "Product not found"}
-          </h1>
-          <Link
-            prefetch={false}
-            href="/"
-            className="text-primary hover:underline"
-          >
-            Return to Home
-          </Link>
-        </div>
-      </div>
-    );
+    notFound();
   }
 
   return (

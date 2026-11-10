@@ -42,6 +42,17 @@ export async function generateMetadata(): Promise<Metadata> {
       images: logo ? [{ url: getStoreLogoUrl(logo), alt: storeName }] : [],
       type: 'website',
     },
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        'max-video-preview': -1,
+        'max-image-preview': 'large',
+        'max-snippet': -1,
+      },
+    },
   };
 }
 
@@ -49,23 +60,15 @@ export default async function Page() {
   const { tenantSlug, requestOrigin } = await getRequestContext();
 
   let themeId = 'design-01';
-  let storeInfo = null;
 
   if (tenantSlug !== 'main') {
-    const [theme, info] = await Promise.all([
-      getTheme(tenantSlug),
-      getStoreInfo(tenantSlug),
-    ]);
-    storeInfo = info;
+    const theme = await getTheme(tenantSlug);
     if (theme && theme.themeId && themeRegistry[theme.themeId]) {
       themeId = theme.themeId;
     }
   }
 
   const ThemeHome = themeRegistry[themeId]?.Home || themeRegistry['design-01'].Home;
-
-  const baseUrl = getSiteOrigin(requestOrigin, storeInfo);
-  const storeName = getStoreName(storeInfo, tenantSlug);
 
   // Platform root: emit a WebSite JSON-LD for masheco.com itself.
   // This is the primary signal Google uses for "MASH ECO" site name on masheco.com.
@@ -100,46 +103,6 @@ export default async function Page() {
     );
   }
 
-  return (
-    <>
-      {/* Dedicated WebSite Schema on the Homepage for Google Search Site Name */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            '@context': 'https://schema.org',
-            '@type': 'WebSite',
-            '@id': `${baseUrl}/#website`,
-            name: storeName,
-            alternateName: Array.from(
-              new Set(
-                [
-                  tenantSlug,
-                  storeName.replace(/\s+/g, ''),
-                ].filter(
-                  (item) =>
-                    Boolean(
-                      item &&
-                        !item.toLowerCase().includes('masheco.com') &&
-                        item.trim().toLowerCase() !== storeName.trim().toLowerCase()
-                    )
-                )
-              )
-            ),
-            url: `${baseUrl}/`,
-            potentialAction: {
-              '@type': 'SearchAction',
-              target: {
-                '@type': 'EntryPoint',
-                urlTemplate: `${baseUrl}/products?search={search_term_string}`,
-              },
-              'query-input': 'required name=search_term_string',
-            },
-          }),
-        }}
-      />
-      <ThemeHome tenantSlug={tenantSlug} />
-    </>
-  );
+  return <ThemeHome tenantSlug={tenantSlug} />;
 }
 

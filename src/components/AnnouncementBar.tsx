@@ -23,6 +23,7 @@ export default function AnnouncementBar({ banner, currencySymbol }: Announcement
   if (isSliding) {
     return (
       <div 
+        data-nosnippet="true"
         style={{ backgroundColor: bgColor, color: textColor }}
         className="text-xs sm:text-sm font-medium py-2 overflow-hidden border-b border-black/10 w-full relative z-[60] transition-colors select-none"
       >
@@ -47,6 +48,7 @@ export default function AnnouncementBar({ banner, currencySymbol }: Announcement
 
   return (
     <div 
+      data-nosnippet="true"
       style={{ backgroundColor: bgColor, color: textColor }}
       className="text-center text-xs sm:text-sm font-medium py-2 px-4 tracking-wide border-b border-black/10 w-full relative z-[60] transition-colors"
     >

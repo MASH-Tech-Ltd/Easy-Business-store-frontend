@@ -149,16 +149,16 @@ export default async function Footer() {
             <h3 className="font-bold text-gray-900 mb-4 text-sm uppercase">{t('shop')}</h3>
             <ul className="space-y-3">
               <li>
+                <Link prefetch={false} href="/products" className="text-sm text-gray-500 hover:text-primary transition-colors">{t('allProducts') || 'All Products'}</Link>
+              </li>
+              <li>
                 <Link prefetch={false} href="/categories" className="text-sm text-gray-500 hover:text-primary transition-colors">{t('categories') || 'All Categories'}</Link>
               </li>
               <li>
-                <Link prefetch={false} href="/cart" className="text-sm text-gray-500 hover:text-primary transition-colors">{t('yourBag')}</Link>
+                <Link prefetch={false} href="/cart" rel="nofollow" className="text-sm text-gray-500 hover:text-primary transition-colors">{t('yourBag')}</Link>
               </li>
               <li>
-                <Link prefetch={false} href="/products?sort=newest" className="text-sm text-gray-500 hover:text-primary transition-colors">{t('newCollection') || 'New Arrivals'}</Link>
-              </li>
-              <li>
-                <Link prefetch={false} href="/track-order" className="text-sm text-gray-500 hover:text-primary transition-colors">{t('trackOrder')}</Link>
+                <Link prefetch={false} href="/track-order" rel="nofollow" className="text-sm text-gray-500 hover:text-primary transition-colors">{t('trackOrder')}</Link>
               </li>
             </ul>
           </div>

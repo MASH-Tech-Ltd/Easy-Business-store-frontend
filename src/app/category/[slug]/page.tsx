@@ -34,10 +34,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   );
 
   if (!category && tenantSlug !== 'main') {
-    return {
-      title: 'Category Not Found',
-      robots: { index: false, follow: false },
-    };
+    notFound();
   }
 
   const categoryName = category?.name

@@ -1,5 +1,6 @@
 import { getTranslation } from "../../utils/translations";
 import { headers } from "next/headers";
+import { notFound } from "next/navigation";
 import Link from "next/link";
 import ProductGallery from "@/components/ProductGallery";
 import AddToCartClient03 from "./AddToCartClient";
@@ -38,26 +39,7 @@ export default async function Design03ProductPage({
   const t = (key: any) => getTranslation(language, key);
 
   if (!product) {
-    return (
-      <div className="min-h-screen bg-black text-white flex flex-col font-sans selection:bg-cyan-500/30">
-        <Header03 storeInfo={storeInfo} />
-        <main className="lg:ml-64 flex flex-col min-h-screen border-l border-white/10 bg-[#050505] items-center justify-center">
-          <div className="text-center font-mono">
-            <span className="text-red-500 text-6xl block mb-4">!</span>
-            <h1 className="text-2xl font-black text-white mb-4 uppercase tracking-widest">
-              RECORD NOT FOUND
-            </h1>
-            <Link
-              prefetch={false}
-              href="/"
-              className="text-cyan-400 font-bold hover:text-white transition-colors border border-cyan-400 px-6 py-2 uppercase tracking-widest"
-            >
-              Return to ROOT
-            </Link>
-          </div>
-        </main>
-      </div>
-    );
+    notFound();
   }
 
   return (

@@ -160,15 +160,21 @@ export async function GET() {
 
   for (const c of categories) {
     const cMod = (c.updatedAt ? new Date(c.updatedAt) : new Date()).toISOString();
+    const rawCatSlug = String(c.slug || c._id || "").trim();
+    if (!rawCatSlug) continue;
+    const encodedCatSlug = encodeURIComponent(decodeURIComponent(rawCatSlug));
     urlEntries.push(
-      `  <url>\n    <loc>${escapeXml(`${baseUrl}/category/${c.slug || c._id}`)}</loc>\n    <lastmod>${cMod}</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.7</priority>\n  </url>`
+      `  <url>\n    <loc>${escapeXml(`${baseUrl}/category/${encodedCatSlug}`)}</loc>\n    <lastmod>${cMod}</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.7</priority>\n  </url>`
     );
   }
 
   for (const p of products) {
     const pMod = (p.updatedAt ? new Date(p.updatedAt) : new Date()).toISOString();
+    const rawProdSlug = String(p.slug || p._id || "").trim();
+    if (!rawProdSlug) continue;
+    const encodedProdSlug = encodeURIComponent(decodeURIComponent(rawProdSlug));
     urlEntries.push(
-      `  <url>\n    <loc>${escapeXml(`${baseUrl}/product/${p.slug || p._id}`)}</loc>\n    <lastmod>${pMod}</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>`
+      `  <url>\n    <loc>${escapeXml(`${baseUrl}/product/${encodedProdSlug}`)}</loc>\n    <lastmod>${pMod}</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>`
     );
   }
 
@@ -180,7 +186,7 @@ export async function GET() {
   ];
   for (const slug of policySlugs) {
     urlEntries.push(
-      `  <url>\n    <loc>${escapeXml(`${baseUrl}/policies/${slug}`)}</loc>\n    <lastmod>${lastModIso}</lastmod>\n    <changefreq>monthly</changefreq>\n    <priority>0.3</priority>\n  </url>`
+      `  <url>\n    <loc>${escapeXml(`${baseUrl}/policies/${slug}`)}</loc>\n    <lastmod>${lastModIso}</lastmod>\n    <changefreq>monthly</changefreq>\n    <priority>0.6</priority>\n  </url>`
     );
   }
 

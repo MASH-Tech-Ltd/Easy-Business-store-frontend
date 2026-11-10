@@ -31,8 +31,9 @@ export default async function Header() {
             </h1>
           </Link>
           
-          <nav className="flex md:hidden items-center gap-4 font-semibold text-sm text-gray-600">
+          <nav className="flex md:hidden items-center gap-3 font-semibold text-xs sm:text-sm text-gray-600">
             <Link prefetch={false} href="/" className="hover:text-gray-900 transition-colors">{t('home') || 'Home'}</Link>
+            <Link prefetch={false} href="/products" className="hover:text-gray-900 transition-colors">{t('allProducts') || 'All Products'}</Link>
             <HeaderCartIcon />
           </nav>
         </div>
@@ -45,6 +46,8 @@ export default async function Header() {
         {/* Desktop Nav */}
         <nav className="hidden md:flex items-center gap-6 font-semibold text-sm text-gray-600">
           <Link prefetch={false} href="/" className="hover:text-gray-900 transition-colors">{t('home') || 'Home'}</Link>
+          <Link prefetch={false} href="/products" className="hover:text-gray-900 transition-colors">{t('allProducts') || 'All Products'}</Link>
+          <Link prefetch={false} href="/categories" className="hover:text-gray-900 transition-colors">{t('categories') || 'Categories'}</Link>
           <HeaderCartIcon />
         </nav>
 

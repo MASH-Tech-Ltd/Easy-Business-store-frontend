@@ -69,8 +69,9 @@ export const getJustForYouProducts = cache(async (tenantSlug: string, limit: num
 
 export const getProductBySlug = cache(async (tenantSlug: string, productSlug: string, clientIp?: string) => {
   try {
+    const safeSlug = encodeURIComponent(decodeURIComponent(productSlug || '').trim());
     const res = await storefrontFetch(
-      `${getStorefrontApiUrl()}/storefront/${tenantSlug}/products/${productSlug}`,
+      `${getStorefrontApiUrl()}/storefront/${tenantSlug}/products/${safeSlug}`,
       { next: { revalidate: 60, tags: [`tenant-${tenantSlug}-product-${productSlug}`] } },
       clientIp
     );

@@ -136,9 +136,9 @@ export async function generateMetadata(): Promise<Metadata> {
     openGraph: {
       title,
       description,
-      url: baseUrl,
+      url: `${baseUrl}/`,
       siteName: title,
-      images: [{ url: storeInfo?.logo ? getStoreLogoUrl(storeInfo.logo) : defaultOgImage }],
+      images: [{ url: storeInfo?.logo ? getStoreLogoUrl(storeInfo.logo) : defaultOgImage, alt: title }],
       locale: theme?.language === "bn" ? "bn_BD" : "en_US",
       type: "website",
     },
@@ -147,6 +147,17 @@ export async function generateMetadata(): Promise<Metadata> {
       title,
       description,
       images: [storeInfo?.logo ? getStoreLogoUrl(storeInfo.logo) : defaultOgImage],
+    },
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        "max-video-preview": -1,
+        "max-image-preview": "large",
+        "max-snippet": -1,
+      },
     },
   };
 }
@@ -660,17 +671,12 @@ export default async function RootLayout({
         {/* Referrer Policy: Prevents CDN hotlinking blocks on custom domains */}
         <meta name="referrer" content="same-origin" />
 
-        {/* Site Name & Mobile Web App Meta Signals for Google Search */}
-        <meta name="application-name" content={storeName} />
-        <meta name="apple-mobile-web-app-title" content={storeName} />
-        <meta property="og:site_name" content={storeName} />
-
         {/* Explicit Favicons for Googlebot-Image, Search Results, & all browsers */}
         <link rel="icon" type="image/png" sizes="192x192" href={faviconUrl192} />
         <link rel="icon" type="image/png" sizes="32x32" href={faviconUrl32} />
         <link rel="apple-touch-icon" sizes="180x180" href={appleIconUrl} />
 
-        {/* Google Search Site Name & Organization Schema (JSON-LD) for all store subdomains and custom domains */}
+        {/* 1. Google Search Site Name & Organization Schema (JSON-LD) for all store subdomains and custom domains */}
         {tenantSlug !== "main" && (
           <script
             type="application/ld+json"
@@ -686,8 +692,9 @@ export default async function RootLayout({
                     "alternateName": Array.from(
                       new Set(
                         [
+                          `${storeName} Bangladesh`,
+                          `${storeName} Official Store`,
                           tenantSlug,
-                          host,
                           storeName.replace(/\s+/g, ""),
                         ].filter(
                           (item) =>
@@ -699,6 +706,7 @@ export default async function RootLayout({
                         )
                       )
                     ),
+                    "inLanguage": language === "bn" ? "bn-BD" : "en-US",
                     "publisher": {
                       "@id": `${baseUrl}/#organization`,
                     },
@@ -733,6 +741,86 @@ export default async function RootLayout({
                     ...(storeInfo?.description
                       ? { "description": storeInfo.description }
                       : {}),
+                    ...(storeInfo?.phone
+                      ? { "telephone": storeInfo.phone }
+                      : {}),
+                    "currenciesAccepted": storeInfo?.currency || "BDT",
+                    "priceRange": "৳",
+                    ...(storeInfo?.address
+                      ? {
+                          "address": {
+                            "@type": "PostalAddress",
+                            "streetAddress": storeInfo.address,
+                            "addressCountry": "BD",
+                          },
+                        }
+                      : {}),
+                  },
+                ],
+              }),
+            }}
+          />
+        )}
+
+        {/* 2. Google Sitelinks: SiteNavigationElement / ItemList JSON-LD */}
+        {tenantSlug !== "main" && (
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{
+              __html: JSON.stringify({
+                "@context": "https://schema.org",
+                "@type": "ItemList",
+                "itemListElement": [
+                  {
+                    "@type": "SiteNavigationElement",
+                    "position": 1,
+                    "name": "All Products",
+                    "description": `Browse all products and new arrivals at ${storeName}.`,
+                    "url": `${baseUrl}/products`,
+                  },
+                  {
+                    "@type": "SiteNavigationElement",
+                    "position": 2,
+                    "name": "Categories",
+                    "description": `Explore all product categories and collections at ${storeName}.`,
+                    "url": `${baseUrl}/categories`,
+                  },
+                  ...categories.slice(0, 4).map((cat: any, idx: number) => ({
+                    "@type": "SiteNavigationElement",
+                    "position": idx + 3,
+                    "name": cat.name,
+                    "description":
+                      cat.description ||
+                      `Shop ${cat.name} online at ${storeName}.`,
+                    "url": `${baseUrl}/category/${cat.slug || cat._id}`,
+                  })),
+                  {
+                    "@type": "SiteNavigationElement",
+                    "position": Math.min(categories.length, 4) + 3,
+                    "name": "About Us",
+                    "description": `Learn about ${storeName}, our story, and customer commitments.`,
+                    "url": `${baseUrl}/policies/about-us`,
+                  },
+                  {
+                    "@type": "SiteNavigationElement",
+                    "position": Math.min(categories.length, 4) + 4,
+                    "name": "Terms & Conditions",
+                    "description": `Terms of service, purchasing agreements, and policies at ${storeName}.`,
+                    "url": `${baseUrl}/policies/terms-and-conditions`,
+                  },
+                  {
+                    "@type": "SiteNavigationElement",
+                    "position": Math.min(categories.length, 4) + 5,
+                    "name": "Return & Refund Policy",
+                    "description": `Hassle-free return and refund guidelines for buyers at ${storeName}.`,
+                    "url": `${baseUrl}/policies/return-policy`,
+                  },
+                  {
+                    "@type": "SiteNavigationElement",
+                    "position": Math.min(categories.length, 4) + 6,
+                    "name": "Privacy Policy",
+                    "description": `How ${storeName} protects your personal data and shopping privacy.`,
+                    "url": `${baseUrl}/policies/privacy-policy`,
                   },
                 ],
               }),
@@ -808,91 +896,6 @@ export default async function RootLayout({
         `,
           }}
         />
-        {/* 1. Organization / OnlineStore JSON-LD */}
-        {storeInfo && (
-          <script
-            type="application/ld+json"
-            dangerouslySetInnerHTML={{
-              __html: JSON.stringify({
-                "@context": "https://schema.org",
-                "@type": "OnlineStore",
-                "@id": `${baseUrl}/#store`,
-                name: storeName,
-                url: `${baseUrl}/`,
-                logo: storeInfo.logo ? getStoreLogoUrl(storeInfo.logo) : undefined,
-                description: storeInfo.description || undefined,
-                telephone: storeInfo.phone || undefined,
-                currenciesAccepted: storeInfo.currency || "BDT",
-                priceRange: "৳",
-                address: storeInfo.address
-                  ? {
-                      "@type": "PostalAddress",
-                      streetAddress: storeInfo.address,
-                      addressCountry: "BD",
-                    }
-                  : undefined,
-              }),
-            }}
-          />
-        )}
-        {/* 3. Google Sitelinks: SiteNavigationElement / ItemList JSON-LD */}
-        {storeInfo && (
-          <script
-            type="application/ld+json"
-            dangerouslySetInnerHTML={{
-              __html: JSON.stringify({
-                "@context": "https://schema.org",
-                "@type": "ItemList",
-                itemListElement: [
-                  {
-                    "@type": "SiteNavigationElement",
-                    position: 1,
-                    name: "All Products",
-                    description: `Browse all products and new arrivals at ${storeName}.`,
-                    url: `${baseUrl}/products`,
-                  },
-                  ...categories.slice(0, 6).map((cat: any, idx: number) => ({
-                    "@type": "SiteNavigationElement",
-                    position: idx + 2,
-                    name: cat.name,
-                    description:
-                      cat.description ||
-                      `Shop ${cat.name} online at ${storeName}.`,
-                    url: `${baseUrl}/category/${cat.slug || cat._id}`,
-                  })),
-                  {
-                    "@type": "SiteNavigationElement",
-                    position: Math.min(categories.length, 6) + 2,
-                    name: "About Us",
-                    description: `Learn about ${storeName}, our story, and customer commitments.`,
-                    url: `${baseUrl}/policies/about-us`,
-                  },
-                  {
-                    "@type": "SiteNavigationElement",
-                    position: Math.min(categories.length, 6) + 3,
-                    name: "Track Order",
-                    description: `Track your courier shipment and order delivery status at ${storeName}.`,
-                    url: `${baseUrl}/track-order`,
-                  },
-                  {
-                    "@type": "SiteNavigationElement",
-                    position: Math.min(categories.length, 6) + 4,
-                    name: "Terms & Conditions",
-                    description: `Terms of service, purchasing agreements, and policies at ${storeName}.`,
-                    url: `${baseUrl}/policies/terms-and-conditions`,
-                  },
-                  {
-                    "@type": "SiteNavigationElement",
-                    position: Math.min(categories.length, 6) + 5,
-                    name: "Return & Refund Policy",
-                    description: `Hassle-free return and refund guidelines for buyers at ${storeName}.`,
-                    url: `${baseUrl}/policies/return-policy`,
-                  },
-                ],
-              }),
-            }}
-          />
-        )}
         <LanguageProvider initialLanguage={language}>
           <Providers>
             <StorefrontTracker

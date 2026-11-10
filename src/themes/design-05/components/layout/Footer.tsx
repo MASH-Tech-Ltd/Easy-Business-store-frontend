@@ -1,4 +1,3 @@
-"use client";
 import { getStoreLogoUrl } from '@/utils/imageOptimizer';
 
 import React from "react";
@@ -143,6 +142,12 @@ export default function Footer05({
               <ul className="space-y-2 text-xs sm:text-sm text-gray-500">
                 <li>
                   <Link prefetch={false}
+                    href="/products"
+                    className="hover:text-black transition-colors"
+                  >{t('allProducts') || 'All Products'}</Link>
+                </li>
+                <li>
+                  <Link prefetch={false}
                     href="/categories"
                     className="hover:text-black transition-colors"
                   >{t('categories') || 'All Categories'}</Link>
@@ -150,18 +155,14 @@ export default function Footer05({
                 <li>
                   <Link prefetch={false}
                     href="/cart"
+                    rel="nofollow"
                     className="hover:text-black transition-colors"
                   >{t('yourBag')}</Link>
                 </li>
                 <li>
                   <Link prefetch={false}
-                    href="/products?sort=newest"
-                    className="hover:text-black transition-colors"
-                  >{t('newCollection') || 'New Arrivals'}</Link>
-                </li>
-                <li>
-                  <Link prefetch={false}
                     href="/track-order"
+                    rel="nofollow"
                     className="hover:text-black transition-colors"
                   >{t('trackOrder')}</Link>
                 </li>

@@ -84,16 +84,16 @@ export default function Footer03({
           <div className="text-[10px] text-cyan-400 mb-6 uppercase tracking-widest">{t('shop')}</div>
           <ul className="space-y-4 text-xs font-bold uppercase tracking-widest text-gray-500">
             <li>
+              <Link prefetch={false} href="/products" className="hover:text-white transition-colors">{t('allProducts') || 'All Products'}</Link>
+            </li>
+            <li>
               <Link prefetch={false} href="/categories" className="hover:text-white transition-colors">{t('categories') || 'All Categories'}</Link>
             </li>
             <li>
-              <Link prefetch={false} href="/cart" className="hover:text-white transition-colors">{t('yourBag')}</Link>
+              <Link prefetch={false} href="/cart" rel="nofollow" className="hover:text-white transition-colors">{t('yourBag')}</Link>
             </li>
             <li>
-              <Link prefetch={false} href="/products?sort=newest" className="hover:text-white transition-colors">{t('newCollection') || 'New Arrivals'}</Link>
-            </li>
-            <li>
-              <Link prefetch={false} href="/track-order" className="hover:text-white transition-colors">{t('trackOrder')}</Link>
+              <Link prefetch={false} href="/track-order" rel="nofollow" className="hover:text-white transition-colors">{t('trackOrder')}</Link>
             </li>
           </ul>
         </div>

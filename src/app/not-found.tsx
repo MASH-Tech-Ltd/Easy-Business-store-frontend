@@ -1,6 +1,21 @@
 import Link from "next/link";
 import { headers } from "next/headers";
 import { getStoreInfo } from "@/core/api/store";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "404 - Page Not Found",
+  robots: {
+    index: false,
+    follow: false,
+    nocache: true,
+    googleBot: {
+      index: false,
+      follow: false,
+      noimageindex: true,
+    },
+  },
+};
 
 export default async function NotFound() {
   const headersList = await headers();
@@ -10,10 +25,7 @@ export default async function NotFound() {
   const storeName = storeInfo?.name || (tenantSlug === 'main' ? 'our store' : tenantSlug);
   
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center p-6 bg-[var(--background)] text-[var(--foreground)]">
-      <head>
-        <meta name="robots" content="noindex, nofollow" />
-      </head>
+    <div data-nosnippet="true" className="min-h-screen flex flex-col items-center justify-center p-6 bg-[var(--background)] text-[var(--foreground)]">
       <div className="max-w-2xl w-full text-center p-8 md:p-12 border border-gray-200/20 dark:border-gray-800/50 rounded-3xl shadow-2xl backdrop-blur-md relative overflow-hidden" style={{ background: 'var(--background)' }}>
         {/* Decorative background blobs using tenant's primary color */}
         <div 

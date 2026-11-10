@@ -52,14 +52,21 @@ export default async function Header03({ storeInfo }: { storeInfo?: any }) {
           <Link prefetch={false} href="/" className="flex items-center justify-between group py-3 border-b border-white/5 hover:border-cyan-400 transition-colors">
             <div className="flex items-center gap-3 text-xs font-bold uppercase tracking-widest text-gray-400 group-hover:text-white transition-colors">
               <Home className="w-4 h-4 text-cyan-400 opacity-50 group-hover:opacity-100" />
-              <span>Index</span>
+              <span>{t('home') || 'Home'}</span>
+            </div>
+            <ChevronRight className="w-4 h-4 text-white/20 group-hover:text-cyan-400 group-hover:translate-x-1 transition-all" />
+          </Link>
+          <Link prefetch={false} href="/products" className="flex items-center justify-between group py-3 border-b border-white/5 hover:border-cyan-400 transition-colors">
+            <div className="flex items-center gap-3 text-xs font-bold uppercase tracking-widest text-gray-400 group-hover:text-white transition-colors">
+              <Grid className="w-4 h-4 text-cyan-400 opacity-50 group-hover:opacity-100" />
+              <span>{t('allProducts') || 'All Products'}</span>
             </div>
             <ChevronRight className="w-4 h-4 text-white/20 group-hover:text-cyan-400 group-hover:translate-x-1 transition-all" />
           </Link>
           <Link prefetch={false} href="/categories" className="flex items-center justify-between group py-3 border-b border-white/5 hover:border-cyan-400 transition-colors">
             <div className="flex items-center gap-3 text-xs font-bold uppercase tracking-widest text-gray-400 group-hover:text-white transition-colors">
               <Grid className="w-4 h-4 text-cyan-400 opacity-50 group-hover:opacity-100" />
-              <span>Catalog</span>
+              <span>{t('categories') || 'Categories'}</span>
             </div>
             <ChevronRight className="w-4 h-4 text-white/20 group-hover:text-cyan-400 group-hover:translate-x-1 transition-all" />
           </Link>
