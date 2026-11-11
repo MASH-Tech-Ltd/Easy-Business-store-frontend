@@ -100,7 +100,7 @@ export default function ProductClient05({
   const [quantity, setQuantity] = useState(1);
 
   const mainImgRef = useRef<HTMLImageElement | null>(null);
-  const [highResLoaded, setHighResLoaded] = useState(() => isHighResImageLoaded(activeImage));
+  const [highResLoaded, setHighResLoaded] = useState(false);
   const placeholderUrl = getProductPlaceholderImageUrl(
     activeImage,
     !allImages.length || activeImage === allImages[0]
@@ -612,6 +612,8 @@ export default function ProductClient05({
                 >
                   <iframe
                     src={embedUrl}
+                    referrerPolicy="strict-origin-when-cross-origin"
+                    loading="lazy"
                     title={`Product Video ${index + 1}`}
                     className="w-full h-full rounded-[1.5rem]"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"

@@ -33,6 +33,7 @@ import { storefrontFetch } from "@/utils/storefrontFetch";
 import {
   cleanStoreName,
   getStoreName,
+  getStoreAlternateNames,
   getRequestContext,
   getSiteOrigin,
 } from "@/utils/seo";
@@ -58,20 +59,20 @@ export async function generateMetadata(): Promise<Metadata> {
   if (tenantSlug === 'main') {
     const platformOrigin = requestOrigin.includes('localhost')
       ? requestOrigin
-      : 'https://masheco.com';
+      : 'https://www.masheco.com';
     return {
       metadataBase: new URL(platformOrigin),
       applicationName: 'MASH ECO',
       authors: [{ name: 'MASH ECO', url: `${platformOrigin}/` }],
       publisher: 'MASH ECO',
       title: {
-        default: 'MASH ECO',
+        default: 'MASH ECO | Launch Your E-Commerce Store – Zero Coding Required',
         template: '%s | MASH ECO',
       },
       description: 'MASH ECO — Create your own online store in minutes. Multi-tenant e-commerce platform.',
       alternates: { canonical: `${platformOrigin}/` },
       openGraph: {
-        title: 'MASH ECO',
+        title: 'MASH ECO | All-in-One E-Commerce Store Builder',
         description: 'MASH ECO — Create your own online store in minutes. Multi-tenant e-commerce platform.',
         url: `${platformOrigin}/`,
         siteName: 'MASH ECO',
@@ -671,95 +672,89 @@ export default async function RootLayout({
         {/* Referrer Policy: Prevents CDN hotlinking blocks on custom domains */}
         <meta name="referrer" content="same-origin" />
 
+        {/* Explicit Site Name meta tags for Google Search */}
+        <meta property="og:site_name" content={storeName} />
+        <meta name="application-name" content={storeName} />
+        <meta name="apple-mobile-web-app-title" content={storeName} />
+
         {/* Explicit Favicons for Googlebot-Image, Search Results, & all browsers */}
         <link rel="icon" type="image/png" sizes="192x192" href={faviconUrl192} />
         <link rel="icon" type="image/png" sizes="32x32" href={faviconUrl32} />
         <link rel="apple-touch-icon" sizes="180x180" href={appleIconUrl} />
 
-        {/* 1. Google Search Site Name & Organization Schema (JSON-LD) for all store subdomains and custom domains */}
+        {/* 1. Google Search Site Name (WebSite JSON-LD) & OnlineStore Schema for all store subdomains and custom domains */}
         {tenantSlug !== "main" && (
-          <script
-            type="application/ld+json"
-            dangerouslySetInnerHTML={{
-              __html: JSON.stringify({
-                "@context": "https://schema.org",
-                "@graph": [
-                  {
-                    "@type": "WebSite",
-                    "@id": `${baseUrl}/#website`,
-                    "url": `${baseUrl}/`,
-                    "name": storeName,
-                    "alternateName": Array.from(
-                      new Set(
-                        [
-                          `${storeName} Bangladesh`,
-                          `${storeName} Official Store`,
-                          tenantSlug,
-                          storeName.replace(/\s+/g, ""),
-                        ].filter(
-                          (item) =>
-                            Boolean(
-                              item &&
-                                !item.toLowerCase().includes("masheco.com") &&
-                                item.trim().toLowerCase() !== storeName.trim().toLowerCase()
-                            )
-                        )
-                      )
-                    ),
-                    "inLanguage": language === "bn" ? "bn-BD" : "en-US",
-                    "publisher": {
-                      "@id": `${baseUrl}/#organization`,
-                    },
-                    "potentialAction": {
-                      "@type": "SearchAction",
-                      "target": {
-                        "@type": "EntryPoint",
-                        "urlTemplate": `${baseUrl}/products?search={search_term_string}`,
-                      },
-                      "query-input": "required name=search_term_string",
-                    },
-                  },
-                  {
-                    "@type": "OnlineStore",
+          <>
+            <script
+              type="application/ld+json"
+              dangerouslySetInnerHTML={{
+                __html: JSON.stringify({
+                  "@context": "https://schema.org",
+                  "@type": "WebSite",
+                  "@id": `${baseUrl}/#website`,
+                  "name": storeName,
+                  "alternateName": getStoreAlternateNames(storeName),
+                  "url": `${baseUrl}/`,
+                  "inLanguage": language === "bn" ? "bn-BD" : "en-US",
+                  "publisher": {
                     "@id": `${baseUrl}/#organization`,
-                    "name": storeName,
-                    "url": `${baseUrl}/`,
-                    ...(storeInfo?.logo
-                      ? {
-                          "logo": {
-                            "@type": "ImageObject",
-                            "@id": `${baseUrl}/#logo`,
-                            "url": faviconUrl192,
-                            "contentUrl": faviconUrl192,
-                            "caption": storeName,
-                          },
-                          "image": {
-                            "@id": `${baseUrl}/#logo`,
-                          },
-                        }
-                      : {}),
-                    ...(storeInfo?.description
-                      ? { "description": storeInfo.description }
-                      : {}),
-                    ...(storeInfo?.phone
-                      ? { "telephone": storeInfo.phone }
-                      : {}),
-                    "currenciesAccepted": storeInfo?.currency || "BDT",
-                    "priceRange": "৳",
-                    ...(storeInfo?.address
-                      ? {
-                          "address": {
-                            "@type": "PostalAddress",
-                            "streetAddress": storeInfo.address,
-                            "addressCountry": "BD",
-                          },
-                        }
-                      : {}),
                   },
-                ],
-              }),
-            }}
-          />
+                  "potentialAction": {
+                    "@type": "SearchAction",
+                    "target": {
+                      "@type": "EntryPoint",
+                      "urlTemplate": `${baseUrl}/products?search={search_term_string}`,
+                    },
+                    "query-input": "required name=search_term_string",
+                  },
+                }),
+              }}
+            />
+            <script
+              type="application/ld+json"
+              dangerouslySetInnerHTML={{
+                __html: JSON.stringify({
+                  "@context": "https://schema.org",
+                  "@type": "OnlineStore",
+                  "@id": `${baseUrl}/#organization`,
+                  "name": storeName,
+                  "alternateName": getStoreAlternateNames(storeName),
+                  "url": `${baseUrl}/`,
+                  ...(storeInfo?.logo
+                    ? {
+                        "logo": {
+                          "@type": "ImageObject",
+                          "@id": `${baseUrl}/#logo`,
+                          "url": faviconUrl192,
+                          "contentUrl": faviconUrl192,
+                          "caption": storeName,
+                        },
+                        "image": {
+                          "@id": `${baseUrl}/#logo`,
+                        },
+                      }
+                    : {}),
+                  ...(storeInfo?.description
+                    ? { "description": storeInfo.description }
+                    : {}),
+                  ...(storeInfo?.phone
+                    ? { "telephone": storeInfo.phone }
+                    : {}),
+                  "currenciesAccepted": storeInfo?.currency || "BDT",
+                  "priceRange": "৳",
+                  ...(storeInfo?.address
+                    ? {
+                        "address": {
+                          "@type": "PostalAddress",
+                          "streetAddress": storeInfo.address,
+                          "addressCountry": "BD",
+                        },
+                      }
+                    : {}),
+                }),
+              }}
+            />
+          </>
         )}
 
         {/* 2. Google Sitelinks: SiteNavigationElement / ItemList JSON-LD */}

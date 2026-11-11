@@ -41,7 +41,7 @@ export default function ProductGallery({ images, image, title }: ProductGalleryP
   const mainImageUrl = getProductMainImageUrl(currentImage);
 
   const mainImgRef = useRef<HTMLImageElement | null>(null);
-  const [imageLoaded, setImageLoaded] = useState(() => isHighResImageLoaded(currentImage));
+  const [imageLoaded, setImageLoaded] = useState(false);
 
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: 'instant' });

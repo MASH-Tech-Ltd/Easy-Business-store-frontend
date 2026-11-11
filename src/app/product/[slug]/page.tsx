@@ -163,8 +163,10 @@ export default async function ProductPage({ params }: PageProps) {
           product.description?.replace(/<[^>]*>?/gm, "") ||
           product.title,
         image:
-          product.images?.map((img: any) => getProductMainImageUrl(img.secure_url)).filter(Boolean) ||
-          [],
+          (product.images?.length
+            ? product.images.map((img: any) => getProductMainImageUrl(img.secure_url || img))
+            : [getProductMainImageUrl(product.image?.secure_url || product.image)]
+          ).filter(Boolean),
         sku: product.sku || product._id,
         brand: product.brand
           ? {
@@ -176,7 +178,13 @@ export default async function ProductPage({ params }: PageProps) {
           "@type": "Offer",
           url: `${baseUrl}/product/${resolvedParams.slug}`,
           priceCurrency: storeInfo?.currency || "BDT",
-          price: product.salePrice ?? product.price ?? 0,
+          price:
+            product.discountedPrice ??
+            product.salePrice ??
+            product.originalPrice ??
+            product.price ??
+            0,
+          itemCondition: "https://schema.org/NewCondition",
           availability:
             (product.stock ?? 1) > 0
               ? "https://schema.org/InStock"

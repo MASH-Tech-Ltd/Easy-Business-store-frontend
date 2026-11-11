@@ -41,6 +41,46 @@ export function getStoreName(storeInfo: StoreInfoLike, tenantSlug: string): stri
   return cleanStoreName(raw) || tenantSlug.toUpperCase();
 }
 
+/**
+ * Generates clean, human-readable alternate names for Google Site Name structured data.
+ * Never includes raw subdomain slugs (e.g. "mashiatfashion") or domain names,
+ * and ensures a natural Title Case variant is included when the store name is ALL CAPS.
+ */
+export function getStoreAlternateNames(storeName: string): string[] {
+  const cleaned = cleanStoreName(storeName).trim();
+  if (!cleaned) return [];
+
+  const titleCase = cleaned
+    .toLowerCase()
+    .split(/\s+/)
+    .map((word) => (word.length > 0 ? word[0].toUpperCase() + word.slice(1) : ''))
+    .join(' ');
+
+  const candidates = [
+    titleCase,
+    cleaned.toUpperCase(),
+    `${titleCase} Official Store`,
+    `${cleaned} Official Store`,
+  ];
+
+  const seen = new Set<string>([cleaned]);
+  const result: string[] = [];
+
+  for (const item of candidates) {
+    const trimmed = item.trim();
+    if (
+      trimmed &&
+      !seen.has(trimmed) &&
+      !trimmed.toLowerCase().includes('masheco')
+    ) {
+      seen.add(trimmed);
+      result.push(trimmed);
+    }
+  }
+
+  return result;
+}
+
 /** Read host + tenant slug for the current request (same header the middleware uses). */
 export async function getRequestContext() {
   const h = await headers();

@@ -267,6 +267,8 @@ export default async function Design03ProductPage({
                   >
                     <iframe
                       src={embedUrl}
+                      referrerPolicy="strict-origin-when-cross-origin"
+                      loading="lazy"
                       title={`Product Video ${index + 1}`}
                       className="w-full h-full grayscale hover:grayscale-0 transition-all duration-500"
                       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"

@@ -224,27 +224,9 @@ export function rememberLoadedProductImage(rawOrOptimizedUrl?: any, loadedSrc?: 
 
 export function getProductPlaceholderImageUrl(url?: any, isPrimary: boolean = true): string {
   if (!url) return '';
-  const key = normalizeImageKey(url);
-  if (!key) return '';
-
-  const memCached = loadedPreviewCache.get(key);
-  if (memCached) return memCached;
-
-  if (typeof window !== 'undefined') {
-    try {
-      const existingRaw = window.sessionStorage.getItem(SESSION_CACHE_KEY);
-      if (existingRaw) {
-        const parsed = JSON.parse(existingRaw);
-        if (parsed && typeof parsed[key] === 'string' && parsed[key]) {
-          loadedPreviewCache.set(key, parsed[key]);
-          return parsed[key];
-        }
-      }
-    } catch {}
-  }
-
-  // Fallback to the exact deterministic URL used by ProductCard (300px) for primary image,
-  // or gallery thumbnail (100px) for secondary gallery images.
+  // IMPORTANT: must be deterministic (identical on server & client) to avoid hydration mismatch.
+  // The primary image uses the exact same 300px URL as ProductCard, so the browser HTTP/memory
+  // cache already holds it; secondary gallery images use the 100px thumbnail URL.
   return isPrimary ? getProductCardImageUrl(url) : getOptimizedImageUrl(url, 100);
 }
 
