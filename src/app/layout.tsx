@@ -897,7 +897,11 @@ export default async function RootLayout({
           }}
         />
         <LanguageProvider initialLanguage={language}>
-          <Providers>
+          <Providers
+            chatWidget={tenantSlug !== "main" ? theme?.chatWidget : undefined}
+            storeName={storeName}
+            primaryColor={primaryColor}
+          >
             <StorefrontTracker
               tenantSlug={tenantSlug}
               initialConfig={trackingConfig}

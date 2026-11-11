@@ -5,8 +5,19 @@ import { usePathname } from 'next/navigation';
 import { CartProvider } from '@/context/CartContext';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import FloatingChatWidget, { ChatWidgetConfig } from './FloatingChatWidget';
 
-export default function Providers({ children }: { children: React.ReactNode }) {
+export default function Providers({
+  children,
+  chatWidget,
+  storeName,
+  primaryColor,
+}: {
+  children: React.ReactNode;
+  chatWidget?: ChatWidgetConfig | null;
+  storeName?: string;
+  primaryColor?: string;
+}) {
   const pathname = usePathname();
 
   useEffect(() => {
@@ -17,6 +28,11 @@ export default function Providers({ children }: { children: React.ReactNode }) {
   return (
     <CartProvider>
       {children}
+      <FloatingChatWidget
+        chatWidget={chatWidget}
+        storeName={storeName}
+        primaryColor={primaryColor}
+      />
       <ToastContainer 
         position="top-right"
         autoClose={3000}
