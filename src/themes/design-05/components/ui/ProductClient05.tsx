@@ -1,12 +1,20 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { ShoppingCart, Star, Check } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import { useRouter } from "next/navigation";
 import { getTranslation } from "@/utils/translations";
-import { getProductMainImageUrl, getOptimizedImageUrl } from "@/utils/imageOptimizer";
+import {
+  getProductMainImageUrl,
+  getOptimizedImageUrl,
+  getProductPlaceholderImageUrl,
+  rememberLoadedProductImage,
+  markHighResImageLoaded,
+  isHighResImageLoaded,
+  preloadProductMainImage,
+} from "@/utils/imageOptimizer";
 
 export default function ProductClient05({
   product,
@@ -90,6 +98,39 @@ export default function ProductClient05({
     () => allImages[0] || (typeof product?.image === 'string' ? product.image : product?.image?.secure_url) || ""
   );
   const [quantity, setQuantity] = useState(1);
+
+  const mainImgRef = useRef<HTMLImageElement | null>(null);
+  const [highResLoaded, setHighResLoaded] = useState(() => isHighResImageLoaded(activeImage));
+  const placeholderUrl = getProductPlaceholderImageUrl(
+    activeImage,
+    !allImages.length || activeImage === allImages[0]
+  );
+  const mainImageUrl = getProductMainImageUrl(activeImage);
+
+  useEffect(() => {
+    if (!activeImage) return;
+    if (isHighResImageLoaded(activeImage)) {
+      setHighResLoaded(true);
+      return;
+    }
+    const imgEl = mainImgRef.current;
+    if (imgEl && imgEl.complete && imgEl.naturalWidth > 0) {
+      markHighResImageLoaded(activeImage);
+      setHighResLoaded(true);
+    } else {
+      setHighResLoaded(false);
+    }
+  }, [activeImage]);
+
+  useEffect(() => {
+    if (allImages.length <= 1) return;
+    const timer = setTimeout(() => {
+      allImages.slice(1).forEach((imgUrl) => {
+        preloadProductMainImage(imgUrl);
+      });
+    }, 150);
+    return () => clearTimeout(timer);
+  }, [allImages.join("|")]);
 
   // Find currently matched variant
   const matchedVariant = React.useMemo(() => {
@@ -191,14 +232,32 @@ export default function ProductClient05({
         <div className="lg:w-1/2 flex flex-col gap-6">
           <div className="aspect-[4/4] bg-[#F8F9FA] rounded-[2rem] p-6 sm:p-10 flex items-center justify-center overflow-hidden border border-gray-100 group cursor-zoom-in relative">
             {activeImage ? (
-              <div className="w-full h-full rounded-2xl overflow-hidden relative">
+              <div className="w-full h-full rounded-2xl overflow-hidden relative mix-blend-multiply">
+                {/* Previously loaded Product Card (300px) / Thumbnail image shown immediately as placeholder */}
                 <img
-                  src={getProductMainImageUrl(activeImage)}
+                  src={placeholderUrl}
+                  alt={product.title}
+                  loading="eager"
+                  decoding="sync"
+                  fetchPriority="high"
+                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110 rounded-2xl pointer-events-none"
+                />
+                {/* High-Quality Product Details Image (800px) replaces placeholder automatically once loaded */}
+                <img
+                  key={mainImageUrl}
+                  ref={mainImgRef}
+                  src={mainImageUrl}
                   alt={product.title}
                   loading="eager"
                   decoding="async"
                   fetchPriority="high"
-                  className="w-full h-full object-cover mix-blend-multiply transition-transform duration-700 ease-out group-hover:scale-110 rounded-2xl"
+                  onLoad={() => {
+                    markHighResImageLoaded(activeImage);
+                    setHighResLoaded(true);
+                  }}
+                  className={`relative z-10 w-full h-full object-cover transition-all duration-300 ease-out group-hover:scale-110 rounded-2xl ${
+                    highResLoaded ? "opacity-100" : "opacity-0"
+                  }`}
                 />
               </div>
             ) : (
@@ -209,23 +268,38 @@ export default function ProductClient05({
           </div>
           {allImages.length > 1 && (
             <div className="flex gap-4 overflow-x-auto pb-2 custom-scrollbar">
-              {allImages.map((imgUrl: string, idx: number) => (
-                <button
-                  key={idx}
-                  onClick={() => setActiveImage(imgUrl)}
-                  className={`w-24 h-24 shrink-0 rounded-2xl bg-[#F8F9FA] border p-2 flex items-center justify-center transition-all ${
-                    activeImage === imgUrl
-                      ? "border-black shadow-sm"
-                      : "border-transparent hover:border-gray-200"
-                  }`}
-                >
-                  <img
-                    src={getOptimizedImageUrl(imgUrl, 100)}
-                    alt=""
-                    className="w-full h-full object-cover mix-blend-multiply"
-                  />
-                </button>
-              ))}
+              {allImages.map((imgUrl: string, idx: number) => {
+                const thumbSrc =
+                  idx === 0
+                    ? getProductPlaceholderImageUrl(imgUrl, true)
+                    : getOptimizedImageUrl(imgUrl, 100);
+                return (
+                  <button
+                    key={idx}
+                    onClick={() => {
+                      if (activeImage !== imgUrl) {
+                        setActiveImage(imgUrl);
+                        setHighResLoaded(isHighResImageLoaded(imgUrl));
+                      }
+                    }}
+                    onMouseEnter={() => preloadProductMainImage(imgUrl)}
+                    className={`w-24 h-24 shrink-0 rounded-2xl bg-[#F8F9FA] border p-2 flex items-center justify-center transition-all ${
+                      activeImage === imgUrl
+                        ? "border-black shadow-sm"
+                        : "border-transparent hover:border-gray-200"
+                    }`}
+                  >
+                    <img
+                      src={thumbSrc}
+                      alt=""
+                      loading={idx === 0 ? "eager" : "lazy"}
+                      decoding="async"
+                      onLoad={() => rememberLoadedProductImage(imgUrl, thumbSrc)}
+                      className="w-full h-full object-cover mix-blend-multiply"
+                    />
+                  </button>
+                );
+              })}
             </div>
           )}
         </div>

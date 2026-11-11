@@ -6,7 +6,11 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCart } from "@/context/CartContext";
 import { useTranslation } from "@/context/LanguageContext";
-import { getProductCardImageUrl } from "@/utils/imageOptimizer";
+import {
+  getProductCardImageUrl,
+  rememberLoadedProductImage,
+  preloadProductMainImage,
+} from "@/utils/imageOptimizer";
 import { getTranslation } from "@/utils/translations";
 import { useProductTracker } from "@/hooks/useProductTracker";
 
@@ -108,6 +112,10 @@ export default function ProductCard({
     (typeof product.quantity === 'number' && product.quantity <= 0);
 
   const handleMouseEnter = () => {
+    if (imageUrl) {
+      rememberLoadedProductImage(imageUrl, getProductCardImageUrl(imageUrl));
+      preloadProductMainImage(imageUrl);
+    }
     try {
       router.prefetch(`/product/${productSlug}`);
     } catch {}
@@ -156,6 +164,9 @@ export default function ProductCard({
             alt={product.title}
             loading="lazy"
             decoding="async"
+            onLoad={() =>
+              rememberLoadedProductImage(imageUrl, getProductCardImageUrl(imageUrl))
+            }
             className={`w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 ${isOutOfStock ? "opacity-70 grayscale-[30%]" : ""}`}
           />
         ) : (

@@ -4,7 +4,11 @@ import React from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import ProductCardActions03 from './ProductCardActions';
-import { getProductCardImageUrl } from '@/utils/imageOptimizer';
+import {
+  getProductCardImageUrl,
+  rememberLoadedProductImage,
+  preloadProductMainImage,
+} from '@/utils/imageOptimizer';
 import { useProductTracker } from '@/hooks/useProductTracker';
 
 interface ProductProps {
@@ -36,6 +40,10 @@ export default function Design03ProductCard({ product, isList = false, isBestSel
     (typeof product.quantity === 'number' && product.quantity <= 0);
 
   const handleMouseEnter = () => {
+    if (imageUrl) {
+      rememberLoadedProductImage(imageUrl, getProductCardImageUrl(imageUrl));
+      preloadProductMainImage(imageUrl);
+    }
     try {
       router.prefetch(`/product/${productSlug}`);
     } catch {}
@@ -61,7 +69,7 @@ export default function Design03ProductCard({ product, isList = false, isBestSel
             </div>
           )}
           {imageUrl ? (
-            <img src={getProductCardImageUrl(imageUrl)} alt={product.title || product.name} loading="lazy" decoding="async" className={`w-full h-full object-contain mix-blend-luminosity group-hover:mix-blend-normal transition-all duration-300 ${isOutOfStock ? "opacity-60 grayscale" : ""}`} />
+            <img src={getProductCardImageUrl(imageUrl)} alt={product.title || product.name} loading="lazy" decoding="async" onLoad={() => rememberLoadedProductImage(imageUrl, getProductCardImageUrl(imageUrl))} className={`w-full h-full object-contain mix-blend-luminosity group-hover:mix-blend-normal transition-all duration-300 ${isOutOfStock ? "opacity-60 grayscale" : ""}`} />
           ) : (
             <div className="w-full h-full flex items-center justify-center text-gray-600 text-xs font-mono uppercase tracking-widest">No Signal</div>
           )}
@@ -110,7 +118,7 @@ export default function Design03ProductCard({ product, isList = false, isBestSel
             </div>
           )}
           {imageUrl ? (
-            <img src={getProductCardImageUrl(imageUrl)} alt={product.title || product.name} loading="lazy" decoding="async" className={`w-full h-full object-contain mix-blend-luminosity group-hover:mix-blend-normal transition-all duration-500 scale-95 group-hover:scale-105 ${isOutOfStock ? "opacity-60 grayscale" : ""}`} />
+            <img src={getProductCardImageUrl(imageUrl)} alt={product.title || product.name} loading="lazy" decoding="async" onLoad={() => rememberLoadedProductImage(imageUrl, getProductCardImageUrl(imageUrl))} className={`w-full h-full object-contain mix-blend-luminosity group-hover:mix-blend-normal transition-all duration-500 scale-95 group-hover:scale-105 ${isOutOfStock ? "opacity-60 grayscale" : ""}`} />
           ) : (
             <div className="w-full h-full flex items-center justify-center">
               <span className="text-gray-600 text-xs font-mono uppercase tracking-widest">No Signal</span>

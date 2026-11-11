@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useCallback } from 'react';
 import { trackProductImpression, trackProductClick } from '@/utils/productAnalytics';
+import { rememberLoadedProductImage, preloadProductMainImage } from '@/utils/imageOptimizer';
 
 interface UseProductTrackerProps {
   productId?: string | number;
@@ -21,6 +22,19 @@ export function useProductTracker({
   const cleanProductId = productId ? String(productId) : '';
   const cleanTenantId = tenantId || 'main';
 
+  const captureCardImage = useCallback((preloadHighRes: boolean = false) => {
+    const target = elementRef.current;
+    if (!target || typeof window === 'undefined') return;
+    const imgEl = target.querySelector('img') as HTMLImageElement | null;
+    const loadedSrc = imgEl?.currentSrc || imgEl?.src || '';
+    if (loadedSrc) {
+      rememberLoadedProductImage(loadedSrc, loadedSrc);
+      if (preloadHighRes) {
+        preloadProductMainImage(loadedSrc);
+      }
+    }
+  }, []);
+
   // IntersectionObserver: >= 50% visible for >= 1 second
   useEffect(() => {
     if (!cleanProductId || !cleanTenantId || hasTriggeredRef.current) return;
@@ -30,11 +44,15 @@ export function useProductTracker({
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            captureCardImage(false);
+          }
           if (entry.isIntersecting && entry.intersectionRatio >= 0.5) {
             // Started being visible >= 50%
             if (!impressionTimerRef.current && !hasTriggeredRef.current) {
               impressionTimerRef.current = setTimeout(() => {
                 hasTriggeredRef.current = true;
+                captureCardImage(false);
                 trackProductImpression({
                   productId: cleanProductId,
                   tenantId: cleanTenantId,
@@ -66,16 +84,17 @@ export function useProductTracker({
       }
       observer.disconnect();
     };
-  }, [cleanProductId, cleanTenantId, sourceSection]);
+  }, [cleanProductId, cleanTenantId, sourceSection, captureCardImage]);
 
   const handleProductClick = useCallback(() => {
+    captureCardImage(true);
     if (!cleanProductId || !cleanTenantId) return;
     trackProductClick({
       productId: cleanProductId,
       tenantId: cleanTenantId,
       sourceSection,
     });
-  }, [cleanProductId, cleanTenantId, sourceSection]);
+  }, [cleanProductId, cleanTenantId, sourceSection, captureCardImage]);
 
   return {
     trackRef: elementRef as any,

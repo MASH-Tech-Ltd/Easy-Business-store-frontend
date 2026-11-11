@@ -6,7 +6,11 @@ import { ShoppingCart } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
 import { useRouter } from 'next/navigation';
 import { getTranslation } from '@/utils/translations';
-import { getProductCardImageUrl } from '@/utils/imageOptimizer';
+import {
+  getProductCardImageUrl,
+  rememberLoadedProductImage,
+  preloadProductMainImage,
+} from '@/utils/imageOptimizer';
 import { useProductTracker } from '@/hooks/useProductTracker';
 
 export default function ProductCard05({ product, isList = false, isBestSelling = false, theme }: { product: any; isList?: boolean; isBestSelling?: boolean; theme?: any }) {
@@ -30,6 +34,10 @@ export default function ProductCard05({ product, isList = false, isBestSelling =
   });
 
   const handleMouseEnter = () => {
+    if (imageUrl) {
+      rememberLoadedProductImage(imageUrl, getProductCardImageUrl(imageUrl));
+      preloadProductMainImage(imageUrl);
+    }
     try {
       router.prefetch(`/product/${productSlug}`);
     } catch {}
@@ -65,7 +73,7 @@ export default function ProductCard05({ product, isList = false, isBestSelling =
             </div>
           )}
           {imageUrl ? (
-            <img src={getProductCardImageUrl(imageUrl)} alt={product.title} loading="lazy" decoding="async" className={`w-full h-full object-cover mix-blend-multiply group-hover:scale-105 transition-transform duration-500 ${isOutOfStock ? "opacity-70 grayscale-[30%]" : ""}`} />
+            <img src={getProductCardImageUrl(imageUrl)} alt={product.title} loading="lazy" decoding="async" onLoad={() => rememberLoadedProductImage(imageUrl, getProductCardImageUrl(imageUrl))} className={`w-full h-full object-cover mix-blend-multiply group-hover:scale-105 transition-transform duration-500 ${isOutOfStock ? "opacity-70 grayscale-[30%]" : ""}`} />
           ) : (
             <div className="text-gray-300 text-xs font-medium uppercase tracking-widest">No image</div>
           )}
@@ -121,7 +129,7 @@ export default function ProductCard05({ product, isList = false, isBestSelling =
         )}
 
         {imageUrl ? (
-          <img src={getProductCardImageUrl(imageUrl)} alt={product.title || product.name} loading="lazy" decoding="async" className={`w-full h-full object-cover mix-blend-multiply group-hover:scale-105 transition-transform duration-700 ease-out ${isOutOfStock ? "opacity-70 grayscale-[30%]" : ""}`} />
+          <img src={getProductCardImageUrl(imageUrl)} alt={product.title || product.name} loading="lazy" decoding="async" onLoad={() => rememberLoadedProductImage(imageUrl, getProductCardImageUrl(imageUrl))} className={`w-full h-full object-cover mix-blend-multiply group-hover:scale-105 transition-transform duration-700 ease-out ${isOutOfStock ? "opacity-70 grayscale-[30%]" : ""}`} />
         ) : (
           <div className="w-full h-full flex items-center justify-center text-gray-300 text-xs font-medium uppercase tracking-widest">No image</div>
         )}

@@ -4,7 +4,11 @@ import React from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import ProductCardActions from "./ProductCardActions";
-import { getProductCardImageUrl } from "@/utils/imageOptimizer";
+import {
+  getProductCardImageUrl,
+  rememberLoadedProductImage,
+  preloadProductMainImage,
+} from "@/utils/imageOptimizer";
 import { useProductTracker } from "@/hooks/useProductTracker";
 
 interface ProductProps {
@@ -42,6 +46,10 @@ export default function Design02ProductCard({
     (typeof product.quantity === 'number' && product.quantity <= 0);
 
   const handleMouseEnter = () => {
+    if (imageUrl) {
+      rememberLoadedProductImage(imageUrl, getProductCardImageUrl(imageUrl));
+      preloadProductMainImage(imageUrl);
+    }
     try {
       router.prefetch(`/product/${productSlug}`);
     } catch {}
@@ -72,6 +80,9 @@ export default function Design02ProductCard({
               alt={product.title || product.name}
               loading="lazy"
               decoding="async"
+              onLoad={() =>
+                rememberLoadedProductImage(imageUrl, getProductCardImageUrl(imageUrl))
+              }
               className={`w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ${isOutOfStock ? "opacity-70 grayscale-[30%]" : ""}`}
             />
           ) : (
@@ -136,6 +147,9 @@ export default function Design02ProductCard({
             alt={product.title || product.name}
             loading="lazy"
             decoding="async"
+            onLoad={() =>
+              rememberLoadedProductImage(imageUrl, getProductCardImageUrl(imageUrl))
+            }
             className={`w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ${isOutOfStock ? "opacity-70 grayscale-[30%]" : ""}`}
           />
         ) : (

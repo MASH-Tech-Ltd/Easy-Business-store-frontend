@@ -167,3 +167,109 @@ export const getProductMainImageUrl = (url?: any) => getOptimizedImageUrl(url, 8
 export const getProductGalleryImageUrl = (url?: any) => getOptimizedImageUrl(url, 800);
 export const getStoreLogoUrl = (url?: string | null) => getOptimizedImageUrl(url, 150);
 export const getBannerImageUrl = (url?: string | null) => getOptimizedImageUrl(url, 1200);
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Progressive Product Image Cache (Card Preview -> High-Quality Main Image)
+// Reuses already-loaded 300px card images from Homepage / All Products as an
+// instant placeholder on Product Details until the 800px image finishes loading.
+// ─────────────────────────────────────────────────────────────────────────────
+
+const loadedPreviewCache = new Map<string, string>();
+const loadedHighResSet = new Set<string>();
+const SESSION_CACHE_KEY = '__masheco_img_previews__';
+
+export function normalizeImageKey(url?: any): string {
+  if (!url) return '';
+  const actualUrl = typeof url === 'string' ? url : url?.secure_url || url?.url || '';
+  if (!actualUrl || typeof actualUrl !== 'string') return '';
+  const trimmed = actualUrl.trim();
+  if (!trimmed) return '';
+
+  if (trimmed.includes('res.cloudinary.com') && trimmed.includes('/image/upload/')) {
+    const parts = trimmed.split('/image/upload/');
+    if (parts.length === 2) {
+      return stripCloudinaryTransforms(parts[1]);
+    }
+  }
+
+  if (trimmed.includes('cdn.masheco.com/img/')) {
+    const parts = trimmed.split('/img/');
+    if (parts.length === 2) {
+      return stripCloudinaryTransforms(parts[1]);
+    }
+  }
+
+  return trimmed;
+}
+
+export function rememberLoadedProductImage(rawOrOptimizedUrl?: any, loadedSrc?: string): void {
+  if (typeof window === 'undefined') return;
+  const key = normalizeImageKey(rawOrOptimizedUrl || loadedSrc);
+  const srcToStore = loadedSrc || getProductCardImageUrl(rawOrOptimizedUrl);
+  if (!key || !srcToStore) return;
+
+  loadedPreviewCache.set(key, srcToStore);
+  try {
+    const existingRaw = window.sessionStorage.getItem(SESSION_CACHE_KEY);
+    const parsed: Record<string, string> = existingRaw ? JSON.parse(existingRaw) : {};
+    parsed[key] = srcToStore;
+    // Keep session cache bounded to most recent 100 images
+    const keys = Object.keys(parsed);
+    if (keys.length > 100) {
+      delete parsed[keys[0]];
+    }
+    window.sessionStorage.setItem(SESSION_CACHE_KEY, JSON.stringify(parsed));
+  } catch {}
+}
+
+export function getProductPlaceholderImageUrl(url?: any, isPrimary: boolean = true): string {
+  if (!url) return '';
+  const key = normalizeImageKey(url);
+  if (!key) return '';
+
+  const memCached = loadedPreviewCache.get(key);
+  if (memCached) return memCached;
+
+  if (typeof window !== 'undefined') {
+    try {
+      const existingRaw = window.sessionStorage.getItem(SESSION_CACHE_KEY);
+      if (existingRaw) {
+        const parsed = JSON.parse(existingRaw);
+        if (parsed && typeof parsed[key] === 'string' && parsed[key]) {
+          loadedPreviewCache.set(key, parsed[key]);
+          return parsed[key];
+        }
+      }
+    } catch {}
+  }
+
+  // Fallback to the exact deterministic URL used by ProductCard (300px) for primary image,
+  // or gallery thumbnail (100px) for secondary gallery images.
+  return isPrimary ? getProductCardImageUrl(url) : getOptimizedImageUrl(url, 100);
+}
+
+export function markHighResImageLoaded(url?: any): void {
+  const mainUrl = getProductMainImageUrl(url);
+  if (mainUrl) {
+    loadedHighResSet.add(mainUrl);
+  }
+}
+
+export function isHighResImageLoaded(url?: any): boolean {
+  const mainUrl = getProductMainImageUrl(url);
+  return Boolean(mainUrl && loadedHighResSet.has(mainUrl));
+}
+
+export function preloadProductMainImage(url?: any): void {
+  if (typeof window === 'undefined' || !url) return;
+  const mainUrl = getProductMainImageUrl(url);
+  if (!mainUrl || loadedHighResSet.has(mainUrl)) return;
+
+  const img = new window.Image();
+  img.decoding = 'async';
+  img.onload = () => {
+    loadedHighResSet.add(mainUrl);
+  };
+  img.src = mainUrl;
+}
+
