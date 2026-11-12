@@ -114,13 +114,22 @@ export default function Design02CheckoutClient({ theme,
           division,
           district,
           upazila,
+          items: cartItems.map((item) => ({
+            productId: item.productId || item.id,
+            title: item.title,
+            price: item.price,
+            quantity: item.quantity,
+            image: item.image,
+            color: item.color,
+            size: item.size,
+          })),
           status: 'abandoned'
         })
       }).catch(err => console.error("Failed to track lead", err));
     }, 2000);
 
     return () => clearTimeout(timeoutId);
-  }, [phone, fullName, address, division, district, upazila, status]);
+  }, [phone, fullName, address, division, district, upazila, cartItems, status]);
 
   // Scroll to top when checkout is successful
   React.useEffect(() => {

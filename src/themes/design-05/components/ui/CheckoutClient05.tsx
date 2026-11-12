@@ -133,6 +133,15 @@ export default function CheckoutClient05({
           division,
           district,
           upazila,
+          items: items.map((item) => ({
+            productId: item.productId || item.id,
+            title: item.title,
+            price: item.price,
+            quantity: item.quantity,
+            image: item.image,
+            color: item.color,
+            size: item.size,
+          })),
           status: "abandoned",
         }),
       }).catch((err) => console.error("Failed to track lead", err));
@@ -148,6 +157,7 @@ export default function CheckoutClient05({
     division,
     district,
     upazila,
+    items,
     isSuccess,
     isProcessing,
   ]);
