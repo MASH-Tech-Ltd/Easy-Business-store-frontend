@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { trackEvent } from "@/utils/tracking";
+import { useCheckoutLeadTracker } from "@/hooks/useCheckoutLeadTracker";
 import { useCart } from "@/context/CartContext";
 import Link from "next/link";
 import { Check, ShieldCheck, ChevronRight, Banknote } from "lucide-react";
@@ -115,52 +116,28 @@ export default function CheckoutClient05({
   const upazilasList =
     districtsList.find((d) => d.district === district)?.upazilas || [];
 
-  // Track Checkout Leads (Abandoned Checkout)
-  React.useEffect(() => {
-    if (!phone && !firstName && !address) return;
-    if (isSuccess || isProcessing) return;
-
-    const timeoutId = setTimeout(() => {
-      fetch("/api/checkout-leads", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          firstName,
-          lastName,
-          email,
-          phone,
-          address,
-          division,
-          district,
-          upazila,
-          items: items.map((item) => ({
-            productId: item.productId || item.id,
-            title: item.title,
-            price: item.price,
-            quantity: item.quantity,
-            image: item.image,
-            color: item.color,
-            size: item.size,
-          })),
-          status: "abandoned",
-        }),
-      }).catch((err) => console.error("Failed to track lead", err));
-    }, 2000);
-
-    return () => clearTimeout(timeoutId);
-  }, [
-    phone,
+  // Track & auto-update Checkout Leads on any field change
+  useCheckoutLeadTracker({
     firstName,
     lastName,
     email,
+    phone,
     address,
     division,
     district,
     upazila,
-    items,
+    items: items.map((item) => ({
+      productId: item.productId || item.id,
+      title: item.title,
+      price: item.price,
+      quantity: item.quantity,
+      image: item.image,
+      color: item.color,
+      size: item.size,
+    })),
     isSuccess,
     isProcessing,
-  ]);
+  });
 
   const { cost: shippingEstimate, zoneName: shippingZoneName } =
     computeShipping(

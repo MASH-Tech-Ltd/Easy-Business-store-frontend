@@ -26,18 +26,21 @@ export async function POST(req: NextRequest) {
     const apiBase = process.env.API_URL || process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api/v1';
     const url = new URL(`${apiBase}/orders/create-order`);
 
-    // Pass the original host header so the backend tenant middleware can resolve the tenant automatically
-    const originalHost = req.headers.get('host') || '';
+    // Pass the original host header so the backend tenant middleware can resolve both subdomains and custom domains
+    const rawHost = req.headers.get('x-forwarded-host') || req.headers.get('host') || '';
+    const originalHost = rawHost.split(',')[0]?.trim() || '';
 
     const userAgent = req.headers.get('user-agent') || 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36';
     const apiKey = process.env.STOREFRONT_API_KEY || process.env.NEXT_PUBLIC_STOREFRONT_API_KEY;
 
     const forwardHeaders: Record<string, string> = {
       'Content-Type': 'application/json',
-      'Host': originalHost,
       'X-Forwarded-Host': originalHost,
       'User-Agent': userAgent,
     };
+    if (url.hostname === 'localhost' || url.hostname === '127.0.0.1') {
+      forwardHeaders['Host'] = originalHost;
+    }
     if (apiKey) {
       forwardHeaders['x-storefront-api-key'] = apiKey;
     }

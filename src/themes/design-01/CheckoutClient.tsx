@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { trackEvent } from '@/utils/tracking';
+import { useCheckoutLeadTracker } from '@/hooks/useCheckoutLeadTracker';
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
@@ -101,39 +102,27 @@ export default function CheckoutClient({ storeInfo, theme }: { storeInfo?: any; 
     return () => clearTimeout(timer);
   }, [phone, fullName, address, division, district, upazila, deliveryNote]);
 
-  // Track Checkout Leads (Abandoned Checkout)
-  React.useEffect(() => {
-    if (!phone && !fullName && !address) return;
-    if (status === 'success' || status === 'processing') return;
-
-    const timeoutId = setTimeout(() => {
-      fetch('/api/checkout-leads', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          firstName: fullName.split(' ')[0] || fullName,
-          lastName: fullName.split(' ').slice(1).join(' ') || undefined,
-          phone,
-          address,
-          division,
-          district,
-          upazila,
-          items: cartItems.map((item) => ({
-            productId: item.productId || item.id,
-            title: item.title,
-            price: item.price,
-            quantity: item.quantity,
-            image: item.image,
-            color: item.color,
-            size: item.size,
-          })),
-          status: 'abandoned'
-        })
-      }).catch(err => console.error("Failed to track lead", err));
-    }, 2000);
-
-    return () => clearTimeout(timeoutId);
-  }, [phone, fullName, address, division, district, upazila, cartItems, status]);
+  // Track & auto-update Checkout Leads on any field change
+  useCheckoutLeadTracker({
+    firstName: fullName.split(' ')[0] || fullName,
+    lastName: fullName.split(' ').slice(1).join(' ') || undefined,
+    phone,
+    address,
+    division,
+    district,
+    upazila,
+    items: cartItems.map((item) => ({
+      productId: item.productId || item.id,
+      title: item.title,
+      price: item.price,
+      quantity: item.quantity,
+      image: item.image,
+      color: item.color,
+      size: item.size,
+    })),
+    isSuccess: status === 'success',
+    isProcessing: status === 'processing',
+  });
 
   // Scroll to top when checkout is successful
   React.useEffect(() => {
