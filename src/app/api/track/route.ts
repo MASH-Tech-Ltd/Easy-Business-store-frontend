@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { extractClientIp } from '@/utils/clientIp';
 import { storefrontFetch } from '@/utils/storefrontFetch';
 
 export async function GET(req: NextRequest) {
@@ -20,10 +21,7 @@ export async function GET(req: NextRequest) {
     const url = new URL(`${apiBase}/orders/track/${encodeURIComponent(id)}`);
     url.searchParams.append('phone', phone);
     
-    const cfIp = req.headers.get('cf-connecting-ip');
-    const forwardedFor = req.headers.get('x-forwarded-for');
-    const realIp = req.headers.get('x-real-ip');
-    const clientIp = cfIp || (forwardedFor ? forwardedFor.split(',')[0]?.trim() : null) || realIp || '';
+    const clientIp = extractClientIp(req.headers);
     
     const originalHost = req.headers.get('host') || '';
     const userAgent = req.headers.get('user-agent') || 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36';

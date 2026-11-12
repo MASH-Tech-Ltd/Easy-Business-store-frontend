@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { extractClientIp } from '@/utils/clientIp';
 
 export async function POST(req: NextRequest) {
   try {
@@ -20,10 +21,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const cfIp = req.headers.get('cf-connecting-ip');
-    const forwardedFor = req.headers.get('x-forwarded-for');
-    const realIp = req.headers.get('x-real-ip');
-    const clientIp = cfIp || (forwardedFor ? forwardedFor.split(',')[0]?.trim() : null) || realIp || '';
+    const clientIp = extractClientIp(req.headers);
 
     const apiBase = process.env.API_URL || process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api/v1';
     const url = new URL(`${apiBase}/orders/create-order`);

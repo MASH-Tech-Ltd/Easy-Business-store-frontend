@@ -1,4 +1,5 @@
 import { headers } from 'next/headers';
+import { extractClientIp } from '@/utils/clientIp';
 
 /**
  * Resolves the real browser client IP and User-Agent from Next.js incoming request headers.
@@ -7,10 +8,7 @@ import { headers } from 'next/headers';
 async function resolveClientHeaders(): Promise<{ clientIp?: string; userAgent?: string }> {
   try {
     const headersList = await headers();
-    const cfIp = headersList.get('cf-connecting-ip');
-    const forwarded = headersList.get('x-forwarded-for');
-    const realIp = headersList.get('x-real-ip');
-    const clientIp = cfIp?.trim() || (forwarded ? forwarded.split(',')[0]?.trim() : null) || realIp?.trim() || undefined;
+    const clientIp = extractClientIp(headersList) || undefined;
     const userAgent = headersList.get('user-agent') || undefined;
     return { clientIp, userAgent };
   } catch {
@@ -68,11 +66,9 @@ export async function storefrontFetch(url: string, init?: RequestInit, clientIp?
     fetchHeaders.set('user-agent', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
   }
 
-  // Pass x-tenant-client-ip so backend directClientBlockMiddleware permits the SSR call
+  // Only forward x-tenant-client-ip when a real public visitor IP exists (never spoof 127.0.0.1)
   if (ip && ip !== '127.0.0.1' && ip !== '::1') {
     fetchHeaders.set('x-tenant-client-ip', ip);
-  } else if (!fetchHeaders.has('x-tenant-client-ip')) {
-    fetchHeaders.set('x-tenant-client-ip', '127.0.0.1');
   }
 
   return fetch(resolvedUrl, {

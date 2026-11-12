@@ -1,19 +1,13 @@
 import { NextResponse } from 'next/server';
 import { headers } from 'next/headers';
+import { extractClientIp } from '@/utils/clientIp';
 
 export async function POST(req: Request) {
   try {
     const body = await req.json();
     const headersList = await headers();
 
-    // Read the real client IP from the incoming browser request headers
-    // (set by Cloudflare/Nginx before hitting Next.js)
-    const cfIp = headersList.get('cf-connecting-ip');
-    const forwardedFor = headersList.get('x-forwarded-for');
-    const realIp = headersList.get('x-real-ip');
-
-    // Determine the best real IP to forward
-    const clientIp = cfIp || (forwardedFor ? forwardedFor.split(',')[0]?.trim() : null) || realIp || '';
+    const clientIp = extractClientIp(headersList);
 
     // Build forwarded headers to pass real IP to the backend.
     // Use x-tenant-client-ip (custom header) instead of x-forwarded-for / x-real-ip

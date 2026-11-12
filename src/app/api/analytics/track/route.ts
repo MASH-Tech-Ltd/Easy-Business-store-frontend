@@ -1,15 +1,13 @@
 import { NextResponse } from 'next/server';
 import { headers } from 'next/headers';
+import { extractClientIp } from '@/utils/clientIp';
 
 export async function POST(req: Request) {
   try {
     const body = await req.json();
     const headersList = await headers();
 
-    const cfIp = headersList.get('cf-connecting-ip');
-    const forwardedFor = headersList.get('x-forwarded-for');
-    const realIp = headersList.get('x-real-ip');
-    const clientIp = cfIp || (forwardedFor ? forwardedFor.split(',')[0]?.trim() : null) || realIp || '';
+    const clientIp = extractClientIp(headersList);
 
     const userAgent = headersList.get('user-agent') || 'Mozilla/5.0';
     const apiKey = process.env.STOREFRONT_API_KEY || process.env.NEXT_PUBLIC_STOREFRONT_API_KEY;
