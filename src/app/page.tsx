@@ -1,7 +1,7 @@
 import { getStoreLogoUrl } from '@/utils/imageOptimizer';
 import { getTheme, getStoreInfo } from '@/core/api/store';
 import { themeRegistry } from '@/themes/themeRegistry';
-import { getStoreName, getRequestContext, getSiteOrigin, cleanMetaDescription } from '@/utils/seo';
+import { getStoreName, getRequestContext, getSiteOrigin, cleanMetaDescription, getStoreAlternateNames } from '@/utils/seo';
 import type { Metadata } from 'next';
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -61,12 +61,17 @@ export default async function Page() {
   const { tenantSlug, requestOrigin } = await getRequestContext();
 
   let themeId = 'design-01';
+  let storeInfo = null;
 
   if (tenantSlug !== 'main') {
-    const theme = await getTheme(tenantSlug);
+    const [theme, info] = await Promise.all([
+      getTheme(tenantSlug),
+      getStoreInfo(tenantSlug),
+    ]);
     if (theme && theme.themeId && themeRegistry[theme.themeId]) {
       themeId = theme.themeId;
     }
+    storeInfo = info;
   }
 
   const ThemeHome = themeRegistry[themeId]?.Home || themeRegistry['design-01'].Home;
@@ -104,6 +109,38 @@ export default async function Page() {
     );
   }
 
-  return <ThemeHome tenantSlug={tenantSlug} />;
+  // Tenant homepage: explicit Google Site Name WebSite JSON-LD
+  // Google Search specifically reads WebSite structured data on the homepage root (/)
+  // to identify the independent brand/site name for the subdomain.
+  const baseUrl = getSiteOrigin(requestOrigin, storeInfo);
+  const storeName = getStoreName(storeInfo, tenantSlug);
+  const alternateNames = getStoreAlternateNames(storeName);
+
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'WebSite',
+            '@id': `${baseUrl}/#website`,
+            name: storeName,
+            ...(alternateNames.length > 0 ? { alternateName: alternateNames } : {}),
+            url: `${baseUrl}/`,
+            potentialAction: {
+              '@type': 'SearchAction',
+              target: {
+                '@type': 'EntryPoint',
+                urlTemplate: `${baseUrl}/products?search={search_term_string}`,
+              },
+              'query-input': 'required name=search_term_string',
+            },
+          }),
+        }}
+      />
+      <ThemeHome tenantSlug={tenantSlug} />
+    </>
+  );
 }
 

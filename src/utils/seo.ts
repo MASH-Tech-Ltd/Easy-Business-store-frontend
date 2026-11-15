@@ -50,30 +50,52 @@ export function getStoreAlternateNames(storeName: string): string[] {
   const cleaned = cleanStoreName(storeName).trim();
   if (!cleaned) return [];
 
+  const candidates: string[] = [];
+
+  // 1. Natural Title Case
   const titleCase = cleaned
     .toLowerCase()
     .split(/\s+/)
     .map((word) => (word.length > 0 ? word[0].toUpperCase() + word.slice(1) : ''))
     .join(' ');
+  candidates.push(titleCase);
+  candidates.push(cleaned.toUpperCase());
 
-  const candidates = [
-    titleCase,
-    cleaned.toUpperCase(),
-    `${titleCase} Official Store`,
-    `${cleaned} Official Store`,
-  ];
+  // 2. '&' <-> 'and' expansion (crucial for Google Search variations)
+  if (cleaned.includes('&')) {
+    candidates.push(cleaned.replace(/\s*&\s*/g, ' and ').trim());
+    candidates.push(cleaned.replace(/\s*&\s*/g, ' ').replace(/\s+/g, ' ').trim());
+  } else if (/\band\b/i.test(cleaned)) {
+    candidates.push(cleaned.replace(/\band\b/gi, '&').trim());
+  }
 
-  const seen = new Set<string>([cleaned]);
+  // 3. Singular/Plural variants (e.g. Electronic vs Electronics)
+  if (/electronics/i.test(cleaned)) {
+    candidates.push(cleaned.replace(/electronics/i, 'Electronic'));
+  }
+
+  // 4. Shorter core brand name (e.g. "SM Electronics & Gadgets" -> "SM Electronics")
+  const brandWithoutSuffix = cleaned.replace(/\s*(&|and)\s*gadgets/i, '').trim();
+  if (brandWithoutSuffix && brandWithoutSuffix !== cleaned) {
+    candidates.push(brandWithoutSuffix);
+  }
+
+  // 5. Official Store variant
+  candidates.push(`${cleaned} Official Store`);
+
+  const seen = new Set<string>([cleaned.toLowerCase()]);
   const result: string[] = [];
 
   for (const item of candidates) {
     const trimmed = item.trim();
+    const lower = trimmed.toLowerCase();
     if (
       trimmed &&
-      !seen.has(trimmed) &&
-      !trimmed.toLowerCase().includes('masheco')
+      !seen.has(lower) &&
+      !lower.includes('masheco') &&
+      !lower.includes('localhost')
     ) {
-      seen.add(trimmed);
+      seen.add(lower);
       result.push(trimmed);
     }
   }
