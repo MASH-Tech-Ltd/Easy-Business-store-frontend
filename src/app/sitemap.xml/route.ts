@@ -151,28 +151,18 @@ export async function GET() {
   ]);
 
   const lastModIso = (storeInfo.updatedAt ? new Date(storeInfo.updatedAt) : new Date()).toISOString();
+  const urlEntries: string[] = [];
 
-  const urlEntries: string[] = [
-    `  <url>\n    <loc>${escapeXml(`${baseUrl}/`)}</loc>\n    <lastmod>${lastModIso}</lastmod>\n    <changefreq>daily</changefreq>\n    <priority>1.0</priority>\n  </url>`,
-    `  <url>\n    <loc>${escapeXml(`${baseUrl}/products`)}</loc>\n    <lastmod>${lastModIso}</lastmod>\n    <changefreq>daily</changefreq>\n    <priority>0.9</priority>\n  </url>`,
-    `  <url>\n    <loc>${escapeXml(`${baseUrl}/categories`)}</loc>\n    <lastmod>${lastModIso}</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>`,
-    `  <url>\n    <loc>${escapeXml(`${baseUrl}/track-order`)}</loc>\n    <lastmod>${lastModIso}</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.7</priority>\n  </url>`,
-  ];
+  // 1. Homepage (Highest Authority)
+  urlEntries.push(
+    `  <url>\n    <loc>${escapeXml(`${baseUrl}/`)}</loc>\n    <lastmod>${lastModIso}</lastmod>\n    <changefreq>daily</changefreq>\n    <priority>1.0</priority>\n  </url>`
+  );
 
-  // Policies (Privacy, Terms, Return, About Us)
-  const policySlugs = [
-    "privacy-policy",
-    "terms-and-conditions",
-    "return-policy",
-    "about-us",
-  ];
-  for (const slug of policySlugs) {
-    urlEntries.push(
-      `  <url>\n    <loc>${escapeXml(`${baseUrl}/policies/${slug}`)}</loc>\n    <lastmod>${lastModIso}</lastmod>\n    <changefreq>monthly</changefreq>\n    <priority>0.6</priority>\n  </url>`
-    );
-  }
+  // 2. Categories Architecture (Catalog Directory & Category Silos)
+  urlEntries.push(
+    `  <url>\n    <loc>${escapeXml(`${baseUrl}/categories`)}</loc>\n    <lastmod>${lastModIso}</lastmod>\n    <changefreq>daily</changefreq>\n    <priority>0.9</priority>\n  </url>`
+  );
 
-  // Categories
   for (const c of categories) {
     const cMod = (c.updatedAt ? new Date(c.updatedAt) : new Date()).toISOString();
     const rawCatSlug = String(c.slug || c._id || "").trim();
@@ -191,7 +181,11 @@ export async function GET() {
     );
   }
 
-  // Products
+  // 3. Products Inventory (Main Catalog & Individual Items)
+  urlEntries.push(
+    `  <url>\n    <loc>${escapeXml(`${baseUrl}/products`)}</loc>\n    <lastmod>${lastModIso}</lastmod>\n    <changefreq>daily</changefreq>\n    <priority>0.9</priority>\n  </url>`
+  );
+
   for (const p of products) {
     const pMod = (p.updatedAt ? new Date(p.updatedAt) : new Date()).toISOString();
     const rawProdSlug = String(p.slug || p._id || "").trim();
@@ -215,6 +209,24 @@ export async function GET() {
           ? `\n    <image:image>\n      <image:loc>${escapeXml(prodImg)}</image:loc>\n      <image:title>${escapeXml(prodTitle)}</image:title>\n    </image:image>`
           : ""
       }\n  </url>`
+    );
+  }
+
+  // 4. Utility / Customer Service
+  urlEntries.push(
+    `  <url>\n    <loc>${escapeXml(`${baseUrl}/track-order`)}</loc>\n    <lastmod>${lastModIso}</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.5</priority>\n  </url>`
+  );
+
+  // 5. Trust, Institutional & Legal Compliance Policies
+  const policyConfigs = [
+    { slug: "about-us", priority: "0.5" },
+    { slug: "return-policy", priority: "0.4" },
+    { slug: "privacy-policy", priority: "0.3" },
+    { slug: "terms-and-conditions", priority: "0.3" },
+  ];
+  for (const policy of policyConfigs) {
+    urlEntries.push(
+      `  <url>\n    <loc>${escapeXml(`${baseUrl}/policies/${policy.slug}`)}</loc>\n    <lastmod>${lastModIso}</lastmod>\n    <changefreq>monthly</changefreq>\n    <priority>${policy.priority}</priority>\n  </url>`
     );
   }
 
