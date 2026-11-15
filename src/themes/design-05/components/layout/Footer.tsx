@@ -38,7 +38,7 @@ const Tiktok = (props: React.SVGProps<SVGSVGElement>) => (
 
 import Link from "next/link";
 import { getTranslation } from '@/utils/translations';
-import { cleanCopyright } from '@/utils/cleanText';
+import { cleanCopyright, cleanMetaDescription } from '@/utils/cleanText';
 import PoweredByBadge from '@/components/PoweredByBadge';
 
 export default function Footer05({
@@ -77,7 +77,7 @@ export default function Footer05({
             </Link>
             {storeInfo?.description && (
               <p className="text-gray-500 text-xs sm:text-sm font-medium leading-normal max-w-sm mb-4">
-                {storeInfo.description}
+                {cleanMetaDescription(storeInfo.description)}
               </p>
             )}
             <div className="flex flex-wrap items-center gap-4 text-gray-400">

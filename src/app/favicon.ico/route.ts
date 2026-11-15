@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { getRequestContext } from "@/utils/seo";
 import { getStoreInfo } from "@/core/api/store";
-import { getFaviconUrl } from "@/utils/imageOptimizer";
+import { getFaviconUrl, toCdnUrl } from "@/utils/imageOptimizer";
 
 export const dynamic = "force-dynamic";
 
@@ -13,26 +13,54 @@ export async function GET() {
     const { tenantSlug } = await getRequestContext();
     if (tenantSlug && tenantSlug !== "main") {
       const storeInfo = await getStoreInfo(tenantSlug);
-      const logo = storeInfo?.logo;
-      if (logo) {
-        const cdnFavicon = getFaviconUrl(logo, 192);
-        
-        try {
-          const imgRes = await fetch(cdnFavicon, { next: { revalidate: 86400 } });
-          if (imgRes.ok) {
-            const buffer = await imgRes.arrayBuffer();
-            const contentType = imgRes.headers.get("content-type") || "image/png";
-            return new NextResponse(buffer, {
-              status: 200,
-              headers: {
-                "Content-Type": contentType,
-                "Cache-Control": "public, max-age=86400, s-maxage=604800, stale-while-revalidate=86400",
-              },
-            });
+      const rawLogo = storeInfo?.logo;
+      const logoUrl =
+        typeof rawLogo === "string"
+          ? rawLogo
+          : rawLogo?.secure_url || rawLogo?.url || "";
+
+      if (logoUrl && typeof logoUrl === "string" && logoUrl.trim() !== "") {
+        const candidateUrls = [
+          getFaviconUrl(logoUrl, 192),
+          getFaviconUrl(logoUrl, 32),
+          toCdnUrl(logoUrl),
+          logoUrl,
+        ].filter(Boolean);
+
+        for (const candidate of candidateUrls) {
+          if (!candidate.startsWith("http://") && !candidate.startsWith("https://")) {
+            continue;
           }
-        } catch {
-          // If direct proxy fails, fallback to 302 redirect WITHOUT noindex
-          return NextResponse.redirect(cdnFavicon, {
+
+          try {
+            const imgRes = await fetch(candidate, {
+              headers: {
+                "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+                "accept": "image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8",
+              },
+              next: { revalidate: 86400 },
+            });
+
+            if (imgRes.ok) {
+              const buffer = await imgRes.arrayBuffer();
+              const contentType = imgRes.headers.get("content-type") || "image/png";
+              return new NextResponse(buffer, {
+                status: 200,
+                headers: {
+                  "Content-Type": contentType,
+                  "Cache-Control": "public, max-age=86400, s-maxage=604800, stale-while-revalidate=86400",
+                },
+              });
+            }
+          } catch {
+            // Try next candidate URL
+          }
+        }
+
+        // If direct byte-proxy failed, redirect directly so browser/crawlers fetch the image directly
+        const redirectTarget = getFaviconUrl(logoUrl, 192) || logoUrl;
+        if (redirectTarget.startsWith("http://") || redirectTarget.startsWith("https://")) {
+          return NextResponse.redirect(redirectTarget, {
             status: 302,
             headers: {
               "Cache-Control": "public, max-age=86400, s-maxage=604800",
@@ -41,11 +69,11 @@ export async function GET() {
         }
       }
     }
-  } catch {
+  } catch (err) {
     // Fall through to fallback
   }
 
-  // Fallback icon for crawlers and browsers (NO noindex header, so Googlebot can freely index)
+  // Fallback icon for crawlers and browsers
   return new NextResponse(FALLBACK_FAVICON_SVG, {
     status: 200,
     headers: {

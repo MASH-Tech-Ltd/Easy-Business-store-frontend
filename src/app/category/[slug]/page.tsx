@@ -5,7 +5,7 @@ import { getTheme, getStoreInfo } from '@/core/api/store';
 import { getCategories } from '@/core/api/category';
 import { getProducts } from '@/core/api/product';
 import { themeRegistry } from '@/themes/themeRegistry';
-import { getStoreName, getRequestContext, getSiteOrigin } from '@/utils/seo';
+import { getStoreName, getRequestContext, getSiteOrigin, cleanMetaDescription } from '@/utils/seo';
 import type { Metadata } from 'next';
 
 interface PageProps {
@@ -322,7 +322,7 @@ export default async function CategoryPage({ params, searchParams }: PageProps) 
     name: storeName,
     url: baseUrl,
     logo: storeInfo?.logo ? getStoreLogoUrl(storeInfo.logo) : undefined,
-    description: storeInfo?.description || `${storeName} official online store`,
+    description: cleanMetaDescription(storeInfo?.description || `${storeName} official online store`),
     currenciesAccepted: currencyCode,
     paymentAccepted: 'Cash on Delivery, Digital Payment, bKash, Nagad',
     areaServed: 'Bangladesh',

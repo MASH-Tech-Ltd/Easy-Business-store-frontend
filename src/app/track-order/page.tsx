@@ -2,20 +2,46 @@ import React, { Suspense } from 'react';
 import { headers } from 'next/headers';
 import { getTheme, getStoreInfo } from '@/core/api/store';
 import { themeRegistry } from '@/themes/themeRegistry';
-import { getStoreName, getRequestContext } from '@/utils/seo';
+import { getStoreName, getRequestContext, getSiteOrigin, cleanMetaDescription } from '@/utils/seo';
+import { getStoreLogoUrl } from '@/utils/imageOptimizer';
 import { TrackOrderContent } from './TrackOrderClient';
 import type { Metadata } from 'next';
 
 export async function generateMetadata(): Promise<Metadata> {
-  const { tenantSlug } = await getRequestContext();
+  const { tenantSlug, requestOrigin } = await getRequestContext();
   const storeInfo = await getStoreInfo(tenantSlug);
+  const baseUrl = getSiteOrigin(requestOrigin, storeInfo);
   const storeName = getStoreName(storeInfo, tenantSlug);
+  const title = `Track Your Order | ${storeName}`;
+  const description = cleanMetaDescription(
+    `Track the live delivery and courier status of your order at ${storeName}. Enter your phone number or order tracking ID.`
+  );
+  const ogImage = storeInfo?.logo ? getStoreLogoUrl(storeInfo.logo) : null;
+
   return {
-    title: { absolute: `Track Your Order | ${storeName}` },
-    description: `Track the status of your order at ${storeName}.`,
+    title: { absolute: title },
+    description,
+    alternates: {
+      canonical: `${baseUrl}/track-order`,
+    },
+    openGraph: {
+      title,
+      description,
+      url: `${baseUrl}/track-order`,
+      siteName: storeName,
+      images: ogImage ? [{ url: ogImage, alt: storeName }] : [],
+      type: 'website',
+    },
     robots: {
-      index: false,
-      follow: false,
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        'max-video-preview': -1,
+        'max-image-preview': 'large',
+        'max-snippet': -1,
+      },
     },
   };
 }

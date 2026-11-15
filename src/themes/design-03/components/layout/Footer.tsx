@@ -2,7 +2,7 @@ import { getStoreLogoUrl } from '@/utils/imageOptimizer';
 import { getTranslation } from '@/utils/translations';
 import Link from "next/link";
 import { Mail, Phone, MapPin } from "lucide-react";
-import { cleanCopyright } from "@/utils/seo";
+import { cleanCopyright, cleanMetaDescription } from "@/utils/seo";
 import PoweredByBadge from "@/components/PoweredByBadge";
 
 export default function Footer03({
@@ -36,7 +36,7 @@ export default function Footer03({
           </h3>
             {storeInfo?.description && (
               <p className="text-gray-400 text-sm max-w-sm mb-6 leading-relaxed">
-                {storeInfo.description}
+                {cleanMetaDescription(storeInfo.description)}
               </p>
             )}
           {(footer?.socialLinks?.facebook || footer?.socialLinks?.youtube) && (

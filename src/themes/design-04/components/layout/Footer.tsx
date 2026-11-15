@@ -4,7 +4,7 @@ import React from "react";
 import { Mail, Phone, MapPin } from "lucide-react";
 import Link from "next/link";
 import { getTranslation } from "@/utils/translations";
-import { cleanCopyright } from "@/utils/cleanText";
+import { cleanCopyright, cleanMetaDescription } from "@/utils/cleanText";
 import PoweredByBadge from "@/components/PoweredByBadge";
 
 export default function Footer04({
@@ -47,7 +47,7 @@ export default function Footer04({
             </div>
             {storeInfo?.description && (
               <p className="text-sm text-gray-400 leading-relaxed mb-5">
-                {storeInfo.description}
+                {cleanMetaDescription(storeInfo.description)}
               </p>
             )}
             {(socialLinks.facebook ||

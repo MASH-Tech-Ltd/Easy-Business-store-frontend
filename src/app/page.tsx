@@ -1,7 +1,7 @@
 import { getStoreLogoUrl } from '@/utils/imageOptimizer';
 import { getTheme, getStoreInfo } from '@/core/api/store';
 import { themeRegistry } from '@/themes/themeRegistry';
-import { getStoreName, getRequestContext, getSiteOrigin } from '@/utils/seo';
+import { getStoreName, getRequestContext, getSiteOrigin, cleanMetaDescription } from '@/utils/seo';
 import type { Metadata } from 'next';
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -17,7 +17,8 @@ export async function generateMetadata(): Promise<Metadata> {
   const storeInfo = await getStoreInfo(tenantSlug);
   const baseUrl = getSiteOrigin(requestOrigin, storeInfo);
   const storeName = getStoreName(storeInfo, tenantSlug);
-  const description = storeInfo?.description || `Welcome to ${storeName}`;
+  const defaultDesc = `${storeName} — Official online store. Discover genuine products with fast home delivery and cash on delivery in Bangladesh.`;
+  const description = cleanMetaDescription(storeInfo?.description || defaultDesc);
   const logo = storeInfo?.logo || '';
 
   return {

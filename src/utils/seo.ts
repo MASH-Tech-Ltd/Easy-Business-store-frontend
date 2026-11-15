@@ -15,8 +15,8 @@ type StoreInfoLike = {
   domainStatus?: string | null;
 } | null | undefined;
 
-import { cleanStoreName, cleanCopyright } from './cleanText';
-export { cleanStoreName, cleanCopyright };
+import { cleanStoreName, cleanCopyright, cleanMetaDescription, decodeHtmlEntities } from './cleanText';
+export { cleanStoreName, cleanCopyright, cleanMetaDescription, decodeHtmlEntities };
 
 /**
  * The canonical platform name used for og:site_name, applicationName,

@@ -1,7 +1,7 @@
 import { getStoreLogoUrl } from '@/utils/imageOptimizer';
 import Link from "next/link";
 import { getTranslation } from '@/utils/translations';
-import { cleanCopyright } from "@/utils/seo";
+import { cleanCopyright, cleanMetaDescription } from "@/utils/seo";
 import PoweredByBadge from "@/components/PoweredByBadge";
 
 export default function Footer({
@@ -39,7 +39,7 @@ export default function Footer({
           </h2>
             {storeInfo?.description && (
               <p className="text-gray-400 font-light text-sm max-w-sm mb-6 leading-relaxed">
-                {storeInfo.description}
+                {cleanMetaDescription(storeInfo.description)}
               </p>
             )}
           {(socialLinks.facebook ||

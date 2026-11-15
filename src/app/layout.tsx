@@ -32,6 +32,7 @@ import AnnouncementBar from "../components/AnnouncementBar";
 import { storefrontFetch } from "@/utils/storefrontFetch";
 import {
   cleanStoreName,
+  cleanMetaDescription,
   getStoreName,
   getStoreAlternateNames,
   getRequestContext,
@@ -100,7 +101,8 @@ export async function generateMetadata(): Promise<Metadata> {
 
   const baseUrl = getSiteOrigin(requestOrigin, storeInfo);
   const title = getStoreName(storeInfo, tenantSlug);
-  const description = storeInfo?.description || `Welcome to ${title}`;
+  const defaultDesc = `${title} — Official online store. Discover genuine electronics, gadgets, and accessories with fast home delivery and cash on delivery in Bangladesh.`;
+  const description = cleanMetaDescription(storeInfo?.description || defaultDesc);
 
   const faviconUrl192 = getFaviconUrl(storeInfo?.logo, 192);
   const faviconUrl32 = getFaviconUrl(storeInfo?.logo, 32);

@@ -4,7 +4,7 @@ import Link from "next/link";
 import { Mail, Phone, MapPin } from "lucide-react";
 import { headers } from "next/headers";
 import { getTranslation, TranslationKeys } from "@/utils/translations";
-import { cleanCopyright } from "@/utils/seo";
+import { cleanCopyright, cleanMetaDescription } from "@/utils/seo";
 import PoweredByBadge from "@/components/PoweredByBadge";
 import { getTheme, getStoreInfo } from "@/core/api/store";
 
@@ -68,7 +68,7 @@ export default async function Footer() {
             
             {storeInfo?.description && (
               <p className="text-sm text-gray-500 max-w-xs leading-relaxed">
-                {storeInfo.description}
+                {cleanMetaDescription(storeInfo.description)}
               </p>
             )}
 

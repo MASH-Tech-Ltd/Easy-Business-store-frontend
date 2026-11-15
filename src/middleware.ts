@@ -41,6 +41,22 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL('/', request.url), 301);
   }
 
+  // 301 Redirect direct policy aliases to canonical /policies/... routes
+  const directPolicyMap: Record<string, string> = {
+    '/privacy-policy': '/policies/privacy-policy',
+    '/privacy': '/policies/privacy-policy',
+    '/terms': '/policies/terms-and-conditions',
+    '/terms-and-conditions': '/policies/terms-and-conditions',
+    '/return-policy': '/policies/return-policy',
+    '/refund-policy': '/policies/return-policy',
+    '/refund': '/policies/return-policy',
+    '/about': '/policies/about-us',
+    '/about-us': '/policies/about-us',
+  };
+  if (directPolicyMap[url.pathname]) {
+    return NextResponse.redirect(new URL(directPolicyMap[url.pathname], request.url), 301);
+  }
+
   // Block search crawlers from indexing /visit as a page
   if (url.pathname === '/visit' || url.pathname.startsWith('/visit/')) {
     return new NextResponse(null, {
@@ -75,7 +91,7 @@ export async function middleware(request: NextRequest) {
   // Never blocks, never times out, never 503s, never redirects, ensuring Google Search Console inspection always succeeds.
   if (url.pathname === '/robots.txt') {
     const proto = request.headers.get('x-forwarded-proto') || (currentHost.includes('localhost') ? 'http' : 'https');
-    const robotsTxt = `User-agent: *\nAllow: /\nDisallow: /cart\nDisallow: /checkout\nDisallow: /account\nDisallow: /track-order\nDisallow: /api/\n\nSitemap: ${proto}://${currentHost}/sitemap.xml\n`;
+    const robotsTxt = `User-agent: *\nAllow: /\nDisallow: /cart\nDisallow: /checkout\nDisallow: /account\nDisallow: /api/\n\nSitemap: ${proto}://${currentHost}/sitemap.xml\n`;
     return new NextResponse(robotsTxt, {
       status: 200,
       headers: {
