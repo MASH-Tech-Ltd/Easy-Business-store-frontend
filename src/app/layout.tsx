@@ -270,6 +270,11 @@ export default async function RootLayout({
 
     return (
       <html lang="en">
+        <head>
+          <title>Store Offline</title>
+          <meta name="robots" content="noindex, nofollow, noarchive, nosnippet" />
+          <meta name="googlebot" content="noindex, nofollow, noarchive, nosnippet" />
+        </head>
         <body className={`${inter.variable} font-sans antialiased`}>
           <style
             dangerouslySetInnerHTML={{

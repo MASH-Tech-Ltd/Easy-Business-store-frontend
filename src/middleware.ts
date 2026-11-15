@@ -232,6 +232,7 @@ export async function middleware(request: NextRequest) {
             status: 503,
           });
           response.headers.set('x-tenant-slug', tenantSlug);
+          response.headers.set('X-Robots-Tag', 'noindex, nofollow, noarchive');
           return response;
         }
       }
