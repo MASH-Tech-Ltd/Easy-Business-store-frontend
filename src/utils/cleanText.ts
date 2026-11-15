@@ -15,14 +15,10 @@ export function decodeHtmlEntities(text?: string | null): string {
     .replace(/&nbsp;/gi, ' ');
 }
 
-/** Strip any platform or builder suffixes (e.g. "- MASH ECO", "Product Of MASH TECH") and decode entities */
+/** Preserves full store name exactly as configured by merchant (decodes HTML entities and trims) */
 export function cleanStoreName(raw?: string | null): string {
   if (!raw) return '';
-  const decoded = decodeHtmlEntities(raw);
-  return decoded
-    .replace(/\s*[-|•·]?\s*Powered\s+by\s+(MASH\s*ECO|MASH\s*TECH)[^.]*$/i, '')
-    .replace(/\s*[-|•·]?\s*(A\s+Product\s+Of\s+)?(MASH\s*TECH|MASH\s*ECO)[^.]*$/i, '')
-    .trim();
+  return decodeHtmlEntities(raw).trim();
 }
 
 /** Sanitize copyright text so platform / builder references never appear in UI or Google snippets */

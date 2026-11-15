@@ -46,61 +46,13 @@ export function getStoreName(storeInfo: StoreInfoLike, tenantSlug: string): stri
  * Never includes raw subdomain slugs (e.g. "mashiatfashion") or domain names,
  * and ensures a natural Title Case variant is included when the store name is ALL CAPS.
  */
-export function getStoreAlternateNames(storeName: string): string[] {
-  const cleaned = cleanStoreName(storeName).trim();
-  if (!cleaned) return [];
-
-  const candidates: string[] = [];
-
-  // 1. Natural Title Case
-  const titleCase = cleaned
-    .toLowerCase()
-    .split(/\s+/)
-    .map((word) => (word.length > 0 ? word[0].toUpperCase() + word.slice(1) : ''))
-    .join(' ');
-  candidates.push(titleCase);
-  candidates.push(cleaned.toUpperCase());
-
-  // 2. '&' <-> 'and' expansion (crucial for Google Search variations)
-  if (cleaned.includes('&')) {
-    candidates.push(cleaned.replace(/\s*&\s*/g, ' and ').trim());
-    candidates.push(cleaned.replace(/\s*&\s*/g, ' ').replace(/\s+/g, ' ').trim());
-  } else if (/\band\b/i.test(cleaned)) {
-    candidates.push(cleaned.replace(/\band\b/gi, '&').trim());
-  }
-
-  // 3. Singular/Plural variants (e.g. Electronic vs Electronics)
-  if (/electronics/i.test(cleaned)) {
-    candidates.push(cleaned.replace(/electronics/i, 'Electronic'));
-  }
-
-  // 4. Shorter core brand name (e.g. "SM Electronics & Gadgets" -> "SM Electronics")
-  const brandWithoutSuffix = cleaned.replace(/\s*(&|and)\s*gadgets/i, '').trim();
-  if (brandWithoutSuffix && brandWithoutSuffix !== cleaned) {
-    candidates.push(brandWithoutSuffix);
-  }
-
-  // 5. Official Store variant
-  candidates.push(`${cleaned} Official Store`);
-
-  const seen = new Set<string>([cleaned.toLowerCase()]);
-  const result: string[] = [];
-
-  for (const item of candidates) {
-    const trimmed = item.trim();
-    const lower = trimmed.toLowerCase();
-    if (
-      trimmed &&
-      !seen.has(lower) &&
-      !lower.includes('masheco') &&
-      !lower.includes('localhost')
-    ) {
-      seen.add(lower);
-      result.push(trimmed);
-    }
-  }
-
-  return result;
+/**
+ * Alternate names for Google Search.
+ * Returns empty array to guarantee Google strictly displays the merchant's
+ * exact full store name without truncating, abbreviation, or mutation.
+ */
+export function getStoreAlternateNames(_storeName: string): string[] {
+  return [];
 }
 
 /** Read host + tenant slug for the current request (same header the middleware uses). */

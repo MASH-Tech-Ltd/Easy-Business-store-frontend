@@ -34,7 +34,6 @@ import {
   cleanStoreName,
   cleanMetaDescription,
   getStoreName,
-  getStoreAlternateNames,
   getRequestContext,
   getSiteOrigin,
 } from "@/utils/seo";
@@ -695,7 +694,6 @@ export default async function RootLayout({
                   "@type": "WebSite",
                   "@id": `${baseUrl}/#website`,
                   "name": storeName,
-                  "alternateName": getStoreAlternateNames(storeName),
                   "url": `${baseUrl}/`,
                   "inLanguage": language === "bn" ? "bn-BD" : "en-US",
                   "publisher": {
@@ -720,7 +718,6 @@ export default async function RootLayout({
                   "@type": "OnlineStore",
                   "@id": `${baseUrl}/#organization`,
                   "name": storeName,
-                  "alternateName": getStoreAlternateNames(storeName),
                   "url": `${baseUrl}/`,
                   ...(storeInfo?.logo
                     ? {
