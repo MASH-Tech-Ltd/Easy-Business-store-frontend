@@ -48,7 +48,7 @@ export async function GET() {
                 status: 200,
                 headers: {
                   "Content-Type": contentType,
-                  "Cache-Control": "public, max-age=3600, s-maxage=86400, stale-while-revalidate=86400",
+                  "Cache-Control": "public, max-age=86400, s-maxage=86400, stale-while-revalidate=86400",
                 },
               });
             }
@@ -63,7 +63,7 @@ export async function GET() {
           return NextResponse.redirect(redirectTarget, {
             status: 302,
             headers: {
-              "Cache-Control": "public, max-age=3600, s-maxage=86400",
+              "Cache-Control": "public, max-age=86400, s-maxage=86400",
             },
           });
         }
