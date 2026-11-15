@@ -48,11 +48,13 @@ export function getStoreName(storeInfo: StoreInfoLike, tenantSlug: string): stri
  */
 /**
  * Alternate names for Google Search.
- * Returns empty array to guarantee Google strictly displays the merchant's
- * exact full store name without truncating, abbreviation, or mutation.
+ * Returns the exact same store name to reinforce and lock in
+ * the merchant's full brand name across all search engine schemas.
  */
-export function getStoreAlternateNames(_storeName: string): string[] {
-  return [];
+export function getStoreAlternateNames(storeName: string): string[] {
+  const cleaned = cleanStoreName(storeName).trim();
+  if (!cleaned) return [];
+  return [cleaned];
 }
 
 /** Read host + tenant slug for the current request (same header the middleware uses). */
