@@ -48,7 +48,7 @@ export async function GET() {
                 status: 200,
                 headers: {
                   "Content-Type": contentType,
-                  "Cache-Control": "public, max-age=86400, s-maxage=604800, stale-while-revalidate=86400",
+                  "Cache-Control": "public, max-age=3600, s-maxage=86400, stale-while-revalidate=86400",
                 },
               });
             }
@@ -63,7 +63,7 @@ export async function GET() {
           return NextResponse.redirect(redirectTarget, {
             status: 302,
             headers: {
-              "Cache-Control": "public, max-age=86400, s-maxage=604800",
+              "Cache-Control": "public, max-age=3600, s-maxage=86400",
             },
           });
         }
@@ -73,12 +73,12 @@ export async function GET() {
     // Fall through to fallback
   }
 
-  // Fallback icon for crawlers and browsers
+  // Fallback icon for crawlers and browsers (NO CDN caching so fallback never gets permanently stuck)
   return new NextResponse(FALLBACK_FAVICON_SVG, {
     status: 200,
     headers: {
       "Content-Type": "image/svg+xml; charset=utf-8",
-      "Cache-Control": "public, max-age=86400, s-maxage=604800",
+      "Cache-Control": "no-cache, no-store, must-revalidate",
     },
   });
 }
