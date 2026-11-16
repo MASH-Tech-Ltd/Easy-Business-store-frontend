@@ -128,14 +128,14 @@ export function getStandardPolicyContent(
   <section class="space-y-4">
     <h3 class="text-2xl font-bold text-gray-900 border-b border-gray-100 pb-3 flex items-center gap-2.5">
       <span class="w-2.5 h-6 bg-primary rounded-full inline-block"></span>
-      The MASH ECO Cloud Platform Advantage
+      Our Shopping &amp; Service Guarantee
     </h3>
     <p>
-      <strong>${storeName}</strong> proudly operates as an independent enterprise merchant hosted on <strong>MASH ECO</strong>. This cloud ecosystem guarantees:
+      At <strong>${storeName}</strong>, we are committed to providing a secure, reliable, and premium online shopping experience. Our digital storefront offers:
     </p>
     <ul class="list-disc pl-6 space-y-2">
       <li><strong>Sub-second Page Speeds:</strong> Lightning-fast product browsing optimized for mobile and desktop shoppers alike.</li>
-      <li><strong>Bank-Grade Infrastructure Security:</strong> SSL/TLS encryption securing customer accounts, order history, and sensitive checkout credentials.</li>
+      <li><strong>Bank-Grade Infrastructure Security:</strong> 256-Bit SSL/TLS encryption securing customer accounts, order history, and sensitive checkout credentials.</li>
       <li><strong>Real-Time Parcel Tracking:</strong> Automated courier tracking synchronization keeping you updated from warehouse dispatch to delivery handover.</li>
     </ul>
   </section>
@@ -153,7 +153,7 @@ export function getStandardPolicyContent(
         <div>
           <span class="text-gray-500 block text-xs uppercase font-bold tracking-wider mb-1">Store / Legal Entity</span>
           <span class="text-gray-900 font-bold text-base">${storeName}</span>
-          <span class="text-xs text-emerald-600 font-semibold block mt-0.5">&bull; Verified MASH ECO Merchant</span>
+          <span class="text-xs text-emerald-600 font-semibold block mt-0.5">&bull; Verified Official Store</span>
         </div>
         <div>
           <span class="text-gray-500 block text-xs uppercase font-bold tracking-wider mb-1">Customer Care Helpline</span>
@@ -161,7 +161,7 @@ export function getStandardPolicyContent(
         </div>
         <div>
           <span class="text-gray-500 block text-xs uppercase font-bold tracking-wider mb-1">Official Support Email</span>
-          ${email ? `<a href="mailto:${email}" class="text-primary hover:underline font-medium text-sm">${email}</a>` : '<span class="text-gray-500">support@masheco.com</span>'}
+          ${email ? `<a href="mailto:${email}" class="text-primary hover:underline font-medium text-sm">${email}</a>` : '<span class="text-gray-500">Contact store helpline</span>'}
         </div>
         <div>
           <span class="text-gray-500 block text-xs uppercase font-bold tracking-wider mb-1">Operating Location</span>
@@ -226,7 +226,7 @@ export function getStandardPolicyContent(
       </div>
       <div class="flex items-start gap-3">
         <span class="text-emerald-600 font-bold text-base">&bull;</span>
-        <p><strong>Security &amp; Fraud Prevention:</strong> Protecting merchants and genuine buyers from fake orders, system abuse, and suspicious automated activity on the MASH ECO network.</p>
+        <p><strong>Security &amp; Fraud Prevention:</strong> Protecting genuine buyers and merchants from fraudulent orders, system abuse, and suspicious automated activity.</p>
       </div>
     </div>
   </section>
@@ -277,7 +277,7 @@ export function getStandardPolicyContent(
       <p><strong>Store Data Officer:</strong> ${storeName} Privacy Desk</p>
       ${email ? `<p><strong>Email:</strong> <a href="mailto:${email}" class="text-primary hover:underline font-semibold">${email}</a></p>` : ''}
       ${phone ? `<p><strong>Helpline:</strong> <a href="tel:${phone}" class="text-primary hover:underline font-semibold">${phone}</a></p>` : ''}
-      <p class="text-xs text-gray-500 pt-1">Platform Architecture: Secured by MASH ECO Cloud Infrastructure.</p>
+      <p class="text-xs text-gray-500 pt-1">Architecture: Secured with 256-Bit SSL Encryption.</p>
     </div>
   </section>
 </div>
@@ -293,7 +293,7 @@ export function getStandardPolicyContent(
       Welcome to <strong class="text-primary font-bold">${storeName}</strong>. Please review these official Terms &amp; Conditions carefully before engaging with our platform or completing any order.
     </p>
     <p class="leading-relaxed">
-      These terms establish a legally binding retail agreement between the customer (hereinafter referred to as &ldquo;Buyer&rdquo; or &ldquo;You&rdquo;) and <strong>${storeName}</strong> (hosted on the MASH ECO Multi-Tenant Platform). By placing an order, browsing our digital catalog, or submitting payment, you agree to comply with and be bound by the terms detailed below.
+      These terms establish a legally binding retail agreement between the customer (hereinafter referred to as &ldquo;Buyer&rdquo; or &ldquo;You&rdquo;) and <strong>${storeName}</strong>. By placing an order, browsing our digital catalog, or submitting payment, you agree to comply with and be bound by the terms detailed below.
     </p>
   </section>
 
@@ -400,7 +400,7 @@ export function getStandardPolicyContent(
       5. Buyer Responsibilities &amp; Delivery Acceptance
     </h3>
     <p>
-      Shoppers are expected to keep their contact telephone active during delivery hours and inspect the exterior parcel condition before payment. False orders or arbitrary refusal of packages without justifiable cause causes severe financial loss to small businesses and couriers, and may result in the suspension of Cash on Delivery privileges across the MASH ECO network.
+      Shoppers are expected to keep their contact telephone active during delivery hours and inspect the exterior parcel condition before payment. False orders or arbitrary refusal of packages without justifiable cause causes severe financial loss to small businesses and couriers, and may result in the suspension of Cash on Delivery privileges.
     </p>
   </section>
 </div>
@@ -481,7 +481,7 @@ export function getStandardPolicyContent(
         <span class="absolute -left-[31px] top-0 w-4 h-4 rounded-full bg-primary border-4 border-white shadow-sm"></span>
         <h4 class="font-bold text-gray-900 text-sm">Step 1: Contact Customer Support within ${returnWindow}</h4>
         <p class="text-xs text-gray-600 mt-1">
-          Reach out to our helpline (${phone || 'our support number'}) or email (${email || 'support@masheco.com'}) with your <strong>Order ID</strong> and a clear photo or short video demonstrating the defect or mismatch.
+          Reach out to our helpline (${phone || 'our support number'}) or email (${email || 'our official support email'}) with your <strong>Order ID</strong> and a clear photo or short video demonstrating the defect or mismatch.
         </p>
       </div>
 
@@ -559,7 +559,6 @@ export function getStandardPolicyContent(
       <p><strong>Store:</strong> ${storeName}</p>
       ${phone ? `<p><strong>Helpline:</strong> <a href="tel:${phone}" class="text-primary hover:underline font-bold">${phone}</a></p>` : ''}
       ${email ? `<p><strong>Email:</strong> <a href="mailto:${email}" class="text-primary hover:underline font-semibold">${email}</a></p>` : ''}
-      <p class="text-xs text-gray-500 pt-1">Platform Ecosystem: Powered by MASH ECO.</p>
     </div>
   </section>
 </div>
