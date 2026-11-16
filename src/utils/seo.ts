@@ -47,14 +47,28 @@ export function getStoreName(storeInfo: StoreInfoLike, tenantSlug: string): stri
  * and ensures a natural Title Case variant is included when the store name is ALL CAPS.
  */
 /**
- * Alternate names for Google Search.
- * Returns the exact same store name to reinforce and lock in
- * the merchant's full brand name across all search engine schemas.
+ * Alternate names for Google Search Site Names.
+ * According to Google guidelines: "Don't provide the exact same value in both
+ * name and alternateName. If you don't have an alternate name, omit this property."
+ * This generates legitimate recognizable variants (e.g. '&' <-> 'and') and avoids
+ * identical duplicate strings.
  */
 export function getStoreAlternateNames(storeName: string): string[] {
   const cleaned = cleanStoreName(storeName).trim();
   if (!cleaned) return [];
-  return [cleaned];
+
+  const candidates: string[] = [];
+
+  // '&' <-> 'and' expansion
+  if (cleaned.includes('&')) {
+    candidates.push(cleaned.replace(/\s*&\s*/g, ' and ').trim());
+  } else if (/\band\b/i.test(cleaned)) {
+    candidates.push(cleaned.replace(/\band\b/gi, '&').trim());
+  }
+
+  return candidates.filter(
+    (name) => Boolean(name && name.toLowerCase() !== cleaned.toLowerCase())
+  );
 }
 
 /** Read host + tenant slug for the current request (same header the middleware uses). */

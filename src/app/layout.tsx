@@ -693,44 +693,22 @@ export default async function RootLayout({
         <link rel="shortcut icon" href="/favicon.ico" />
         <link rel="apple-touch-icon" sizes="180x180" href={appleIconUrl} />
 
-        {/* 1. Google Search Site Name (WebSite JSON-LD) & OnlineStore Schema for all store subdomains and custom domains */}
+        {/* Organization / OnlineStore Schema across all store subdomains and custom domains.
+            Note: WebSite schema for Google Search Site Name is placed exclusively on the homepage (src/app/page.tsx)
+            following Google Search guidelines to prevent duplicate schema warnings. */}
         {tenantSlug !== "main" && (
-          <>
-            <script
-              type="application/ld+json"
-              dangerouslySetInnerHTML={{
-                __html: JSON.stringify({
-                  "@context": "https://schema.org",
-                  "@type": "WebSite",
-                  "@id": `${baseUrl}/#website`,
-                  "name": storeName,
-                  "alternateName": getStoreAlternateNames(storeName),
-                  "url": `${baseUrl}/`,
-                  "inLanguage": language === "bn" ? "bn-BD" : "en-US",
-                  "publisher": {
-                    "@id": `${baseUrl}/#organization`,
-                  },
-                  "potentialAction": {
-                    "@type": "SearchAction",
-                    "target": {
-                      "@type": "EntryPoint",
-                      "urlTemplate": `${baseUrl}/products?search={search_term_string}`,
-                    },
-                    "query-input": "required name=search_term_string",
-                  },
-                }),
-              }}
-            />
-            <script
-              type="application/ld+json"
-              dangerouslySetInnerHTML={{
-                __html: JSON.stringify({
-                  "@context": "https://schema.org",
-                  "@type": "OnlineStore",
-                  "@id": `${baseUrl}/#organization`,
-                  "name": storeName,
-                  "alternateName": getStoreAlternateNames(storeName),
-                  "url": `${baseUrl}/`,
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{
+              __html: JSON.stringify({
+                "@context": "https://schema.org",
+                "@type": "OnlineStore",
+                "@id": `${baseUrl}/#organization`,
+                "name": storeName,
+                ...(getStoreAlternateNames(storeName).length > 0
+                  ? { "alternateName": getStoreAlternateNames(storeName) }
+                  : {}),
+                "url": `${baseUrl}/`,
                   ...(storeInfo?.logo
                     ? {
                         "logo": {
@@ -765,7 +743,6 @@ export default async function RootLayout({
                 }),
               }}
             />
-          </>
         )}
 
         {/* 2. Google Sitelinks: SiteNavigationElement / ItemList JSON-LD */}

@@ -126,7 +126,7 @@ export default async function Page() {
             '@type': 'WebSite',
             '@id': `${baseUrl}/#website`,
             name: storeName,
-            alternateName: alternateNames,
+            ...(alternateNames.length > 0 ? { alternateName: alternateNames } : {}),
             url: `${baseUrl}/`,
             potentialAction: {
               '@type': 'SearchAction',
