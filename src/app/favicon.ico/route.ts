@@ -82,9 +82,11 @@ export async function GET() {
     status: 200,
     headers: {
       "Content-Type": "image/svg+xml; charset=utf-8",
-      "Cache-Control": "no-cache, no-store, must-revalidate",
-      "CDN-Cache-Control": "no-cache, no-store, must-revalidate",
-      "Cloudflare-CDN-Cache-Control": "no-cache, no-store, must-revalidate",
+      "Cache-Control": "no-cache, no-store, must-revalidate, max-age=0, s-maxage=0",
+      "CDN-Cache-Control": "no-store, no-cache, max-age=0",
+      "Cloudflare-CDN-Cache-Control": "no-store, no-cache, max-age=0",
+      "Pragma": "no-cache",
+      "Expires": "0",
     },
   });
 }

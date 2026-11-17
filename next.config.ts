@@ -50,23 +50,6 @@ const nextConfig: NextConfig = {
   async headers() {
     return [
       {
-        source: "/favicon.ico",
-        headers: [
-          {
-            key: "Cache-Control",
-            value: "public, max-age=86400, s-maxage=86400, stale-while-revalidate=86400",
-          },
-          {
-            key: "CDN-Cache-Control",
-            value: "public, max-age=86400",
-          },
-          {
-            key: "Cloudflare-CDN-Cache-Control",
-            value: "public, max-age=86400",
-          },
-        ],
-      },
-      {
         source: "/_next/static/:path*",
         headers: [
           {
