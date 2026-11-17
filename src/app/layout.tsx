@@ -28,7 +28,6 @@ import { LanguageProvider } from "../context/LanguageContext";
 import VisitTracker from "../components/VisitTracker";
 import StorefrontTracker from "../components/StorefrontTracker";
 import AnnouncementBar from "../components/AnnouncementBar";
-import DynamicFavicon from "../components/DynamicFavicon";
 
 import { storefrontFetch } from "@/utils/storefrontFetch";
 import {
@@ -131,11 +130,11 @@ export async function generateMetadata(): Promise<Metadata> {
     description,
     icons: {
       icon: [
-        { url: "/favicon.ico", sizes: "any" },
-        { url: faviconUrl192, sizes: "192x192", type: "image/png" },
         { url: faviconUrl32, sizes: "32x32", type: "image/png" },
+        { url: faviconUrl192, sizes: "192x192", type: "image/png" },
+        { url: "/favicon.ico", sizes: "any" },
       ],
-      shortcut: ["/favicon.ico"],
+      shortcut: [faviconUrl32],
       apple: [{ url: appleIconUrl, sizes: "180x180", type: "image/png" }],
     },
     openGraph: {
@@ -540,10 +539,10 @@ export default async function RootLayout({
         <meta name="apple-mobile-web-app-title" content={storeName} />
 
         {/* Explicit Favicons for Googlebot-Image, Google Favicon crawler, Search Results, & all browsers */}
-        <link rel="icon" href="/favicon.ico" sizes="any" />
-        <link rel="icon" type="image/png" sizes="192x192" href={faviconUrl192} />
         <link rel="icon" type="image/png" sizes="32x32" href={faviconUrl32} />
-        <link rel="shortcut icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="192x192" href={faviconUrl192} />
+        <link rel="icon" href="/favicon.ico" sizes="any" />
+        <link rel="shortcut icon" href={faviconUrl32} />
         <link rel="apple-touch-icon" sizes="180x180" href={appleIconUrl} />
 
         {/* Organization / OnlineStore Schema across all store subdomains and custom domains.
@@ -732,7 +731,6 @@ export default async function RootLayout({
         `,
           }}
         />
-        <DynamicFavicon iconUrl={faviconUrl192} appleIconUrl={appleIconUrl} />
         <LanguageProvider initialLanguage={language}>
           <Providers
             chatWidget={tenantSlug !== "main" ? theme?.chatWidget : undefined}

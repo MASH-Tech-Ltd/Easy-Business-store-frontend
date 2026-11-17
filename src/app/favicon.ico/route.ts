@@ -49,6 +49,8 @@ export async function GET() {
                 headers: {
                   "Content-Type": contentType,
                   "Cache-Control": "public, max-age=86400, s-maxage=86400, stale-while-revalidate=86400",
+                  "CDN-Cache-Control": "public, max-age=86400",
+                  "Cloudflare-CDN-Cache-Control": "public, max-age=86400",
                 },
               });
             }
@@ -64,6 +66,8 @@ export async function GET() {
             status: 302,
             headers: {
               "Cache-Control": "public, max-age=86400, s-maxage=86400",
+              "CDN-Cache-Control": "public, max-age=86400",
+              "Cloudflare-CDN-Cache-Control": "public, max-age=86400",
             },
           });
         }
@@ -79,6 +83,8 @@ export async function GET() {
     headers: {
       "Content-Type": "image/svg+xml; charset=utf-8",
       "Cache-Control": "no-cache, no-store, must-revalidate",
+      "CDN-Cache-Control": "no-cache, no-store, must-revalidate",
+      "Cloudflare-CDN-Cache-Control": "no-cache, no-store, must-revalidate",
     },
   });
 }
