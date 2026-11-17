@@ -231,18 +231,23 @@ export default async function RootLayout({
   ) {
     return (
       <html lang="en">
-        <body className={`${inter.variable} font-sans antialiased bg-gray-50 flex items-center justify-center min-h-screen p-6`}>
-          <div className="max-w-md w-full bg-white rounded-2xl shadow-xl border border-gray-100 p-8 text-center">
-            <div className="w-16 h-16 bg-red-50 text-red-500 rounded-full flex items-center justify-center mx-auto mb-4 font-bold text-2xl">
+        <head>
+          <title>Store Not Found</title>
+          <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+          <meta name="robots" content="noindex, nofollow, noarchive, nosnippet" />
+        </head>
+        <body className={`${inter.variable} font-sans antialiased bg-gray-50 flex items-center justify-center min-h-screen p-4 sm:p-6`}>
+          <div className="max-w-md w-full bg-white rounded-2xl sm:rounded-3xl shadow-xl border border-gray-100 p-6 sm:p-8 text-center">
+            <div className="w-14 h-14 sm:w-16 sm:h-16 bg-red-50 text-red-500 rounded-full flex items-center justify-center mx-auto mb-4 font-bold text-xl sm:text-2xl">
               404
             </div>
-            <h1 className="text-2xl font-black text-gray-900 mb-2">Store Not Found</h1>
-            <p className="text-gray-500 text-sm mb-6">
+            <h1 className="text-xl sm:text-2xl font-black text-gray-900 mb-2">Store Not Found</h1>
+            <p className="text-gray-500 text-xs sm:text-sm mb-6">
               The store <strong className="text-gray-900">{tenantSlug}</strong> does not exist or may have been removed.
             </p>
             <a
               href="https://masheco.com"
-              className="inline-block px-6 py-3 bg-gray-900 text-white rounded-xl font-semibold text-sm hover:bg-gray-800 transition-colors"
+              className="inline-block px-5 py-2.5 sm:px-6 sm:py-3 bg-gray-900 text-white rounded-xl font-semibold text-xs sm:text-sm hover:bg-gray-800 transition-colors"
             >
               Back to Masheco
             </a>
@@ -274,134 +279,62 @@ export default async function RootLayout({
       <html lang="en">
         <head>
           <title>Store Offline</title>
+          <meta name="viewport" content="width=device-width, initial-scale=1.0" />
           <meta name="robots" content="noindex, nofollow, noarchive, nosnippet" />
           <meta name="googlebot" content="noindex, nofollow, noarchive, nosnippet" />
         </head>
-        <body className={`${inter.variable} font-sans antialiased`}>
+        <body className={`${inter.variable} font-sans antialiased text-white`}>
           <style
             dangerouslySetInnerHTML={{
               __html: `
-            @keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-10px); } }
-            @keyframes pulse-ring { 0% { transform: scale(0.9); opacity: 1; } 100% { transform: scale(1.4); opacity: 0; } }
-            @keyframes fade-up { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+            @keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-8px); } }
+            @keyframes pulse-ring { 0% { transform: scale(0.92); opacity: 0.9; } 100% { transform: scale(1.35); opacity: 0; } }
+            @keyframes fade-up { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
             .animate-float { animation: float 3s ease-in-out infinite; }
-            .animate-pulse-ring { animation: pulse-ring 2s cubic-bezier(0.455, 0.03, 0.515, 0.955) infinite; }
-            .animate-fade-up { animation: fade-up 0.6s ease both; }
-            .animate-fade-up-1 { animation: fade-up 0.6s 0.1s ease both; }
-            .animate-fade-up-2 { animation: fade-up 0.6s 0.2s ease both; }
-            .animate-fade-up-3 { animation: fade-up 0.6s 0.3s ease both; }
+            .animate-pulse-ring { animation: pulse-ring 2.2s cubic-bezier(0.455, 0.03, 0.515, 0.955) infinite; }
+            .animate-fade-up { animation: fade-up 0.5s ease both; }
+            .animate-fade-up-1 { animation: fade-up 0.5s 0.08s ease both; }
+            .animate-fade-up-2 { animation: fade-up 0.5s 0.16s ease both; }
+            .animate-fade-up-3 { animation: fade-up 0.5s 0.24s ease both; }
           `,
             }}
           />
 
           {/* Full-screen gradient background */}
-          <div
-            style={{
-              minHeight: "100vh",
-              background:
-                "linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%)",
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              justifyContent: "center",
-              padding: "24px",
-              position: "relative",
-              overflow: "hidden",
-            }}
-          >
+          <div className="min-h-screen w-full bg-gradient-to-br from-[#0f0c29] via-[#302b63] to-[#24243e] flex flex-col items-center justify-center p-3 sm:p-6 md:p-8 relative overflow-hidden">
             {/* Decorative background blobs */}
-            <div
-              style={{
-                position: "absolute",
-                top: "-80px",
-                left: "-80px",
-                width: "320px",
-                height: "320px",
-                borderRadius: "50%",
-                background: "rgba(120, 60, 255, 0.15)",
-                filter: "blur(60px)",
-              }}
-            />
-            <div
-              style={{
-                position: "absolute",
-                bottom: "-80px",
-                right: "-80px",
-                width: "320px",
-                height: "320px",
-                borderRadius: "50%",
-                background: "rgba(255, 60, 120, 0.12)",
-                filter: "blur(60px)",
-              }}
-            />
+            <div className="absolute -top-16 -left-16 w-64 sm:w-80 h-64 sm:h-80 rounded-full bg-purple-600/15 blur-3xl pointer-events-none" />
+            <div className="absolute -bottom-16 -right-16 w-64 sm:w-80 h-64 sm:h-80 rounded-full bg-pink-600/15 blur-3xl pointer-events-none" />
 
-            {/* Card */}
-            <div
-              className="animate-fade-up"
-              style={{
-                background: "rgba(255,255,255,0.05)",
-                backdropFilter: "blur(20px)",
-                WebkitBackdropFilter: "blur(20px)",
-                border: "1px solid rgba(255,255,255,0.12)",
-                borderRadius: "28px",
-                padding: "48px 40px",
-                maxWidth: "480px",
-                width: "100%",
-                textAlign: "center",
-                boxShadow: "0 25px 60px rgba(0,0,0,0.4)",
-                position: "relative",
-              }}
-            >
-              {/* Icon area */}
-              <div
-                className="animate-float"
-                style={{
-                  marginBottom: "28px",
-                  position: "relative",
-                  display: "inline-block",
-                }}
-              >
-                {/* Pulse ring */}
+            {/* Card Container */}
+            <div className="animate-fade-up w-full max-w-[460px] bg-white/[0.06] backdrop-blur-2xl border border-white/10 rounded-2xl sm:rounded-3xl p-5 sm:p-8 md:p-10 text-center shadow-2xl relative z-10 mx-auto">
+              {/* Store Avatar & Status Icon */}
+              <div className="animate-float mb-4 sm:mb-6 relative inline-block">
+                {/* Glowing Pulse Ring */}
                 <div
-                  className="animate-pulse-ring"
-                  style={{
-                    position: "absolute",
-                    inset: "-8px",
-                    borderRadius: "50%",
-                    border: `2px solid ${ringColor}`,
-                  }}
+                  className="animate-pulse-ring absolute -inset-2 rounded-full pointer-events-none"
+                  style={{ border: `2px solid ${ringColor}` }}
                 />
+
                 {storeLogo ? (
                   <img
                     src={getStoreLogoUrl(storeLogo)}
                     alt={storeName}
-                    style={{
-                      width: "80px",
-                      height: "80px",
-                      borderRadius: "50%",
-                      objectFit: "cover",
-                      border: "3px solid rgba(255,255,255,0.2)",
-                    }}
+                    className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 rounded-full object-cover border-2 sm:border-[3px] border-white/20 shadow-lg mx-auto"
                   />
                 ) : (
                   <div
+                    className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 rounded-full flex items-center justify-center shadow-lg mx-auto"
                     style={{
-                      width: "80px",
-                      height: "80px",
-                      borderRadius: "50%",
                       background: accentBg,
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
                       boxShadow: `0 8px 24px ${accentGlow}`,
                     }}
                   >
                     {isTrialExpired ? (
                       <svg
-                        width="36"
-                        height="36"
+                        className="w-8 h-8 sm:w-10 sm:h-10 text-white"
                         fill="none"
-                        stroke="white"
+                        stroke="currentColor"
                         strokeWidth="2"
                         strokeLinecap="round"
                         strokeLinejoin="round"
@@ -412,10 +345,9 @@ export default async function RootLayout({
                       </svg>
                     ) : (
                       <svg
-                        width="36"
-                        height="36"
+                        className="w-8 h-8 sm:w-10 sm:h-10 text-white"
                         fill="none"
-                        stroke="white"
+                        stroke="currentColor"
                         strokeWidth="2"
                         strokeLinecap="round"
                         strokeLinejoin="round"
@@ -427,82 +359,31 @@ export default async function RootLayout({
                     )}
                   </div>
                 )}
-                {/* Status badge */}
+
+                {/* Status mini badge */}
                 <div
-                  style={{
-                    position: "absolute",
-                    bottom: "-4px",
-                    right: "-4px",
-                    background: accentColor,
-                    borderRadius: "50%",
-                    width: "24px",
-                    height: "24px",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    border: "2px solid rgba(15,12,41,1)",
-                  }}
+                  className="absolute -bottom-1 -right-1 w-5 h-5 sm:w-6 sm:h-6 rounded-full flex items-center justify-center border-2 border-[#0f0c29] shadow-md"
+                  style={{ background: accentColor }}
                 >
                   {isTrialExpired ? (
-                    <svg
-                      width="11"
-                      height="11"
-                      fill="white"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        d="M12 2a10 10 0 100 20A10 10 0 0012 2zm0 5v5l4 2"
-                        stroke="white"
-                        strokeWidth="2.5"
-                        strokeLinecap="round"
-                        fill="none"
-                      />
+                    <svg className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+                      <path d="M12 6v6l4 2" />
                     </svg>
                   ) : (
-                    <svg
-                      width="12"
-                      height="12"
-                      fill="white"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        d="M18 6L6 18M6 6l12 12"
-                        stroke="white"
-                        strokeWidth="3"
-                        strokeLinecap="round"
-                      />
+                    <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="3" strokeLinecap="round">
+                      <path d="M18 6L6 18M6 6l12 12" />
                     </svg>
                   )}
                 </div>
               </div>
 
-              {/* Store name */}
-              <p
-                className="animate-fade-up-1"
-                style={{
-                  fontSize: "13px",
-                  fontWeight: 600,
-                  letterSpacing: "0.1em",
-                  textTransform: "uppercase",
-                  color: "rgba(255,255,255,0.45)",
-                  marginBottom: "8px",
-                }}
-              >
+              {/* Store Name */}
+              <p className="animate-fade-up-1 text-xs sm:text-sm font-semibold tracking-wider uppercase text-white/50 mb-1.5 sm:mb-2 truncate max-w-full px-2">
                 {storeName}
               </p>
 
-              {/* Main heading */}
-              <h1
-                className="animate-fade-up-1"
-                style={{
-                  fontSize: "28px",
-                  fontWeight: 900,
-                  color: "#ffffff",
-                  lineHeight: 1.2,
-                  marginBottom: "16px",
-                  letterSpacing: "-0.5px",
-                }}
-              >
+              {/* Main Heading */}
+              <h1 className="animate-fade-up-1 text-xl sm:text-2xl md:text-3xl font-extrabold text-white tracking-tight mb-2.5 sm:mb-3 leading-tight">
                 {isTrialExpired
                   ? "Free Trial Ended"
                   : isExpired
@@ -513,15 +394,7 @@ export default async function RootLayout({
               </h1>
 
               {/* Description */}
-              <p
-                className="animate-fade-up-2"
-                style={{
-                  fontSize: "15px",
-                  color: "rgba(255,255,255,0.6)",
-                  lineHeight: 1.7,
-                  marginBottom: "28px",
-                }}
-              >
+              <p className="animate-fade-up-2 text-xs sm:text-sm text-white/70 leading-relaxed mb-4 sm:mb-6 max-w-sm mx-auto">
                 {isTrialExpired
                   ? `The 5-day free trial for this store has ended. The owner needs to upgrade to a paid plan to bring the store back online.`
                   : isExpired
@@ -531,27 +404,13 @@ export default async function RootLayout({
                       : `This store is temporarily unavailable. Please check back later.`}
               </p>
 
-              {/* Info box */}
-              <div
-                className="animate-fade-up-2"
-                style={{
-                  background: "rgba(255,255,255,0.06)",
-                  borderRadius: "14px",
-                  padding: "16px 20px",
-                  marginBottom: "28px",
-                  border: "1px solid rgba(255,255,255,0.08)",
-                  display: "flex",
-                  alignItems: "flex-start",
-                  gap: "12px",
-                  textAlign: "left",
-                }}
-              >
-                <div style={{ flexShrink: 0, marginTop: "2px" }}>
+              {/* Info Box */}
+              <div className="animate-fade-up-2 bg-white/[0.05] border border-white/10 rounded-xl sm:rounded-2xl p-3.5 sm:p-4 mb-4 sm:mb-6 text-left flex items-start gap-2.5 sm:gap-3">
+                <div className="shrink-0 mt-0.5 w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-amber-400/10 flex items-center justify-center">
                   <svg
-                    width="16"
-                    height="16"
+                    className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-amber-400 shrink-0"
                     fill="none"
-                    stroke="rgba(251,191,36,1)"
+                    stroke="currentColor"
                     strokeWidth="2"
                     viewBox="0 0 24 24"
                   >
@@ -562,43 +421,37 @@ export default async function RootLayout({
                     />
                   </svg>
                 </div>
-                <p
-                  style={{
-                    fontSize: "13px",
-                    color: "rgba(255,255,255,0.5)",
-                    lineHeight: 1.6,
-                    margin: 0,
-                  }}
-                >
-                  {isTrialExpired
-                    ? `Are you the store owner? Your free trial has ended. Log in to your merchant dashboard and choose a paid plan to go live again.`
-                    : isExpired
-                      ? `Are you the store owner? Log in to your merchant dashboard and renew your subscription to bring your store back online.`
-                      : `Are you the store owner? Visit your merchant dashboard to activate a subscription plan.`}
-                </p>
+                <div className="text-[11px] sm:text-xs text-white/60 leading-relaxed space-y-2 flex-1">
+                  <p>
+                    {isTrialExpired
+                      ? `Are you the store owner? Your free trial has ended. Log in to your merchant dashboard and choose a paid plan to go live again.`
+                      : isExpired
+                        ? `Are you the store owner? Log in to your merchant dashboard and renew your subscription to bring your store back online.`
+                        : `Are you the store owner? Visit your merchant dashboard to activate a subscription plan.`}
+                  </p>
+                  {/* <a
+                    href="https://merchant.masheco.com/dashboard/subscription"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-amber-300 hover:text-amber-200 underline underline-offset-2 transition-colors pt-0.5"
+                  >
+                    <span>Go to Merchant Dashboard</span>
+                    <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                    </svg>
+                  </a> */}
+                </div>
               </div>
 
-              {/* Divider */}
-              <div
-                style={{
-                  borderTop: "1px solid rgba(255,255,255,0.08)",
-                  paddingTop: "20px",
-                }}
-              >
-                <p
-                  style={{
-                    fontSize: "12px",
-                    color: "rgba(255,255,255,0.25)",
-                    margin: 0,
-                  }}
-                >
+              {/* Divider & Footer */}
+              <div className="border-t border-white/[0.08] pt-3 sm:pt-4">
+                <p className="text-[11px] text-white/30">
                   Powered by{" "}
                   <a
                     href="https://www.masheco.com"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-[rgba(255,255,255,0.45)] hover:text-[rgba(255,255,255,0.8)] transition-colors duration-200"
-                    style={{ fontWeight: 600, textDecoration: "none" }}
+                    className="text-white/40 hover:text-white/70 font-semibold transition-colors"
                   >
                     MASH ECO
                   </a>
