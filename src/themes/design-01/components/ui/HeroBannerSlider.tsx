@@ -12,6 +12,7 @@ interface HeroBannerSliderProps {
     description?: string;
     buttonText?: string;
     buttonLink?: string;
+    showBannerContent?: boolean;
     image?: any;
     images?: any[];
   };
@@ -70,40 +71,44 @@ export default function HeroBannerSlider({ banner }: HeroBannerSliderProps) {
             </div>
           ))}
           {/* Dark overlay to ensure white text is readable over the banner */}
-          <div className="absolute inset-0 bg-black/50 z-10" />
+          {banner?.showBannerContent !== false && (
+            <div className="absolute inset-0 bg-black/50 z-10" />
+          )}
         </div>
       )}
 
       {/* Content Overlay */}
-      <div className="max-w-[1400px] w-full mx-auto px-4 sm:px-6 md:px-8 relative z-20 py-4 sm:py-8">
-        <div className="max-w-2xl">
-          {banner?.subtitle && (
-            <span className="inline-block py-1 px-3 rounded-full bg-blue-800/50 text-blue-200 text-xs sm:text-sm font-semibold mb-3 sm:mb-4 md:mb-6 border border-blue-700/50 backdrop-blur-sm">
-              {banner.subtitle}
-            </span>
-          )}
-          {banner?.title && (
-            <h1 className="text-[clamp(1.75rem,5vw,4rem)] font-extrabold tracking-tight mb-3 sm:mb-4 md:mb-6 leading-tight whitespace-pre-line">
-              {banner.title}
-            </h1>
-          )}
-          {banner?.description && (
-            <p className="text-[clamp(0.875rem,2vw,1.25rem)] text-blue-100 mb-5 sm:mb-6 md:mb-8 leading-relaxed">
-              {banner.description}
-            </p>
-          )}
-          {banner?.buttonText && banner?.buttonLink && (
-            <Link
-              prefetch={false}
-              href={banner.buttonLink}
-              className="inline-flex items-center gap-1 sm:gap-2 bg-white text-indigo-900 px-3 py-1.5 sm:px-6 sm:py-3 md:px-8 md:py-4 rounded-md sm:rounded-lg font-bold text-[10px] sm:text-sm md:text-lg hover:bg-blue-50 transition-colors shadow-lg hover:shadow-xl"
-            >
-              {banner.buttonText}{' '}
-              <ArrowRight className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5" />
-            </Link>
-          )}
+      {banner?.showBannerContent !== false && (
+        <div className="max-w-[1400px] w-full mx-auto px-4 sm:px-6 md:px-8 relative z-20 py-4 sm:py-8">
+          <div className="max-w-2xl">
+            {banner?.subtitle && (
+              <span className="inline-block py-1 px-3 rounded-full bg-blue-800/50 text-blue-200 text-xs sm:text-sm font-semibold mb-3 sm:mb-4 md:mb-6 border border-blue-700/50 backdrop-blur-sm">
+                {banner.subtitle}
+              </span>
+            )}
+            {banner?.title && (
+              <h1 className="text-[clamp(1.75rem,5vw,4rem)] font-extrabold tracking-tight mb-3 sm:mb-4 md:mb-6 leading-tight whitespace-pre-line">
+                {banner.title}
+              </h1>
+            )}
+            {banner?.description && (
+              <p className="text-[clamp(0.875rem,2vw,1.25rem)] text-blue-100 mb-5 sm:mb-6 md:mb-8 leading-relaxed">
+                {banner.description}
+              </p>
+            )}
+            {banner?.buttonText && banner?.buttonLink && (
+              <Link
+                prefetch={false}
+                href={banner.buttonLink}
+                className="inline-flex items-center gap-1 sm:gap-2 bg-white text-indigo-900 px-3 py-1.5 sm:px-6 sm:py-3 md:px-8 md:py-4 rounded-md sm:rounded-lg font-bold text-[10px] sm:text-sm md:text-lg hover:bg-blue-50 transition-colors shadow-lg hover:shadow-xl"
+              >
+                {banner.buttonText}{' '}
+                <ArrowRight className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5" />
+              </Link>
+            )}
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Indicator Dots (if > 1 image) */}
       {images.length > 1 && (

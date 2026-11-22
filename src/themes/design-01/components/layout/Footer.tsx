@@ -55,13 +55,18 @@ export default async function Footer() {
           <div className="col-span-2 md:col-span-1 flex flex-col items-start justify-start w-full gap-5 md:gap-4">
             <div className="h-12 flex items-center justify-start shrink-0 gap-3">
               {storeInfo?.logo && (
-                <img
-                  src={getStoreLogoUrl(storeInfo.logo)}
-                  alt={storeInfo.name}
-                  className="w-12 h-12 rounded-full object-cover shadow-sm border border-gray-100"
-                />
+                <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-full overflow-hidden shrink-0 aspect-square flex items-center justify-center bg-gray-50 border border-gray-100 shadow-2xs">
+                  <img
+                    src={getStoreLogoUrl(storeInfo.logo)}
+                    alt={storeInfo.name}
+                    className="w-full h-full object-cover rounded-full aspect-square"
+                  />
+                </div>
               )}
-              <span className="font-black text-xl text-gray-900 break-words max-w-[200px] sm:max-w-full leading-tight">
+              <span
+                style={theme?.storeTitleFont ? { fontFamily: `'${theme.storeTitleFont}', serif` } : undefined}
+                className="store-title-font font-black text-xl text-gray-900 break-words max-w-[200px] sm:max-w-full leading-tight uppercase"
+              >
                 {storeInfo?.name || tenantSlug.toUpperCase()}
               </span>
             </div>

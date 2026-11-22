@@ -33,15 +33,20 @@ export default function Footer04({
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-10">
           {/* Brand */}
           <div className="col-span-2 lg:col-span-1">
-            <div className="flex items-center gap-2 mb-4">
+            <div className="flex items-center gap-3 mb-4">
               {storeInfo?.logo && (
-                <img
-                  src={getStoreLogoUrl(storeInfo.logo)}
-                  alt={storeInfo.name}
-                  className="w-8 h-8 rounded-full object-contain"
-                />
+                <div className="w-10 h-10 rounded-full overflow-hidden shrink-0 aspect-square flex items-center justify-center bg-gray-50 border border-gray-100 shadow-2xs">
+                  <img
+                    src={getStoreLogoUrl(storeInfo.logo)}
+                    alt={storeInfo.name}
+                    className="w-full h-full object-cover rounded-full aspect-square"
+                  />
+                </div>
               )}
-              <span className="font-black text-gray-900 text-lg uppercase">
+              <span
+                style={theme?.storeTitleFont ? { fontFamily: `'${theme.storeTitleFont}', serif` } : undefined}
+                className="store-title-font font-black text-gray-900 text-lg sm:text-xl uppercase"
+              >
                 {storeInfo?.name || "Store"}
               </span>
             </div>

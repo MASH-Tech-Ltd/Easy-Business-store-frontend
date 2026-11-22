@@ -11,6 +11,7 @@ interface HeroBannerSliderProps {
     description?: string;
     buttonText?: string;
     buttonLink?: string;
+    showBannerContent?: boolean;
     image?: any;
     images?: any[];
   };
@@ -51,34 +52,36 @@ export default function HeroBannerSlider03({ banner }: HeroBannerSliderProps) {
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
     >
-      <div className="grid grid-cols-1 md:grid-cols-2 h-full flex-1">
+      <div className={`grid ${banner?.showBannerContent === false ? 'grid-cols-1' : 'grid-cols-1 md:grid-cols-2'} h-full flex-1`}>
         {/* Left side: Typography & Actions */}
-        <div className="p-8 md:p-16 flex flex-col justify-center border-b md:border-b-0 md:border-r border-white/10 relative overflow-hidden bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]">
-          <div className="relative z-10">
-            <div className="inline-block px-3 py-1 bg-cyan-400 text-black text-[10px] font-black uppercase tracking-widest mb-6">
-              {banner?.subtitle || 'System Initialized'}
+        {banner?.showBannerContent !== false && (
+          <div className="p-8 md:p-16 flex flex-col justify-center border-b md:border-b-0 md:border-r border-white/10 relative overflow-hidden bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]">
+            <div className="relative z-10">
+              <div className="inline-block px-3 py-1 bg-cyan-400 text-black text-[10px] font-black uppercase tracking-widest mb-6">
+                {banner?.subtitle || 'System Initialized'}
+              </div>
+              {banner?.title && (
+                <h2 className="text-5xl md:text-7xl lg:text-8xl font-black tracking-tighter leading-[0.9] uppercase mb-8">
+                  {banner.title}
+                </h2>
+              )}
+              {banner?.description && (
+                <p className="text-lg md:text-xl text-gray-400 font-mono mb-12 max-w-xl leading-relaxed">
+                  {banner.description}
+                </p>
+              )}
+              {banner?.buttonText && banner?.buttonLink && (
+                <Link
+                  prefetch={false}
+                  href={banner.buttonLink}
+                  className="inline-flex items-center justify-center px-12 py-5 bg-white text-black text-sm font-black uppercase tracking-[0.2em] hover:bg-cyan-400 transition-colors border border-transparent hover:border-white"
+                >
+                  {banner.buttonText}
+                </Link>
+              )}
             </div>
-            {banner?.title && (
-              <h2 className="text-5xl md:text-7xl lg:text-8xl font-black tracking-tighter leading-[0.9] uppercase mb-8">
-                {banner.title}
-              </h2>
-            )}
-            {banner?.description && (
-              <p className="text-lg md:text-xl text-gray-400 font-mono mb-12 max-w-xl leading-relaxed">
-                {banner.description}
-              </p>
-            )}
-            {banner?.buttonText && banner?.buttonLink && (
-              <Link
-                prefetch={false}
-                href={banner.buttonLink}
-                className="inline-flex items-center justify-center px-12 py-5 bg-white text-black text-sm font-black uppercase tracking-[0.2em] hover:bg-cyan-400 transition-colors border border-transparent hover:border-white"
-              >
-                {banner.buttonText}
-              </Link>
-            )}
           </div>
-        </div>
+        )}
 
         {/* Right side: Cyberpunk Image Slider */}
         <div className="relative min-h-[40vh] md:min-h-full bg-[#050505] overflow-hidden group">

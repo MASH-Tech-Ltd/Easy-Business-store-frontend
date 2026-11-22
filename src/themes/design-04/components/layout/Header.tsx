@@ -25,9 +25,14 @@ export default async function Header04({ storeInfo, theme: initialTheme }: { sto
           {/* Logo */}
           <Link prefetch={false} href="/" className="flex items-center gap-3 shrink-0">
             {info?.logo ? (
-              <img src={getStoreLogoUrl(info.logo)} alt={info?.name || 'Store'} className="w-10 h-10 rounded-full object-contain border border-gray-100" />
+              <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-full overflow-hidden shrink-0 aspect-square flex items-center justify-center bg-gray-50 border border-gray-100 shadow-2xs">
+                <img src={getStoreLogoUrl(info.logo)} alt={info?.name || 'Store'} className="w-full h-full object-cover rounded-full aspect-square" />
+              </div>
             ) : null}
-            <h1 className="text-xl font-black tracking-tight text-gray-900 uppercase">
+            <h1
+              style={theme?.storeTitleFont ? { fontFamily: `'${theme.storeTitleFont}', serif` } : undefined}
+              className="store-title-font text-xl sm:text-2xl font-black tracking-tight text-gray-900 uppercase"
+            >
               {info?.name || tenantSlug}
             </h1>
           </Link>

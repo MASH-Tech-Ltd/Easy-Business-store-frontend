@@ -19,12 +19,19 @@ export default async function Header({ storeInfo }: { storeInfo: any }) {
       <header className="py-4 border-b border-gray-100 bg-white/80 backdrop-blur-md sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-8 flex flex-col md:flex-row items-center gap-4 justify-between">
           <div className="flex w-full md:w-auto items-center justify-between">
-            <h1 className="text-2xl font-bold tracking-tight">
+            <h1 className="text-xl sm:text-2xl font-bold tracking-tight">
               <Link prefetch={false} href="/" className="flex items-center gap-3">
                 {storeInfo?.logo && (
-                  <img src={getStoreLogoUrl(storeInfo.logo)} alt={storeInfo?.name || 'Minimal Store'} className="w-8 h-8 rounded-full object-cover" />
+                  <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full overflow-hidden shrink-0 aspect-square flex items-center justify-center bg-gray-50 border border-gray-100 shadow-2xs">
+                    <img src={getStoreLogoUrl(storeInfo.logo)} alt={storeInfo?.name || 'Minimal Store'} className="w-full h-full object-cover rounded-full aspect-square" />
+                  </div>
                 )}
-                <span>{storeInfo?.name || 'Minimal Store'}</span>
+                <span
+                  style={theme?.storeTitleFont ? { fontFamily: `'${theme.storeTitleFont}', serif` } : undefined}
+                  className="store-title-font uppercase tracking-wider"
+                >
+                  {storeInfo?.name || 'Minimal Store'}
+                </span>
               </Link>
             </h1>
             <div className="md:hidden flex items-center">

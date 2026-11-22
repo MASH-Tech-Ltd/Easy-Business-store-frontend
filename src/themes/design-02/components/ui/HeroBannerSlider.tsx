@@ -11,6 +11,7 @@ interface HeroBannerSliderProps {
     description?: string;
     buttonText?: string;
     buttonLink?: string;
+    showBannerContent?: boolean;
     image?: any;
     images?: any[];
   };
@@ -70,43 +71,47 @@ export default function HeroBannerSlider02({ banner }: HeroBannerSliderProps) {
               </div>
             ))}
             {/* Elegant gradient overlay */}
-            <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/50 to-transparent z-10" />
+            {banner?.showBannerContent !== false && (
+              <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/50 to-transparent z-10" />
+            )}
           </div>
         ) : (
           <div className="absolute inset-0 z-0 bg-gray-50" />
         )}
 
         {/* Content */}
-        <div className="relative z-20 flex flex-col justify-center pointer-events-none w-full h-full">
-          <div className="w-full px-6 sm:px-12">
-            <div className="max-w-2xl text-left pointer-events-auto py-8 lg:py-16">
-              {banner?.subtitle && (
-                <span className="inline-block text-xs sm:text-sm font-semibold tracking-wider uppercase text-blue-300 mb-2">
-                  {banner.subtitle}
-                </span>
-              )}
-              {banner?.title && (
-                <h2 className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-2 sm:mb-4 text-white leading-[1.1] whitespace-pre-line">
-                  {banner.title}
-                </h2>
-              )}
-              {banner?.description && (
-                <p className="text-sm sm:text-base md:text-lg lg:text-xl text-white mb-4 sm:mb-8 max-w-xl font-medium line-clamp-2 sm:line-clamp-3">
-                  {banner.description}
-                </p>
-              )}
-              {banner?.buttonText && banner?.buttonLink && (
-                <Link
-                  prefetch={false}
-                  href={banner.buttonLink}
-                  className="inline-block px-6 sm:px-10 py-2.5 sm:py-4 bg-white text-gray-900 rounded-full text-xs sm:text-sm font-bold tracking-wide hover:bg-gray-100 transition-all shadow-xl hover:shadow-2xl duration-300"
-                >
-                  {banner.buttonText}
-                </Link>
-              )}
+        {banner?.showBannerContent !== false && (
+          <div className="relative z-20 flex flex-col justify-center pointer-events-none w-full h-full">
+            <div className="w-full px-6 sm:px-12">
+              <div className="max-w-2xl text-left pointer-events-auto py-8 lg:py-16">
+                {banner?.subtitle && (
+                  <span className="inline-block text-xs sm:text-sm font-semibold tracking-wider uppercase text-blue-300 mb-2">
+                    {banner.subtitle}
+                  </span>
+                )}
+                {banner?.title && (
+                  <h2 className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-2 sm:mb-4 text-white leading-[1.1] whitespace-pre-line">
+                    {banner.title}
+                  </h2>
+                )}
+                {banner?.description && (
+                  <p className="text-sm sm:text-base md:text-lg lg:text-xl text-white mb-4 sm:mb-8 max-w-xl font-medium line-clamp-2 sm:line-clamp-3">
+                    {banner.description}
+                  </p>
+                )}
+                {banner?.buttonText && banner?.buttonLink && (
+                  <Link
+                    prefetch={false}
+                    href={banner.buttonLink}
+                    className="inline-block px-6 sm:px-10 py-2.5 sm:py-4 bg-white text-gray-900 rounded-full text-xs sm:text-sm font-bold tracking-wide hover:bg-gray-100 transition-all shadow-xl hover:shadow-2xl duration-300"
+                  >
+                    {banner.buttonText}
+                  </Link>
+                )}
+              </div>
             </div>
           </div>
-        </div>
+        )}
 
         {/* Indicator Dots (if > 1 image) */}
         {images.length > 1 && (

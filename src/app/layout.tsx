@@ -487,8 +487,14 @@ export default async function RootLayout({
   };
   const primaryForeground = getContrastColor(primaryColor);
   const selectedFont = theme?.fontFamily || "Inter";
+  const storeTitleFont = theme?.storeTitleFont || "Playfair Display";
   const encodedFont = encodeURIComponent(selectedFont).replace(/%20/g, "+");
+  const encodedStoreTitleFont = encodeURIComponent(storeTitleFont).replace(/%20/g, "+");
   const googleFontHref = `https://fonts.googleapis.com/css2?family=${encodedFont}&display=swap`;
+  const storeTitleGoogleFontHref =
+    storeTitleFont !== selectedFont
+      ? `https://fonts.googleapis.com/css2?family=${encodedStoreTitleFont}&display=swap`
+      : null;
 
   const fontChoice = selectedFont.toLowerCase();
   const themeId = theme?.themeId || "light";
@@ -529,6 +535,9 @@ export default async function RootLayout({
           crossOrigin="anonymous"
         />
         <link rel="stylesheet" href={googleFontHref} />
+        {storeTitleGoogleFontHref && (
+          <link rel="stylesheet" href={storeTitleGoogleFontHref} />
+        )}
 
         {/* Referrer Policy: Prevents CDN hotlinking blocks on custom domains */}
         <meta name="referrer" content="same-origin" />
@@ -672,20 +681,57 @@ export default async function RootLayout({
         <style
           dangerouslySetInnerHTML={{
             __html: `
+          @import url('https://fonts.googleapis.com/css2?family=${encodedFont}&display=swap');
+          ${storeTitleFont !== selectedFont ? `@import url('https://fonts.googleapis.com/css2?family=${encodedStoreTitleFont}&display=swap');` : ''}
+
           :root {
             --primary-color: ${primaryColor};
             --primary-foreground: ${primaryForeground};
             --background: ${bgColor};
             --foreground: ${textColor};
-            --font-heading: '${selectedFont}', sans-serif;
+            --font-heading: '${selectedFont}', var(--font-sans), sans-serif;
             --font-sans: '${selectedFont}', var(--font-${fontChoice}), sans-serif;
+            --font-store-title: '${storeTitleFont}', serif;
           }
           
-          /* When language is Bengali, use Hind Siliguri – compact, professional, no layout bloat */
+          /* Dedicated Store Title / Brand Logo Font (Header & Footer across all themes) */
+          .store-title-font,
+          .store-brand-title {
+            font-family: var(--font-store-title) !important;
+          }
+          
+          /* Dedicated Heading & Title Font across all themes and sections */
+          h1, h2, h3, h4, h5, h6,
+          .font-heading,
+          .heading-font,
+          .store-heading-font,
+          .font-serif,
+          [class*="font-serif"] {
+            font-family: var(--font-heading) !important;
+          }
+          
+          /* When language is Bengali, use Hind Siliguri for body, but allow heading font */
           html[lang="bn"] {
-            --font-sans: var(--font-hind-siliguri), '${selectedFont}', sans-serif !important;
+            --font-sans: var(--font-hind-siliguri), sans-serif !important;
             font-size: 70% !important;
             line-height: 1.5 !important;
+          }
+          html[lang="bn"] body,
+          html[lang="bn"] button,
+          html[lang="bn"] input,
+          html[lang="bn"] select {
+            font-family: var(--font-hind-siliguri), sans-serif !important;
+          }
+          html[lang="bn"] h1,
+          html[lang="bn"] h2,
+          html[lang="bn"] h3,
+          html[lang="bn"] h4,
+          html[lang="bn"] h5,
+          html[lang="bn"] h6,
+          html[lang="bn"] .font-heading,
+          html[lang="bn"] .heading-font,
+          html[lang="bn"] .font-serif {
+            font-family: var(--font-heading), var(--font-hind-siliguri), sans-serif !important;
           }
           html[lang="bn"] * {
             line-height: 1.5 !important;

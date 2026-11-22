@@ -27,15 +27,22 @@ export default function Footer({
     <footer className="py-12 sm:py-16 bg-gray-50 text-gray-900 border-t border-gray-100 mt-auto">
       <div className="max-w-7xl mx-auto px-6 sm:px-8 grid grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
         <div className="col-span-2 lg:col-span-1 mb-2 lg:mb-0">
-          <h2 className="text-2xl font-semibold tracking-tight mb-4 flex items-center gap-2">
+          <h2 className="text-xl sm:text-2xl font-semibold tracking-tight mb-4 flex items-center gap-3">
             {storeInfo?.logo ? (
-              <img
-                src={getStoreLogoUrl(storeInfo.logo)}
-                alt={storeInfo?.name || "Minimal Store"}
-                className="w-10 h-10 rounded-full object-cover"
-              />
+              <div className="w-10 h-10 rounded-full overflow-hidden shrink-0 aspect-square flex items-center justify-center bg-gray-50 border border-gray-200/80 shadow-2xs">
+                <img
+                  src={getStoreLogoUrl(storeInfo.logo)}
+                  alt={storeInfo?.name || "Minimal Store"}
+                  className="w-full h-full object-cover rounded-full aspect-square"
+                />
+              </div>
             ) : null}
-            {storeInfo?.name || "Minimal Store"}
+            <span
+              style={theme?.storeTitleFont ? { fontFamily: `'${theme.storeTitleFont}', serif` } : undefined}
+              className="store-title-font uppercase tracking-wider text-gray-900"
+            >
+              {storeInfo?.name || "Minimal Store"}
+            </span>
           </h2>
             {storeInfo?.description && (
               <p className="text-gray-400 font-light text-sm max-w-sm mb-6 leading-relaxed">

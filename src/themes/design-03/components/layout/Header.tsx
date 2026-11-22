@@ -19,9 +19,18 @@ export default async function Header03({ storeInfo }: { storeInfo?: any }) {
       {/* Mobile Top Bar */}
       <header className="lg:hidden flex flex-col p-4 border-b border-white/10 bg-[#050505] sticky top-0 z-50 gap-4">
         <div className="flex items-center justify-between">
-          <Link prefetch={false} href="/" className="flex items-center gap-2">
-            {storeInfo?.logo && <img src={getStoreLogoUrl(storeInfo.logo)} alt="Logo" className="w-8 h-8 rounded-none border border-white/20" />}
-            <span className="font-bold tracking-widest uppercase text-sm">{storeInfo?.name || 'Store'}</span>
+          <Link prefetch={false} href="/" className="flex items-center gap-2.5">
+            {storeInfo?.logo && (
+              <div className="w-8 h-8 rounded-full overflow-hidden shrink-0 aspect-square flex items-center justify-center border border-white/20 bg-white/5">
+                <img src={getStoreLogoUrl(storeInfo.logo)} alt="Logo" className="w-full h-full object-cover rounded-full aspect-square" />
+              </div>
+            )}
+            <span
+              style={theme?.storeTitleFont ? { fontFamily: `'${theme.storeTitleFont}', serif` } : undefined}
+              className="store-title-font font-bold tracking-widest uppercase text-sm text-white"
+            >
+              {storeInfo?.name || 'Store'}
+            </span>
           </Link>
           <Link prefetch={false} href="/cart" className="text-white hover:text-cyan-400 transition-colors">
             <ShoppingCart className="w-5 h-5" />
@@ -35,11 +44,18 @@ export default async function Header03({ storeInfo }: { storeInfo?: any }) {
         <div className="mb-8">
           <Link prefetch={false} href="/" className="flex flex-col gap-4 group">
             {storeInfo?.logo ? (
-              <img src={getStoreLogoUrl(storeInfo.logo)} alt="Logo" className="w-16 h-16 rounded-none border border-white/20 p-1 bg-white/5 group-hover:border-cyan-400 transition-colors" />
+              <div className="w-16 h-16 rounded-full overflow-hidden shrink-0 aspect-square flex items-center justify-center border border-white/20 p-1 bg-white/5 group-hover:border-cyan-400 transition-colors">
+                <img src={getStoreLogoUrl(storeInfo.logo)} alt="Logo" className="w-full h-full object-cover rounded-full aspect-square" />
+              </div>
             ) : (
-              <div className="w-12 h-12 border border-white/20 bg-white/5 flex items-center justify-center font-bold text-xl group-hover:border-cyan-400 transition-colors">03</div>
+              <div className="w-14 h-14 border border-white/20 bg-white/5 flex items-center justify-center font-bold text-xl group-hover:border-cyan-400 transition-colors shrink-0 aspect-square rounded-full">03</div>
             )}
-            <span className="font-black text-xl tracking-tighter uppercase leading-none text-white group-hover:text-cyan-400 transition-colors">{storeInfo?.name || 'Premium Store'}</span>
+            <span
+              style={theme?.storeTitleFont ? { fontFamily: `'${theme.storeTitleFont}', serif` } : undefined}
+              className="store-title-font font-black text-xl tracking-tighter uppercase leading-none text-white group-hover:text-cyan-400 transition-colors"
+            >
+              {storeInfo?.name || 'Premium Store'}
+            </span>
           </Link>
         </div>
 

@@ -11,6 +11,7 @@ interface HeroBannerSliderProps {
     description?: string;
     buttonText?: string;
     buttonLink?: string;
+    showBannerContent?: boolean;
     image?: any;
     images?: any[];
   };
@@ -71,47 +72,51 @@ export default function HeroBannerSlider04({ banner, featuredProductImage }: Her
                 />
               </div>
             ))}
-            <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-black/30 z-10" />
+            {banner?.showBannerContent !== false && (
+              <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-black/30 z-10" />
+            )}
           </>
         ) : (
           <div className="w-full h-full bg-gray-900" />
         )}
       </div>
 
-      <div className="relative z-10 max-w-[1400px] mx-auto w-full px-4 sm:px-6 py-2 sm:py-4 lg:py-20 grid lg:grid-cols-2 gap-4 lg:gap-10 items-center">
+      <div className={`relative z-10 max-w-[1400px] mx-auto w-full px-4 sm:px-6 py-2 sm:py-4 lg:py-20 ${banner?.showBannerContent === false ? 'flex justify-center' : 'grid lg:grid-cols-2 gap-4 lg:gap-10'} items-center`}>
         {/* Left: Text */}
-        <div className="text-white lg:text-gray-900 flex flex-col justify-center h-full">
-          {banner?.subtitle && (
-            <p className="text-[10px] sm:text-xs lg:text-sm font-semibold tracking-widest uppercase mb-1 lg:mb-3 text-gray-300 lg:text-gray-400">
-              {banner.subtitle}
-            </p>
-          )}
-          {banner?.title && (
-            <h2 className="text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-black tracking-tight leading-[1.1] mb-1 sm:mb-2 lg:mb-5">
-              {banner.title}
-            </h2>
-          )}
-          {banner?.description && (
-            <p className="text-xs sm:text-sm md:text-lg mb-2 sm:mb-4 lg:mb-8 max-w-md leading-snug lg:leading-relaxed text-gray-200 lg:text-gray-400 line-clamp-1 sm:line-clamp-2 lg:line-clamp-none">
-              {banner.description}
-            </p>
-          )}
-          {banner?.buttonText && banner?.buttonLink && (
-            <div>
-              <Link
-                prefetch={false}
-                href={banner.buttonLink}
-                className="inline-block font-bold px-6 py-2 sm:px-6 sm:py-2.5 md:px-10 md:py-4 rounded-full transition-colors shadow-xl lg:shadow-none bg-white text-gray-900 hover:bg-gray-100 lg:bg-gray-900 lg:text-white lg:hover:bg-gray-700 text-xs sm:text-sm md:text-base"
-              >
-                {banner.buttonText}
-              </Link>
-            </div>
-          )}
-        </div>
+        {banner?.showBannerContent !== false && (
+          <div className="text-white lg:text-gray-900 flex flex-col justify-center h-full">
+            {banner?.subtitle && (
+              <p className="text-[10px] sm:text-xs lg:text-sm font-semibold tracking-widest uppercase mb-1 lg:mb-3 text-gray-300 lg:text-gray-400">
+                {banner.subtitle}
+              </p>
+            )}
+            {banner?.title && (
+              <h2 className="text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-black tracking-tight leading-[1.1] mb-1 sm:mb-2 lg:mb-5">
+                {banner.title}
+              </h2>
+            )}
+            {banner?.description && (
+              <p className="text-xs sm:text-sm md:text-lg mb-2 sm:mb-4 lg:mb-8 max-w-md leading-snug lg:leading-relaxed text-gray-200 lg:text-gray-400 line-clamp-1 sm:line-clamp-2 lg:line-clamp-none">
+                {banner.description}
+              </p>
+            )}
+            {banner?.buttonText && banner?.buttonLink && (
+              <div>
+                <Link
+                  prefetch={false}
+                  href={banner.buttonLink}
+                  className="inline-block font-bold px-6 py-2 sm:px-6 sm:py-2.5 md:px-10 md:py-4 rounded-full transition-colors shadow-xl lg:shadow-none bg-white text-gray-900 hover:bg-gray-100 lg:bg-gray-900 lg:text-white lg:hover:bg-gray-700 text-xs sm:text-sm md:text-base"
+                >
+                  {banner.buttonText}
+                </Link>
+              </div>
+            )}
+          </div>
+        )}
 
         {/* Right: Hero Image Slider (Visible only >= lg) */}
-        <div className="hidden lg:flex relative justify-center items-center">
-          <div className="w-full max-h-[480px] aspect-square bg-gray-50 rounded-3xl overflow-hidden relative shadow-md flex items-center justify-center">
+        <div className={`hidden lg:flex relative justify-center items-center ${banner?.showBannerContent === false ? 'w-full' : ''}`}>
+          <div className={`w-full ${banner?.showBannerContent === false ? 'aspect-[21/9] max-h-[520px]' : 'max-h-[480px] aspect-square'} bg-gray-50 rounded-3xl overflow-hidden relative shadow-md flex items-center justify-center`}>
             {images.length > 0 ? (
               images.map((imgUrl, index) => (
                 <div

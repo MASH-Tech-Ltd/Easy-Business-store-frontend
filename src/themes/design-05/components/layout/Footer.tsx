@@ -67,11 +67,16 @@ export default function Footer05({
         <div className="grid grid-cols-1 md:grid-cols-12 gap-12 lg:gap-8 mb-16">
           {/* Brand & Intro */}
           <div className="md:col-span-4 lg:col-span-5 pr-4">
-            <Link prefetch={false} href="/" className="inline-flex items-center gap-2 mb-6">
+            <Link prefetch={false} href="/" className="inline-flex items-center gap-3 mb-6">
               {storeInfo?.logo && (
-                <img src={getStoreLogoUrl(storeInfo.logo)} alt={storeInfo.name} className="w-8 h-8 rounded-full object-cover" />
+                <div className="w-10 h-10 rounded-full overflow-hidden shrink-0 aspect-square flex items-center justify-center bg-gray-50 border border-gray-100 shadow-2xs">
+                  <img src={getStoreLogoUrl(storeInfo.logo)} alt={storeInfo.name} className="w-full h-full object-cover rounded-full aspect-square" />
+                </div>
               )}
-              <span className="font-bold text-xl tracking-tight text-gray-900">
+              <span
+                style={theme?.storeTitleFont ? { fontFamily: `'${theme.storeTitleFont}', serif` } : undefined}
+                className="store-title-font font-bold text-xl tracking-tight text-gray-900 uppercase"
+              >
                 {storeInfo?.name || "Minimal"}
               </span>
             </Link>

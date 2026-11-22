@@ -24,9 +24,14 @@ export default async function Header() {
         <div className="flex justify-between items-center w-full md:w-auto">
           <Link prefetch={false} href="/" className="flex items-center gap-3">
             {storeInfo?.logo && (
-              <img src={getStoreLogoUrl(storeInfo.logo)} alt={storeInfo?.name || tenantSlug} className="w-10 h-10 sm:w-12 sm:h-12 rounded-full object-cover shadow-sm border border-gray-100" />
+              <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-full overflow-hidden shrink-0 aspect-square flex items-center justify-center bg-gray-50 border border-gray-100 shadow-2xs">
+                <img src={getStoreLogoUrl(storeInfo.logo)} alt={storeInfo?.name || tenantSlug} className="w-full h-full object-cover rounded-full aspect-square" />
+              </div>
             )}
-            <h1 className="text-xl sm:text-2xl font-black tracking-tight text-gray-900 uppercase">
+            <h1
+              style={theme?.storeTitleFont ? { fontFamily: `'${theme.storeTitleFont}', serif` } : undefined}
+              className="store-title-font text-xl sm:text-2xl font-black tracking-tight text-gray-900 uppercase"
+            >
               {storeInfo?.name || tenantSlug}
             </h1>
           </Link>

@@ -11,6 +11,7 @@ interface HeroBannerSliderProps {
     description?: string;
     buttonText?: string;
     buttonLink?: string;
+    showBannerContent?: boolean;
     image?: any;
     images?: any[];
   };
@@ -56,44 +57,46 @@ export default function HeroBannerSlider05({ banner }: HeroBannerSliderProps) {
         onMouseLeave={() => setIsPaused(false)}
       >
         {/* Left: Banner Content */}
-        <div className="lg:w-1/2 z-10 relative text-center lg:text-left mt-4 lg:mt-0 w-full">
-          {banner?.subtitle && (
-            <span className="inline-block text-xs uppercase tracking-widest font-bold text-gray-400 mb-2">
-              {banner.subtitle}
-            </span>
-          )}
-          {banner?.title && (
-            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold tracking-tighter leading-[1.1] mb-3 sm:mb-5">
-              {banner.title}
-            </h2>
-          )}
-          {banner?.description && (
-            <p className="text-gray-500 text-sm sm:text-base lg:text-lg mb-6 sm:mb-8 max-w-md mx-auto lg:mx-0 leading-relaxed">
-              {banner.description}
-            </p>
-          )}
-          {banner?.buttonText && banner?.buttonLink && (
-            <Link
-              prefetch={false}
-              href={banner.buttonLink}
-              className="inline-flex items-center justify-center bg-black text-white px-8 py-4 rounded-full font-semibold text-sm hover:bg-gray-800 transition-colors gap-2 group/btn shadow-md hover:shadow-lg"
-            >
-              {banner.buttonText}
-              <svg
-                className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
+        {banner?.showBannerContent !== false && (
+          <div className="lg:w-1/2 z-10 relative text-center lg:text-left mt-4 lg:mt-0 w-full">
+            {banner?.subtitle && (
+              <span className="inline-block text-xs uppercase tracking-widest font-bold text-gray-400 mb-2">
+                {banner.subtitle}
+              </span>
+            )}
+            {banner?.title && (
+              <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold tracking-tighter leading-[1.1] mb-3 sm:mb-5">
+                {banner.title}
+              </h2>
+            )}
+            {banner?.description && (
+              <p className="text-gray-500 text-sm sm:text-base lg:text-lg mb-6 sm:mb-8 max-w-md mx-auto lg:mx-0 leading-relaxed">
+                {banner.description}
+              </p>
+            )}
+            {banner?.buttonText && banner?.buttonLink && (
+              <Link
+                prefetch={false}
+                href={banner.buttonLink}
+                className="inline-flex items-center justify-center bg-black text-white px-8 py-4 rounded-full font-semibold text-sm hover:bg-gray-800 transition-colors gap-2 group/btn shadow-md hover:shadow-lg"
               >
-                <path d="M5 12h14M12 5l7 7-7 7" />
-              </svg>
-            </Link>
-          )}
-        </div>
+                {banner.buttonText}
+                <svg
+                  className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  <path d="M5 12h14M12 5l7 7-7 7" />
+                </svg>
+              </Link>
+            )}
+          </div>
+        )}
 
         {/* Right: Floating Image Slider */}
-        <div className="lg:w-1/2 relative flex justify-center aspect-[21/9] w-full mb-2 lg:mb-0">
+        <div className={`${banner?.showBannerContent === false ? 'w-full' : 'lg:w-1/2'} relative flex justify-center aspect-[21/9] w-full mb-2 lg:mb-0`}>
           <div className="w-full h-full relative rounded-2xl sm:rounded-3xl overflow-hidden drop-shadow-2xl z-10 bg-white">
             {images.length > 0 ? (
               images.map((imgUrl, index) => (

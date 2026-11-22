@@ -28,11 +28,18 @@ export default function Footer03({
           <div className="text-[10px] text-cyan-400 mb-4 uppercase tracking-widest">
             System Identifier
           </div>
-          <h3 className="text-3xl font-black uppercase tracking-tighter mb-4 flex items-center gap-3">
+          <h3 className="text-2xl sm:text-3xl font-black uppercase tracking-tighter mb-4 flex items-center gap-3">
             {storeInfo?.logo && (
-              <img src={getStoreLogoUrl(storeInfo.logo)} alt={storeInfo.name} className="w-10 h-10 rounded-full object-cover" />
+              <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-full overflow-hidden shrink-0 aspect-square flex items-center justify-center border border-white/20 bg-white/5">
+                <img src={getStoreLogoUrl(storeInfo.logo)} alt={storeInfo.name} className="w-full h-full object-cover rounded-full aspect-square" />
+              </div>
             )}
-            {storeInfo?.name || "Premium Store"}
+            <span
+              style={theme?.storeTitleFont ? { fontFamily: `'${theme.storeTitleFont}', serif` } : undefined}
+              className="store-title-font text-white"
+            >
+              {storeInfo?.name || "Premium Store"}
+            </span>
           </h3>
             {storeInfo?.description && (
               <p className="text-gray-400 text-sm max-w-sm mb-6 leading-relaxed">

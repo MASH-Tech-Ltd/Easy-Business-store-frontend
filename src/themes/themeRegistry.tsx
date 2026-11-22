@@ -56,5 +56,16 @@ export const themeRegistry: Record<string, any> = {
     Header: dynamic(() => import('./design-05/components/layout/Header')),
     Footer: dynamic(() => import('./design-05/components/layout/Footer')),
   },
+  'design-06': {
+    Home: dynamic(() => import('./design-06/Home')),
+    Product: dynamic(() => import('./design-06/Product')),
+    Category: dynamic(() => import('./design-06/Category')),
+    Categories: dynamic(() => import('./design-06/Categories')),
+    Products: dynamic(() => import('./design-06/Products')),
+    Cart: dynamic(() => import('./design-06/Cart')),
+    Checkout: dynamic(() => import('./design-06/Checkout')),
+    Header: dynamic(() => import('./design-06/components/layout/Header')),
+    Footer: dynamic(() => import('./design-06/components/layout/Footer')),
+  },
 };
 
