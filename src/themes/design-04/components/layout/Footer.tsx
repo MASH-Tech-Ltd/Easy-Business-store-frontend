@@ -44,7 +44,7 @@ export default function Footer04({
                 </div>
               )}
               <span
-                style={theme?.storeTitleFont ? { fontFamily: `'${theme.storeTitleFont}', serif` } : undefined}
+                style={theme?.storeTitleFont ? { fontFamily: `'${theme.storeTitleFont}', sans-serif` } : undefined}
                 className="store-title-font font-black text-gray-900 text-lg sm:text-xl uppercase"
               >
                 {storeInfo?.name || "Store"}

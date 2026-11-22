@@ -35,7 +35,7 @@ export default function Footer03({
               </div>
             )}
             <span
-              style={theme?.storeTitleFont ? { fontFamily: `'${theme.storeTitleFont}', serif` } : undefined}
+              style={theme?.storeTitleFont ? { fontFamily: `'${theme.storeTitleFont}', sans-serif` } : undefined}
               className="store-title-font text-white"
             >
               {storeInfo?.name || "Premium Store"}

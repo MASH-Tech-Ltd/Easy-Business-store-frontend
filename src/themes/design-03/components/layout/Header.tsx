@@ -26,7 +26,7 @@ export default async function Header03({ storeInfo }: { storeInfo?: any }) {
               </div>
             )}
             <span
-              style={theme?.storeTitleFont ? { fontFamily: `'${theme.storeTitleFont}', serif` } : undefined}
+              style={theme?.storeTitleFont ? { fontFamily: `'${theme.storeTitleFont}', sans-serif` } : undefined}
               className="store-title-font font-bold tracking-widest uppercase text-sm text-white"
             >
               {storeInfo?.name || 'Store'}
@@ -51,7 +51,7 @@ export default async function Header03({ storeInfo }: { storeInfo?: any }) {
               <div className="w-14 h-14 border border-white/20 bg-white/5 flex items-center justify-center font-bold text-xl group-hover:border-cyan-400 transition-colors shrink-0 aspect-square rounded-full">03</div>
             )}
             <span
-              style={theme?.storeTitleFont ? { fontFamily: `'${theme.storeTitleFont}', serif` } : undefined}
+              style={theme?.storeTitleFont ? { fontFamily: `'${theme.storeTitleFont}', sans-serif` } : undefined}
               className="store-title-font font-black text-xl tracking-tighter uppercase leading-none text-white group-hover:text-cyan-400 transition-colors"
             >
               {storeInfo?.name || 'Premium Store'}

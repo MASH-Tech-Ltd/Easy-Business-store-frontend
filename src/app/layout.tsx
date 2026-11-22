@@ -487,7 +487,7 @@ export default async function RootLayout({
   };
   const primaryForeground = getContrastColor(primaryColor);
   const selectedFont = theme?.fontFamily || "Inter";
-  const storeTitleFont = theme?.storeTitleFont || "Playfair Display";
+  const storeTitleFont = theme?.storeTitleFont || "Inter";
   const encodedFont = encodeURIComponent(selectedFont).replace(/%20/g, "+");
   const encodedStoreTitleFont = encodeURIComponent(storeTitleFont).replace(/%20/g, "+");
   const googleFontHref = `https://fonts.googleapis.com/css2?family=${encodedFont}&display=swap`;
@@ -691,7 +691,7 @@ export default async function RootLayout({
             --foreground: ${textColor};
             --font-heading: '${selectedFont}', var(--font-sans), sans-serif;
             --font-sans: '${selectedFont}', var(--font-${fontChoice}), sans-serif;
-            --font-store-title: '${storeTitleFont}', serif;
+            --font-store-title: '${storeTitleFont}', sans-serif;
           }
           
           /* Dedicated Store Title / Brand Logo Font (Header & Footer across all themes) */

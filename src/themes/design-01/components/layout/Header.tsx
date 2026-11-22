@@ -29,7 +29,7 @@ export default async function Header() {
               </div>
             )}
             <h1
-              style={theme?.storeTitleFont ? { fontFamily: `'${theme.storeTitleFont}', serif` } : undefined}
+              style={theme?.storeTitleFont ? { fontFamily: `'${theme.storeTitleFont}', sans-serif` } : undefined}
               className="store-title-font text-xl sm:text-2xl font-black tracking-tight text-gray-900 uppercase"
             >
               {storeInfo?.name || tenantSlug}

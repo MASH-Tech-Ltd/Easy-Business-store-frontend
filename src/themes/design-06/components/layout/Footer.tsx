@@ -139,7 +139,7 @@ export default function Footer06({
                 </div>
               ) : null}
               <span
-                style={theme?.storeTitleFont ? { fontFamily: `'${theme.storeTitleFont}', serif` } : undefined}
+                style={theme?.storeTitleFont ? { fontFamily: `'${theme.storeTitleFont}', sans-serif` } : undefined}
                 className="store-title-font text-xl sm:text-2xl font-bold tracking-widest uppercase text-gray-900"
               >
                 {storeName}

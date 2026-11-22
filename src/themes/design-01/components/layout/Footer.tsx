@@ -64,7 +64,7 @@ export default async function Footer() {
                 </div>
               )}
               <span
-                style={theme?.storeTitleFont ? { fontFamily: `'${theme.storeTitleFont}', serif` } : undefined}
+                style={theme?.storeTitleFont ? { fontFamily: `'${theme.storeTitleFont}', sans-serif` } : undefined}
                 className="store-title-font font-black text-xl text-gray-900 break-words max-w-[200px] sm:max-w-full leading-tight uppercase"
               >
                 {storeInfo?.name || tenantSlug.toUpperCase()}

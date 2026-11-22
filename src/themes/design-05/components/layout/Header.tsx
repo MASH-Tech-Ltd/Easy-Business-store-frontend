@@ -34,7 +34,7 @@ export default async function Header05({ storeInfo }: { storeInfo?: any }) {
               </div>
             )}
             <h1
-              style={theme?.storeTitleFont ? { fontFamily: `'${theme.storeTitleFont}', serif` } : undefined}
+              style={theme?.storeTitleFont ? { fontFamily: `'${theme.storeTitleFont}', sans-serif` } : undefined}
               className="store-title-font text-xl font-bold tracking-tight text-gray-900 uppercase"
             >
               {info?.name || tenantSlug}

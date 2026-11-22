@@ -27,7 +27,7 @@ export default async function Header({ storeInfo }: { storeInfo: any }) {
                   </div>
                 )}
                 <span
-                  style={theme?.storeTitleFont ? { fontFamily: `'${theme.storeTitleFont}', serif` } : undefined}
+                  style={theme?.storeTitleFont ? { fontFamily: `'${theme.storeTitleFont}', sans-serif` } : undefined}
                   className="store-title-font uppercase tracking-wider"
                 >
                   {storeInfo?.name || 'Minimal Store'}

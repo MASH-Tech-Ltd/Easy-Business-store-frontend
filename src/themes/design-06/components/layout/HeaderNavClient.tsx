@@ -99,7 +99,7 @@ export default function HeaderNavClient06({
           )}
 
           <span
-            style={theme?.storeTitleFont ? { fontFamily: `'${theme.storeTitleFont}', serif` } : undefined}
+            style={theme?.storeTitleFont ? { fontFamily: `'${theme.storeTitleFont}', sans-serif` } : undefined}
             className="store-title-font text-base sm:text-xl font-bold tracking-wider text-gray-900 uppercase group-hover:text-black transition-colors whitespace-nowrap"
           >
             {brandName}
@@ -244,7 +244,7 @@ export default function HeaderNavClient06({
                       </div>
                     )}
                     <span
-                      style={theme?.storeTitleFont ? { fontFamily: `'${theme.storeTitleFont}', serif` } : undefined}
+                      style={theme?.storeTitleFont ? { fontFamily: `'${theme.storeTitleFont}', sans-serif` } : undefined}
                       className="store-title-font text-base font-bold tracking-wider uppercase text-gray-900 truncate"
                     >
                       {brandName}
