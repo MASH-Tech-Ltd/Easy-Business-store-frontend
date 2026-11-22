@@ -5,9 +5,6 @@ import { EventEmitter } from "events";
 EventEmitter.defaultMaxListeners = 50;
 
 const nextConfig: NextConfig = {
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
   // Compress all responses using gzip/brotli
   compress: true,
 
