@@ -62,6 +62,15 @@ function stripCloudinaryTransforms(rawRest: string): string {
   return rest;
 }
 
+function mapR2VariantUrl(trimmed: string, width: number): string | null {
+  const match = trimmed.match(/^(https?:\/\/media\.masheco\.com\/.+?)(?:_w\d+)?\.webp(?:\?.*)?$/i);
+  if (!match || !match[1]) return null;
+  const base = match[1];
+  if (width <= 120) return `${base}_w100.webp`;
+  if (width <= 450) return `${base}_w400.webp`;
+  return `${base}.webp`;
+}
+
 export function getOptimizedImageUrl(
   url?: any,
   presetOrWidth: ImagePreset | number = 'product-card'
@@ -76,6 +85,10 @@ export function getOptimizedImageUrl(
     typeof presetOrWidth === 'number'
       ? presetOrWidth
       : IMAGE_WIDTHS[presetOrWidth] || 300;
+
+  // Cloudflare R2 URL (pre-generated WebP variants)
+  const r2Url = mapR2VariantUrl(trimmed, width);
+  if (r2Url) return r2Url;
 
   // Cloudinary upload URL (http or https, any cloud name)
   if (trimmed.includes('res.cloudinary.com') && trimmed.includes('/image/upload/')) {
@@ -197,6 +210,11 @@ export function normalizeImageKey(url?: any): string {
     if (parts.length === 2) {
       return stripCloudinaryTransforms(parts[1]);
     }
+  }
+
+  const r2Normalized = trimmed.match(/^(https?:\/\/media\.masheco\.com\/.+?)(?:_w\d+)?\.webp(?:\?.*)?$/i);
+  if (r2Normalized && r2Normalized[1]) {
+    return `${r2Normalized[1]}.webp`;
   }
 
   return trimmed;
